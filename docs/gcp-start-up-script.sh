@@ -18,6 +18,9 @@ curl https://dl.google.com/cloudagents/add-monitoring-agent-repo.sh -o $monitori
 bash $monitoring_agent_install_file
 #rm /tmp/add-monitoring-agent-repo.sh
 apt-get update
-apt-get install stackdriver-agent
+apt-get install -y stackdriver-agent
 service stackdriver-agent start
 service stackdriver-agent restart
+
+# Example Google Install Script
+#curl -sSO https://dl.google.com/cloudagents/add-monitoring-agent-repo.sh && sudo bash add-monitoring-agent-repo.sh && sudo apt-get update && sudo apt-get install stackdriver-agent && sudo service stackdriver-agent start"
