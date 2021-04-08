@@ -30,3 +30,9 @@ service stackdriver-agent restart
 ###
 curl -fsSL https://deb.nodesource.com/setup_14.x | bash -
 apt-get install -y nodejs
+
+###
+### Install Git
+###
+apt-get install git
+
