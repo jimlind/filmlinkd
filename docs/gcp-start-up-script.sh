@@ -34,5 +34,5 @@ apt-get install -y nodejs
 ###
 ### Install Git
 ###
-apt-get install git
+apt-get install -y git
 
