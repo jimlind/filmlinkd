@@ -27,6 +27,7 @@
     "firebase": "^8.2.2",
     "htmlparser2": "^6.0.0",
     "letterboxd": "file:lib/letterboxd",
+    "redis": "^3.1.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {

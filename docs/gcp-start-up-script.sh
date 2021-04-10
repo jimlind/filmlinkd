@@ -36,3 +36,11 @@ apt-get install -y nodejs
 ###
 apt-get install -y git
 
+
+###
+### Install Redis
+###
+apt-get install -y redis-server
+service redis-server enable
+service redis-server start
+service redis-server restart
