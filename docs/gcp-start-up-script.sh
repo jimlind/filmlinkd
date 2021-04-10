@@ -36,11 +36,12 @@ apt-get install -y nodejs
 ###
 apt-get install -y git
 
+###
+### Install Flimlinkd in /opt/app
+###
+mkdir /opt/app
+cd /opt/app
+git clone https://github.com/jimlind/filmlinkd.git
+npm install -g npm
+npm install
 
-###
-### Install Redis
-###
-apt-get install -y redis-server
-service redis-server enable
-service redis-server start
-service redis-server restart
