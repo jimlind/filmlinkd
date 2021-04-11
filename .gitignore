@@ -1,2 +1,4 @@
 .DS_Store
+.env
+.gcp-key.json
 node_modules
