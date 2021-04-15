@@ -1,4 +1,5 @@
 .DS_Store
 .env
 .gcp-key.json
+clean-up-archive
 node_modules
