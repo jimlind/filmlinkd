@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 class ActionTranslator {
     constructor(
@@ -7,7 +7,8 @@ class ActionTranslator {
         firestoreSubscriptionDao,
         firestoreUserDao,
         messageEmbedFactory,
-        letterboxdProfile
+        letterboxdProfile,
+        subscribedUserList,
     ) {
         this.diaryEntryWriter = diaryEntryWriter;
         this.discordMessageSender = discordMessageSender;
@@ -15,35 +16,42 @@ class ActionTranslator {
         this.firestoreUserDao = firestoreUserDao;
         this.messageEmbedFactory = messageEmbedFactory;
         this.letterboxdProfile = letterboxdProfile;
+        this.subscribedUserList = subscribedUserList;
     }
 
     translate(message) {
         switch (message.command) {
-            case "help":
+            case 'help':
                 this.help(message.channelId);
                 break;
-            case "follow":
+            case 'follow':
                 if (message.manageServer) {
                     this.follow(message.arguments, message.channelId, message.guildId);
                 } else {
                     this.discordMessageSender
-                        .send(message.channelId, this.messageEmbedFactory.createInadequatePermissionsMessage())
+                        .send(
+                            message.channelId,
+                            this.messageEmbedFactory.createInadequatePermissionsMessage(),
+                        )
                         .catch(() => {});
                 }
                 break;
-            case "unfollow":
+            case 'unfollow':
                 if (message.manageServer) {
                     this.unfollow(message.arguments, message.channelId);
                 } else {
                     this.discordMessageSender
-                        .send(message.channelId, this.messageEmbedFactory.createInadequatePermissionsMessage())
+                        .send(
+                            message.channelId,
+                            this.messageEmbedFactory.createInadequatePermissionsMessage(),
+                        )
                         .catch(() => {});
                 }
                 break;
-            case "refresh":
+            case 'refresh':
                 this.refresh(message.arguments, message.channelId);
                 break;
-            case "following":
+            case 'following':
                 this.following(message.channelId, message.guildId);
                 break;
         }
@@ -59,13 +67,19 @@ class ActionTranslator {
                 .subscribe(userData, channelId, guildId)
                 .then((updatedUserData) => {
                     this.discordMessageSender
-                        .send(channelId, this.messageEmbedFactory.createFollowSuccessMessage(updatedUserData))
+                        .send(
+                            channelId,
+                            this.messageEmbedFactory.createFollowSuccessMessage(updatedUserData),
+                        )
                         .catch(() => {});
                     this.diaryEntryWriter.postMostRecentEntry(updatedUserData, channelId);
                 })
                 .catch(() => {
                     this.discordMessageSender
-                        .send(channelId, this.messageEmbedFactory.createDuplicateFollowMessage(userData))
+                        .send(
+                            channelId,
+                            this.messageEmbedFactory.createDuplicateFollowMessage(userData),
+                        )
                         .catch(() => {});
                 });
         };
@@ -88,7 +102,10 @@ class ActionTranslator {
                         // Failed to find a Letterboxd profile page or relavent data
                         .catch(() => {
                             this.discordMessageSender
-                                .send(channelId, this.messageEmbedFactory.createNoAccountFoundMessage(userName))
+                                .send(
+                                    channelId,
+                                    this.messageEmbedFactory.createNoAccountFoundMessage(userName),
+                                )
                                 .catch(() => {});
                         });
                 });
@@ -100,13 +117,22 @@ class ActionTranslator {
             this.firestoreSubscriptionDao
                 .unsubscribe(userName, channelId)
                 .then((data) => {
+                    if (!data?.channelList?.length) {
+                        this.subscribedUserList.remove(data.userName);
+                    }
                     this.discordMessageSender
-                        .send(channelId, this.messageEmbedFactory.createUnfollowedSuccessMessage(data))
+                        .send(
+                            channelId,
+                            this.messageEmbedFactory.createUnfollowedSuccessMessage(data),
+                        )
                         .catch(() => {});
                 })
                 .catch(() => {
                     this.discordMessageSender
-                        .send(channelId, this.messageEmbedFactory.createUnfollowedErrorMessage(userName))
+                        .send(
+                            channelId,
+                            this.messageEmbedFactory.createUnfollowedErrorMessage(userName),
+                        )
                         .catch(() => {});
                 });
         });
@@ -122,18 +148,27 @@ class ActionTranslator {
                         .update(userName, profile.name, profile.image)
                         .then((data) => {
                             this.discordMessageSender
-                                .send(channelId, this.messageEmbedFactory.createRefreshSuccessMessage(data))
+                                .send(
+                                    channelId,
+                                    this.messageEmbedFactory.createRefreshSuccessMessage(data),
+                                )
                                 .catch(() => {});
                         })
                         .catch(() => {
                             this.discordMessageSender
-                                .send(channelId, this.messageEmbedFactory.createRefreshErrorMessage(userName))
+                                .send(
+                                    channelId,
+                                    this.messageEmbedFactory.createRefreshErrorMessage(userName),
+                                )
                                 .catch(() => {});
                         });
                 })
                 .catch(() => {
                     this.discordMessageSender
-                        .send(channelId, this.messageEmbedFactory.createRefreshErrorMessage(userName))
+                        .send(
+                            channelId,
+                            this.messageEmbedFactory.createRefreshErrorMessage(userName),
+                        )
                         .catch(() => {});
                 });
         });

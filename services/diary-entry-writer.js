@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 class DiaryEntryWriter {
     constructor(
@@ -8,7 +8,8 @@ class DiaryEntryWriter {
         firestoreSubscriptionDao,
         firestorePreviousDao,
         firestoreUserDao,
-        logger
+        logger,
+        subscribedUserList,
     ) {
         this.letterboxdDiary = letterboxdDiary;
         this.messageEmbedFactory = messageEmbedFactory;
@@ -17,6 +18,7 @@ class DiaryEntryWriter {
         this.firestorePreviousDao = firestorePreviousDao;
         this.firestoreUserDao = firestoreUserDao;
         this.logger = logger;
+        this.subscribedUserList = subscribedUserList;
     }
 
     postMostRecentEntry(userData, channelId) {
@@ -29,93 +31,119 @@ class DiaryEntryWriter {
         });
     }
 
-    postAllEntries() {
-        this.firestoreSubscriptionDao.getActiveSubscriptions().then((documentList) => {
-            this.logger.info(`Starting work on complete list of ${documentList.length} records.`);
-            documentList.forEach((document, documentIndex) => {
-                setTimeout(() => {
-                    this.postAllEntriesForUser(document);
-                }, documentIndex * 2000); // 2 second wait for each user
-            });
-        });
-    }
-
-    postPageOfEntries(rssDelay, pageSize) {
+    postPageOfEntries(index, pageSize) {
         return new Promise((resolve) => {
-            this.firestoreSubscriptionDao.getActiveSubscriptionsPage(pageSize).then((documentList) => {
+            this.subscribedUserList.getActiveSubscriptionsPage(index, pageSize).then((userList) => {
+                // Special usecase for empty user list returned.
+                if (!userList.length) {
+                    this.logger.info('Empty page. Resetting pagination.');
+                    return resolve(0);
+                }
+
                 const used = process.memoryUsage().heapUsed / 1024 / 1024;
+                this.logger.info(
+                    `Starting work on page of ${userList.length} records. [${used} MB]`,
+                );
 
-                this.logger.info(`Starting work on page of ${documentList.length} records. [${used} MB]`);
-                documentList.forEach((document, documentIndex) => {
-                    setTimeout(() => {
-                        // Update the document for the user
-                        this.firestoreUserDao.resetChecked(document.id);
-
-                        // Post any entries available for the user
-                        this.postAllEntriesForUser(document);
-
-                        // On the last document, resolve after waiting another second
-                        if (documentList.length === documentIndex + 1) {
-                            setTimeout(() => {
-                                resolve();
-                            }, rssDelay);
+                let userListPostCount = 0;
+                userList.forEach((user) => {
+                    // Post any entries available for the user
+                    this.postEntriesForUser(user, 10).then(() => {
+                        userListPostCount++;
+                        if (userList.length === userListPostCount) {
+                            return resolve(userListPostCount);
                         }
-                    }, documentIndex * rssDelay); // Wait a delay for each user
+                    });
                 });
             });
         });
     }
 
-    postAllEntriesForUser = function (userData) {
-        this.getAllEntriesForUser(userData, 10).then((diaryEntryList) => {
-            diaryEntryList.forEach((diaryEntry) => {
-                userData.channelList.forEach((channel, channelIndex) => {
-                    setTimeout(() => {
-                        this.sendOneDiaryEntry(userData, diaryEntry, channel.channelId);
-                    }, channelIndex * 1000); // 1 second wait for each channel
+    postEntriesForUser = function (user, maxDiaryEntries) {
+        return new Promise((resolve) => {
+            this.getEntriesForUser(user.userName, user.previousId, maxDiaryEntries)
+                .then((diaryEntryList) => {
+                    if (diaryEntryList.length === 0) {
+                        return resolve(); // Exit early if no diary entries
+                    }
+
+                    this.firestoreUserDao
+                        .read(user.userName)
+                        .then((userData) => {
+                            if (userData.channelList === 0) {
+                                return resolve(); // Exit early if no subscribed channels
+                            }
+
+                            diaryEntryList.forEach((diaryEntry, diaryEntryIndex) => {
+                                setTimeout(() => {
+                                    userData.channelList.forEach((channel, channelIndex) => {
+                                        const channelId = channel.channelId;
+                                        this.sendOneDiaryEntry(userData, diaryEntry, channelId)
+                                            .then(() => {
+                                                if (
+                                                    diaryEntryIndex == diaryEntryList.length - 1 &&
+                                                    channelIndex == userData.channelList.length - 1
+                                                ) {
+                                                    // Sent all messages on all channels
+                                                    return resolve();
+                                                }
+                                            })
+                                            .catch(() => {
+                                                // Unable to send diary entry
+                                                return resolve();
+                                            });
+                                    });
+                                }, diaryEntryIndex * 1000); // Wait 1 second for each diary entry
+                            });
+                        })
+                        .catch(() => {
+                            // Unable to read user data from DAO
+                            return resolve();
+                        });
+                })
+                .catch(() => {
+                    // Unable to read diary entries from Letterboxd
+                    return resolve();
                 });
-            });
         });
     };
 
-    getAllEntriesForUser = function (userData, maxDiaryEntries) {
+    getEntriesForUser = function (userName, previousId, maxDiaryEntries) {
         return new Promise((resolve) => {
             this.letterboxdDiary
-                .get(userData.userName, maxDiaryEntries)
+                .get(userName, maxDiaryEntries)
                 .then((diaryEntryList) => {
                     const filteredDiaryEntryList = diaryEntryList.filter((diaryEntry) => {
-                        // Exclude any entries older than the previous published
-                        if (diaryEntry.publishedDate < userData.previous.published) {
-                            return false;
-                        }
-                        // Exclude any entries that match the previous published link
-                        if (diaryEntry.link === userData.previous.uri) {
-                            return false;
-                        }
-                        // Otherwise include the entry
-                        return true;
+                        // Include any entry newer than last logged
+                        return diaryEntry.id > previousId;
                     });
-                    resolve(filteredDiaryEntryList);
+                    return resolve(filteredDiaryEntryList);
                 })
                 .catch(() => {
-                    const metadata = { userData };
-                    this.logger.warn(`Could not fetch feed for "${userData.userName}" on Letterboxd`, { metadata });
-                    resolve([]);
+                    this.logger.warn(`Could not fetch feed for "${userName}" on Letterboxd`);
+                    return resolve([]);
                 });
         });
     };
 
     sendOneDiaryEntry(userData, diaryEntry, channelId) {
-        const message = this.messageEmbedFactory.createDiaryEntryMessage(diaryEntry, userData);
-        this.discordMessageSender
-            .send(channelId, message)
-            .then(() => {
-                // Message send successful so update previous
-                this.firestorePreviousDao.update(userData, diaryEntry);
-            })
-            .catch(() => {
-                // Do Nothing. Send failure caught and logged in MessageSender
-            });
+        return new Promise((resolve) => {
+            const message = this.messageEmbedFactory.createDiaryEntryMessage(diaryEntry, userData);
+            this.discordMessageSender
+                .send(channelId, message)
+                .then(() => {
+                    // Message send successful so update previous
+                    // TODO: Combine these two update methods
+                    this.firestorePreviousDao.update(userData, diaryEntry);
+                    this.subscribedUserList.upsert(userData.userName, diaryEntry.id);
+                    // Work completed. Updates can be async.
+                    return resolve();
+                })
+                .catch(() => {
+                    // Do Nothing. Send failure caught and logged in MessageSender
+                    return resolve();
+                });
+        });
     }
 }
 
