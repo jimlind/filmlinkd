@@ -1,17 +1,20 @@
-"use strict";
+'use strict';
 
 class Logger {
-    constructor(config, winston, googleCloudWinstonTransport) {
+    constructor(config, winston, googleCloudWinstonTransport, consoleTransport) {
         // Create a Winston logger that logs debug and above
         this.winstonLogger = winston.createLogger({
-            level: "debug",
-            format: winston.format.combine(winston.format.timestamp(), winston.format.prettyPrint()),
+            level: 'debug',
+            format: winston.format.combine(
+                winston.format.timestamp(),
+                winston.format.prettyPrint(),
+            ),
             transports: [googleCloudWinstonTransport],
         });
 
         // If the environment is dev, then also log to console
-        if (config.isDev) {
-            this.winstonLogger.add(new winston.transports.Console());
+        if (config.getIsDev()) {
+            this.winstonLogger.add(consoleTransport);
         }
     }
 

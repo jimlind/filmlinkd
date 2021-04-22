@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
-const awilix = require("awilix");
-const discord = require("discord.js");
-const { LetterboxdDiary, LetterboxdProfile } = require("letterboxd");
-const { LoggingWinston } = require("@google-cloud/logging-winston");
-const winston = require("winston");
+const awilix = require('awilix');
+const discord = require('discord.js');
+const { LetterboxdDiary, LetterboxdProfile } = require('letterboxd');
+const { LoggingWinston } = require('@google-cloud/logging-winston');
+const winston = require('winston');
 
 class DependencyInjectionContainer {
     constructor(configModel) {
@@ -14,28 +14,28 @@ class DependencyInjectionContainer {
         const googleCloudWinstonTransport = new LoggingWinston({
             labels: {
                 app: configModel.packageName,
-                version:
-                    configModel.packageVersion +
-                    (configModel.isDev ? "-dev" : ""),
+                version: configModel.packageVersion + (configModel.isDev ? '-dev' : ''),
             },
-            prefix: configModel.isDev ? "DEV" : null,
+            prefix: configModel.isDev ? 'DEV' : null,
             projectId: configModel.googleCloudProjectId,
             keyFilename: configModel.gcpKeyFile,
         });
 
+        // Create logger for the JS console
+        const consoleTransport = new winston.transports.Console();
+
         this.container.register({
             config: awilix.asValue(configModel),
             discordClient: awilix.asClass(discord.Client).classic(),
-            googleCloudWinstonTransport: awilix.asValue(
-                googleCloudWinstonTransport
-            ),
+            googleCloudWinstonTransport: awilix.asValue(googleCloudWinstonTransport),
+            consoleTransport: awilix.asValue(consoleTransport),
             letterboxdDiary: awilix.asValue(LetterboxdDiary),
             letterboxdProfile: awilix.asValue(LetterboxdProfile),
             winston: awilix.asValue(winston),
         });
 
-        this.container.loadModules(["factories/**/*.js", "services/**/*.js"], {
-            formatName: "camelCase",
+        this.container.loadModules(['factories/**/*.js', 'services/**/*.js'], {
+            formatName: 'camelCase',
             resolverOptions: {
                 lifetime: awilix.Lifetime.SINGLETON,
                 injectionMode: awilix.InjectionMode.CLASSIC,
