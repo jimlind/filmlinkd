@@ -43,5 +43,4 @@ mkdir /opt/app
 cd /opt/app
 git clone https://github.com/jimlind/filmlinkd.git
 npm install -g npm
-npm install
-
+npm install --omit=dev
