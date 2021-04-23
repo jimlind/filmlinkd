@@ -34,7 +34,4 @@ class LetterboxdProfileWeb {
     }
 }
 
-function get(userName) {
-    return new LetterboxdProfileWeb().get(userName);
-}
-exports.get = get;
+module.exports = LetterboxdProfileWeb;

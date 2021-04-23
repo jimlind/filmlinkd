@@ -7,7 +7,7 @@ class ActionTranslator {
         firestoreSubscriptionDao,
         firestoreUserDao,
         messageEmbedFactory,
-        letterboxdProfile,
+        letterboxdProfileWeb,
         subscribedUserList,
     ) {
         this.diaryEntryWriter = diaryEntryWriter;
@@ -15,7 +15,7 @@ class ActionTranslator {
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
         this.firestoreUserDao = firestoreUserDao;
         this.messageEmbedFactory = messageEmbedFactory;
-        this.letterboxdProfile = letterboxdProfile;
+        this.letterboxdProfileWeb = letterboxdProfileWeb;
         this.subscribedUserList = subscribedUserList;
     }
 
@@ -92,7 +92,7 @@ class ActionTranslator {
                 .then(subscribe.bind(this))
                 // User not found so get the profile data then create a new user then subscribe
                 .catch(() => {
-                    this.letterboxdProfile
+                    this.letterboxdProfileWeb
                         .get(userName)
                         .then((profile) => {
                             this.firestoreUserDao
@@ -141,7 +141,7 @@ class ActionTranslator {
     refresh(userList, channelId) {
         //TODO: Rate limit this
         userList.forEach((userName) => {
-            this.letterboxdProfile
+            this.letterboxdProfileWeb
                 .get(userName)
                 .then((profile) => {
                     this.firestoreUserDao

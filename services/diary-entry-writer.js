@@ -2,7 +2,7 @@
 
 class DiaryEntryWriter {
     constructor(
-        letterboxdDiary,
+        letterboxdDiaryRss,
         messageEmbedFactory,
         discordMessageSender,
         firestoreSubscriptionDao,
@@ -11,7 +11,7 @@ class DiaryEntryWriter {
         logger,
         subscribedUserList,
     ) {
-        this.letterboxdDiary = letterboxdDiary;
+        this.letterboxdDiaryRss = letterboxdDiaryRss;
         this.messageEmbedFactory = messageEmbedFactory;
         this.discordMessageSender = discordMessageSender;
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
@@ -22,7 +22,7 @@ class DiaryEntryWriter {
     }
 
     postMostRecentEntry(userData, channelId) {
-        this.letterboxdDiary.get(userData.userName, 1).then((diaryEntryList) => {
+        this.letterboxdDiaryRss.get(userData.userName, 1).then((diaryEntryList) => {
             if (diaryEntryList.length === 0) {
                 return;
             }
@@ -110,7 +110,7 @@ class DiaryEntryWriter {
 
     getEntriesForUser = function (userName, previousId, maxDiaryEntries) {
         return new Promise((resolve) => {
-            this.letterboxdDiary
+            this.letterboxdDiaryRss
                 .get(userName, maxDiaryEntries)
                 .then((diaryEntryList) => {
                     const filteredDiaryEntryList = diaryEntryList.filter((diaryEntry) => {

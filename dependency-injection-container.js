@@ -2,7 +2,6 @@
 
 const awilix = require('awilix');
 const discord = require('discord.js');
-const { LetterboxdDiary, LetterboxdProfile } = require('letterboxd');
 const { LoggingWinston } = require('@google-cloud/logging-winston');
 const winston = require('winston');
 
@@ -29,8 +28,6 @@ class DependencyInjectionContainer {
             discordClient: awilix.asClass(discord.Client).classic(),
             googleCloudWinstonTransport: awilix.asValue(googleCloudWinstonTransport),
             consoleTransport: awilix.asValue(consoleTransport),
-            letterboxdDiary: awilix.asValue(LetterboxdDiary),
-            letterboxdProfile: awilix.asValue(LetterboxdProfile),
             winston: awilix.asValue(winston),
         });
 

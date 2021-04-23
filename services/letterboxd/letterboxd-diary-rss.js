@@ -1,6 +1,6 @@
 'use strict';
 
-const DiaryEntry = require('./diary-entry');
+const DiaryEntry = require('../../models/diary-entry');
 const axios = require('axios').default;
 const htmlparser2 = require('htmlparser2');
 
@@ -171,7 +171,4 @@ class LetterboxdDiaryRss {
     }
 }
 
-function get(userName, count) {
-    return new LetterboxdDiaryRss().get(userName, count);
-}
-exports.get = get;
+module.exports = LetterboxdDiaryRss;
