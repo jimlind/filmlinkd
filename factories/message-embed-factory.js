@@ -74,7 +74,6 @@ class MessageEmbedFactory {
         }
 
         let reviewText = entry.review || '<No Review>';
-        reviewText = 'Disastrous.' + '\n' + reviewText;
         if (reviewText.length > 400) {
             reviewText = reviewText.substring(0, 400).trim() + '…';
         }
