@@ -1,7 +1,9 @@
 'use strict';
 
 const awilix = require('awilix');
+const axios = require('axios').default;
 const discord = require('discord.js');
+const htmlparser2 = require('htmlparser2');
 const { LoggingWinston } = require('@google-cloud/logging-winston');
 const winston = require('winston');
 
@@ -26,6 +28,8 @@ class DependencyInjectionContainer {
         this.container.register({
             config: awilix.asValue(configModel),
             discordClient: awilix.asClass(discord.Client).classic(),
+            axios: awilix.asValue(axios),
+            htmlParser2: awilix.asValue(htmlparser2),
             googleCloudWinstonTransport: awilix.asValue(googleCloudWinstonTransport),
             consoleTransport: awilix.asValue(consoleTransport),
             winston: awilix.asValue(winston),
