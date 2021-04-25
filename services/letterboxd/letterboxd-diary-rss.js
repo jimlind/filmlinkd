@@ -28,14 +28,12 @@ class LetterboxdDiaryRss {
         const itemList = this.htmlParser2.DomUtils.getElementsByTagName('item', dom);
 
         const entryList = [];
-        const linkList = [];
         for (let i = 0; i < itemList.length; i++) {
             // If it doesn't have a film title then we don't care about it. Ignore it.
             const filmTitle = this.getFilmTitle(itemList[i]);
             if (!filmTitle) continue;
 
             entryList.push(this.createEntry(itemList[i]));
-            linkList.push(filmLink);
 
             // Once we hit the number we want, stop processing data
             if (entryList.length >= count) {
