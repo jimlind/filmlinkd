@@ -39,7 +39,7 @@ container
             .resolve('subscribedUserList')
             .getRandomIndex()
             .then((index) => {
-                const diaryRestInterval = 60 * 1000; // Give it 1 minute to rest
+                const diaryRestInterval = 30 * 1000; // Give it 30 seconds to rest
                 interval = setInterval(() => {
                     if (threadRunning) return;
 
