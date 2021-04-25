@@ -1,13 +1,16 @@
 'use strict';
 
 const DiaryEntry = require('../../models/diary-entry');
-const axios = require('axios').default;
-const htmlparser2 = require('htmlparser2');
 
 class LetterboxdDiaryRss {
+    constructor(axios, htmlparser2) {
+        this.axios = axios;
+        this.htmlparser2 = htmlparser2;
+    }
+
     get(userName, count) {
         return new Promise((resolve, reject) => {
-            axios
+            this.axios
                 .get(`https://letterboxd.com/${userName}/rss/`, {
                     headers: {
                         'User-Agent': 'Filmlinkd - A Letterboxd Discord Bot',
@@ -30,10 +33,6 @@ class LetterboxdDiaryRss {
             // If it doesn't have a film title then we don't care about it. Ignore it.
             const filmTitle = this.getFilmTitle(itemList[i]);
             if (!filmTitle) continue;
-
-            // If the same link has already been seen it is a wierd repeat bug. Ignore it.
-            const filmLink = this.getLink(itemList[i]);
-            if (linkList.includes(filmLink)) continue;
 
             entryList.push(this.createEntry(itemList[i]));
             linkList.push(filmLink);
