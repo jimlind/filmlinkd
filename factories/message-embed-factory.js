@@ -48,7 +48,7 @@ class MessageEmbedFactory {
     createFollowingMessage(results) {
         const accountNameString = results.join(' ');
         return this.createEmbed().setDescription(
-            "Here are the accounts I'm following:" + '```' + accountNameString + '```',
+            "Here are the accounts I'm following:" + '```\n' + accountNameString + '\n```',
         );
     }
 
@@ -81,7 +81,7 @@ class MessageEmbedFactory {
 
         reviewText = entry.containsSpoilers
             ? '||`' + reviewText + '`||'
-            : '```' + reviewText + '```';
+            : '```\n' + reviewText + '\n```';
 
         const embed = this.createEmbed()
             .setAuthor('Recent diary activity from ' + profileName, profileImage, profileURL)
