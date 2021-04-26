@@ -5,6 +5,7 @@ cd /opt/app/filmlinkd/
 
 # Stop the service
 systemctl stop filmlinkd
+sleep 2
 
 # Delete all existing node modules
 rm -rf node_modules
@@ -17,6 +18,7 @@ npm install --omit=dev
 
 # Start the service
 systemctl start filmlinkd
+sleep 2
 
 # Output the service status
 systemctl status filmlinkd
