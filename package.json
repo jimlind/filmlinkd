@@ -13,9 +13,9 @@
         "node": ">=14"
     },
     "scripts": {
-        "start": "tsc && node bot.js dev",
-        "test": "tsc && mocha ./test --recursive",
-        "build": "tsc --build"
+        "start": "node bot.js dev",
+        "test": "mocha ./test --recursive",
+        "build": "npm install && tsc --build"
     },
     "dependencies": {
         "@google-cloud/firestore": "^4.8.1",
