@@ -35,7 +35,7 @@ class DependencyInjectionContainer {
             winston: awilix.asValue(winston),
         });
 
-        this.container.loadModules(['factories/**/*.js', 'services/**/*.js', 'services/**/*.ts'], {
+        this.container.loadModules(['factories/**/*.js', 'services/**/*.js', 'compiled/**/*.js'], {
             formatName: 'camelCase',
             resolverOptions: {
                 lifetime: awilix.Lifetime.SINGLETON,

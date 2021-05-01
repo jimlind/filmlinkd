@@ -2,9 +2,9 @@
 
 class Logger {
 
-    winstonLogger;
+    winstonLogger: any;
 
-    constructor(config, winston, googleCloudWinstonTransport, consoleTransport) {
+    constructor(config: any, winston: any, googleCloudWinstonTransport: any, consoleTransport: any) {
         // Create a Winston logger that logs debug and above
         this.winstonLogger = winston.createLogger({
             level: 'debug',
@@ -21,16 +21,16 @@ class Logger {
         }
     }
 
-    debug(...args) {
+    debug(...args: any[]) {
         this.winstonLogger.debug(...args);
     }
-    info(...args) {
+    info(...args: any[]) {
         this.winstonLogger.info(...args);
     }
-    warn(...args) {
+    warn(...args: any[]) {
         this.winstonLogger.warn(...args);
     }
-    error(...args) {
+    error(...args: any[]) {
         this.winstonLogger.error(...args);
     }
 }
