@@ -1,6 +1,9 @@
 'use strict';
 
 class Logger {
+
+    winstonLogger;
+
     constructor(config, winston, googleCloudWinstonTransport, consoleTransport) {
         // Create a Winston logger that logs debug and above
         this.winstonLogger = winston.createLogger({
