@@ -7,8 +7,9 @@ cd /opt/app/filmlinkd/
 systemctl stop filmlinkd
 sleep 2
 
-# Delete all existing node modules
+# Delete all existing node modules and compiled files
 rm -rf node_modules
+rm -rf compiled
 
 # Fresh pull from git
 git pull
