@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 class FirestorePreviousDao {
     firestoreCollection;
@@ -10,13 +10,17 @@ class FirestorePreviousDao {
     }
 
     update(userData, diaryEntry) {
-        // If the database record for previous is later than the new entry, skip it.
-        if (userData?.previous?.published > diaryEntry.publishedDate) {
+        // If the id for previous is later than the new entry, skip it.
+        if (userData?.previous?.id >= diaryEntry.id) {
             return;
         }
 
         // Set previous and override anything that may have previously existed
-        userData.previous = { id: diaryEntry.id, published: diaryEntry.publishedDate, uri: diaryEntry.link };
+        userData.previous = {
+            id: diaryEntry.id,
+            published: diaryEntry.publishedDate,
+            uri: diaryEntry.link,
+        };
         userData.updated = Date.now();
 
         // Update the database record
@@ -26,7 +30,7 @@ class FirestorePreviousDao {
                 userData,
                 diaryEntry,
             };
-            this.logger.warn("Unable to Update Previous", metadata);
+            this.logger.warn('Unable to Update Previous', metadata);
         });
     }
 }

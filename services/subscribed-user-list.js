@@ -3,8 +3,9 @@
 class SubscribedUserList {
     cachedData = [];
 
-    constructor(firestoreSubscriptionDao) {
+    constructor(firestoreSubscriptionDao, logger) {
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
+        this.logger = logger;
     }
 
     upsert(userName, previousId) {
@@ -59,6 +60,10 @@ class SubscribedUserList {
                 return resolve(this.cachedData);
             } else {
                 this.firestoreSubscriptionDao.getActiveSubscriptions().then((subscriberList) => {
+                    this.logger.info('Cached Users', {
+                        count: subscriberList.length,
+                    });
+
                     this.cachedData = subscriberList.map((subscriber) => {
                         return {
                             userName: subscriber.userName,
