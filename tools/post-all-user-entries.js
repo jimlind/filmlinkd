@@ -13,7 +13,7 @@ const container = new DependencyInjectionContainer(configModel);
 // Configs for the messages posted
 const userName = 'slim';
 const quantity = 20;
-const channelId = '799785154032959528';
+const channelId = '799785154032959528'; // This is an intenal channel for testing
 const mockUser = {
     displayName: userName,
     userName: userName,
@@ -29,7 +29,7 @@ container
 
         container
             .resolve('letterboxdDiaryRss')
-            .get('slim', quantity)
+            .get(userName, quantity)
             .then((entryList) => {
                 entryList.forEach((entry, index) => {
                     setTimeout(() => {
