@@ -9,6 +9,7 @@ class DiaryEntry {
     image = '';
     stars = '';
     rewatch = false;
+    liked = false;
     containsSpoilers = false;
     review = '';
 }
