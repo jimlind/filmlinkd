@@ -12,7 +12,8 @@ class LetterboxdProfileWeb {
                     const dom = htmlparser2.parseDocument(response.data);
 
                     const avatar = htmlparser2.DomUtils.getElements(
-                        { tag_name: 'div', class: 'profile-avatar' },
+                        // Use `tag_contains` here so tag and class are both checked against
+                        { tag_contains: 'div', class: 'profile-avatar' },
                         dom,
                     );
                     if (!avatar.length) {
