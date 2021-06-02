@@ -3,6 +3,7 @@
 class DiaryEntryWriter {
     constructor(
         letterboxdDiaryRss,
+        letterboxdLikesWeb,
         messageEmbedFactory,
         discordMessageSender,
         firestoreSubscriptionDao,
@@ -12,6 +13,7 @@ class DiaryEntryWriter {
         subscribedUserList,
     ) {
         this.letterboxdDiaryRss = letterboxdDiaryRss;
+        this.letterboxdLikesWeb = letterboxdLikesWeb;
         this.messageEmbedFactory = messageEmbedFactory;
         this.discordMessageSender = discordMessageSender;
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
@@ -113,11 +115,30 @@ class DiaryEntryWriter {
             this.letterboxdDiaryRss
                 .get(userName, maxDiaryEntries)
                 .then((diaryEntryList) => {
-                    const filteredDiaryEntryList = diaryEntryList.filter((diaryEntry) => {
+                    let filteredDiaryEntryList = diaryEntryList.filter((diaryEntry) => {
                         // Include any entry newer than last logged
                         return diaryEntry.id > previousId;
                     });
-                    return resolve(filteredDiaryEntryList);
+
+                    this.letterboxdLikesWeb
+                        .get(userName, filteredDiaryEntryList.length)
+                        .then((likedFilmSlugList) => {
+                            filteredDiaryEntryList = filteredDiaryEntryList.map((value) => {
+                                const liked = likedFilmSlugList.filter((filmSlug) =>
+                                    value.link.includes(filmSlug),
+                                );
+                                value.liked = Boolean(liked.length);
+                                return value;
+                            });
+                        })
+                        .catch(() => {
+                            this.logger.warn(
+                                `Could not fetch film likes for "${userName}" on Letterboxd`,
+                            );
+                        })
+                        .finally(() => {
+                            return resolve(filteredDiaryEntryList);
+                        });
                 })
                 .catch(() => {
                     this.logger.warn(`Could not fetch feed for "${userName}" on Letterboxd`);
