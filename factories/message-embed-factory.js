@@ -68,9 +68,12 @@ class MessageEmbedFactory {
             dateString = date.toLocaleDateString('en-CA') + ' ';
         }
 
-        let reviewTitle = dateString + (entry.stars || '<No Stars>');
+        let reviewTitle = dateString + (entry.stars || ':no_entry_sign:');
         if (entry.rewatch) {
-            reviewTitle += ' ↺';
+            reviewTitle += ' :repeat:';
+        }
+        if (entry.liked) {
+            reviewTitle += ' :heart:';
         }
 
         let reviewText = entry.review || '<No Review>';
