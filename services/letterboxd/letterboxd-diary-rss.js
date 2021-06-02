@@ -117,15 +117,15 @@ class LetterboxdDiaryRss {
         const rating = this.getTextFromTag('letterboxd:memberRating', item);
         const map = {
             0.5: '½',
-            '1.0': '★',
-            1.5: '★½',
-            '2.0': '★★',
-            2.5: '★★½',
-            '3.0': '★★★',
-            3.5: '★★★½',
-            '4.0': '★★★★',
-            4.5: '★★★★½',
-            '5.0': '★★★★★',
+            '1.0': ':star:',
+            1.5: ':star:½',
+            '2.0': ':star::star:',
+            2.5: ':star::star:½',
+            '3.0': ':star::star::star:',
+            3.5: ':star::star::star:½',
+            '4.0': ':star::star::star::star:',
+            4.5: ':star::star::star::star:½',
+            '5.0': ':star::star::star::star::star:',
         };
         return map[rating] || '';
     }
