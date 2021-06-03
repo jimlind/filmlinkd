@@ -65,7 +65,8 @@ class MessageEmbedFactory {
         let dateString = '';
         if (entry.watchedDate) {
             const date = new Date(entry.watchedDate);
-            dateString = date.toLocaleDateString('en-CA') + ' ';
+            const options = { month: 'short', day: 'numeric' };
+            dateString = date.toLocaleDateString('default', options) + ' ';
         }
 
         let reviewTitle = dateString + (entry.stars || ':no_entry_sign:');
