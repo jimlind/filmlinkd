@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-const UserTextMessage = require("../../models/user-text-message");
+const UserTextMessage = require('../../models/user-text-message');
 
 class DiscordMessageListener {
     constructor(discordConnection) {
@@ -10,9 +10,9 @@ class DiscordMessageListener {
     onMessage(callback) {
         // Get connected client and listen for messages
         this.discordConnection.getConnectedClient().then((client) => {
-            client.on("message", (message) => {
+            client.on('message', (message) => {
                 // Only process actions that start with a '!`
-                if (message.content[0] === "!") {
+                if (message.content[0] === '!') {
                     callback(this.createUserTextMessage(message));
                 }
             });
@@ -26,7 +26,7 @@ class DiscordMessageListener {
         // Callback on the message parsed into a subscription message object
         const userTextMessage = new UserTextMessage();
 
-        userTextMessage.manageServer = message.member.permissions.has("MANAGE_GUILD");
+        userTextMessage.manageServer = message.member?.permissions?.has('MANAGE_GUILD') || false;
         userTextMessage.command = messageTextList[0].substring(1);
         userTextMessage.channelId = message.channel.id;
         userTextMessage.guildId = message.guild.id;
