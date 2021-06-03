@@ -28,8 +28,22 @@ class DiaryEntryWriter {
             if (diaryEntryList.length === 0) {
                 return;
             }
+            const diaryEntry = diaryEntryList[0];
 
-            this.sendOneDiaryEntry(userData, diaryEntryList[0], channelId);
+            this.letterboxdLikesWeb
+                .get(userData.userName, 1)
+                .then((likedFilmSlugList) => {
+                    // Use a funky character if the array is empty so it is not found
+                    diaryEntry.liked = diaryEntry.link.includes(likedFilmSlugList[0] || '/☣/');
+                })
+                .catch(() => {
+                    this.logger.warn(
+                        `Could not fetch film likes for "${userData.userName}" on Letterboxd`,
+                    );
+                })
+                .finally(() => {
+                    this.sendOneDiaryEntry(userData, diaryEntry, channelId);
+                });
         });
     }
 
