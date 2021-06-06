@@ -30,6 +30,9 @@ class DiaryEntryWriter {
             }
             const diaryEntry = diaryEntryList[0];
 
+            // TODO: Make this part work
+            const linkList = diaryEntryList.map((diaryEntry) => diaryEntry.link);
+
             this.letterboxdLikesWeb
                 .get(userData.userName, 1)
                 .then((likedFilmSlugList) => {
@@ -133,13 +136,14 @@ class DiaryEntryWriter {
                         // Include any entry newer than last logged
                         return diaryEntry.id > previousId;
                     });
+                    const linkList = diaryEntryList.map((diaryEntry) => diaryEntry.link);
 
                     this.letterboxdLikesWeb
-                        .get(userName, filteredDiaryEntryList.length)
-                        .then((likedFilmSlugList) => {
+                        .get(userName, linkList)
+                        .then((likedFilmLinkList) => {
                             filteredDiaryEntryList = filteredDiaryEntryList.map((value) => {
-                                const liked = likedFilmSlugList.filter((filmSlug) =>
-                                    value.link.includes(filmSlug),
+                                const liked = likedFilmLinkList.filter(
+                                    (filmLink) => value.link == filmLink,
                                 );
                                 value.liked = Boolean(liked.length);
                                 return value;
