@@ -56,6 +56,7 @@ class LetterboxdDiaryRss {
         diaryEntry.filmYear = this.getFilmYear(item);
         diaryEntry.watchedDate = this.getWatchedDate(item);
         diaryEntry.image = this.getImage(description);
+        diaryEntry.starCount = this.getStarCount(item);
         diaryEntry.stars = this.getStars(item);
         diaryEntry.rewatch = this.getRewatch(item);
         diaryEntry.containsSpoilers = this.getContainsSpoilers(item);
@@ -111,6 +112,10 @@ class LetterboxdDiaryRss {
             return '';
         }
         return this.htmlParser2.DomUtils.getAttributeValue(elements[0], 'src') || '';
+    }
+
+    getStarCount(item) {
+        return parseFloat(this.getTextFromTag('letterboxd:memberRating', item)) || 0;
     }
 
     getStars(item) {

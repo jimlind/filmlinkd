@@ -7,6 +7,7 @@ class DiaryEntry {
     filmYear = 0;
     watchedDate = 0;
     image = '';
+    starCount = 0;
     stars = '';
     rewatch = false;
     liked = false;
