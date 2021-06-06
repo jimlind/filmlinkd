@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 class DiscordMessageSender {
     constructor(discordConnection, logger) {
@@ -16,7 +16,7 @@ class DiscordMessageSender {
                         channelId,
                         messageEmbed: message.toJSON(),
                     };
-                    this.logger.warn("Unable to Send Message: Bad Channel Id", metadata);
+                    this.logger.warn('Unable to Send Message: Bad Channel Id', metadata);
                     return reject();
                 }
 
@@ -25,7 +25,7 @@ class DiscordMessageSender {
                         channelId,
                         messageEmbed: message.toJSON(),
                     };
-                    this.logger.warn("Unable to Send Message: Channel Not Visibile", metadata);
+                    this.logger.warn('Unable to Send Message: Channel Not Visibile', metadata);
                     return reject();
                 }
 
@@ -38,7 +38,7 @@ class DiscordMessageSender {
                             channel: channel.name,
                             messageEmbed: message.toJSON(),
                         };
-                        this.logger.debug("Successfully Sent Message", metadata);
+                        this.logger.debug('Successfully Sent Message', metadata);
                         return resolve();
                     })
                     .catch(() => {
@@ -48,9 +48,26 @@ class DiscordMessageSender {
                             channel: channel.name,
                             messageEmbed: message.toJSON(),
                         };
-                        this.logger.warn("Unable to Send Message: Bad Channel Permissions", metadata);
+                        this.logger.warn(
+                            'Unable to Send Message: Bad Channel Permissions',
+                            metadata,
+                        );
                         return reject();
                     });
+            });
+        });
+    }
+
+    getPermissions(channelId) {
+        return new Promise((resolve) => {
+            this.discordConnection.getConnectedClient().then((client) => {
+                const channel = client?.channels?.cache?.find((ch) => ch.id === channelId);
+                const clientMember = channel?.guild?.members?.cache?.get(client.user.id);
+
+                resolve({
+                    use_external_emojis:
+                        clientMember?.permissions?.has('USE_EXTERNAL_EMOJIS') || false,
+                });
             });
         });
     }
