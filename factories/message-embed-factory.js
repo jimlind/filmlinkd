@@ -56,7 +56,7 @@ class MessageEmbedFactory {
         return this.createEmbed().setDescription('Not following any accounts in this channel');
     }
 
-    createDiaryEntryMessage(entry, data) {
+    createDiaryEntryMessage(entry, data, permissions) {
         const profileName = data.displayName;
         const profileURL = `https://letterboxd.com/${data.userName}/`;
         const profileImage = data.image;
@@ -66,15 +66,30 @@ class MessageEmbedFactory {
         if (entry.watchedDate) {
             const date = new Date(entry.watchedDate);
             const options = { month: 'short', day: 'numeric' };
-            dateString = date.toLocaleDateString('default', options) + ' ';
+            dateString = date.toLocaleDateString('default', options);
         }
 
-        let reviewTitle = dateString + (entry.stars || ':no_entry_sign:');
-        if (entry.rewatch) {
-            reviewTitle += ' :repeat:';
-        }
-        if (entry.liked) {
-            reviewTitle += ' :heart:';
+        let reviewTitle = dateString + ' ';
+        if (permissions?.use_external_emojis) {
+            if (entry.starCount) {
+                // Whole stars
+                reviewTitle += '<:filmlinkd_star:851134022251970610>'.repeat(
+                    Math.floor(entry.starCount),
+                );
+                // Half star if neccessary
+                reviewTitle +=
+                    entry.starCount % 1 ? '<:filmlinkd_half_star:851199023854649374>' : '';
+            }
+            if (entry.rewatch) {
+                reviewTitle += ' <:filmlinkd_rewatch:851135667546488903>';
+            }
+            if (entry.liked) {
+                reviewTitle += ' <:filmlinkd_like:851138401557676073>';
+            }
+        } else {
+            reviewTitle =
+                'Update Bot Permissions to Allow External Emojis: ' +
+                'https://discord.com/oauth2/authorize?client_id=794271558570213409&permissions=262144&scope=bot';
         }
 
         let reviewText = entry.review || '<No Review>';
