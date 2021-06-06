@@ -164,21 +164,27 @@ class DiaryEntryWriter {
 
     sendOneDiaryEntry(userData, diaryEntry, channelId) {
         return new Promise((resolve) => {
-            const message = this.messageEmbedFactory.createDiaryEntryMessage(diaryEntry, userData);
-            this.discordMessageSender
-                .send(channelId, message)
-                .then(() => {
-                    // Message send successful so update previous
-                    // TODO: Combine these two update methods
-                    this.firestorePreviousDao.update(userData, diaryEntry);
-                    this.subscribedUserList.upsert(userData.userName, diaryEntry.id);
-                    // Work completed. Updates can be async.
-                    return resolve();
-                })
-                .catch(() => {
-                    // Do Nothing. Send failure caught and logged in MessageSender
-                    return resolve();
-                });
+            this.discordMessageSender.getPermissions(channelId).then((permissions) => {
+                const message = this.messageEmbedFactory.createDiaryEntryMessage(
+                    diaryEntry,
+                    userData,
+                    permissions,
+                );
+                this.discordMessageSender
+                    .send(channelId, message)
+                    .then(() => {
+                        // Message send successful so update previous
+                        // TODO: Combine these two update methods
+                        this.firestorePreviousDao.update(userData, diaryEntry);
+                        this.subscribedUserList.upsert(userData.userName, diaryEntry.id);
+                        // Work completed. Updates can be async.
+                        return resolve();
+                    })
+                    .catch(() => {
+                        // Do Nothing. Send failure caught and logged in MessageSender
+                        return resolve();
+                    });
+            });
         });
     }
 }
