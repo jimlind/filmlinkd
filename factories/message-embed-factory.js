@@ -73,9 +73,8 @@ class MessageEmbedFactory {
         if (permissions?.use_external_emojis) {
             if (entry.starCount) {
                 // Whole stars
-                reviewTitle += '<:filmlinkd_star:851134022251970610>'.repeat(
-                    Math.floor(entry.starCount),
-                );
+                const rounded = Math.floor(entry.starCount);
+                reviewTitle += '<:filmlinkd_star:851134022251970610>'.repeat(rounded);
                 // Half star if neccessary
                 reviewTitle +=
                     entry.starCount % 1 ? '<:filmlinkd_half_star:851199023854649374>' : '';
