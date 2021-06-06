@@ -88,8 +88,7 @@ class MessageEmbedFactory {
             }
         } else {
             reviewTitle =
-                'Update Bot Permissions to Allow External Emojis: ' +
-                'https://discord.com/oauth2/authorize?client_id=794271558570213409&permissions=262144&scope=bot';
+                dateString + ' - ' + entry.starCount + ' stars - Allow External Emoji Link Below';
         }
 
         let reviewText = entry.review || '<No Review>';
@@ -100,6 +99,12 @@ class MessageEmbedFactory {
         reviewText = entry.containsSpoilers
             ? '||`' + reviewText + '`||'
             : '```\n' + reviewText + '\n```';
+
+        if (!permissions?.use_external_emojis) {
+            reviewText +=
+                '\n[Give Bot External Emoji Permission]' +
+                '(https://discord.com/oauth2/authorize?client_id=794271558570213409&permissions=262144&scope=bot)';
+        }
 
         const embed = this.createEmbed()
             .setAuthor('Recent diary activity from ' + profileName, profileImage, profileURL)
