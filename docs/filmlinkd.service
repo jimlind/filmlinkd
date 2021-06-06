@@ -7,7 +7,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/opt/app/filmlinkd
-ExecStart=/usr/bin/node --optimize_for_size --max-old-space-size=192 --gc_interval=100 /opt/app/filmlinkd/bot.js prod
+ExecStart=/usr/bin/node --optimize_for_size --max-old-space-size=192 /opt/app/filmlinkd/bot.js prod
 Restart=on-failure
 
 [Install]
