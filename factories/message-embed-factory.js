@@ -61,6 +61,9 @@ class MessageEmbedFactory {
         const profileURL = `https://letterboxd.com/${data.userName}/`;
         const profileImage = data.image;
 
+        const action = entry.type || 'logg';
+        const authorTitle = `${profileName} ${action}ed...`;
+
         let releaseYear = entry.filmYear ? '(' + entry.filmYear + ')' : '';
         let dateString = '';
         if (entry.watchedDate) {
@@ -106,7 +109,7 @@ class MessageEmbedFactory {
         }
 
         const embed = this.createEmbed()
-            .setAuthor('Recent diary activity from ' + profileName, profileImage, profileURL)
+            .setAuthor(authorTitle, profileImage, profileURL)
             .setTitle(entry.filmTitle + ' ' + releaseYear)
             .setURL(entry.link)
             .setThumbnail(entry.image)
