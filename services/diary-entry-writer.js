@@ -29,15 +29,12 @@ class DiaryEntryWriter {
                 return;
             }
             const diaryEntry = diaryEntryList[0];
-
-            // TODO: Make this part work
-            const linkList = diaryEntryList.map((diaryEntry) => diaryEntry.link);
-
             this.letterboxdLikesWeb
-                .get(userData.userName, 1)
-                .then((likedFilmSlugList) => {
-                    // Use a funky character if the array is empty so it is not found
-                    diaryEntry.liked = diaryEntry.link.includes(likedFilmSlugList[0] || '/☣/');
+                .get(userData.userName, [diaryEntry.link])
+                .then((likedFilmList) => {
+                    diaryEntry.liked = likedFilmList.length
+                        ? likedFilmList.includes(diaryEntry.link)
+                        : false;
                 })
                 .catch(() => {
                     this.logger.warn(
