@@ -77,16 +77,15 @@ class MessageEmbedFactory {
             if (entry.starCount) {
                 // Whole stars
                 const rounded = Math.floor(entry.starCount);
-                reviewTitle += '<:filmlinkd_star:851134022251970610>'.repeat(rounded);
+                reviewTitle += '<:s:851134022251970610>'.repeat(rounded);
                 // Half star if neccessary
-                reviewTitle +=
-                    entry.starCount % 1 ? '<:filmlinkd_half_star:851199023854649374>' : '';
+                reviewTitle += entry.starCount % 1 ? '<:h:851199023854649374>' : '';
             }
             if (entry.rewatch) {
-                reviewTitle += ' <:filmlinkd_rewatch:851135667546488903>';
+                reviewTitle += ' <:r:851135667546488903>';
             }
             if (entry.liked) {
-                reviewTitle += ' <:filmlinkd_like:851138401557676073>';
+                reviewTitle += ' <:l:851138401557676073>';
             }
         } else {
             reviewTitle =
