@@ -92,6 +92,8 @@ class MessageEmbedFactory {
                 dateString + ' - ' + entry.starCount + ' stars - Allow External Emoji Link Below';
         }
 
+        // Hack to work around fields requiring text.
+        reviewTitle = reviewTitle.trim() ? reviewTitle : '⠀'; // This is the Braille Pattern Blank
         let reviewText = entry.review || '<No Review>';
         if (reviewText.length > 400) {
             reviewText = reviewText.substring(0, 400).trim() + '…';
