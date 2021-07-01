@@ -1,34 +1,41 @@
 #!/usr/bin/env node
 
-const ConfigFactory = require("../factories/config-factory");
-const DependencyInjectionContainer = require("../dependency-injection-container");
-const dotenv = require("dotenv");
-const fs = require("fs");
+const ConfigFactory = require('../factories/config-factory');
+const DependencyInjectionContainer = require('../dependency-injection-container');
+const dotenv = require('dotenv');
+const fs = require('fs');
 
 // Load .env into process.env, create config, create container
 dotenv.config();
-const configModel = new ConfigFactory("prod", process.env, {}, fs.existsSync).build();
+const configModel = new ConfigFactory('prod', process.env, {}, fs.existsSync).build();
 const container = new DependencyInjectionContainer(configModel);
 
-const collection = container.resolve("firestoreConnection").getCollection();
+const collection = container.resolve('firestoreConnection').getCollection();
 processData(collection);
 
 async function processData(collection) {
     const querySnapshot = await collection.get();
     const channelList = querySnapshot.docs.reduce(reduceDocsToChannels, {});
-    const client = await container.resolve("discordConnection").getConnectedClient();
-    const fileName = "Bad Channel Deletes " + new Date().toString() + ".txt";
+    const client = await container.resolve('discordConnection').getConnectedClient();
+    const fileName = 'Bad Channel Deletes ' + new Date().toString() + '.txt';
 
-    for (const channelId in channelList) {
-        const channel = client.channels.cache.find((ch) => ch.id === channelId);
-        if (!channel?.viewable) {
-            const guildId = channelList[channelId];
-            if (!true) {
-                console.log(`Channel / Guild : ${channelId} / ${guildId} is not viewable.`);
+    for (var i = 0; i < 10; i++) {
+        console.log(`${Object.values(channelList).length} channels to check...`);
+        for (const channelId in channelList) {
+            const channel = client.channels.cache.find((ch) => ch.id === channelId);
+            const botPermissions = channel?.permissionsFor(client.user || '');
+            if (botPermissions?.has(['VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS'])) {
+                console.log(`+++ Success with ${channelId}`);
+                delete channelList[channelId];
             } else {
-                deleteChannelUsers(channelId, guildId, fileName);
+                console.log(`--- Failure with ${channelId}`);
             }
         }
+    }
+
+    for (const channelId in channelList) {
+        const guildId = channelList[channelId];
+        deleteChannelUsers(channelId, guildId, fileName);
     }
 
     client.destroy();
@@ -44,14 +51,14 @@ function reduceDocsToChannels(acc, current) {
 
 async function deleteChannelUsers(channelId, guildId, fileName) {
     const channel = { channelId: channelId, guildId: guildId };
-    const query = collection.where("channelList", "array-contains", channel);
+    const query = collection.where('channelList', 'array-contains', channel);
     const querySnapshot = await query.get();
 
     for (const key in querySnapshot.docs) {
         const documentSnapshot = querySnapshot.docs[key];
         const data = documentSnapshot.data();
-        const content = data.userName + "||" + channelId + "||" + guildId + "\n";
-        fs.writeFileSync(fileName, content, { flag: "a+" }, (err) => {});
+        const content = data.userName + '||' + channelId + '||' + guildId + '\n';
+        fs.writeFileSync(fileName, content, { flag: 'a+' }, (err) => {});
 
         data.channelList = data.channelList.filter((channel) => {
             return channel.channelId !== channelId;
