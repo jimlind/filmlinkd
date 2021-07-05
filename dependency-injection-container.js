@@ -6,6 +6,7 @@ const discord = require('discord.js');
 const htmlparser2 = require('htmlparser2');
 const { LoggingWinston } = require('@google-cloud/logging-winston');
 const winston = require('winston');
+const { PubSub } = require('@google-cloud/pubsub');
 
 class DependencyInjectionContainer {
     constructor(configModel) {
@@ -25,6 +26,12 @@ class DependencyInjectionContainer {
         // Create logger for the JS console
         const consoleTransport = new winston.transports.Console();
 
+        // Creast PubSub
+        const pubsub = new PubSub({
+            projectId: configModel.googleCloudProjectId,
+            keyFilename: configModel.gcpKeyFile,
+        });
+
         this.container.register({
             config: awilix.asValue(configModel),
             discordClient: awilix.asClass(discord.Client).classic(),
@@ -33,6 +40,7 @@ class DependencyInjectionContainer {
             googleCloudWinstonTransport: awilix.asValue(googleCloudWinstonTransport),
             consoleTransport: awilix.asValue(consoleTransport),
             winston: awilix.asValue(winston),
+            pubSub: awilix.asValue(pubsub),
         });
 
         this.container.loadModules(['factories/**/*.js', 'services/**/*.js', 'compiled/**/*.js'], {

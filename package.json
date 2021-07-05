@@ -19,6 +19,7 @@
     "dependencies": {
         "@google-cloud/firestore": "^4.8.1",
         "@google-cloud/logging-winston": "^4.0.4",
+        "@google-cloud/pubsub": "^2.15.1",
         "awilix": "^4.3.3",
         "axios": "^0.21.1",
         "death": "^1.1.0",

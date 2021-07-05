@@ -3,6 +3,9 @@ class Config {
     firestoreCollectionId = '';
     gcpKeyFile = '';
     googleCloudProjectId = '';
+    pubSubTopicName = '';
+    pubSubSubscriptionName = '';
+
     isDev = false;
     isVIP = false;
 

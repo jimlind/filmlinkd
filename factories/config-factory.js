@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-const Config = require("../models/config");
+const Config = require('../models/config');
 
 class ConfigFactory {
     constructor(argument, environment, packageJson, fileExists) {
@@ -13,8 +13,8 @@ class ConfigFactory {
     build() {
         const config = new Config();
 
-        config.packageName = this.packageJson?.name || "";
-        config.packageVersion = this.packageJson?.version || "";
+        config.packageName = this.packageJson?.name || '';
+        config.packageVersion = this.packageJson?.version || '';
 
         config.googleCloudProjectId = this.environment.GOOGLE_CLOUD_PROJECT_ID;
         if (this.fileExists(this.environment.GOOGLE_CLOUD_IDENTITY_KEY_FILE)) {
@@ -22,14 +22,18 @@ class ConfigFactory {
         }
 
         switch (this.argument) {
-            case "prod":
+            case 'prod':
                 config.discordBotToken = this.environment.DISCORD_PROD_BOT_TOKEN;
                 config.firestoreCollectionId = this.environment.FIRESTORE_PROD_COLLECTION_ID;
+                config.pubSubTopicName = this.environment.PUB_SUB_PROD_TOPIC_NAME;
+                config.pubSubSubscriptionName = this.environment.PUB_SUB_PROD_SUBSCRIPTION_NAME;
                 config.isDev = false;
                 break;
-            case "dev":
+            case 'dev':
                 config.discordBotToken = this.environment.DISCORD_DEV_BOT_TOKEN;
                 config.firestoreCollectionId = this.environment.FIRESTORE_DEV_COLLECTION_ID;
+                config.pubSubTopicName = this.environment.PUB_SUB_DEV_TOPIC_NAME;
+                config.pubSubSubscriptionName = this.environment.PUB_SUB_DEV_SUBSCRIPTION_NAME;
                 config.isDev = true;
                 break;
         }
