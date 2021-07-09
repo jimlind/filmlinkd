@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 const Axios = require('axios');
-const DiaryEntryWriter = require('./models/DiaryEntryWriter');
+const diaryEntryPublisher = require('./models/diaryEntryPublisher');
 const DiscordJS = require('discord.js');
 const DotEnv = require('dotenv');
-const {Firestore} = require('@google-cloud/firestore');
+const { Firestore } = require('@google-cloud/firestore');
 const FirestoreDao = require('./models/FirestoreDao');
 const { letterboxdDiary, letterboxdProfile } = require('letterboxd');
 const MessageFactory = require('./models/MessageFactory');
@@ -19,7 +19,11 @@ const messageFactory = new MessageFactory();
 
 const discordClient = new DiscordJS.Client();
 discordClient.login(process.env.DISCORD_BOT_TOKEN).then(() => {
-     // This is the thing that handles posting to Discord
-     const diaryEntryWriter = new DiaryEntryWriter(firestoreDAO, discordClient, messageFactory);
-     diaryEntryWriter.postAllEntries();
+    // This is the thing that handles posting to Discord
+    const diaryEntryPublisher = new diaryEntryPublisher(
+        firestoreDAO,
+        discordClient,
+        messageFactory,
+    );
+    diaryEntryPublisher.postAllEntries();
 });

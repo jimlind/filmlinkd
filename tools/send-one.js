@@ -28,7 +28,7 @@ container
 
         // This will write to all dev channels the user is followed in and quit
         container
-            .resolve('diaryEntryWriter')
+            .resolve('diaryEntryPublisher')
             .postEntriesForUser(user, quantity)
             .then(() => {
                 discordClient.destroy();

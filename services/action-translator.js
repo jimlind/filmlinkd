@@ -2,7 +2,7 @@
 
 class ActionTranslator {
     constructor(
-        diaryEntryWriter,
+        diaryEntryPublisher,
         discordMessageSender,
         firestoreSubscriptionDao,
         firestoreUserDao,
@@ -10,7 +10,7 @@ class ActionTranslator {
         letterboxdProfileWeb,
         subscribedUserList,
     ) {
-        this.diaryEntryWriter = diaryEntryWriter;
+        this.diaryEntryPublisher = diaryEntryPublisher;
         this.discordMessageSender = discordMessageSender;
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
         this.firestoreUserDao = firestoreUserDao;
@@ -72,7 +72,7 @@ class ActionTranslator {
                             this.messageEmbedFactory.createFollowSuccessMessage(updatedUserData),
                         )
                         .catch(() => {});
-                    this.diaryEntryWriter.postMostRecentEntry(updatedUserData, channelId);
+                    this.diaryEntryPublisher.postMostRecentEntry(updatedUserData, channelId);
                 })
                 .catch(() => {
                     this.discordMessageSender

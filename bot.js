@@ -24,9 +24,17 @@ container
         const serverCount = discordClient.guilds.cache.size;
         container.resolve('logger').info(`Discord Client Logged In on ${serverCount} Servers`);
 
-        // Listen for messages posted and respond
+        // Listen for discord messages posted and respond
         container.resolve('discordMessageListener').onMessage((message) => {
             container.resolve('actionTranslator').translate(message);
+        });
+
+        // Listen for PubSub messages posted and respond
+        container.resolve('pubSubMessageListener').onMessage((message) => {
+            // TODO:
+            // This shouldn't actually be a "write entry" action.
+            // This should be a "here is a potential new entry" action.
+            container.resolve('diaryEntryWriter').write(message);
         });
 
         // This is the part that posts RSS updates at a regular interval
@@ -45,7 +53,7 @@ container
 
                     const config = container.resolve('config');
                     container
-                        .resolve('diaryEntryWriter')
+                        .resolve('diaryEntryPublisher')
                         .postPageOfEntries(index, config.pageSize)
                         .then((pageCount) => {
                             threadRunning = false;
@@ -60,6 +68,7 @@ container
         death((signal, error) => {
             clearInterval(interval);
             discordClient.destroy();
+            container.resolve('pubSubConnection').getSubscription().close();
             container.resolve('logger').info('Program Terminated', { signal, error });
         });
     });

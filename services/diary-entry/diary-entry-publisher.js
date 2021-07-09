@@ -1,6 +1,6 @@
 'use strict';
 
-class DiaryEntryWriter {
+class DiaryEntryPublisher {
     constructor(
         letterboxdDiaryRss,
         letterboxdLikesWeb,
@@ -10,6 +10,7 @@ class DiaryEntryWriter {
         firestorePreviousDao,
         firestoreUserDao,
         logger,
+        pubSubConnection,
         subscribedUserList,
     ) {
         this.letterboxdDiaryRss = letterboxdDiaryRss;
@@ -20,6 +21,7 @@ class DiaryEntryWriter {
         this.firestorePreviousDao = firestorePreviousDao;
         this.firestoreUserDao = firestoreUserDao;
         this.logger = logger;
+        this.pubSubConnection = pubSubConnection;
         this.subscribedUserList = subscribedUserList;
     }
 
@@ -93,21 +95,18 @@ class DiaryEntryWriter {
                             diaryEntryList.forEach((diaryEntry, diaryEntryIndex) => {
                                 setTimeout(() => {
                                     userData.channelList.forEach((channel, channelIndex) => {
-                                        const channelId = channel.channelId;
-                                        this.sendOneDiaryEntry(userData, diaryEntry, channelId)
-                                            .then(() => {
-                                                if (
-                                                    diaryEntryIndex == diaryEntryList.length - 1 &&
-                                                    channelIndex == userData.channelList.length - 1
-                                                ) {
-                                                    // Sent all messages on all channels
-                                                    return resolve();
-                                                }
-                                            })
-                                            .catch(() => {
-                                                // Unable to send diary entry
-                                                return resolve();
-                                            });
+                                        this.publishDiaryEntryToPubSub(
+                                            userData,
+                                            diaryEntry,
+                                            channel,
+                                        );
+                                        if (
+                                            diaryEntryIndex == diaryEntryList.length - 1 &&
+                                            channelIndex == userData.channelList.length - 1
+                                        ) {
+                                            // Attempted to published all messages on all channels
+                                            return resolve();
+                                        }
                                     });
                                 }, diaryEntryIndex * 1000); // Wait 1 second for each diary entry
                             });
@@ -131,7 +130,8 @@ class DiaryEntryWriter {
                 .then((diaryEntryList) => {
                     let filteredDiaryEntryList = diaryEntryList.filter((diaryEntry) => {
                         // Include any entry newer than last logged
-                        return diaryEntry.id > previousId;
+                        return true;
+                        //return diaryEntry.id > previousId;
                     });
                     const linkList = diaryEntryList.map((diaryEntry) => diaryEntry.link);
 
@@ -162,31 +162,27 @@ class DiaryEntryWriter {
         });
     };
 
-    sendOneDiaryEntry(userData, diaryEntry, channelId) {
-        return new Promise((resolve) => {
-            this.discordMessageSender.getPermissions(channelId).then((permissions) => {
-                const message = this.messageEmbedFactory.createDiaryEntryMessage(
-                    diaryEntry,
-                    userData,
-                    permissions,
-                );
-                this.discordMessageSender
-                    .send(channelId, message)
-                    .then(() => {
-                        // Message send successful so update previous
-                        // TODO: Combine these two update methods
-                        this.firestorePreviousDao.update(userData, diaryEntry);
-                        this.subscribedUserList.upsert(userData.userName, diaryEntry.id);
-                        // Work completed. Updates can be async.
-                        return resolve();
-                    })
-                    .catch(() => {
-                        // Do Nothing. Send failure caught and logged in MessageSender
-                        return resolve();
-                    });
+    publishDiaryEntryToPubSub(userData, diaryEntry, channel) {
+        // Send an Example Message;
+        this.pubSubConnection
+            .getTopic()
+            .then((topic) => {
+                const dataString = JSON.stringify({ userData, diaryEntry, channel });
+                const buffer = Buffer.from(dataString);
+                topic.publish(buffer).then(() => {
+                    // Message published successful so update previous data in database and local cache
+                    this.firestorePreviousDao.update(userData, diaryEntry);
+                    this.subscribedUserList.upsert(userData.userName, diaryEntry.id);
+                });
+            })
+            .catch(() => {
+                this.logger.warn(`Problem publishing a diary message`);
             });
-        });
+    }
+
+    sendOneDiaryEntry(userData, diaryEntry, channelId) {
+        this.logger.error(`This method is dead. Use the diary entry writer.`);
     }
 }
 
-module.exports = DiaryEntryWriter;
+module.exports = DiaryEntryPublisher;
