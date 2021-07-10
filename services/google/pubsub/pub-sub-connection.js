@@ -14,11 +14,11 @@ class PubSubConnection {
     getTopic() {
         return new Promise((resolve, reject) => {
             if (this.topic) {
-                resolve(this.topic);
+                return resolve(this.topic);
             }
 
             if (this.getTopicLocked) {
-                reject('Duplicating initial topic getting requests');
+                return reject('Duplicating initial topic getting requests');
             }
             this.getTopicLocked = true;
 
@@ -37,12 +37,12 @@ class PubSubConnection {
                                 return resolve(result);
                             })
                             .catch(() => {
-                                reject('Unable to create topic');
+                                return reject('Unable to create topic');
                             });
                     }
                 })
                 .catch(() => {
-                    reject('Unable to check topic exists');
+                    return reject('Unable to check topic exists');
                 });
         });
     }
@@ -50,11 +50,11 @@ class PubSubConnection {
     getSubscription() {
         return new Promise((resolve, reject) => {
             if (this.subscription) {
-                resolve(this.subscription);
+                return resolve(this.subscription);
             }
 
             if (this.getSubscriptionLocked) {
-                reject('Duplicating initial subscription getting requests.');
+                return reject('Duplicating initial subscription getting requests.');
             }
             this.getSubscriptionLocked = true;
 
@@ -75,11 +75,11 @@ class PubSubConnection {
                             }
                         })
                         .catch(() => {
-                            reject('Unable to check subsciption exists');
+                            return reject('Unable to check subsciption exists');
                         });
                 })
                 .catch((e) => {
-                    reject('Unable to get topic: ' + e);
+                    return reject('Unable to get topic: ' + e);
                 });
         });
     }
