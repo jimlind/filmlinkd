@@ -2,4 +2,7 @@
     "compilerOptions": {
         "checkJs": true,
     },
+    "typeAcquisition": {
+        "exclude": [ "dotenv" ]
+    }
 }
