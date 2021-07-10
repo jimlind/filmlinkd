@@ -26,18 +26,19 @@ class LetterboxdDiaryRss {
                     },
                 })
                 .then((response) => {
-                    resolve(this.parseRss(response.data, count));
+                    resolve(this.parseRss(userName, response.data, count));
                 })
                 .catch(reject);
         });
     }
 
     /**
+     * @param {string} userName
      * @param {string} responseText
      * @param {number} count
      * @returns {DiaryEntry[]}
      */
-    parseRss(responseText, count) {
+    parseRss(userName, responseText, count) {
         const dom = this.htmlParser2.parseDocument(responseText, { xmlMode: true });
         const itemList = this.htmlParser2.DomUtils.getElementsByTagName('item', dom);
 
@@ -47,7 +48,7 @@ class LetterboxdDiaryRss {
             const filmTitle = this.getFilmTitle(itemList[i]);
             if (!filmTitle) continue;
 
-            entryList.push(this.createEntry(itemList[i]));
+            entryList.push(this.createEntry(userName, itemList[i]));
 
             // Once we hit the number we want, stop processing data
             if (entryList.length >= count) {
@@ -59,14 +60,16 @@ class LetterboxdDiaryRss {
     }
 
     /**
+     * @param {string} userName
      * @param {import("domhandler").Element} item
      * @returns {DiaryEntry}
      */
-    createEntry(item) {
+    createEntry(userName, item) {
         const description = this.getDescriptionDom(item);
 
         const diaryEntry = new DiaryEntry();
         diaryEntry.id = this.getId(item);
+        diaryEntry.userName = userName;
         diaryEntry.type = this.getType(item);
         diaryEntry.link = this.getLink(item);
         diaryEntry.publishedDate = this.getPublishedDate(item);
