@@ -3,11 +3,20 @@
 const DiaryEntry = require('../../models/diary-entry');
 
 class LetterboxdDiaryRss {
+    /**
+     * @param {import('axios').default} axios - Library for downloading
+     * @param {import('htmlparser2')} htmlParser2 - Library for parsing HTML
+     */
     constructor(axios, htmlParser2) {
         this.axios = axios;
         this.htmlParser2 = htmlParser2;
     }
 
+    /**
+     * @param {string} userName
+     * @param {number} count
+     * @returns {Promise<DiaryEntry[]>}
+     */
     get(userName, count) {
         return new Promise((resolve, reject) => {
             this.axios
@@ -23,6 +32,11 @@ class LetterboxdDiaryRss {
         });
     }
 
+    /**
+     * @param {string} responseText
+     * @param {number} count
+     * @returns {DiaryEntry[]}
+     */
     parseRss(responseText, count) {
         const dom = this.htmlParser2.parseDocument(responseText, { xmlMode: true });
         const itemList = this.htmlParser2.DomUtils.getElementsByTagName('item', dom);
@@ -44,6 +58,10 @@ class LetterboxdDiaryRss {
         return entryList;
     }
 
+    /**
+     * @param {import("domhandler").Element} item
+     * @returns {DiaryEntry}
+     */
     createEntry(item) {
         const description = this.getDescriptionDom(item);
 
@@ -65,30 +83,54 @@ class LetterboxdDiaryRss {
         return diaryEntry;
     }
 
+    /**
+     * @param {import("domhandler").Element} item
+     * @returns {import("domhandler").Document}
+     */
     getDescriptionDom(item) {
         const descriptionHtml = this.getTextFromTag('description', item);
         return this.htmlParser2.parseDocument(descriptionHtml, { xmlMode: true });
     }
 
+    /**
+     * @param {import("domhandler").Element} item
+     * @returns {number}
+     */
     getId(item) {
         const results = this.getTextFromTag('guid', item).match(/letterboxd-.*-(\d+)/);
         return parseInt(results[1]);
     }
 
+    /**
+     * @param {import("domhandler").Element} item
+     * @returns {string}
+     */
     getType(item) {
         const results = this.getTextFromTag('guid', item).match(/letterboxd-(.*)-\d+/);
         return results[1];
     }
 
+    /**
+     * @param {import("domhandler").Element} item
+     * @returns {string}
+     */
     getLink(item) {
         return this.getTextFromTag('link', item);
     }
 
+    /**
+     * @param {import("domhandler").Element} item
+     * @returns {number}
+     */
     getPublishedDate(item) {
         const pubDateString = this.getTextFromTag('pubDate', item);
         return new Date(pubDateString).getTime();
     }
 
+    /**
+     * @param {import("domhandler").Element} item
+     * @returns {number}
+     */
     getWatchedDate(item) {
         const watchedDateString = this.getTextFromTag('letterboxd:watchedDate', item);
         if (!watchedDateString) {
@@ -98,14 +140,26 @@ class LetterboxdDiaryRss {
         return new Date(watchedDateString).getTime();
     }
 
+    /**
+     * @param {import("domhandler").Element} item
+     * @returns {string}
+     */
     getFilmTitle(item) {
         return this.getTextFromTag('letterboxd:filmTitle', item);
     }
 
+    /**
+     * @param {import("domhandler").Element} item
+     * @returns {number}
+     */
     getFilmYear(item) {
         return parseInt(this.getTextFromTag('letterboxd:filmYear', item));
     }
 
+    /**
+     * @param {import("domhandler").Document} item
+     * @returns {string}
+     */
     getImage(item) {
         const elements = this.htmlParser2.DomUtils.getElementsByTagName('img', item);
         if (!elements.length) {
@@ -114,10 +168,18 @@ class LetterboxdDiaryRss {
         return this.htmlParser2.DomUtils.getAttributeValue(elements[0], 'src') || '';
     }
 
+    /**
+     * @param {import("domhandler").Element} item
+     * @returns {number}
+     */
     getStarCount(item) {
         return parseFloat(this.getTextFromTag('letterboxd:memberRating', item)) || 0;
     }
 
+    /**
+     * @param {import("domhandler").Element} item
+     * @returns {string}
+     */
     getStars(item) {
         const rating = this.getTextFromTag('letterboxd:memberRating', item);
         const map = {
@@ -135,10 +197,18 @@ class LetterboxdDiaryRss {
         return map[rating] || '';
     }
 
+    /**
+     * @param {import("domhandler").Element} item
+     * @returns {boolean}
+     */
     getRewatch(item) {
         return this.getTextFromTag('letterboxd:rewatch', item) === 'Yes';
     }
 
+    /**
+     * @param {import("domhandler").Document} item
+     * @returns {string}
+     */
     getReview(item) {
         const paragraphs = this.htmlParser2.DomUtils.getElementsByTagName('p', item);
         return paragraphs
@@ -159,10 +229,19 @@ class LetterboxdDiaryRss {
             .trim();
     }
 
+    /**
+     * @param {import("domhandler").Element} item
+     * @returns {boolean}
+     */
     getContainsSpoilers(item) {
         return this.getTextFromTag('title', item).includes('(contains spoilers)');
     }
 
+    /**
+     * @param {string | ((name: string) => boolean)} tag
+     * @param {import("domhandler").Element} item
+     * @returns {string}
+     */
     getTextFromTag(tag, item) {
         const elements = this.htmlParser2.DomUtils.getElementsByTagName(tag, item);
         if (!elements.length) {
