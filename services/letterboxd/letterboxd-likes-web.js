@@ -9,6 +9,13 @@ class LetterboxdLikesWeb {
         this.domUtils = htmlParser2.DomUtils;
     }
 
+    /**
+     * @param {string} userName
+     * @param {string[]} linkList
+     * @param {{[url: string]: boolean}[]} initialLikedList
+     * @param {number} after
+     * @returns {Promise<string[]>}
+     */
     get(userName, linkList, initialLikedList = [], after = 0) {
         return new Promise((resolve, reject) => {
             this.fetch(userName, after)
