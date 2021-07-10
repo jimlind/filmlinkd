@@ -5,6 +5,8 @@ const DependencyInjectionContainer = require('./dependency-injection-container')
 const death = require('death');
 const dotenv = require('dotenv');
 const fs = require('fs');
+
+// @ts-ignore
 const packageJson = require('./package.json');
 
 // Load .env into process.env, create config, create container
@@ -29,6 +31,7 @@ container
             container.resolve('actionTranslator').translate(message);
         });
 
+        /*
         // Listen for PubSub messages posted and respond
         container.resolve('pubSubMessageListener').onMessage((message) => {
             // TODO:
@@ -36,11 +39,12 @@ container
             // This should be a "here is a potential new entry" action.
             container.resolve('diaryEntryWriter').write(message);
         });
+        */
 
         // This is the part that posts RSS updates at a regular interval
         // Keeps track of if an active diary entry thread is running
         let threadRunning = false;
-        let interval = 0;
+        let interval = null;
 
         // Get a random index from the user list
         container
@@ -53,8 +57,8 @@ container
 
                     const config = container.resolve('config');
                     container
-                        .resolve('diaryEntryPublisher')
-                        .postPageOfEntries(index, config.pageSize)
+                        .resolve('diaryEntryProcessor')
+                        .processPageOfEntries(index, config.pageSize)
                         .then((pageCount) => {
                             threadRunning = false;
                             index = pageCount === 0 ? 0 : index + pageCount;
@@ -68,6 +72,7 @@ container
         death((signal, error) => {
             clearInterval(interval);
             discordClient.destroy();
+            // This seems to fail.
             container.resolve('pubSubConnection').getSubscription().close();
             container.resolve('logger').info('Program Terminated', { signal, error });
         });
