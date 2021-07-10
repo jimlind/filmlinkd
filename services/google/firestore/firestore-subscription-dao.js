@@ -1,4 +1,6 @@
-"use strict";
+'use strict';
+
+const User = require('../../../models/user');
 
 class FirestoreSubscriptionDao {
     firestoreCollection;
@@ -36,7 +38,7 @@ class FirestoreSubscriptionDao {
                         channelId,
                         userData,
                     };
-                    this.logger.warn("Unable to Subscribe", metadata);
+                    this.logger.warn('Unable to Subscribe', metadata);
                 });
         });
     }
@@ -69,7 +71,7 @@ class FirestoreSubscriptionDao {
                             channelId,
                             userData,
                         };
-                        this.logger.warn("Unable to Unsubscribe", metadata);
+                        this.logger.warn('Unable to Unsubscribe', metadata);
                     });
             });
         });
@@ -78,13 +80,16 @@ class FirestoreSubscriptionDao {
     // Requiring guildID makes this a super easy query
     list(channelId, guildId) {
         const channel = { channelId: channelId, guildId: guildId };
-        const query = this.firestoreCollection.where("channelList", "array-contains", channel);
+        const query = this.firestoreCollection.where('channelList', 'array-contains', channel);
 
         return new Promise((resolve) => {
             query
                 .get()
                 .then((querySnapshot) => {
-                    const userList = querySnapshot.docs.reduce((acc, current) => [...acc, current.id], []);
+                    const userList = querySnapshot.docs.reduce(
+                        (acc, current) => [...acc, current.id],
+                        [],
+                    );
                     resolve(userList);
                 })
                 .catch(() => {
@@ -93,18 +98,19 @@ class FirestoreSubscriptionDao {
         });
     }
 
+    /**
+     * @returns {Promise<User[]>}
+     */
     getActiveSubscriptions() {
-        const query = this.firestoreCollection.where("channelList", "!=", []);
+        const query = this.firestoreCollection.where('channelList', '!=', []);
 
         return this.getUserListFromQuery(query);
     }
 
-    getActiveSubscriptionsPage(pageSize) {
-        const query = this.firestoreCollection.orderBy("checked", "asc").limit(pageSize);
-
-        return this.getUserListFromQuery(query);
-    }
-
+    /**
+     * @param {*} query
+     * @returns {Promise<User[]>}
+     */
     getUserListFromQuery(query) {
         const userList = [];
 
@@ -117,12 +123,13 @@ class FirestoreSubscriptionDao {
                             id: documentSnapshot.ref.id,
                             ...documentSnapshot.data(),
                         };
-
-                        userList.push(documentData); // TODO: Do we need the complete data blob or can we trim it?
+                        const user = Object.assign(new User(), documentData);
+                        userList.push(user); // TODO: Do we need the complete data blob or can we trim it?
                     });
                     resolve(userList);
                 })
-                .catch((e) => {
+                .catch(() => {
+                    // If any error resolve as an empty user list
                     resolve([]);
                 });
         });
