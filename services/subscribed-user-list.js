@@ -1,8 +1,15 @@
 'use strict';
 
 class SubscribedUserList {
+    /**
+     * @type {{ userName: string; previousId: number;}[]}
+     */
     cachedData = [];
 
+    /**
+     * @param {import('./google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
+     * @param {import('./logger')} logger
+     */
     constructor(firestoreSubscriptionDao, logger) {
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
         this.logger = logger;
@@ -40,28 +47,36 @@ class SubscribedUserList {
 
     getRandomIndex() {
         return new Promise((resolve) => {
-            this.getActiveSubscriptions().then((subscriberList) => {
+            this.getAllActiveSubscriptions().then((subscriberList) => {
                 return resolve(Math.floor(Math.random() * subscriberList.length));
             });
         });
     }
 
+    /**
+     * @param {number} index
+     * @param {number} pageSize
+     * @returns {Promise<{ userName: string; previousId: number;}[]>}}
+     */
     getActiveSubscriptionsPage(index, pageSize) {
         return new Promise((resolve) => {
-            this.getActiveSubscriptions().then((subscriberList) => {
+            this.getAllActiveSubscriptions().then((subscriberList) => {
                 return resolve(subscriberList.slice(index, index + pageSize));
             });
         });
     }
 
-    getActiveSubscriptions() {
+    /**
+     * @returns {Promise<{ userName: string; previousId: number;}[]>}}
+     */
+    getAllActiveSubscriptions() {
         return new Promise((resolve) => {
             if (this.cachedData.length) {
                 return resolve(this.cachedData);
             } else {
                 this.firestoreSubscriptionDao.getActiveSubscriptions().then((subscriberList) => {
-                    this.logger.info('Cached Users', {
-                        count: subscriberList.length,
+                    this.logger.info('Loaded and Cached Users', {
+                        userCount: subscriberList.length,
                     });
 
                     this.cachedData = subscriberList.map((subscriber) => {
