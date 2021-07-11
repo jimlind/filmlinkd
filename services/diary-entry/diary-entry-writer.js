@@ -13,23 +13,19 @@ class DiaryEntryWriter {
         this.subscribedUserList = subscribedUserList;
     }
 
-    write(message) {
-        const { userData, diaryEntry, channel } = JSON.parse(message.data.toString());
-        this.discordMessageSender.getPermissions(channel.channelId).then((permissions) => {
-            const message = this.messageEmbedFactory.createDiaryEntryMessage(
-                diaryEntry,
-                userData,
-                permissions,
-            );
-            this.discordMessageSender
-                .send(channel.channelId, message)
-                .then(() => {
-                    // Work completed. Updates can be async.
-                    message.ack();
-                })
-                .catch(() => {
-                    // Do Nothing. Send failure caught and logged in MessageSender
-                });
+    /**
+     * @param {import('../../models/diary-entry')} diaryEntry
+     * @returns {Promise}
+     */
+    validateAndWrite(diaryEntry) {
+        return new Promise((resolve) => {
+            this.firestoreUserDao
+                        .read(user.userName)
+                        .then((userData) => {
+                            if (userData.channelList === 0) {
+                                return resolve(); // Exit early if no subscribed channels
+                            }
+            return resolve();
         });
     }
 }
