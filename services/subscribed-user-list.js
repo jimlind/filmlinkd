@@ -45,6 +45,19 @@ class SubscribedUserList {
         //TODO: Does it make sense to call firestore here?
     }
 
+    /**
+     * @param {string} userName
+     * @returns {{ userName: string; previousId: number;} | null}
+     */
+    get(userName) {
+        for (let x = 0; x < this.cachedData.length; x++) {
+            if (this.cachedData[x].userName === userName) {
+                return this.cachedData[x];
+            }
+        }
+        return null;
+    }
+
     getRandomIndex() {
         return new Promise((resolve) => {
             this.getAllActiveSubscriptions().then((subscriberList) => {
