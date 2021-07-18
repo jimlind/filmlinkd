@@ -3,12 +3,20 @@
 class DiaryEntryWriter {
     /**
      * @param {import('../discord/discord-message-sender')} discordMessageSender
+     * @param {import('../google/firestore/firestore-previous-dao')} firestorePreviousDao
      * @param {import('../google/firestore/firestore-user-dao')} firestoreUserDao
      * @param {import('../../factories/message-embed-factory')} messageEmbedFactory
      * @param {import('../subscribed-user-list')} subscribedUserList
      */
-    constructor(discordMessageSender, firestoreUserDao, messageEmbedFactory, subscribedUserList) {
+    constructor(
+        discordMessageSender,
+        firestorePreviousDao,
+        firestoreUserDao,
+        messageEmbedFactory,
+        subscribedUserList,
+    ) {
         this.discordMessageSender = discordMessageSender;
+        this.firestorePreviousDao = firestorePreviousDao;
         this.firestoreUserDao = firestoreUserDao;
         this.messageEmbedFactory = messageEmbedFactory;
         this.subscribedUserList = subscribedUserList;
@@ -20,12 +28,13 @@ class DiaryEntryWriter {
      */
     validateAndWrite(diaryEntry) {
         return new Promise((resolve, reject) => {
+            // Get the user data from cache
             const user = this.subscribedUserList.get(diaryEntry.userName);
 
             // Because we are expecting multiple requests to post a diary entry we maintain
             // the one source of truth on the server that sends messages so we double check
             // the previous Id.
-            if (user && diaryEntry.id <= user.previousId) {
+            if (diaryEntry.id <= user.previousId) {
                 return resolve(); // Exit early if the diary entry is latest
             }
 
@@ -34,22 +43,22 @@ class DiaryEntryWriter {
                     return resolve(); // Exit early if no subscribed channels
                 }
 
+                // Get sender promise list with mapped failures to noops
                 const promiseList = this.createSenderPromiseList(diaryEntry, userData).map((p) =>
                     p.catch(() => false),
                 );
                 Promise.all(promiseList).then((results) => {
                     const sentMessageCount = results.filter(Boolean).length;
+                    // If any messages were successful
                     if (sentMessageCount) {
-                        console.log('LOG THIS AS A SUCCESS');
                         // Message published successful so update previous data in database and local cache
-
-                        /*
-                        this.firestoreUserDao
-                            .read(user.userName)
-                            .then((userData) => {
-                        */
-                        //this.firestorePreviousDao.update(userData, diaryEntry);
-                        this.subscribedUserList.upsert(userData.userName, diaryEntry.id);
+                        const entryId = diaryEntry.id;
+                        if (this.subscribedUserList.upsert(userData.userName, entryId) == entryId) {
+                            this.firestorePreviousDao.update(userData, diaryEntry);
+                        }
+                        return resolve();
+                    } else {
+                        return reject();
                     }
                 });
             });
