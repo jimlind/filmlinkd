@@ -1,14 +1,22 @@
 'use strict';
 
 class FirestorePreviousDao {
-    firestoreCollection;
-
+    /**
+     * @param {import('../../../models/config')} config
+     * @param {import('../firestore/firestore-connection')} firestoreConnection
+     * @param {import('../../logger')} logger
+     */
     constructor(config, firestoreConnection, logger) {
         this.config = config;
         this.firestoreCollection = firestoreConnection.getCollection();
         this.logger = logger;
     }
 
+    /**
+     * @param {import('../../../models/user')} userData
+     * @param {import('../../../models/diary-entry')} diaryEntry
+     * @returns void
+     */
     update(userData, diaryEntry) {
         // If the id for previous is later than the new entry, skip it.
         if (userData?.previous?.id >= diaryEntry.id) {
