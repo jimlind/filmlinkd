@@ -56,7 +56,7 @@ class LetterboxdDiaryRss {
             }
         }
 
-        return entryList;
+        return entryList.reverse();
     }
 
     /**
