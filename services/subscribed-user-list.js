@@ -15,6 +15,11 @@ class SubscribedUserList {
         this.logger = logger;
     }
 
+    /**
+     * @param {string} userName
+     * @param {number} previousId
+     * @returns {number} The current PreviousID for the user after upsert
+     */
     upsert(userName, previousId) {
         for (let x = 0; x < this.cachedData.length; x++) {
             const user = this.cachedData[x];
@@ -24,15 +29,16 @@ class SubscribedUserList {
                 if (user.previousId < previousId) {
                     this.cachedData[x].previousId = previousId;
                 }
-                // Break the loop. Method is complete.
-                return;
+                // Break the loop. User was found so method is complete.
+                return this.cachedData[x].previousId;
             }
         }
-        // Not found in the loop so add new record instead
+        // User not found in the loop so add new record instead
         this.cachedData.push({
             userName,
             previousId,
         });
+        return previousId;
     }
 
     remove(userName) {
