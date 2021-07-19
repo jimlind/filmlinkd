@@ -24,7 +24,7 @@ const container = new DependencyInjectionContainer(configModel);
 Promise.all([
     container.resolve('discordConnection').getConnectedClient(),
     container.resolve('pubSubConnection').getSubscription(),
-]).then(([discordClient]) => {
+]).then(([discordClient, pubSubSubscription]) => {
     const serverCount = discordClient.guilds.cache.size;
     container.resolve('logger').info(`Discord Client Logged In on ${serverCount} Servers`);
 
@@ -77,8 +77,7 @@ Promise.all([
     death((signal, error) => {
         clearInterval(interval);
         discordClient.destroy();
-        // TODO subscription close fails here. Not sure what's up.
-        container.resolve('pubSubConnection').getSubscription().close();
+        pubSubSubscription.close();
         container.resolve('logger').info('Program Terminated', { signal, error });
     });
 });
