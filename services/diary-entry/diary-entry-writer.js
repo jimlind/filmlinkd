@@ -24,9 +24,11 @@ class DiaryEntryWriter {
 
     /**
      * @param {import('../../models/diary-entry')} diaryEntry
+     * @param {number[]} channelIdList
+     * @param {boolean} skipPreviousCheck
      * @returns {Promise}
      */
-    validateAndWrite(diaryEntry) {
+    validateAndWrite(diaryEntry, channelIdList = [], skipPreviousCheck = false) {
         return new Promise((resolve, reject) => {
             // Get the user data from cache
             const user = this.subscribedUserList.get(diaryEntry.userName);
@@ -34,12 +36,18 @@ class DiaryEntryWriter {
             // Because we are expecting multiple requests to post a diary entry we maintain
             // the one source of truth on the server that sends messages so we double check
             // the previous Id.
-            if (diaryEntry.id <= user.previousId) {
+            if (diaryEntry.id <= user.previousId && !skipPreviousCheck) {
                 return resolve(); // Exit early if the diary entry is latest
             }
 
+            // Create a properly formed list of channels
+            const channelList = channelIdList.map((channelId) => ({ channelId }));
+
             this.firestoreUserDao.read(diaryEntry.userName).then((userData) => {
-                if (userData.channelList === 0) {
+                // Potentially override the channel list
+                userData.channelList = channelList.length ? channelList : userData.channelList;
+
+                if (userData.channelList.length === 0) {
                     return resolve(); // Exit early if no subscribed channels
                 }
 

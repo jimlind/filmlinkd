@@ -23,6 +23,17 @@ class DiaryEntryProcessor {
     }
 
     /**
+     * @param {string} userName
+     * @param {string} channelId
+     */
+    processMostRecentForUser(userName, channelId) {
+        const user = { userName, previousId: 0 };
+        this.getEntriesForUser(user, 1).then((diaryEntryList) => {
+            this.diaryEntryPublisher.publish(diaryEntryList, [channelId]);
+        });
+    }
+
+    /**
      * @param {number} index
      * @param {number} pageSize
      * @returns {Promise<number>}

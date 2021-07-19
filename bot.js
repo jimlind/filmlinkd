@@ -36,10 +36,11 @@ Promise.all([
     // Listen for PubSub messages posted and respond
     container.resolve('pubSubMessageListener').onMessage((message) => {
         const returnData = JSON.parse(message.data.toString());
-        const diaryEntry = Object.assign(new DiaryEntry(), returnData);
+        const diaryEntry = Object.assign(new DiaryEntry(), returnData?.entry);
+        const channelIdList = returnData?.channelIdList || [];
         container
             .resolve('diaryEntryWriter')
-            .validateAndWrite(diaryEntry)
+            .validateAndWrite(diaryEntry, channelIdList, Boolean(channelIdList.length))
             .then(() => {
                 message.ack();
             });

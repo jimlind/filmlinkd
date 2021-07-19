@@ -12,13 +12,15 @@ class DiaryEntryPublisher {
 
     /**
      * @param {import('../../models/diary-entry')[]} diaryEntryList
+     * @param {string[]} channelIdList
      */
-    publish(diaryEntryList) {
+    publish(diaryEntryList, channelIdList = []) {
         diaryEntryList.forEach((diaryEntry) => {
             this.pubSubConnection
                 .getTopic()
                 .then((topic) => {
-                    const buffer = Buffer.from(JSON.stringify(diaryEntry));
+                    const data = { entry: diaryEntry, channelIdList };
+                    const buffer = Buffer.from(JSON.stringify(data));
                     topic.publish(buffer);
                 })
                 .catch(() => {
