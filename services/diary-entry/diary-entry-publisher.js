@@ -2,12 +2,12 @@
 
 class DiaryEntryPublisher {
     /**
-     * @param {*} logger
      * @param {import('../google/pubsub/pub-sub-connection')} pubSubConnection
+     * @param {import('../logger')} logger
      */
-    constructor(logger, pubSubConnection) {
-        this.logger = logger;
+    constructor(pubSubConnection, logger) {
         this.pubSubConnection = pubSubConnection;
+        this.logger = logger;
     }
 
     /**

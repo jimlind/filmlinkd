@@ -53,7 +53,7 @@ class SubscribedUserList {
 
     /**
      * @param {string} userName
-     * @returns {{ userName: string; previousId: number;} | null}
+     * @returns {{ userName: string; previousId: number;}|null}
      */
     get(userName) {
         for (let x = 0; x < this.cachedData.length; x++) {
