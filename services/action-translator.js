@@ -1,7 +1,18 @@
 'use strict';
 
 class ActionTranslator {
+    /**
+     * @param {import('./diary-entry/diary-entry-processor')} diaryEntryProcessor
+     * @param {any} diaryEntryPublisher
+     * @param {any} discordMessageSender
+     * @param {import('./google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
+     * @param {import('./google/firestore/firestore-user-dao')} firestoreUserDao
+     * @param {any} messageEmbedFactory
+     * @param {any} letterboxdProfileWeb
+     * @param {any} subscribedUserList
+     */
     constructor(
+        diaryEntryProcessor,
         diaryEntryPublisher,
         discordMessageSender,
         firestoreSubscriptionDao,
@@ -10,6 +21,7 @@ class ActionTranslator {
         letterboxdProfileWeb,
         subscribedUserList,
     ) {
+        this.diaryEntryProcessor = diaryEntryProcessor;
         this.diaryEntryPublisher = diaryEntryPublisher;
         this.discordMessageSender = discordMessageSender;
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
@@ -19,6 +31,9 @@ class ActionTranslator {
         this.subscribedUserList = subscribedUserList;
     }
 
+    /**
+     * @param {import('../models/user-text-message')} message
+     */
     translate(message) {
         switch (message.command) {
             case 'help':
@@ -61,31 +76,40 @@ class ActionTranslator {
         this.discordMessageSender.send(channelId, this.messageEmbedFactory.createHelpMessage());
     }
 
-    follow(userList, channelId, guildId) {
-        var subscribe = function (userData) {
+    /**
+     * @param {string[]} userNameList
+     * @param {string} channelId
+     * @param {string} guildId
+     */
+    follow(userNameList, channelId, guildId) {
+        var subscribe = (userData) => {
             this.firestoreSubscriptionDao
                 .subscribe(userData, channelId, guildId)
-                .then((updatedUserData) => {
-                    this.discordMessageSender
-                        .send(
+                .then((result) => {
+                    if (result.success) {
+                        this.discordMessageSender
+                            .send(
+                                channelId,
+                                this.messageEmbedFactory.createFollowSuccessMessage(userData),
+                            )
+                            .catch(() => {});
+                        this.diaryEntryProcessor.processMostRecentForUser(
+                            userData.userName,
                             channelId,
-                            this.messageEmbedFactory.createFollowSuccessMessage(updatedUserData),
-                        )
-                        .catch(() => {});
-                    this.diaryEntryPublisher.postMostRecentEntry(updatedUserData, channelId);
+                        );
+                    } else {
+                        this.discordMessageSender
+                            .send(
+                                channelId,
+                                this.messageEmbedFactory.createDuplicateFollowMessage(userData),
+                            )
+                            .catch(() => {});
+                    }
                 })
-                .catch(() => {
-                    this.discordMessageSender
-                        .send(
-                            channelId,
-                            this.messageEmbedFactory.createDuplicateFollowMessage(userData),
-                        )
-                        .catch(() => {});
-                });
+                .catch(() => {});
         };
 
-        userList.forEach((userName) => {
-            //TODO: Rate limit this
+        userNameList.forEach((userName) => {
             this.firestoreUserDao
                 .read(userName)
                 // User found so subscribe
