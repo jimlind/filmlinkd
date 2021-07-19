@@ -10,39 +10,50 @@ class FirestoreSubscriptionDao {
         this.logger = logger;
     }
 
-    subscribe(data, channelId, guildId) {
+    /**
+     * @param {import('../../../models/user')} userData
+     * @param {string} channelId
+     * @param {string} guildId
+     * @returns {Promise<{userData: import('../../../models/user'), success: boolean}>}
+     */
+    subscribe(userData, channelId, guildId) {
         return new Promise((resolve, reject) => {
-            const channelList = data.channelList || [];
+            const channelList = userData.channelList || [];
 
             // If the channel is already subscribed reject
             if (channelList.some((channel) => channel.channelId === channelId)) {
-                reject();
+                resolve({ userData, success: false });
                 return;
             }
 
             // Create new data object with new channels and timestamp
-            const updatedData = {
-                ...data,
+            const updatedUserData = {
+                ...userData,
                 channelList: channelList.concat([{ channelId, guildId }]),
                 updated: Date.now(),
             };
 
-            const documentReference = this.firestoreCollection.doc(data.userName);
+            const documentReference = this.firestoreCollection.doc(updatedUserData.userName);
             documentReference
-                .update(updatedData)
+                .update(updatedUserData)
                 .then(() => {
-                    resolve(updatedData);
+                    resolve({ userData: updatedUserData, success: true });
                 })
-                .catch((error) => {
+                .catch(() => {
                     const metadata = {
                         channelId,
-                        userData,
+                        updatedUserData,
                     };
                     this.logger.warn('Unable to Subscribe', metadata);
+                    reject();
                 });
         });
     }
 
+    /**
+     * @param {string} userName
+     * @param {string} channelId
+     */
     unsubscribe(userName, channelId) {
         return new Promise((resolve, reject) => {
             const documentReference = this.firestoreCollection.doc(userName);
@@ -66,10 +77,10 @@ class FirestoreSubscriptionDao {
                     .then(() => {
                         resolve(documentData);
                     })
-                    .catch((error) => {
+                    .catch(() => {
                         const metadata = {
                             channelId,
-                            userData,
+                            documentData,
                         };
                         this.logger.warn('Unable to Unsubscribe', metadata);
                     });
