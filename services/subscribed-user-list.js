@@ -53,7 +53,7 @@ class SubscribedUserList {
 
     /**
      * @param {string} userName
-     * @returns {{ userName: string; previousId: number;}|null}
+     * @returns {{ userName: string; previousId: number;}}
      */
     get(userName) {
         for (let x = 0; x < this.cachedData.length; x++) {
@@ -61,7 +61,7 @@ class SubscribedUserList {
                 return this.cachedData[x];
             }
         }
-        return null;
+        return { userName, previousId: 0 };
     }
 
     getRandomIndex() {
