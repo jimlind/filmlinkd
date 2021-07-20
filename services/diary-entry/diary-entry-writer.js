@@ -29,7 +29,7 @@ class DiaryEntryWriter {
      * @returns {Promise}
      */
     validateAndWrite(diaryEntry, channelIdList = [], skipPreviousCheck = false) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             // Get the user data from cache
             const user = this.subscribedUserList.get(diaryEntry.userName);
 
@@ -43,33 +43,39 @@ class DiaryEntryWriter {
             // Create a properly formed list of channels
             const channelList = channelIdList.map((channelId) => ({ channelId }));
 
-            this.firestoreUserDao.read(diaryEntry.userName).then((userData) => {
-                // Potentially override the channel list
-                userData.channelList = channelList.length ? channelList : userData.channelList;
+            this.firestoreUserDao
+                .read(diaryEntry.userName)
+                .then((userData) => {
+                    // Potentially override the channel list
+                    userData.channelList = channelList.length ? channelList : userData.channelList;
 
-                if (userData.channelList.length === 0) {
-                    return resolve(); // Exit early if no subscribed channels
-                }
+                    // Exit early if no subscribed channels
+                    if (userData.channelList.length === 0) {
+                        return resolve();
+                    }
 
-                // Get sender promise list with mapped failures to noops
-                const promiseList = this.createSenderPromiseList(diaryEntry, userData).map((p) =>
-                    p.catch(() => false),
-                );
-                Promise.all(promiseList).then((results) => {
-                    const sentMessageCount = results.filter(Boolean).length;
-                    // If any messages were successful
-                    if (sentMessageCount) {
-                        // Message published successful so update previous data in database and local cache
+                    // Get sender promise list with mapped failures to noops
+                    const promiseList = this.createSenderPromiseList(diaryEntry, userData).map(
+                        (p) => p.catch(() => false),
+                    );
+                    Promise.all(promiseList).then((results) => {
+                        // If we weren't able to post any messages just move on.
+                        if (results.filter(Boolean).length == 0) {
+                            return resolve();
+                        }
+
+                        // At least one message posted, so update previous data in database and local cache
                         const entryId = diaryEntry.id;
                         if (this.subscribedUserList.upsert(userData.userName, entryId) == entryId) {
                             this.firestorePreviousDao.update(userData, diaryEntry);
                         }
                         return resolve();
-                    } else {
-                        return reject();
-                    }
+                    });
+                })
+                .catch(() => {
+                    // TODO: Log on user read failure or something
+                    return resolve();
                 });
-            });
         });
     }
 
