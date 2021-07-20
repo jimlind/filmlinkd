@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 class DiscordConnection {
     connected = false;
@@ -31,7 +31,7 @@ class DiscordConnection {
             this.locked = true;
 
             // On ready needs to be setup before login is called or ready events may be missed
-            this.discordClient.on("ready", () => {
+            this.discordClient.on('ready', () => {
                 this.connected = true;
                 this.locked = false;
 
