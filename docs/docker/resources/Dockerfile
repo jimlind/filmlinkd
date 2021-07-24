@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM node:14-slim
+FROM node:16-slim
 RUN apt-get update
 
 # Install OhMyZsh with Clean template
