@@ -87,7 +87,6 @@ class DiaryEntryProcessor {
                                     .publish(diaryEntryList)
                                     .then((successList) => {
                                         successList.forEach((success) => {
-                                            console.log(success);
                                             this.subscribedUserList.upsert(
                                                 success.user,
                                                 parseInt(success.id),
