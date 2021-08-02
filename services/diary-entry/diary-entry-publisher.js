@@ -13,19 +13,25 @@ class DiaryEntryPublisher {
     /**
      * @param {import('../../models/diary-entry')[]} diaryEntryList
      * @param {string[]} channelIdList
+     * @return {Promise<{user:string, id: string}[]>}
      */
     publish(diaryEntryList, channelIdList = []) {
-        diaryEntryList.forEach((diaryEntry) => {
-            this.pubSubConnection
-                .getTopic()
-                .then((topic) => {
-                    const data = { entry: diaryEntry, channelIdList };
-                    const buffer = Buffer.from(JSON.stringify(data));
-                    topic.publish(buffer);
+        return new Promise((resolve) => {
+            const promiseList = diaryEntryList
+                .map((diaryEntry) => {
+                    return this.pubSubConnection.getTopic().then((topic) => {
+                        const data = { entry: diaryEntry, channelIdList };
+                        const buffer = Buffer.from(JSON.stringify(data));
+                        topic.publish(buffer);
+
+                        return { user: diaryEntry.userName, id: diaryEntry.id };
+                    });
                 })
-                .catch(() => {
-                    this.logger.warn(`Problem publishing a diary message`);
-                });
+                .map((p) => p.catch(() => null));
+
+            Promise.all(promiseList).then((promiseResult) => {
+                resolve(promiseResult.filter(Boolean));
+            });
         });
     }
 }
