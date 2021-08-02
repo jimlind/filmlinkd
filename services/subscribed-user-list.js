@@ -23,23 +23,26 @@ class SubscribedUserList {
     /**
      * @param {string} userName
      * @param {number} previousId
+     * @param {boolean} vipStatus
      * @returns {number} The current PreviousID for the user after upsert
      */
-    upsert(userName, previousId) {
-        for (let x = 0; x < this.cachedData.length; x++) {
-            const user = this.cachedData[x];
+    upsert(userName, previousId, vipStatus = false) {
+        const dataSource = vipStatus ? this.cachedVipData : this.cachedData;
+
+        for (let x = 0; x < dataSource.length; x++) {
+            const user = dataSource[x];
             // If the user already exists
             if (user.userName === userName) {
                 // If the Id is newer than the last one
                 if (user.previousId < previousId) {
-                    this.cachedData[x].previousId = previousId;
+                    dataSource[x].previousId = previousId;
                 }
                 // Break the loop. User was found so method is complete.
-                return this.cachedData[x].previousId;
+                return dataSource[x].previousId;
             }
         }
         // User not found in the loop so add new record instead
-        this.cachedData.push({
+        dataSource.push({
             userName,
             previousId,
         });
