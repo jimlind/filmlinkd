@@ -28,7 +28,7 @@ class DiaryEntryProcessor {
      */
     processMostRecentForUser(userName, channelId) {
         const user = { userName, previousId: 0 };
-        this.getEntriesForUser(user, 1).then((diaryEntryList) => {
+        this.getNewEntriesForUser(user, 1).then((diaryEntryList) => {
             this.diaryEntryPublisher.publish(diaryEntryList, [channelId]);
         });
     }
@@ -43,8 +43,7 @@ class DiaryEntryProcessor {
             this.subscribedUserList.getActiveSubscriptionsPage(index, pageSize).then((userList) => {
                 // Special usecase for empty user list returned.
                 if (!userList.length) {
-                    const used = process.memoryUsage().heapUsed / 1024 / 1024;
-                    this.logger.info(`Empty page. Resetting pagination. [${used} MB]`);
+                    this.logger.info('Empty page of users. Resetting pagination.');
                     return resolve(0);
                 }
 
@@ -52,7 +51,7 @@ class DiaryEntryProcessor {
                 let userListPostCount = 0;
                 userList.forEach((user, userIndex) => {
                     setTimeout(() => {
-                        this.getEntriesForUser(user, 10).then((diaryEntryList) => {
+                        this.getNewEntriesForUser(user, 10).then((diaryEntryList) => {
                             this.diaryEntryPublisher.publish(diaryEntryList);
                         });
                         userListPostCount++;
@@ -65,12 +64,54 @@ class DiaryEntryProcessor {
         });
     }
 
+    processPageOfVipEntries(index, pageSize) {
+        return new Promise((resolve) => {
+            this.subscribedUserList
+                .getActiveVipSubscriptionsPage(index, pageSize)
+                .then((userList) => {
+                    // Special usecase for empty user list returned.
+                    if (!userList.length) {
+                        this.logger.info('Empty page of VIPs. Resetting pagination.');
+                        return resolve(0);
+                    }
+                    // Loop over the users and with a slight delay between each request
+                    let userListPostCount = 0;
+                    userList.forEach((user, userIndex) => {
+                        setTimeout(() => {
+                            this.getNewEntriesForUser(user, 10).then((diaryEntryList) => {
+                                if (diaryEntryList.length) {
+                                    const message = `Publishing "${diaryEntryList[0].filmTitle}" from VIP "${diaryEntryList[0].userName}"`;
+                                    this.logger.info(message);
+                                }
+                                this.diaryEntryPublisher
+                                    .publish(diaryEntryList)
+                                    .then((successList) => {
+                                        successList.forEach((success) => {
+                                            console.log(success);
+                                            this.subscribedUserList.upsert(
+                                                success.user,
+                                                parseInt(success.id),
+                                                true,
+                                            );
+                                        });
+                                    });
+                            });
+                            userListPostCount++;
+                            if (userList.length === userListPostCount) {
+                                return resolve(userListPostCount);
+                            }
+                        }, userIndex * 10);
+                    });
+                });
+        });
+    }
+
     /**
      * @param {{ userName: string; previousId: number; }} user
      * @param {number} maxDiaryEntries
      * @returns {Promise<import('../../models/diary-entry')[]>}
      */
-    getEntriesForUser(user, maxDiaryEntries) {
+    getNewEntriesForUser(user, maxDiaryEntries) {
         return new Promise((resolve) => {
             this.letterboxdDiaryRss
                 .get(user.userName, maxDiaryEntries)
