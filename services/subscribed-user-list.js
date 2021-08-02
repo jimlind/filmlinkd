@@ -7,6 +7,11 @@ class SubscribedUserList {
     cachedData = [];
 
     /**
+     * @type {{ userName: string; previousId: number;}[]}
+     */
+    cachedVipData = [];
+
+    /**
      * @param {import('./google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
      * @param {import('./logger')} logger
      */
@@ -86,6 +91,19 @@ class SubscribedUserList {
     }
 
     /**
+     * @param {number} index
+     * @param {number} pageSize
+     * @returns {Promise<{ userName: string; previousId: number;}[]>}}
+     */
+    getActiveVipSubscriptionsPage(index, pageSize) {
+        return new Promise((resolve) => {
+            this.getVipActiveSubscriptions().then((vipList) => {
+                return resolve(vipList.slice(index, index + pageSize));
+            });
+        });
+    }
+
+    /**
      * @returns {Promise<{ userName: string; previousId: number;}[]>}}
      */
     getAllActiveSubscriptions() {
@@ -106,6 +124,32 @@ class SubscribedUserList {
                     }, []);
 
                     return resolve(this.cachedData);
+                });
+            }
+        });
+    }
+
+    /**
+     * @returns {Promise<{ userName: string; previousId: number;}[]>}}
+     */
+    getVipActiveSubscriptions() {
+        return new Promise((resolve) => {
+            if (this.cachedVipData.length) {
+                return resolve(this.cachedVipData);
+            } else {
+                this.firestoreSubscriptionDao.getVipSubscriptions().then((vipList) => {
+                    this.logger.info('Loaded and Cached VIPs', {
+                        userCount: vipList.length,
+                    });
+
+                    this.cachedVipData = vipList.map((vip) => {
+                        return {
+                            userName: vip.userName,
+                            previousId: vip?.previous?.id || 0,
+                        };
+                    }, []);
+
+                    return resolve(this.cachedVipData);
                 });
             }
         });
