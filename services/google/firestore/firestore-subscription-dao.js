@@ -3,18 +3,29 @@
 const User = require('../../../models/user');
 
 class FirestoreSubscriptionDao {
+    /** @type FirebaseFirestore.CollectionReference */
     firestoreCollection;
+    /** @type {import('./firestore-vip-dao')} */
+    firestoreVipDao;
+    /** @type {import('../../logger')} */
+    logger;
 
-    constructor(firestoreConnection, logger) {
+    /**
+     * @param {import('./firestore-connection')} firestoreConnection
+     * @param {import('./firestore-vip-dao')} firestoreVipDao
+     * @param {import('../../logger')} logger
+     */
+    constructor(firestoreConnection, firestoreVipDao, logger) {
         this.firestoreCollection = firestoreConnection.getCollection();
+        this.firestoreVipDao = firestoreVipDao;
         this.logger = logger;
     }
 
     /**
-     * @param {import('../../../models/user')} userData
+     * @param {User} userData
      * @param {string} channelId
      * @param {string} guildId
-     * @returns {Promise<{userData: import('../../../models/user'), success: boolean}>}
+     * @returns {Promise<{userData: User, success: boolean}>}
      */
     subscribe(userData, channelId, guildId) {
         return new Promise((resolve, reject) => {
@@ -119,7 +130,31 @@ class FirestoreSubscriptionDao {
     }
 
     /**
-     * @param {*} query
+     * @returns {Promise<User[]>}
+     */
+    getVipSubscriptions() {
+        return new Promise((resolve, reject) => {
+            this.firestoreVipDao
+                .read()
+                .then((channelData) => {
+                    const query = this.firestoreCollection.where(
+                        'channelList',
+                        'array-contains-any',
+                        channelData,
+                    );
+                    return this.getUserListFromQuery(query);
+                })
+                .then((userList) => {
+                    resolve(userList);
+                })
+                .catch(() => {
+                    reject('nope nope');
+                });
+        });
+    }
+
+    /**
+     * @param {FirebaseFirestore.Query} query
      * @returns {Promise<User[]>}
      */
     getUserListFromQuery(query) {
