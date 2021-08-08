@@ -1,16 +1,27 @@
 'use strict';
 
 class PubSubConnection {
+    /** @type {import('@google-cloud/pubsub').Topic | null} */
     topic = null;
+    /** @type {import('@google-cloud/pubsub').Subscription | null} */
     subscription = null;
+    /** @type boolean */
     getTopicLocked = false;
+    /** @type boolean */
     getSubscriptionLocked = false;
 
+    /**
+     * @param {import('../../../models/config')} config
+     * @param {import('@google-cloud/pubsub').PubSub} pubSub
+     */
     constructor(config, pubSub) {
         this.config = config;
         this.pubSub = pubSub;
     }
 
+    /**
+     * @returns {Promise<import('@google-cloud/pubsub').Topic>}
+     */
     getTopic() {
         return new Promise((resolve, reject) => {
             if (this.topic) {
@@ -47,6 +58,9 @@ class PubSubConnection {
         });
     }
 
+    /**
+     * @returns {Promise<import('@google-cloud/pubsub').Subscription>}
+     */
     getSubscription() {
         return new Promise((resolve, reject) => {
             if (this.subscription) {
