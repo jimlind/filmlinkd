@@ -1,0 +1,14 @@
+[Unit]
+Description=Filmlinkd VIP - It is a supplimentary Letterboxd Discord bot
+Documentation=https://jimlind.github.io/filmlinkd/
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/app/filmlinkd
+ExecStart=/usr/bin/node --optimize_for_size --max-old-space-size=256 /opt/app/filmlinkd/bot-vip.js prod
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
