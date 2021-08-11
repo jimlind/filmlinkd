@@ -71,7 +71,6 @@ class DiaryEntryProcessor {
                 .then((userList) => {
                     // Special usecase for empty user list returned.
                     if (!userList.length) {
-                        this.logger.info('Empty page of VIPs. Resetting pagination.');
                         return resolve(0);
                     }
                     // Loop over the users and with a slight delay between each request
