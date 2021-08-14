@@ -50,7 +50,10 @@ function reduceDocsToChannels(acc, current) {
 }
 
 async function deleteChannelUsers(channelId, guildId, fileName) {
-    const channel = { channelId: channelId, guildId: guildId };
+    let channel = { channelId: channelId };
+    if (guildId) {
+        channel = { channelId: channelId, guildId: guildId };
+    }
     const query = collection.where('channelList', 'array-contains', channel);
     const querySnapshot = await query.get();
 
@@ -58,7 +61,7 @@ async function deleteChannelUsers(channelId, guildId, fileName) {
         const documentSnapshot = querySnapshot.docs[key];
         const data = documentSnapshot.data();
         const content = data.userName + '||' + channelId + '||' + guildId + '\n';
-        fs.writeFileSync(fileName, content, { flag: 'a+' }, (err) => {});
+        fs.writeFileSync(fileName, content, { flag: 'a+' });
 
         data.channelList = data.channelList.filter((channel) => {
             return channel.channelId !== channelId;
