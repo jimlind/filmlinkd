@@ -38,7 +38,7 @@ async function processData(collection) {
         const data = document.data();
 
         const content = data.userName + '||' + JSON.stringify(data.channelList) + '\n';
-        fs.writeFileSync(fileName, content, { flag: 'a+' }, (err) => {});
+        fs.writeFileSync(fileName, content, { flag: 'a+' });
         await document.ref.delete();
     }
 }
