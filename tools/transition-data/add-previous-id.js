@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const ConfigFactory = require('../factories/config-factory');
-const DependencyInjectionContainer = require('../dependency-injection-container');
+const ConfigFactory = require('../../factories/config-factory');
+const DependencyInjectionContainer = require('../../dependency-injection-container');
 const dotenv = require('dotenv');
 const fs = require('fs');
 
