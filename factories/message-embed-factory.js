@@ -89,7 +89,7 @@ class MessageEmbedFactory {
         if (entry.liked) {
             reviewTitle += ' <:l:851138401557676073>';
         }
-        reviewTitle = reviewTitle ? reviewTitle + '\u200b\n' + '┈'.repeat(12) + '\n' : '';
+        reviewTitle = reviewTitle ? reviewTitle + '\u200b\n' : '';
 
         let reviewText = entry.review;
         if (reviewText.length > 400) {
@@ -97,12 +97,13 @@ class MessageEmbedFactory {
         }
         reviewText = entry.containsSpoilers ? '||' + reviewText + '||' : reviewText;
 
+        const rule = reviewTitle && reviewText ? '┈'.repeat(12) + '\n' : '';
         const embed = this.createEmbed()
             .setAuthor(authorTitle, profileImage, profileURL)
             .setTitle(entry.filmTitle + ' ' + releaseYear)
             .setURL(entry.link)
             .setThumbnail(entry.image)
-            .setDescription(reviewTitle + reviewText);
+            .setDescription(reviewTitle + rule + reviewText);
 
         // If there is footer data then include it.
         if (data.footer) {
