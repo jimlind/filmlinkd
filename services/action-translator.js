@@ -41,7 +41,7 @@ class ActionTranslator {
                 break;
             case 'follow':
                 if (message.manageServer) {
-                    this.follow(message.arguments, message.channelId, message.guildId);
+                    this.follow(message.arguments, message.channelId);
                 } else {
                     this.discordMessageSender
                         .send(
@@ -67,7 +67,7 @@ class ActionTranslator {
                 this.refresh(message.arguments, message.channelId);
                 break;
             case 'following':
-                this.following(message.channelId, message.guildId);
+                this.following(message.channelId);
                 break;
         }
     }
@@ -79,12 +79,11 @@ class ActionTranslator {
     /**
      * @param {string[]} userNameList
      * @param {string} channelId
-     * @param {string} guildId
      */
-    follow(userNameList, channelId, guildId) {
+    follow(userNameList, channelId) {
         var subscribe = (userData) => {
             this.firestoreSubscriptionDao
-                .subscribe(userData, channelId, guildId)
+                .subscribe(userData, channelId)
                 .then((result) => {
                     if (result.success) {
                         this.discordMessageSender
@@ -198,8 +197,8 @@ class ActionTranslator {
         });
     }
 
-    following(channelId, guildId) {
-        this.firestoreSubscriptionDao.list(channelId, guildId).then((userList) => {
+    following(channelId) {
+        this.firestoreSubscriptionDao.list(channelId).then((userList) => {
             if (userList.length) {
                 this.discordMessageSender
                     .send(channelId, this.messageEmbedFactory.createFollowingMessage(userList))

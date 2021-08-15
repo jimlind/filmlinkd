@@ -24,10 +24,9 @@ class FirestoreSubscriptionDao {
     /**
      * @param {User} userData
      * @param {string} channelId
-     * @param {string} guildId
      * @returns {Promise<{userData: User, success: boolean}>}
      */
-    subscribe(userData, channelId, guildId) {
+    subscribe(userData, channelId) {
         return new Promise((resolve, reject) => {
             const channelList = userData.channelList || [];
 
@@ -40,7 +39,7 @@ class FirestoreSubscriptionDao {
             // Create new data object with new channels and timestamp
             const updatedUserData = {
                 ...userData,
-                channelList: channelList.concat([{ channelId, guildId }]),
+                channelList: channelList.concat([{ channelId }]),
                 updated: Date.now(),
             };
 
@@ -99,9 +98,11 @@ class FirestoreSubscriptionDao {
         });
     }
 
-    // Requiring guildID makes this a super easy query
-    list(channelId, guildId) {
-        const channel = { channelId: channelId, guildId: guildId };
+    /**
+     * @param {string} channelId
+     */
+    list(channelId) {
+        const channel = { channelId: channelId };
         const query = this.firestoreCollection.where('channelList', 'array-contains', channel);
 
         return new Promise((resolve) => {
