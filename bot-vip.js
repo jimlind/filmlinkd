@@ -33,14 +33,14 @@ Promise.all([container.resolve('pubSubConnection').getSubscription()]).then(
             if (threadRunning) return; // Exit early
             container
                 .resolve('diaryEntryProcessor')
-                .processPageOfVipEntries(index, 50)
+                .processPageOfVipEntries(index, 25)
                 .then((pageCount) => {
                     threadRunning = false;
                     index = pageCount === 0 ? 0 : index + pageCount;
                 });
 
             threadRunning = true;
-        }, 1000); // Allow bot to rest for 1 second
+        }, 100); // Allow bot to rest for 100ms
 
         // Clean up when process is told to end
         death((signal, error) => {
