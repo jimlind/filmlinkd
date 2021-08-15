@@ -56,7 +56,11 @@ class MessageEmbedFactory {
         return this.createEmbed().setDescription('Not following any accounts in this channel');
     }
 
-    createDiaryEntryMessage(entry, data, permissions) {
+    /**
+     * @param {import("../models/diary-entry")} entry
+     * @param {import("../models/user")} data
+     */
+    createDiaryEntryMessage(entry, data) {
         const profileName = data.displayName;
         const profileURL = `https://letterboxd.com/${data.userName}/`;
         const profileImage = data.image;
@@ -68,53 +72,37 @@ class MessageEmbedFactory {
         let dateString = '';
         if (entry.watchedDate) {
             const date = new Date(entry.watchedDate);
-            const options = { month: 'short', day: 'numeric' };
-            dateString = date.toLocaleDateString('default', options);
+            dateString = date.toLocaleDateString('default', { month: 'short', day: 'numeric' });
         }
 
-        let reviewTitle = dateString + ' ';
-        if (permissions?.use_external_emojis) {
-            if (entry.starCount) {
-                // Whole stars
-                const rounded = Math.floor(entry.starCount);
-                reviewTitle += '<:s:851134022251970610>'.repeat(rounded);
-                // Half star if neccessary
-                reviewTitle += entry.starCount % 1 ? '<:h:851199023854649374>' : '';
-            }
-            if (entry.rewatch) {
-                reviewTitle += ' <:r:851135667546488903>';
-            }
-            if (entry.liked) {
-                reviewTitle += ' <:l:851138401557676073>';
-            }
-        } else {
-            reviewTitle =
-                dateString + ' - ' + entry.starCount + ' stars - Allow External Emoji Link Below';
+        let reviewTitle = dateString ? '**' + dateString + '** ' : '';
+        if (entry.starCount) {
+            // Whole stars
+            const rounded = Math.floor(entry.starCount);
+            reviewTitle += '<:s:851134022251970610>'.repeat(rounded);
+            // Half star if neccessary
+            reviewTitle += entry.starCount % 1 ? '<:h:851199023854649374>' : '';
         }
+        if (entry.rewatch) {
+            reviewTitle += ' <:r:851135667546488903>';
+        }
+        if (entry.liked) {
+            reviewTitle += ' <:l:851138401557676073>';
+        }
+        reviewTitle = reviewTitle ? reviewTitle + '\u200b\n' + '┈'.repeat(12) + '\n' : '';
 
-        // Hack to work around fields requiring text.
-        reviewTitle = reviewTitle.trim() ? reviewTitle : '⠀'; // This is the Braille Pattern Blank
-        let reviewText = entry.review || '<No Review>';
+        let reviewText = entry.review;
         if (reviewText.length > 400) {
             reviewText = reviewText.substring(0, 400).trim() + '…';
         }
-
-        reviewText = entry.containsSpoilers
-            ? '||`' + reviewText + '`||'
-            : '```\n' + reviewText + '\n```';
-
-        if (!permissions?.use_external_emojis) {
-            reviewText +=
-                '\n[Give Bot External Emoji Permission]' +
-                '(https://discord.com/oauth2/authorize?client_id=794271558570213409&permissions=262144&scope=bot)';
-        }
+        reviewText = entry.containsSpoilers ? '||' + reviewText + '||' : reviewText;
 
         const embed = this.createEmbed()
             .setAuthor(authorTitle, profileImage, profileURL)
             .setTitle(entry.filmTitle + ' ' + releaseYear)
             .setURL(entry.link)
             .setThumbnail(entry.image)
-            .addField(reviewTitle, reviewText);
+            .setDescription(reviewTitle + reviewText);
 
         // If there is footer data then include it.
         if (data.footer) {

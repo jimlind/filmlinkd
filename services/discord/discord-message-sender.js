@@ -57,20 +57,6 @@ class DiscordMessageSender {
             });
         });
     }
-
-    getPermissions(channelId) {
-        return new Promise((resolve) => {
-            this.discordConnection.getConnectedClient().then((client) => {
-                const channel = client?.channels?.cache?.find((ch) => ch.id === channelId);
-                const clientMember = channel?.guild?.members?.cache?.get(client.user.id);
-
-                resolve({
-                    use_external_emojis:
-                        clientMember?.permissions?.has('USE_EXTERNAL_EMOJIS') || false,
-                });
-            });
-        });
-    }
 }
 
 module.exports = DiscordMessageSender;

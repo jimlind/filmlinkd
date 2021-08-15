@@ -17,6 +17,8 @@ class User {
     image = '';
     /** @property {string} displayName Letterboxd account display name */
     displayName = '';
+    /** @property {icon: string; text: string} footer Patron supporter footer */
+    footer = {};
 }
 
 module.exports = User;

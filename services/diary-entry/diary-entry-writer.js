@@ -81,34 +81,25 @@ class DiaryEntryWriter {
 
     /**
      * @param {import("../../models/diary-entry")} diaryEntry
-     * @param {any} userData
+     * @param {import("../../models/user")} userData
      * @returns {Promise<boolean>[]}
      */
     createSenderPromiseList(diaryEntry, userData) {
         const permissionsPromiseList = userData.channelList.map((channel) => {
             return new Promise((resolve, reject) => {
+                const message = this.messageEmbedFactory.createDiaryEntryMessage(
+                    diaryEntry,
+                    userData,
+                );
                 this.discordMessageSender
-                    .getPermissions(channel.channelId)
-                    .then((permissions) => {
-                        const message = this.messageEmbedFactory.createDiaryEntryMessage(
-                            diaryEntry,
-                            userData,
-                            permissions,
-                        );
-                        this.discordMessageSender
-                            .send(channel.channelId, message)
-                            .then(() => {
-                                // Successfully posted message
-                                return resolve(true);
-                            })
-                            .catch(() => {
-                                // Failure posting message
-                                return reject();
-                            });
+                    .send(channel.channelId, message)
+                    .then(() => {
+                        // Successfully posted message
+                        return resolve(true);
                     })
                     .catch(() => {
-                        // Failure getting permissions
-                        reject();
+                        // Failure posting message
+                        return reject();
                     });
             });
         });
