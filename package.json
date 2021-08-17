@@ -17,16 +17,15 @@
         "test": "mocha ./test --recursive"
     },
     "dependencies": {
-        "@google-cloud/firestore": "^4.8.1",
-        "@google-cloud/logging-winston": "^4.0.4",
-        "@google-cloud/pubsub": "^2.15.1",
-        "awilix": "^4.3.3",
+        "@google-cloud/firestore": "^4.14.1",
+        "@google-cloud/logging-winston": "^4.1.0",
+        "@google-cloud/pubsub": "^2.16.3",
+        "awilix": "^5.0.1",
         "axios": "^0.21.1",
         "death": "^1.1.0",
         "discord.js": "^12.5.1",
-        "dotenv": "^8.2.0",
-        "firebase": "^8.3.3",
-        "htmlparser2": "^6.0.0",
+        "dotenv": "^10.0.0",
+        "htmlparser2": "^6.1.0",
         "winston": "^3.3.3"
     },
     "devDependencies": {
