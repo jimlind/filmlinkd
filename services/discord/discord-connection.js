@@ -4,9 +4,19 @@ class DiscordConnection {
     connected = false;
     locked = false;
 
-    constructor(config, discordClient) {
+    /**
+     * @param {import('../../models/config')} config
+     * @param {import('discord.js').Client} discordClient
+     * @param {typeof import('@discordjs/rest').REST} discordRest
+     * @param {typeof import('discord-api-types/v9').Routes} discordRoutes
+     * @param {import('../logger')} logger
+     */
+    constructor(config, discordClient, discordRest, discordRoutes, logger) {
         this.config = config;
         this.discordClient = discordClient;
+        this.discordRest = discordRest;
+        this.discordRoutes = discordRoutes;
+        this.logger = logger;
     }
 
     getConnectedClient() {
@@ -34,10 +44,50 @@ class DiscordConnection {
             this.discordClient.on('ready', () => {
                 this.connected = true;
                 this.locked = false;
+                this.registerCommands();
 
                 return resolve(this.discordClient);
             });
             this.discordClient.login(this.config.discordBotToken);
+        });
+    }
+
+    registerCommands() {
+        const rest = new this.discordRest({ version: '9' }).setToken(this.config.discordBotToken);
+        const commands = [
+            {
+                name: 'help',
+                description: 'Replies with a some helpful information and links.',
+            },
+            {
+                name: 'follow',
+                description:
+                    'Adds the entered Letterboxd account to the following list in this channel.',
+            },
+            {
+                name: 'unfollow',
+                description:
+                    'Removes the entered Letterboxd account from the following list in this channel.',
+            },
+            {
+                name: 'following',
+                description: 'Replies with a list of all accounts followed in this channel.',
+            },
+            {
+                name: 'refresh',
+                description: 'Updates the Filmlinkd cache for the entered Letterboxd account.',
+            },
+        ];
+
+        this.discordClient.guilds.cache.each((guild) => {
+            rest.put(
+                this.discordRoutes.applicationGuildCommands(this.config.discordClientId, guild.id),
+                {
+                    body: commands,
+                },
+            ).catch((e) => {
+                this.logger.info(`Unable to set commands on ${guild.name} (${guild.id})`);
+            });
         });
     }
 }

@@ -1,5 +1,6 @@
 class Config {
     discordBotToken = '';
+    discordClientId = '';
     firestoreCollectionId = '';
     gcpKeyFile = '';
     googleCloudProjectId = '';

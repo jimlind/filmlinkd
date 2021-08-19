@@ -1,16 +1,21 @@
 'use strict';
 
+const { REST: DiscordRest } = require('@discordjs/rest');
+const { LoggingWinston } = require('@google-cloud/logging-winston');
+const { PubSub } = require('@google-cloud/pubsub');
 const awilix = require('awilix');
 const axios = require('axios').default;
-const discord = require('discord.js');
+const { Routes: DiscordRoutes } = require('discord-api-types/v9');
+const { Client: DiscordClient, Intents: DiscordIntents } = require('discord.js');
 const htmlparser2 = require('htmlparser2');
-const { LoggingWinston } = require('@google-cloud/logging-winston');
 const winston = require('winston');
-const { PubSub } = require('@google-cloud/pubsub');
 
 class DependencyInjectionContainer {
     constructor(configModel) {
         this.container = awilix.createContainer();
+
+        // Create Discord Client
+        const discordClient = new DiscordClient({ intents: [DiscordIntents.FLAGS.GUILDS] });
 
         // Create logger transport for the GCP console
         const googleCloudWinstonTransport = new LoggingWinston({
@@ -34,7 +39,9 @@ class DependencyInjectionContainer {
 
         this.container.register({
             config: awilix.asValue(configModel),
-            discordClient: awilix.asClass(discord.Client).classic(),
+            discordClient: awilix.asValue(discordClient),
+            discordRest: awilix.asValue(DiscordRest),
+            discordRoutes: awilix.asValue(DiscordRoutes),
             axios: awilix.asValue(axios),
             htmlParser2: awilix.asValue(htmlparser2),
             googleCloudWinstonTransport: awilix.asValue(googleCloudWinstonTransport),
