@@ -32,7 +32,7 @@ class ActionTranslator {
     }
 
     /**
-     * @param {import('../models/user-text-message')} message
+     * @param {import('../models/command-input')} message
      */
     translate(message) {
         switch (message.command) {
