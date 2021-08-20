@@ -15,7 +15,9 @@ class DependencyInjectionContainer {
         this.container = awilix.createContainer();
 
         // Create Discord Client
-        const discordClient = new DiscordClient({ intents: [DiscordIntents.FLAGS.GUILDS] });
+        const discordClient = new DiscordClient({
+            intents: [DiscordIntents.FLAGS.GUILDS, DiscordIntents.FLAGS.GUILD_MESSAGES],
+        });
 
         // Create logger transport for the GCP console
         const googleCloudWinstonTransport = new LoggingWinston({
