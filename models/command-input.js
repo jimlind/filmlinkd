@@ -1,4 +1,4 @@
-class UserTextMessage {
+class UserInput {
     manageServer = false;
     command = '';
     /** @property {string[]} arguments - All strings passed in via command */
@@ -9,4 +9,4 @@ class UserTextMessage {
     guildId = '';
 }
 
-module.exports = UserTextMessage;
+module.exports = UserInput;

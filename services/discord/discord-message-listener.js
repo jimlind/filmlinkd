@@ -1,6 +1,6 @@
 'use strict';
 
-const UserTextMessage = require('../../models/user-text-message');
+const CommandInput = require('../../models/command-input');
 
 class DiscordMessageListener {
     constructor(discordConnection) {
@@ -24,7 +24,7 @@ class DiscordMessageListener {
         const messageTextList = message.content.toLowerCase().split(/ +/);
 
         // Callback on the message parsed into a subscription message object
-        const userTextMessage = new UserTextMessage();
+        const userTextMessage = new CommandInput();
 
         userTextMessage.manageServer = message.member?.permissions?.has('MANAGE_GUILD') || false;
         userTextMessage.command = messageTextList[0].substring(1);

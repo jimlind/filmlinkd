@@ -30,7 +30,7 @@ class DiscordMessageSender {
                 }
 
                 channel
-                    .send(message)
+                    .send({ embeds: [message] })
                     .then(() => {
                         const metadata = {
                             channelId,
