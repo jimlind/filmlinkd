@@ -117,21 +117,20 @@ class MessageEmbedFactory {
         return this.createEmbed()
             .setTitle('(Help!) I Need Somebody')
             .setURL('https://jimlind.github.io/filmlinkd/')
-            .addField('!help', 'View this help message.\n`!help`')
-            .addField('!faq', 'Display a list of frequently asked questions.\n`!faq`')
+            .addField('/help', 'Replies with a some helpful information and links.')
             .addField(
-                '!follow',
-                'Subscribe Letterboxd user(s) in this channel.\n`!follow slim protolexus r0gue`',
+                '/follow <account>',
+                'Adds the Letterboxd account to the following list this channel.',
             )
             .addField(
-                '!unfollow',
-                'Unsubscribe Letterboxd user(s) in this channel.\n`!unfollow slim protolexus r0gue`',
+                '/unfollow <account>',
+                'Removes the Letterboxd account from the following list in this channel.',
             )
             .addField(
-                '!refresh',
-                'Force refresh of Letterboxd user(s) display name and profile photo.\n`!refresh slim protolexus r0gue`',
+                '/refresh <account>',
+                'Updates the Filmlinkd cache for the Letterboxd account.',
             )
-            .addField('!following', 'List all users subscribed in this channel.\n`!following`')
+            .addField('/following', 'Replies with a list of all accounts followed in this channel.')
             .addField(
                 ':clap: Patreon',
                 '[Support the project on Patreon](https://www.patreon.com/filmlinkd)',

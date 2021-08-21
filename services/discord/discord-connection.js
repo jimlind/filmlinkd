@@ -61,7 +61,7 @@ class DiscordConnection {
             },
             {
                 name: 'follow',
-                description: 'Follows a new Letterboxd account in this channel.',
+                description: 'Adds the Letterboxd account to the following list this channel.',
                 options: [
                     {
                         name: 'account',
@@ -74,7 +74,7 @@ class DiscordConnection {
             {
                 name: 'unfollow',
                 description:
-                    'Removes the entered Letterboxd account from the following list in this channel.',
+                    'Removes the Letterboxd account from the following list in this channel.',
                 options: [
                     {
                         name: 'account',
@@ -90,7 +90,7 @@ class DiscordConnection {
             },
             {
                 name: 'refresh',
-                description: 'Updates the Filmlinkd cache for the entered Letterboxd account.',
+                description: 'Updates the Filmlinkd cache for the Letterboxd account.',
                 options: [
                     {
                         name: 'account',

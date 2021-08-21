@@ -62,19 +62,30 @@
             <img class="d-block img-fluid mx-auto mb-4 rounded" src="images/installation/channel-permissions-bot.png" />
             <h2>Commands</h2>
             <dl>
-            	<dt>!help</dt>
-                <dd>Display a help message. <b>ex: !help</b></dd>
-                <dt>!follow</dt>
-                <dd>Subscribe Letterboxd user(s) in this channel. <b>ex: !follow slim protolexus r0gue</b></dd>
-                <dt>!unfollow</dt>
-                <dd>Unsubscribe Letterboxd user(s) in this channel. <b>ex: !unfollow slim protolexus r0gue</b></dd>
-                <dt>!refresh</dt>
+            	<dt>/help</dt>
                 <dd>
-                    Force refresh of Letterboxd user(s) display name and profile photo.
-                    <b>ex: !refresh slim protolexus r0gue</b>
+                    Replies with a some helpful information and links.
+                    <b>ex: /help</b>
                 </dd>
-                <dt>!following</dt>
-                <dd>List all users subscribed in this channel. <b>ex: !following</b></dd>
+                <dt>/follow</dt>
+                <dd>
+                    Adds the Letterboxd account to the following list this channel.
+                    <b>ex: /follow protolexus</b>
+                </dd>
+                <dt>/unfollow</dt>
+                <dd>
+                    Removes the Letterboxd account from the following list in this channel.
+                    <b>ex: /unfollow protolexus</b></dd>
+                <dt>/refresh</dt>
+                <dd>
+                    Updates the Filmlinkd cache for the Letterboxd account.
+                    <b>ex: /refresh protolexus</b>
+                </dd>
+                <dt>/following</dt>
+                <dd>
+                    Replies with a list of all accounts followed in this channel.
+                    <b>ex: /following</b>
+                </dd>
             </dl>
             <h2>F.A.Q.</h2>
             <dl>
