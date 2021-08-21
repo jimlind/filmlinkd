@@ -17,6 +17,16 @@ class DependencyInjectionContainer {
         // Create Discord Client
         const discordClient = new DiscordClient({
             intents: [DiscordIntents.FLAGS.GUILDS],
+            presence: {
+                status: 'online',
+                activities: [
+                    {
+                        name: 'Slash Commands',
+                        type: 'LISTENING',
+                        url: 'https://jimlind.github.io/filmlinkd/',
+                    },
+                ],
+            },
         });
 
         // Create logger transport for the GCP console
