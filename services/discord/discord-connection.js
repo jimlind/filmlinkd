@@ -61,13 +61,28 @@ class DiscordConnection {
             },
             {
                 name: 'follow',
-                description:
-                    'Adds the entered Letterboxd account to the following list in this channel.',
+                description: 'Follows a new Letterboxd account in this channel.',
+                options: [
+                    {
+                        name: 'account',
+                        description: 'Letterboxd account name',
+                        type: 3,
+                        required: true,
+                    },
+                ],
             },
             {
                 name: 'unfollow',
                 description:
                     'Removes the entered Letterboxd account from the following list in this channel.',
+                options: [
+                    {
+                        name: 'account',
+                        description: 'Letterboxd account name',
+                        type: 3,
+                        required: true,
+                    },
+                ],
             },
             {
                 name: 'following',
@@ -76,18 +91,22 @@ class DiscordConnection {
             {
                 name: 'refresh',
                 description: 'Updates the Filmlinkd cache for the entered Letterboxd account.',
+                options: [
+                    {
+                        name: 'account',
+                        description: 'Letterboxd account name',
+                        type: 3,
+                        required: true,
+                    },
+                ],
             },
         ];
 
-        this.discordClient.guilds.cache.each((guild) => {
-            rest.put(
-                this.discordRoutes.applicationGuildCommands(this.config.discordClientId, guild.id),
-                {
-                    body: commands,
-                },
-            ).catch((e) => {
-                this.logger.info(`Unable to set commands on ${guild.name} (${guild.id})`);
-            });
+        // Update global commands for eventual distribution to all guilds
+        rest.put(this.discordRoutes.applicationCommands(this.config.discordClientId), {
+            body: commands,
+        }).catch((e) => {
+            this.logger.info('Unable to set global Application Commands');
         });
     }
 }
