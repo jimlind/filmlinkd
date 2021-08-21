@@ -45,8 +45,12 @@ class InteractionTranslator {
      * @returns {Promise<import('discord.js').MessageEmbed>}
      */
     getMessagePromiseAfterNeccesaryAction(commandInteraction) {
-        // TODO only let admins follow and unfollow
-        //commandInputModel.manageServer = interaction.member.permissions.has('MANAGE_GUILD');
+        // Check for restricted commands and return the appropriate message
+        if (this.commandIsRestricted(commandInteraction)) {
+            return new Promise((resolve) => {
+                return resolve(this.messageEmbedFactory.createInadequatePermissionsMessage());
+            });
+        }
 
         const accountName = commandInteraction.options.getString('account') || '';
         const channelId = commandInteraction.channelId;
@@ -93,6 +97,26 @@ class InteractionTranslator {
                 });
                 break;
         }
+    }
+
+    /**
+     * @param {import("discord.js").CommandInteraction} interaction
+     * @returns boolean
+     */
+    commandIsRestricted(interaction) {
+        // If command is not in the protected command list is restricted
+        const protectedCommands = ['follow', 'unfollow'];
+        if (!protectedCommands.includes(interaction.commandName)) {
+            return false;
+        }
+
+        // If member is not a normal guild member command is not restricted
+        if (!(interaction.member instanceof require('discord.js').GuildMember)) {
+            return true;
+        }
+
+        // Nothing is restricted for guild managers
+        return !interaction.member.permissions.has('MANAGE_GUILD');
     }
 
     /**

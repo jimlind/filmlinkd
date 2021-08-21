@@ -16,7 +16,7 @@ class DependencyInjectionContainer {
 
         // Create Discord Client
         const discordClient = new DiscordClient({
-            intents: [DiscordIntents.FLAGS.GUILDS, DiscordIntents.FLAGS.GUILD_MESSAGES],
+            intents: [DiscordIntents.FLAGS.GUILDS],
         });
 
         // Create logger transport for the GCP console
