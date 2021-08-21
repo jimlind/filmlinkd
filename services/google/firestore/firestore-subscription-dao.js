@@ -100,6 +100,7 @@ class FirestoreSubscriptionDao {
 
     /**
      * @param {string} channelId
+     * @returns {Promise<string[]>}
      */
     list(channelId) {
         const channel = { channelId: channelId };
