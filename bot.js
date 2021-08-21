@@ -28,9 +28,9 @@ Promise.all([
     const serverCount = discordClient.guilds.cache.size;
     container.resolve('logger').info(`Discord Client Logged In on ${serverCount} Servers`);
 
-    // Listen for discord messages posted and respond
-    container.resolve('discordMessageListener').onMessage((message) => {
-        container.resolve('actionTranslator').translate(message);
+    // Listen for discord interactions and respond
+    container.resolve('discordInteractionListener').onInteraction((commandInteraction) => {
+        container.resolve('interactionTranslator').translate(commandInteraction);
     });
 
     // Listen for PubSub messages posted and respond
