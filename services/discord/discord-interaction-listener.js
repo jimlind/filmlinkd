@@ -17,9 +17,10 @@ class DiscordInteractionListener {
                     // Ignore if not a command and not from a guild member
                     if (!interaction.isCommand()) return;
                     if (!(interaction.member instanceof require('discord.js').GuildMember)) return;
-                    interaction.deferReply();
 
-                    return callback(interaction);
+                    return interaction.deferReply().then(() => {
+                        callback(interaction);
+                    });
                 },
             );
         });

@@ -39,10 +39,10 @@ class InteractionTranslator {
                     'Interaction Translator: Translate Good Message',
                     message.toJSON(),
                 );
-                return commandInteraction.reply({ embeds: [message] });
+                return commandInteraction.editReply({ embeds: [message] });
             } else {
                 this.logger.debug('Interaction Translator: Translate Bad Message');
-                return commandInteraction.reply(
+                return commandInteraction.editReply(
                     'Something has gone terribly wrong. Please enter a bug report',
                 );
             }
