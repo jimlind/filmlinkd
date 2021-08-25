@@ -138,7 +138,7 @@ class MessageEmbedFactory {
             )
             .addField(
                 ':left_speech_bubble: Discord',
-                '[Chat with a human on Discord](https://discord.gg/B4bk8h8PbZ)',
+                '[Chat with a human on Discord](https://discord.gg/deZ7EUguge)',
                 true,
             );
     }

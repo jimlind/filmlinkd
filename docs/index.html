@@ -4,9 +4,12 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="Filmlinkd Letterboxd Discord Bot" />
-		
-		<link rel="shortcut icon" href="images/filmlinkd-100.png">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/sandstone/bootstrap.min.css" />
+
+        <link rel="shortcut icon" href="images/filmlinkd-100.png" />
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/sandstone/bootstrap.min.css"
+        />
         <script src="https://kit.fontawesome.com/fb0723331c.js" crossorigin="anonymous"></script>
 
         <title>Filmlinkd Letterboxd Discord Bot</title>
@@ -16,53 +19,30 @@
         <div class="jumbotron text-center">
             <h1>Filmlinkd</h1>
             <p><strong>The Letterboxd Discord Bot for 2021</strong></p>
-            <a class="btn btn-info m-2" href="https://www.patreon.com/filmlinkd"><i class="fab fa-patreon mx-1"></i> Support Filmlinkd on Patreon</a>
-			<a class="btn btn-info m-2" href="https://discord.gg/B4bk8h8PbZ"><i class="fab fa-discord mx-1"></i> Join the Filmlinkd Discord</a>
+            <a class="btn btn-info m-2" href="https://www.patreon.com/filmlinkd"
+                ><i class="fab fa-patreon mx-1"></i> Support Filmlinkd on Patreon</a
+            >
+            <a class="btn btn-info m-2" href="https://discord.gg/deZ7EUguge"
+                ><i class="fab fa-discord mx-1"></i> Join the Filmlinkd Discord</a
+            >
         </div>
 
         <div class="container">
-            <h2>Recommended Installation Instructions</h2>
-            <p>It is why you are here right?</p>
-            <h3>1. Secure Your Server</h3>
-            <p>
-                You shouldn't install ANY Discord bots until you have taken the time to evaluate the risks associated
-                with it. Bots are treated the same as your friends so they can read EVERY message posted in any channel
-                that they are in. Bots can easily accidentally also be given permissions
-                that allow them to take over your server so think about how much you trust them.
-            </p>
-            <p>
-            	<strong>Optional</strong></br>
-            	If you are running a public server and expect new regular users you will want to install a bot that supports autoroles.
-            	I think that <a href="https://discordyui.net/">Yui</a> is great for autoroles and works even if you give it minimum "Manage Roles" permissions.
-            </p>
-            <p>
-                Create a role for humans/users/etc or reuse a role that you have for actual people. Grant that role the ability to
-                "View Channels."
-            </p>
-            <img class="d-block img-fluid mx-auto mb-4 rounded" src="images/installation/permissions-humans.png" />
-            <p>Edit the role for @everyone and remove the ability to "View Channels."</p>
-            <img class="d-block img-fluid mx-auto mb-4 rounded" src="images/installation/permissions-everyone.png" />
-            <p>If the rest of your roles are set to defaults every channel is now a robot free zone. This is good.</p>
-            <h3>2. Create a Channel</h3>
-            <p>
-                You don't want the bot to interrupt actual conversations so give it it's own channel to live in. Call
-                the channel something like #letterboxd-feed or #diary-feed.
-            </p>
-            <h3>3. Authorize the Bot</h3>
+            <h2>Installation Instructions</h2>
+            <h3>1. Authorize the Bot</h3>
             <div class="col text-center">
                 <a
                     class="btn btn-primary btn-lg mb-4"
-                    href="https://discord.com/oauth2/authorize?client_id=794271558570213409&permissions=262144&scope=bot"
+                    href="https://discord.com/oauth2/authorize?client_id=794271558570213409&permissions=2147764224&scope=applications.commands%20bot"
                     target="_blank"
                     >Authorize Filmlinkd</a
                 >
             </div>
-            <h3>4. Put the Bot to Work</h3>
-            <p>Add the bot to the new channel and make sure it has the ability to "View Channel"</p>
-            <img class="d-block img-fluid mx-auto mb-4 rounded" src="images/installation/channel-permissions-bot.png" />
+            <h3>2. Put the Bot to Work</h3>
+            <p>Use the commands to follow your favorite Letterboxd accounds on your server.</p>
             <h2>Commands</h2>
             <dl>
-            	<dt>/help</dt>
+                <dt>/help</dt>
                 <dd>
                     Replies with a some helpful information and links.
                     <b>ex: /help</b>
@@ -75,7 +55,8 @@
                 <dt>/unfollow</dt>
                 <dd>
                     Removes the Letterboxd account from the following list in this channel.
-                    <b>ex: /unfollow protolexus</b></dd>
+                    <b>ex: /unfollow protolexus</b>
+                </dd>
                 <dt>/refresh</dt>
                 <dd>
                     Updates the Filmlinkd cache for the Letterboxd account.
@@ -91,31 +72,33 @@
             <dl>
                 <dt>How quickly should I see new diary entries post in my channel?</dt>
                 <dd>
-                    It should be somewhere between 20-60 minutes. If you haven't seen it post in 2 hours, something is probably wrong.
+                    It should be somewhere between 20-60 minutes. If you haven't seen it post in 2
+                    hours, something is probably wrong.
                 </dd>
             </dl>
             <dl>
-                <dt>What permissions does this bot need?</dt>
+                <dt>What permissions and scope does this application need?</dt>
                 <dd>
-                    "View Channel," "Send Messages," and "Embed Links" are the only permissions this bot needs. "View Channel" gives it
-                    the ability to read your follow/unfollow commands. "Send Messages" with "Embed Links" gives it the ability to post
-                    your diary entries in a format that isn't just a text blob.
+                    "View Channel," "Send Messages," "Embed Links," and "Use External Emojis" are
+                    the only permissions this bot needs. "View Channel" allows the bot to have a
+                    presence in a specific channel. "Send Messages" with "Embed Links" gives it the
+                    ability to post your diary entries. "Use External Emojis" allows the bot to use
+                    the custom 1/2 star emoji.
                 </dd>
-            </dl>
-            <dl>
-                <dt>Should I really be concerned about what bots I run?</dt>
                 <dd>
-                    Yes! A bot that is running in a channel can record every message (including photos and videos)
-                    posted there.
+                    "Applications Commands" and "Bot" are the only scopes that it needs.
+                    "Application Commands" is used to populate the slash commands you will use to
+                    interact with the bot. "Bot" is used for the application to appear on your
+                    server.
                 </dd>
             </dl>
             <dl>
                 <dt>Where do I go for help?</dt>
-                <dd>Join the Filmlinkd Discord. The link is in the header.</dd>
+                <dd><a href="https://discord.gg/deZ7EUguge">Join the Filmlinkd Discord.</a></dd>
             </dl>
             <dl>
                 <dt>How can I support your work?</dt>
-                <dd>Join the Filmlinkd Patreon. The link is in the header.</dd>
+                <dd><a href="https://www.patreon.com/filmlinkd">Join the Filmlinkd Patreon.</a></dd>
             </dl>
         </div>
     </body>

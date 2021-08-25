@@ -14,4 +14,4 @@ https://github.com/jimlind/filmlinkd
 
 ## Invite the Bot
 
-https://discord.com/oauth2/authorize?client_id=794271558570213409&scope=bot
+https://discord.com/oauth2/authorize?client_id=794271558570213409&permissions=2147764224&scope=applications.commands%20bot
