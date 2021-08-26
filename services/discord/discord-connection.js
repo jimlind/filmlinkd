@@ -44,69 +44,10 @@ class DiscordConnection {
             this.discordClient.on('ready', () => {
                 this.connected = true;
                 this.locked = false;
-                this.registerCommands();
 
                 return resolve(this.discordClient);
             });
             this.discordClient.login(this.config.discordBotToken);
-        });
-    }
-
-    registerCommands() {
-        const rest = new this.discordRest({ version: '9' }).setToken(this.config.discordBotToken);
-        const commands = [
-            {
-                name: 'help',
-                description: 'Replies with a some helpful information and links.',
-            },
-            {
-                name: 'follow',
-                description: 'Adds the Letterboxd account to the following list this channel.',
-                options: [
-                    {
-                        name: 'account',
-                        description: 'Letterboxd account name',
-                        type: 3,
-                        required: true,
-                    },
-                ],
-            },
-            {
-                name: 'unfollow',
-                description:
-                    'Removes the Letterboxd account from the following list in this channel.',
-                options: [
-                    {
-                        name: 'account',
-                        description: 'Letterboxd account name',
-                        type: 3,
-                        required: true,
-                    },
-                ],
-            },
-            {
-                name: 'following',
-                description: 'Replies with a list of all accounts followed in this channel.',
-            },
-            {
-                name: 'refresh',
-                description: 'Updates the Filmlinkd cache for the Letterboxd account.',
-                options: [
-                    {
-                        name: 'account',
-                        description: 'Letterboxd account name',
-                        type: 3,
-                        required: true,
-                    },
-                ],
-            },
-        ];
-
-        // Update global commands for eventual distribution to all guilds
-        rest.put(this.discordRoutes.applicationCommands(this.config.discordClientId), {
-            body: commands,
-        }).catch((e) => {
-            this.logger.info('Unable to set global Application Commands');
         });
     }
 }
