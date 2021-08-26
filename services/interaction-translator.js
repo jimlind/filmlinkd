@@ -8,7 +8,6 @@ class InteractionTranslator {
      * @param {any} messageEmbedFactory
      * @param {any} letterboxdProfileWeb
      * @param {any} subscribedUserList
-     * @param {any} logger
      */
     constructor(
         diaryEntryProcessor,
@@ -17,7 +16,6 @@ class InteractionTranslator {
         messageEmbedFactory,
         letterboxdProfileWeb,
         subscribedUserList,
-        logger,
     ) {
         this.diaryEntryProcessor = diaryEntryProcessor;
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
@@ -25,23 +23,16 @@ class InteractionTranslator {
         this.messageEmbedFactory = messageEmbedFactory;
         this.letterboxdProfileWeb = letterboxdProfileWeb;
         this.subscribedUserList = subscribedUserList;
-        this.logger = logger;
     }
 
     /**
      * @param {import("discord.js").CommandInteraction} commandInteraction
      */
     translate(commandInteraction) {
-        this.logger.debug('Interaction Translator: Translate Initial', commandInteraction.toJSON());
         this.getMessagePromiseAfterNeccesaryAction(commandInteraction).then((message) => {
             if (message instanceof require('discord.js').MessageEmbed) {
-                this.logger.debug(
-                    'Interaction Translator: Translate Good Message',
-                    message.toJSON(),
-                );
                 return commandInteraction.editReply({ embeds: [message] });
             } else {
-                this.logger.debug('Interaction Translator: Translate Bad Message');
                 return commandInteraction.editReply(
                     'Something has gone terribly wrong. Please enter a bug report',
                 );
