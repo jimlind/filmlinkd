@@ -27,6 +27,8 @@ class DiaryEntry {
     liked = false;
     /** @property {boolean} containsSpoilers - Does the review contain spoilers */
     containsSpoilers = false;
+    /** @property {boolean} adult - Is this an adult film */
+    adult = false;
     /** @property {string} review - Full text of the review */
     review = '';
 }

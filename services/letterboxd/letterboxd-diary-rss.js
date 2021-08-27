@@ -66,6 +66,7 @@ class LetterboxdDiaryRss {
      */
     createEntry(userName, item) {
         const description = this.getDescriptionDom(item);
+        const image = this.getImage(description);
 
         const diaryEntry = new DiaryEntry();
         diaryEntry.id = this.getId(item);
@@ -76,11 +77,12 @@ class LetterboxdDiaryRss {
         diaryEntry.filmTitle = this.getFilmTitle(item);
         diaryEntry.filmYear = this.getFilmYear(item);
         diaryEntry.watchedDate = this.getWatchedDate(item);
-        diaryEntry.image = this.getImage(description);
+        diaryEntry.image = this.getUncensoredImage(image);
         diaryEntry.starCount = this.getStarCount(item);
         diaryEntry.stars = this.getStars(item);
         diaryEntry.rewatch = this.getRewatch(item);
         diaryEntry.containsSpoilers = this.getContainsSpoilers(item);
+        diaryEntry.adult = this.getAdult(image);
         diaryEntry.review = this.getReview(description);
 
         return diaryEntry;
@@ -93,6 +95,18 @@ class LetterboxdDiaryRss {
     getDescriptionDom(item) {
         const descriptionHtml = this.getTextFromTag('description', item);
         return this.htmlParser2.parseDocument(descriptionHtml, { xmlMode: true });
+    }
+
+    /**
+     * @param {import("domhandler").Document} item
+     * @returns {string}
+     */
+    getImage(item) {
+        const elements = this.htmlParser2.DomUtils.getElementsByTagName('img', item);
+        if (!elements.length) {
+            return '';
+        }
+        return this.htmlParser2.DomUtils.getAttributeValue(elements[0], 'src') || '';
     }
 
     /**
@@ -144,6 +158,24 @@ class LetterboxdDiaryRss {
     }
 
     /**
+     *
+     * @param {string} imageUrl
+     * @returns {string}
+     */
+    getUncensoredImage(imageUrl) {
+        if (!imageUrl.includes('-scale10')) {
+            return imageUrl;
+        }
+
+        const map = {
+            '-10': '-500',
+            '-15': '-750',
+            '-scale10': '',
+        };
+        return imageUrl.replace(/\-10|\-15|\-scale10/g, (match) => map[match]);
+    }
+
+    /**
      * @param {import("domhandler").Element} item
      * @returns {string}
      */
@@ -157,18 +189,6 @@ class LetterboxdDiaryRss {
      */
     getFilmYear(item) {
         return parseInt(this.getTextFromTag('letterboxd:filmYear', item));
-    }
-
-    /**
-     * @param {import("domhandler").Document} item
-     * @returns {string}
-     */
-    getImage(item) {
-        const elements = this.htmlParser2.DomUtils.getElementsByTagName('img', item);
-        if (!elements.length) {
-            return '';
-        }
-        return this.htmlParser2.DomUtils.getAttributeValue(elements[0], 'src') || '';
     }
 
     /**
@@ -238,6 +258,14 @@ class LetterboxdDiaryRss {
      */
     getContainsSpoilers(item) {
         return this.getTextFromTag('title', item).includes('(contains spoilers)');
+    }
+
+    /**
+     * @param {string} imageUrl
+     * @returns {boolean}
+     */
+    getAdult(imageUrl) {
+        return imageUrl.includes('-scale10');
     }
 
     /**
