@@ -68,7 +68,8 @@ class MessageEmbedFactory {
         const action = entry.type || 'logg';
         const authorTitle = `${profileName} ${action}ed...`;
 
-        let releaseYear = entry.filmYear ? '(' + entry.filmYear + ')' : '';
+        const adult = entry.adult ? ':underage: ' : '';
+        const releaseYear = entry.filmYear ? '(' + entry.filmYear + ')' : '';
         let dateString = '';
         if (entry.watchedDate) {
             const date = new Date(entry.watchedDate);
@@ -100,7 +101,7 @@ class MessageEmbedFactory {
         const rule = reviewTitle && reviewText ? '┈'.repeat(12) + '\n' : '';
         const embed = this.createEmbed()
             .setAuthor(authorTitle, profileImage, profileURL)
-            .setTitle(entry.filmTitle + ' ' + releaseYear)
+            .setTitle(adult + entry.filmTitle + ' ' + releaseYear)
             .setURL(entry.link)
             .setThumbnail(entry.image)
             .setDescription(reviewTitle + rule + reviewText);
