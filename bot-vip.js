@@ -40,6 +40,9 @@ Promise.all([container.resolve('pubSubConnection').getSubscription()]).then(
                 });
 
             threadRunning = true;
+
+            // Attempt to stop memory leak
+            return;
         }, 100); // Allow bot to rest for 100ms
 
         // Clean up when process is told to end

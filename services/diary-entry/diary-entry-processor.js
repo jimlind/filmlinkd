@@ -73,32 +73,29 @@ class DiaryEntryProcessor {
                     if (!userList.length) {
                         return resolve(0);
                     }
-                    // Loop over the users and with a slight delay between each request
-                    let userListPostCount = 0;
-                    userList.forEach((user, userIndex) => {
-                        setTimeout(() => {
-                            this.getNewEntriesForUser(user, 10).then((diaryEntryList) => {
-                                if (diaryEntryList.length) {
-                                    const message = `Publishing "${diaryEntryList[0].filmTitle}" from VIP "${diaryEntryList[0].userName}"`;
-                                    this.logger.info(message);
-                                }
-                                this.diaryEntryPublisher
-                                    .publish(diaryEntryList)
-                                    .then((successList) => {
-                                        successList.forEach((success) => {
-                                            this.subscribedUserList.upsert(
-                                                success.user,
-                                                parseInt(success.id),
-                                                true,
-                                            );
-                                        });
-                                    });
+
+                    // Create list of promises with noop failures
+                    const entryPromiseList = userList
+                        .map((user) => this.getNewEntriesForUser(user, 10))
+                        .map((p) => p.catch(() => false));
+
+                    Promise.all(entryPromiseList).then((values) => {
+                        values.flat().forEach((diaryEntry) => {
+                            if (typeof diaryEntry == 'boolean') return; // Enforce typing (sort of)
+
+                            const message = `Publishing "${diaryEntry.filmTitle}" from VIP "${diaryEntry.userName}"`;
+                            this.logger.info(message);
+
+                            this.diaryEntryPublisher.publish([diaryEntry]).then((successList) => {
+                                successList.forEach((success) => {
+                                    this.subscribedUserList.upsert(
+                                        success.user,
+                                        parseInt(success.id),
+                                        true,
+                                    );
+                                });
                             });
-                            userListPostCount++;
-                            if (userList.length === userListPostCount) {
-                                return resolve(userListPostCount);
-                            }
-                        }, userIndex * 10);
+                        });
                     });
                 });
         });
