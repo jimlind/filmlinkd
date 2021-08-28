@@ -53,6 +53,12 @@ class DiaryEntryWriter {
                         return resolve();
                     }
 
+                    // Exit early if it is an adult film
+                    // I'll selectively enable them for specific servers later
+                    if (diaryEntry.adult) {
+                        return resolve();
+                    }
+
                     // Get sender promise list with mapped failures to noops
                     const promiseList = this.createSenderPromiseList(diaryEntry, userData).map(
                         (p) => p.catch(() => false),
