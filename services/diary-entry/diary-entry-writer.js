@@ -24,30 +24,29 @@ class DiaryEntryWriter {
 
     /**
      * @param {import('../../models/diary-entry')} diaryEntry
-     * @param {number[]} channelIdList
-     * @param {boolean} skipPreviousCheck
+     * @param {string} channelIdOverride
      * @returns {Promise}
      */
-    validateAndWrite(diaryEntry, channelIdList = [], skipPreviousCheck = false) {
+    validateAndWrite(diaryEntry, channelIdOverride) {
         return new Promise((resolve) => {
             // Get the user data from cache
             const user = this.subscribedUserList.get(diaryEntry.userName);
 
             // Because we are expecting multiple requests to post a diary entry we maintain
-            // the one source of truth on the server that sends messages so we double check
+            // the one source of truth on the server that sends messages so we double-check
             // the previous Id.
-            if (diaryEntry.id <= user.previousId && !skipPreviousCheck) {
-                return resolve(); // Exit early if the diary entry is latest
+            // Ignore this check if there is a channel override because that will go no matter what.
+            if (diaryEntry.id <= user.previousId && !channelIdOverride) {
+                return resolve();
             }
-
-            // Create a properly formed list of channels
-            const channelList = channelIdList.map((channelId) => ({ channelId }));
 
             this.firestoreUserDao
                 .read(diaryEntry.userName)
                 .then((userData) => {
-                    // Potentially override the channel list
-                    userData.channelList = channelList.length ? channelList : userData.channelList;
+                    // Rewrite the channel list if there is an override sent
+                    userData.channelList = channelIdOverride
+                        ? [{ channelId: channelIdOverride }]
+                        : userData.channelList;
 
                     // Exit early if no subscribed channels
                     if (userData.channelList.length === 0) {

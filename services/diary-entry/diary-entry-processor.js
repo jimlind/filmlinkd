@@ -29,7 +29,7 @@ class DiaryEntryProcessor {
     processMostRecentForUser(userName, channelId) {
         const user = { userName, previousId: 0 };
         this.getNewEntriesForUser(user, 1).then((diaryEntryList) => {
-            this.diaryEntryPublisher.publish(diaryEntryList, [channelId]);
+            this.diaryEntryPublisher.publish(diaryEntryList, channelId);
         });
     }
 

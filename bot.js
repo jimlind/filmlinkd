@@ -37,10 +37,9 @@ Promise.all([
     container.resolve('pubSubMessageListener').onMessage((message) => {
         const returnData = JSON.parse(message.data.toString());
         const diaryEntry = Object.assign(new DiaryEntry(), returnData?.entry);
-        const channelIdList = returnData?.channelIdList || [];
         container
             .resolve('diaryEntryWriter')
-            .validateAndWrite(diaryEntry, channelIdList, Boolean(channelIdList.length))
+            .validateAndWrite(diaryEntry, returnData?.channelId)
             .then(() => {
                 message.ack();
             });

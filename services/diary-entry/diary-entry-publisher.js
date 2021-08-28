@@ -12,15 +12,15 @@ class DiaryEntryPublisher {
 
     /**
      * @param {import('../../models/diary-entry')[]} diaryEntryList
-     * @param {string[]} channelIdList
+     * @param {string} channelIdOverride
      * @return {Promise<{user:string, id: string}[]>}
      */
-    publish(diaryEntryList, channelIdList = []) {
+    publish(diaryEntryList, channelIdOverride = '') {
         return new Promise((resolve) => {
             const promiseList = diaryEntryList
                 .map((diaryEntry) => {
                     return this.pubSubConnection.getTopic().then((topic) => {
-                        const data = { entry: diaryEntry, channelIdList };
+                        const data = { entry: diaryEntry, channelId: channelIdOverride };
                         const buffer = Buffer.from(JSON.stringify(data));
                         topic.publish(buffer);
 
