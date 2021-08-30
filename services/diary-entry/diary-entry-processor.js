@@ -96,6 +96,7 @@ class DiaryEntryProcessor {
                                 });
                             });
                         });
+                        return resolve(userList.length);
                     });
                 });
         });
