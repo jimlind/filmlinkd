@@ -29,8 +29,15 @@ let index = 0;
 
 Promise.all([container.resolve('pubSubConnection').getSubscription()]).then(
     ([pubSubSubscription]) => {
+        const startTime = Date.now();
         interval = setInterval(() => {
             if (threadRunning) return; // Exit early
+
+            if (Date.now() > startTime + 12 * 60 * 60000) {
+                container.resolve('logger').info('12 Hour Reset');
+                return process.exit();
+            }
+
             container
                 .resolve('diaryEntryProcessor')
                 .processPageOfVipEntries(index, 25)
