@@ -56,8 +56,19 @@ Promise.all([
         .getRandomIndex()
         .then((index) => {
             const diaryRestInterval = 30 * 1000; // Give it 30 seconds to rest
+            const startTime = Date.now();
             interval = setInterval(() => {
                 if (threadRunning) return;
+
+                if (Date.now() > startTime + 4 * 60 * 60000) {
+                    container.resolve('logger').info('4 Hour Reset');
+                    return process.exit();
+                }
+
+                if (!discordClient.isReady()) {
+                    container.resolve('logger').info('Client Not Ready Reset');
+                    return process.exit();
+                }
 
                 const config = container.resolve('config');
                 container
