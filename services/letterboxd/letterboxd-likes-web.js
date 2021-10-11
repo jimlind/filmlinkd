@@ -3,8 +3,12 @@
 class LetterboxdLikesWeb {
     root = 'https://letterboxd.com';
 
-    constructor(axios, htmlParser2) {
-        this.axios = axios;
+    /**
+     * @param {import('../http-client')} httpClient
+     * @param {import('htmlparser2')} htmlParser2 - Library for parsing HTML
+     */
+    constructor(httpClient, htmlParser2) {
+        this.httpClient = httpClient;
         this.htmlParser2 = htmlParser2;
         this.domUtils = htmlParser2.DomUtils;
     }
@@ -45,49 +49,63 @@ class LetterboxdLikesWeb {
         const url =
             `${this.root}/ajax/activity-pagination/${userName}/` + (after ? `?after=${after}` : '');
 
-        return new Promise((resolve, reject) => {
-            this.axios
-                .get(url)
-                .then((response) => {
-                    const likedList = {};
-                    const dom = this.htmlParser2.parseDocument(response.data);
+        return this.httpClient.get(url, 10000).then((response) => {
+            const dom = this.htmlParser2.parseDocument(response.data);
+            const likedReviewedList = this._parseReviewedFilms(dom);
+            const likedWatchedList = this._parseWatchedFilms(dom, userName);
+            const likedList = { ...likedReviewedList, ...likedWatchedList };
 
-                    // Parse reviewed films from activity
-                    this.domUtils
-                        .getElements({ class: 'film-detail-content' }, dom)
-                        .forEach((detail) => {
-                            const h2 = this.domUtils.getElementsByTagName('h2', detail)[0];
-                            const a = this.domUtils.getElementsByTagName('a', h2)[0];
-                            const href = this.root + this.domUtils.getAttributeValue(a, 'href');
-                            const liked = this.domUtils.getElements(
-                                { class: 'has-icon icon-16 icon-liked' },
-                                detail,
-                            );
+            // Parse activity id from sections
+            const section = this.domUtils.getElementsByTagName('section', dom).pop();
+            const activityIdString = this.domUtils.getAttributeValue(section, 'data-activity-id');
+            const activityId = parseInt(activityIdString);
 
-                            likedList[href] = Boolean(liked.length);
-                        });
-
-                    // Parse watched films from activity
-                    this.domUtils
-                        .getElements({ tag_contains: 'a', class: 'target' }, dom)
-                        .forEach((anchor) => {
-                            const href =
-                                this.root + this.domUtils.getAttributeValue(anchor, 'href');
-                            if (href.startsWith(`${this.root}/${userName}/`)) {
-                                const options = { class: 'context' };
-                                const context = this.domUtils.getElements(options, anchor);
-                                likedList[href] = this.domUtils.getText(context).includes('liked');
-                            }
-                        });
-
-                    // Parse activity id from sections
-                    const section = this.domUtils.getElementsByTagName('section', dom).pop();
-                    const activityId = this.domUtils.getAttributeValue(section, 'data-activity-id');
-
-                    resolve({ likedList, activityId, endOfActivity: !activityId });
-                })
-                .catch(reject);
+            return { likedList, activityId, endOfActivity: !activityId };
         });
+    }
+
+    /**
+     * @param {import("domhandler").Node | import("domhandler").Node[]} dom
+     */
+    _parseReviewedFilms(dom) {
+        const likedList = {};
+
+        this.domUtils.getElements({ class: 'film-detail-content' }, dom, true).forEach((detail) => {
+            const h2 = this.domUtils.getElementsByTagName('h2', detail)[0];
+            const a = this.domUtils.getElementsByTagName('a', h2)[0];
+            const href = this.root + this.domUtils.getAttributeValue(a, 'href');
+            const liked = this.domUtils.getElements(
+                { class: 'has-icon icon-16 icon-liked' },
+                detail,
+                true,
+            );
+
+            likedList[href] = Boolean(liked.length);
+        });
+
+        return likedList;
+    }
+
+    /**
+     * @param {import("domhandler").Node | import("domhandler").Node[]} dom
+     * @param {any} userName
+     */
+    _parseWatchedFilms(dom, userName) {
+        const likedList = {};
+
+        this.domUtils
+            .getElements({ tag_contains: 'a', class: 'target' }, dom, true)
+            .forEach((anchor) => {
+                // @ts-ignore -- TODO: Method getAttributeValue expects an Element we give a Node
+                const href = this.root + this.domUtils.getAttributeValue(anchor, 'href');
+                if (href.startsWith(`${this.root}/${userName}/`)) {
+                    const options = { class: 'context' };
+                    const context = this.domUtils.getElements(options, anchor, true);
+                    likedList[href] = this.domUtils.getText(context).includes('liked');
+                }
+            });
+
+        return likedList;
     }
 }
 
