@@ -26,7 +26,7 @@ class LetterboxdDiaryRss {
                     },
                 })
                 .then((response) => {
-                    resolve(this.parseRss(userName, response.data, count));
+                    resolve(this.parseRss(userName, response.data.toString(), count));
                 })
                 .catch(reject);
         });

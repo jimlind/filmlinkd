@@ -1,5 +1,7 @@
 'use strict';
 
+const DiaryEntry = require('../../models/diary-entry');
+
 class LetterboxdLikesWeb {
     root = 'https://letterboxd.com';
 
@@ -50,13 +52,13 @@ class LetterboxdLikesWeb {
             `${this.root}/ajax/activity-pagination/${userName}/` + (after ? `?after=${after}` : '');
 
         return this.httpClient.get(url, 10000).then((response) => {
-            const dom = this.htmlParser2.parseDocument(response.data);
-            const likedReviewedList = this._parseReviewedFilms(dom);
-            const likedWatchedList = this._parseWatchedFilms(dom, userName);
+            const document = this.htmlParser2.parseDocument(response.data.toString());
+            const likedReviewedList = this._parseReviewedFilms(document);
+            const likedWatchedList = this._parseWatchedFilms(document, userName);
             const likedList = { ...likedReviewedList, ...likedWatchedList };
 
             // Parse activity id from sections
-            const section = this.domUtils.getElementsByTagName('section', dom).pop();
+            const section = this.domUtils.getElementsByTagName('section', document).pop();
             const activityIdString = this.domUtils.getAttributeValue(section, 'data-activity-id');
             const activityId = parseInt(activityIdString);
 
@@ -65,43 +67,51 @@ class LetterboxdLikesWeb {
     }
 
     /**
-     * @param {import("domhandler").Node | import("domhandler").Node[]} dom
+     * @param {import("domhandler").Document} document
      */
-    _parseReviewedFilms(dom) {
+    _parseReviewedFilms(document) {
         const likedList = {};
 
-        this.domUtils.getElements({ class: 'film-detail-content' }, dom, true).forEach((detail) => {
-            const h2 = this.domUtils.getElementsByTagName('h2', detail)[0];
-            const a = this.domUtils.getElementsByTagName('a', h2)[0];
-            const href = this.root + this.domUtils.getAttributeValue(a, 'href');
-            const liked = this.domUtils.getElements(
-                { class: 'has-icon icon-16 icon-liked' },
-                detail,
-                true,
-            );
+        this.domUtils
+            .getElements({ class: 'film-detail-content' }, document, true)
+            .forEach((detail) => {
+                const h2 = this.domUtils.getElementsByTagName('h2', detail)[0];
+                const a = this.domUtils.getElementsByTagName('a', h2)[0];
+                const href = this.root + this.domUtils.getAttributeValue(a, 'href');
+                const liked = this.domUtils.getElements(
+                    { class: 'has-icon icon-16 icon-liked' },
+                    detail,
+                    true,
+                    1,
+                );
 
-            likedList[href] = Boolean(liked.length);
-        });
+                likedList[href] = Boolean(liked.length);
+            });
 
         return likedList;
     }
 
     /**
-     * @param {import("domhandler").Node | import("domhandler").Node[]} dom
+     * @param {import("domhandler").Document} document
      * @param {any} userName
      */
-    _parseWatchedFilms(dom, userName) {
+    _parseWatchedFilms(document, userName) {
         const likedList = {};
 
         this.domUtils
-            .getElements({ tag_contains: 'a', class: 'target' }, dom, true)
-            .forEach((anchor) => {
-                // @ts-ignore -- TODO: Method getAttributeValue expects an Element we give a Node
-                const href = this.root + this.domUtils.getAttributeValue(anchor, 'href');
+            .getElements({ tag_contains: 'a', class: 'target' }, document, true)
+            .forEach((anchorElement) => {
+                // The getElements method can return Nodes, but it should always be returning an Element
+                // since we are finding specific tags. Filter on instanceof here just to make sure.
+                if (!(anchorElement instanceof require('domhandler').Element)) {
+                    return;
+                }
+
+                const href = this.root + this.domUtils.getAttributeValue(anchorElement, 'href');
                 if (href.startsWith(`${this.root}/${userName}/`)) {
                     const options = { class: 'context' };
-                    const context = this.domUtils.getElements(options, anchor, true);
-                    likedList[href] = this.domUtils.getText(context).includes('liked');
+                    const context = this.domUtils.getElements(options, anchorElement, true);
+                    likedList[href] = this.domUtils.textContent(context).includes('liked');
                 }
             });
 
