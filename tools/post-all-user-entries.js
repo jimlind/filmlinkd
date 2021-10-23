@@ -12,40 +12,33 @@ const container = new DependencyInjectionContainer(configModel);
 
 // Configs for the messages posted
 const userName = 'slim';
-const quantity = 20;
-const channelId = '799785154032959528'; // This is an intenal channel for testing
+const internalTestingChannelId = '799785154032959528';
+
 const mockUser = {
     displayName: userName,
     userName: userName,
     image: 'https://placedog.net/100',
+    channelList: [{ channelId: internalTestingChannelId }],
 };
 
 container
     .resolve('discordConnection')
     .getConnectedClient()
     .then((discordClient) => {
+        const diaryEntryWriter = container.resolve('diaryEntryWriter');
         const serverCount = discordClient.guilds.cache.size;
         container.resolve('logger').info(`Discord Client Logged In on ${serverCount} Servers`);
 
         container
-            .resolve('letterboxdDiaryRss')
-            .get(userName, quantity)
+            .resolve('diaryEntryProcessor')
+            .getNewEntriesForUser({ userName, previousId: 0 })
             .then((entryList) => {
-                entryList.forEach((entry, index) => {
-                    setTimeout(() => {
-                        const message = container
-                            .resolve('messageEmbedFactory')
-                            .createDiaryEntryMessage(entry, mockUser);
+                const promiseList = entryList
+                    .map((entry) => diaryEntryWriter.createSenderPromiseList(entry, mockUser))
+                    .flat();
 
-                        container
-                            .resolve('discordMessageSender')
-                            .send(channelId, message)
-                            .then(() => {
-                                if (entryList.length == index + 1) {
-                                    discordClient.destroy();
-                                }
-                            });
-                    }, index * 1000);
+                Promise.all(promiseList).finally(() => {
+                    discordClient.destroy();
                 });
             });
     });
