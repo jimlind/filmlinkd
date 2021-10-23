@@ -69,9 +69,8 @@ class DiaryEntryProcessor {
             this.subscribedUserList
                 .getActiveVipSubscriptionsPage(index, pageSize)
                 .then((userList) => {
-                    // Special usecase for empty user list returned.
                     if (!userList.length) {
-                        return resolve(0);
+                        return resolve(0); // If user list is empty exit
                     }
 
                     // Create list of promises with noop failures
