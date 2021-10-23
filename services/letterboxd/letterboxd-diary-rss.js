@@ -4,11 +4,11 @@ const DiaryEntry = require('../../models/diary-entry');
 
 class LetterboxdDiaryRss {
     /**
-     * @param {import('axios').default} axios - Library for downloading
+     * @param {import('../http-client')} httpClient
      * @param {import('htmlparser2')} htmlParser2 - Library for parsing HTML
      */
-    constructor(axios, htmlParser2) {
-        this.axios = axios;
+    constructor(httpClient, htmlParser2) {
+        this.httpClient = httpClient;
         this.htmlParser2 = htmlParser2;
     }
 
@@ -18,18 +18,11 @@ class LetterboxdDiaryRss {
      * @returns {Promise<DiaryEntry[]>}
      */
     get(userName, count) {
-        return new Promise((resolve, reject) => {
-            this.axios
-                .get(`https://letterboxd.com/${userName}/rss/`, {
-                    headers: {
-                        'User-Agent': 'Filmlinkd - A Letterboxd Discord Bot',
-                    },
-                })
-                .then((response) => {
-                    resolve(this.parseRss(userName, response.data.toString(), count));
-                })
-                .catch(reject);
-        });
+        return this.httpClient
+            .get(`https://letterboxd.com/${userName}/rss/`, 10000)
+            .then((response) => {
+                return this.parseRss(userName, response.data.toString(), count);
+            });
     }
 
     /**
