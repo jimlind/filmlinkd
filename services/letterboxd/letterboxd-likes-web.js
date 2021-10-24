@@ -24,6 +24,11 @@ class LetterboxdLikesWeb {
      */
     get(userName, linkList, initialLikedList = [], after = 0) {
         return new Promise((resolve, reject) => {
+            // If there aren't any links to check against exit here
+            if (linkList.length == 0) {
+                resolve(['']);
+            }
+
             this.fetch(userName, after)
                 .then(({ likedList, activityId, endOfActivity }) => {
                     const completeLikedList = { ...initialLikedList, ...likedList };

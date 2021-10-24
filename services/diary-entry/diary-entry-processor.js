@@ -116,6 +116,11 @@ class DiaryEntryProcessor {
                         return diaryEntry.id > user.previousId;
                     });
 
+                    // If there aren't any diary entries exit here
+                    if (filteredDiaryEntryList.length == 0) {
+                        return resolve([]);
+                    }
+
                     // Collect list of all URLs for diary entries and get likes
                     const linkList = filteredDiaryEntryList.map((diaryEntry) => diaryEntry.link);
                     this.letterboxdLikesWeb
