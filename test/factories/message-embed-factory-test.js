@@ -4,34 +4,34 @@ const describe = require('mocha').describe;
 const crypto = require('crypto');
 const DiaryEntry = require('../../models/diary-entry');
 const MessageEmbedFactory = require('../../factories/message-embed-factory');
+const User = require('../../models/user');
 
 describe('Message Embed Factory', () => {
-    it('review codeblocks are properly formatted', () => {
+    it('review normal descriptions are properly formatted', () => {
         const randomText = crypto.randomBytes(16).toString('hex');
 
-        const data = [];
         const entry = new DiaryEntry();
         entry.review = randomText;
+        const user = new User();
 
         const messageEmbedFactory = new MessageEmbedFactory();
-        const message = messageEmbedFactory.createDiaryEntryMessage(entry, data);
+        const message = messageEmbedFactory.createDiaryEntryMessage(entry, user);
 
-        const formattedText = '```\n' + randomText + '\n```';
-        assert.strictEqual(message.fields[0].value, formattedText);
+        assert.strictEqual(message.description, randomText);
     });
 
     it('spoiler reviews are properly formatted', () => {
         const randomText = crypto.randomBytes(16).toString('hex');
 
-        const data = [];
+        const user = new User();
         const entry = new DiaryEntry();
         entry.containsSpoilers = true;
         entry.review = randomText;
 
         const messageEmbedFactory = new MessageEmbedFactory();
-        const message = messageEmbedFactory.createDiaryEntryMessage(entry, data);
+        const message = messageEmbedFactory.createDiaryEntryMessage(entry, user);
 
-        const formattedText = '||`' + randomText + '`||';
-        assert.strictEqual(message.fields[0].value, formattedText);
+        const formattedText = '||' + randomText + '||';
+        assert.strictEqual(message.description, formattedText);
     });
 });

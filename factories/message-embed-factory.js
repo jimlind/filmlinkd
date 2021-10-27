@@ -106,8 +106,8 @@ class MessageEmbedFactory {
             .setThumbnail(entry.image)
             .setDescription(reviewTitle + rule + reviewText);
 
-        // If there is footer data then include it.
-        if (data.footer) {
+        // If there is footer data with actual data then include it.
+        if (data.footer?.text || data.footer?.icon) {
             embed.setFooter(data.footer.text, data.footer.icon);
         }
 
