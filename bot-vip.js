@@ -19,7 +19,7 @@ const configModel = new ConfigFactory(
 ).build();
 
 const container = new DependencyInjectionContainer(configModel);
-const botRestingTime = 100;
+const botRestingTime = 5000; // 5 seconds
 
 // Keeps track of if an active diary entry thread is running
 let threadRunning = false;
