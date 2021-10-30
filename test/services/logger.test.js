@@ -179,27 +179,27 @@ describe('Logger', () => {
     });
 });
 
-setupConfigStub = () => {
+function setupConfigStub() {
     return sinon.createStubInstance(Config);
 };
 
-setupWinstonTransportStub = () => {
+function setupWinstonTransportStub() {
     return sinon.createStubInstance(LoggingWinston);
 };
 
-setupConsoleTransportStub = () => {
+function setupConsoleTransportStub() {
     return sinon.createStubInstance(winston.transports.Console);
 };
 
-setupWinstonStub = () => {
-    winstonStub = sinon.stub(winston);
+function setupWinstonStub() {
+    const winstonStub = sinon.stub(winston);
     winstonStub.format = {
         timestamp: sinon.stub(),
         prettyPrint: sinon.stub(),
         combine: sinon.stub(),
     };
 
-    loggerMethods = {
+    const loggerMethods = {
         add: sinon.stub(),
         debug: sinon.stub(),
         info: sinon.stub(),
