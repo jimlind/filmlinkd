@@ -3,6 +3,15 @@
 const { MessageEmbed } = require('discord.js');
 
 class MessageEmbedFactory {
+    /**
+     * @param {import('markdown-truncate')} truncateMarkdown
+     * @param {import('turndown')} turndownService
+     */
+    constructor(truncateMarkdown, turndownService) {
+        this.truncateMarkdown = truncateMarkdown;
+        this.turndownService = turndownService;
+    }
+
     createFollowSuccessMessage(data) {
         return this.createEmbed()
             .setDescription(
@@ -92,10 +101,8 @@ class MessageEmbedFactory {
         }
         reviewTitle = reviewTitle ? reviewTitle + '\u200b\n' : '';
 
-        let reviewText = entry.review;
-        if (reviewText.length > 400) {
-            reviewText = reviewText.substring(0, 400).trim() + '…';
-        }
+        let reviewText = this.turndownService.turndown(entry.review);
+        reviewText = this.truncateMarkdown(reviewText, { limit: 400, ellipsis: true });
         reviewText = entry.containsSpoilers ? '||' + reviewText + '||' : reviewText;
 
         const rule = reviewTitle && reviewText ? '┈'.repeat(12) + '\n' : '';

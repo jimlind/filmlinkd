@@ -29,7 +29,7 @@ class DiaryEntry {
     containsSpoilers = false;
     /** @property {boolean} adult - Is this an adult film */
     adult = false;
-    /** @property {string} review - Full text of the review */
+    /** @property {string} review - Full raw text of the review including any HTML */
     review = '';
 }
 
