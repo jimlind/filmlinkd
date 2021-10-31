@@ -7,8 +7,6 @@ const DiaryEntry = require('../../models/diary-entry');
 const MessageEmbedFactory = require('../../factories/message-embed-factory');
 const User = require('../../models/user');
 
-const TurndownService = require('turndown');
-
 describe('Message Embed Factory', () => {
     it('review normal descriptions are properly formatted', () => {
         const randomText = crypto.randomBytes(16).toString('hex');
