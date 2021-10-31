@@ -7,6 +7,7 @@ const awilix = require('awilix');
 const axios = require('axios').default;
 const { Routes: DiscordRoutes } = require('discord-api-types/v9');
 const { Client: DiscordClient, Intents: DiscordIntents } = require('discord.js');
+const domSerializer = require('dom-serializer').default;
 const htmlparser2 = require('htmlparser2');
 const truncateMarkdown = require('markdown-truncate');
 const turndown = require('turndown');
@@ -57,6 +58,7 @@ class DependencyInjectionContainer {
             discordRest: awilix.asValue(DiscordRest),
             discordRoutes: awilix.asValue(DiscordRoutes),
             axios: awilix.asValue(axios),
+            domSerializer: awilix.asValue(domSerializer),
             htmlParser2: awilix.asValue(htmlparser2),
             googleCloudWinstonTransport: awilix.asValue(googleCloudWinstonTransport),
             consoleTransport: awilix.asValue(consoleTransport),
