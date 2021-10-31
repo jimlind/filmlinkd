@@ -46,19 +46,22 @@ describe('Message Embed Factory', () => {
 });
 
 /**
- * @returns {import('markdown-truncate')}
+ * @returns {sinon.SinonStub}
  */
 function setupTruncateMarkdownStub() {
-    // TODO: Mock this instead of making a real version.
-    const truncateMarkdown = require('markdown-truncate');
+    const truncateMarkdown = sinon.stub();
+    truncateMarkdown.returnsArg(0);
+
     return truncateMarkdown;
 }
 
 /**
- * @returns {import('turndown')}
+ * @returns {sinon.SinonStubbedInstance<import('turndown')>}
  */
 function setupTurndownStub() {
-    // TODO: Mock this instead of making a real version.
-    const TurndownService = require('turndown');
-    return new TurndownService();
+    const Turndown = require('turndown');
+    const turndownService = sinon.createStubInstance(Turndown);
+    turndownService.turndown.returnsArg(0);
+
+    return turndownService;
 }
