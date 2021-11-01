@@ -46,6 +46,13 @@ class DependencyInjectionContainer {
         // Create logger for the JS console
         const consoleTransport = new winston.transports.Console();
 
+        // Create configured Turndown service
+        const turndownService = new turndown();
+        turndownService.addRule('blockquote', {
+            filter: ['blockquote'],
+            replacement: (content) => '> ' + content,
+        });
+
         // Creast PubSub
         const pubsub = new PubSub({
             projectId: configModel.googleCloudProjectId,
@@ -62,7 +69,7 @@ class DependencyInjectionContainer {
             htmlParser2: awilix.asValue(htmlparser2),
             googleCloudWinstonTransport: awilix.asValue(googleCloudWinstonTransport),
             consoleTransport: awilix.asValue(consoleTransport),
-            turndownService: awilix.asValue(new turndown()),
+            turndownService: awilix.asValue(turndownService),
             truncateMarkdown: awilix.asValue(truncateMarkdown),
             winston: awilix.asValue(winston),
             pubSub: awilix.asValue(pubsub),
