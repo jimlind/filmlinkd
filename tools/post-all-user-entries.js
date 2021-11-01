@@ -11,7 +11,7 @@ const configModel = new ConfigFactory('dev', process.env, [], fs.existsSync).bui
 const container = new DependencyInjectionContainer(configModel);
 
 // Configs for the messages posted
-const userName = 'yoli_zina';
+const userName = 'slim';
 const internalTestingChannelId = '799785154032959528';
 
 const mockUser = {
@@ -31,7 +31,7 @@ container
 
         container
             .resolve('diaryEntryProcessor')
-            .getNewEntriesForUser({ userName, previousId: 0 }, 2)
+            .getNewEntriesForUser({ userName, previousId: 0 })
             .then((entryList) => {
                 const promiseList = entryList
                     .map((entry) => diaryEntryWriter.createSenderPromiseList(entry, mockUser))
