@@ -52,6 +52,10 @@ class DependencyInjectionContainer {
             filter: ['blockquote'],
             replacement: (content) => '> ' + content,
         });
+        turndownService.addRule('break', {
+            filter: ['br'],
+            replacement: () => '\n',
+        });
 
         // Creast PubSub
         const pubsub = new PubSub({
