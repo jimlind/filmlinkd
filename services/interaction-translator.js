@@ -2,6 +2,7 @@
 
 class InteractionTranslator {
     /**
+     * @param {import('./discord/discord-connection')} discordConnection
      * @param {import('./diary-entry/diary-entry-processor')} diaryEntryProcessor
      * @param {import('./google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
      * @param {import('./google/firestore/firestore-user-dao')} firestoreUserDao
@@ -10,6 +11,7 @@ class InteractionTranslator {
      * @param {any} subscribedUserList
      */
     constructor(
+        discordConnection,
         diaryEntryProcessor,
         firestoreSubscriptionDao,
         firestoreUserDao,
@@ -17,6 +19,7 @@ class InteractionTranslator {
         letterboxdProfileWeb,
         subscribedUserList,
     ) {
+        this.discordConnection = discordConnection;
         this.diaryEntryProcessor = diaryEntryProcessor;
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
         this.firestoreUserDao = firestoreUserDao;
@@ -26,7 +29,7 @@ class InteractionTranslator {
     }
 
     /**
-     * @param {import("discord.js").CommandInteraction} commandInteraction
+     * @param {import('discord.js').CommandInteraction} commandInteraction
      */
     translate(commandInteraction) {
         this.getMessagePromiseAfterNeccesaryAction(commandInteraction).then((message) => {
@@ -41,10 +44,10 @@ class InteractionTranslator {
     }
 
     /**
-     * @param {import("discord.js").CommandInteraction} commandInteraction
+     * @param {import('discord.js').CommandInteraction} commandInteraction
      * @returns {Promise<import('discord.js').MessageEmbed>}
      */
-    getMessagePromiseAfterNeccesaryAction(commandInteraction) {
+    async getMessagePromiseAfterNeccesaryAction(commandInteraction) {
         // Check for restricted commands and return the appropriate message
         if (this.commandIsRestricted(commandInteraction)) {
             return new Promise((resolve) => {
@@ -53,7 +56,11 @@ class InteractionTranslator {
         }
 
         const accountName = commandInteraction.options.getString('account') || '';
-        const channelId = commandInteraction.channelId;
+        const channelId = await this.getChannelId(commandInteraction);
+        if (!channelId) {
+            return this.messageEmbedFactory.createChannelNotFoundMessage();
+        }
+
         switch (commandInteraction.commandName) {
             case 'follow':
                 return this.followAccount(accountName, channelId)
@@ -100,7 +107,7 @@ class InteractionTranslator {
     }
 
     /**
-     * @param {import("discord.js").CommandInteraction} interaction
+     * @param {import('discord.js').CommandInteraction} interaction
      * @returns boolean
      */
     commandIsRestricted(interaction) {
@@ -122,7 +129,7 @@ class InteractionTranslator {
     /**
      * @param {string} accountName
      * @param {string} channelId
-     * @returns {Promise<import("../models/user")>}
+     * @returns {Promise<import('../models/user')>}
      */
     followAccount(accountName, channelId) {
         return this.getUserDataObjectFromAccountName(accountName)
@@ -137,7 +144,7 @@ class InteractionTranslator {
 
     /**
      * @param {string} accountName
-     * @returns {Promise<import("../models/user")>}
+     * @returns {Promise<import('../models/user')>}
      */
     refreshAccount(accountName) {
         return this.letterboxdProfileWeb
@@ -153,7 +160,7 @@ class InteractionTranslator {
     /**
      * @param {string} accountName
      * @param {string} channelId
-     * @returns {Promise<import("../models/user")>}
+     * @returns {Promise<import('../models/user')>}
      */
     unfollowAccount(accountName, channelId) {
         return this.firestoreSubscriptionDao
@@ -169,7 +176,7 @@ class InteractionTranslator {
 
     /**
      * @param {string} accountName
-     * @returns {Promise<import("../models/user")>}
+     * @returns {Promise<import('../models/user')>}
      */
     getUserDataObjectFromAccountName(accountName) {
         return (
@@ -191,6 +198,25 @@ class InteractionTranslator {
                         .then((userData) => userData);
                 })
         );
+    }
+
+    /**
+     * @param {import('discord.js').CommandInteraction} commandInteraction
+     * @returns string
+     */
+    async getChannelId(commandInteraction) {
+        const channelInput = commandInteraction.options.getString('channel') || '';
+        if (!channelInput) {
+            return commandInteraction.channelId;
+        }
+
+        const client = await this.discordConnection.getConnectedClient();
+        return client.channels.cache.reduce((accumulator, current) => {
+            if (current?.name === channelInput) {
+                return current.id;
+            }
+            return accumulator;
+        }, '');
     }
 }
 

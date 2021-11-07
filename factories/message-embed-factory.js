@@ -15,7 +15,7 @@ class MessageEmbedFactory {
     createFollowSuccessMessage(data) {
         return this.createEmbed()
             .setDescription(
-                `I am now following ${data.displayName} (${data.userName}) in this channel.\nI'll try to post their most recent entry.`,
+                `I am now following ${data.displayName} (${data.userName}).\nI'll try to post their most recent entry in the appropriate channel.`,
             )
             .setThumbnail(data.image);
     }
@@ -23,7 +23,7 @@ class MessageEmbedFactory {
     createDuplicateFollowMessage(data) {
         return this.createEmbed()
             .setDescription(
-                `I was previously following ${data.displayName} (${data.userName}) in this channel.\nWe are already BFFs.`,
+                `I was previously following ${data.displayName} (${data.userName}).\nWe are already BFFs.`,
             )
             .setThumbnail(data.image);
     }
@@ -35,7 +35,7 @@ class MessageEmbedFactory {
     createUnfollowedSuccessMessage(data) {
         return this.createEmbed()
             .setDescription(
-                `I unfollowed ${data.displayName} (${data.userName}) in this channel.\nNo hard feelings I hope.`,
+                `I unfollowed ${data.displayName} (${data.userName}).\nNo hard feelings I hope.`,
             )
             .setThumbnail(data.image);
     }
@@ -62,7 +62,7 @@ class MessageEmbedFactory {
     }
 
     createEmptyFollowingMessage() {
-        return this.createEmbed().setDescription('Not following any accounts in this channel');
+        return this.createEmbed().setDescription('Not following any accounts.');
     }
 
     /**
@@ -155,6 +155,10 @@ class MessageEmbedFactory {
         return this.createEmbed().setDescription(
             'Only users with Manage Server permissions are allowed to do that.',
         );
+    }
+
+    createChannelNotFoundMessage() {
+        return this.createEmbed().setDescription('Unable to find the specified channel.');
     }
 
     createEmbed() {

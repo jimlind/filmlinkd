@@ -7,7 +7,9 @@ const fs = require('fs');
 
 // Load .env into process.env, create config, create container
 dotenv.config();
-const configModel = new ConfigFactory('prod', process.env, {}, fs.existsSync).build();
+
+const env = process.argv[2] || 'dev';
+const configModel = new ConfigFactory(env, process.env, {}, fs.existsSync).build();
 const container = new DependencyInjectionContainer(configModel);
 
 const commands = [
@@ -25,6 +27,12 @@ const commands = [
                 type: 3,
                 required: true,
             },
+            {
+                name: 'channel',
+                description: 'Discord channel name',
+                type: 3,
+                required: false,
+            },
         ],
     },
     {
@@ -37,11 +45,25 @@ const commands = [
                 type: 3,
                 required: true,
             },
+            {
+                name: 'channel',
+                description: 'Discord channel name',
+                type: 3,
+                required: false,
+            },
         ],
     },
     {
         name: 'following',
         description: 'Replies with a list of all accounts followed in this channel.',
+        options: [
+            {
+                name: 'channel',
+                description: 'Discord channel name',
+                type: 3,
+                required: false,
+            },
+        ],
     },
     {
         name: 'refresh',
@@ -63,6 +85,7 @@ const rest = new discordRest({ version: '9' }).setToken(configModel.discordBotTo
 const commandRoute = container
     .resolve('discordRoutes')
     .applicationCommands(configModel.discordClientId);
+
 rest.put(commandRoute, { body: commands })
     .then((/** @type {*[]} */ commandList) => {
         console.log(`Set ${commandList.length} global Application Commands`);
