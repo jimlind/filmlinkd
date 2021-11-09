@@ -27,6 +27,24 @@ class HttpClient {
                 return response;
             });
     }
+
+    /**
+     * @param {string} url
+     * @param {number} timeout
+     *
+     * @returns {Promise<import('axios').AxiosResponse>}
+     */
+    head(url, timeout) {
+        const abort = this.axios.CancelToken.source();
+        const timeoutId = setTimeout(() => abort.cancel(), timeout);
+
+        return this.axios
+            .head(url, { cancelToken: abort.token, headers: this.headers })
+            .then((response) => {
+                clearTimeout(timeoutId);
+                return response;
+            });
+    }
 }
 
 module.exports = HttpClient;
