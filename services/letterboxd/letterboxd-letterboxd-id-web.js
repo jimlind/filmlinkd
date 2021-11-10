@@ -12,7 +12,7 @@ class LetterboxdLidWeb {
         const url = 'https://letterboxd.com/' + userName;
 
         return this.httpClient
-            .head(url, 1000)
+            .head(url, 10000)
             .then((response) => {
                 return response?.headers['x-letterboxd-identifier'] || '';
             })
