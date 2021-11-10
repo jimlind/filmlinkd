@@ -8,6 +8,7 @@ class InteractionTranslator {
      * @param {import('./google/firestore/firestore-user-dao')} firestoreUserDao
      * @param {any} messageEmbedFactory
      * @param {any} letterboxdProfileWeb
+     * @param {import('./letterboxd/letterboxd-letterboxd-id-web')} letterboxdLetterboxdIdWeb
      * @param {any} subscribedUserList
      */
     constructor(
@@ -17,6 +18,7 @@ class InteractionTranslator {
         firestoreUserDao,
         messageEmbedFactory,
         letterboxdProfileWeb,
+        letterboxdLetterboxdIdWeb,
         subscribedUserList,
     ) {
         this.discordConnection = discordConnection;
@@ -25,6 +27,7 @@ class InteractionTranslator {
         this.firestoreUserDao = firestoreUserDao;
         this.messageEmbedFactory = messageEmbedFactory;
         this.letterboxdProfileWeb = letterboxdProfileWeb;
+        this.letterboxdLetterboxdIdWeb = letterboxdLetterboxdIdWeb;
         this.subscribedUserList = subscribedUserList;
     }
 
@@ -186,10 +189,15 @@ class InteractionTranslator {
                 .then((userData) => userData)
                 // User not found so create a new user from thier Letterboxd profile
                 .catch(() => {
-                    return this.letterboxdProfileWeb
-                        .get(accountName)
-                        .then((profile) => {
+                    const promiseList = [
+                        this.letterboxdLetterboxdIdWeb.get(accountName),
+                        this.letterboxdProfileWeb.get(accountName),
+                    ];
+
+                    return Promise.all(promiseList)
+                        .then(([letterboxdId, profile]) => {
                             return this.firestoreUserDao.create(
+                                letterboxdId,
                                 accountName,
                                 profile.name,
                                 profile.image,
