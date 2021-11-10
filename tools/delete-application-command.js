@@ -15,14 +15,18 @@ const container = new DependencyInjectionContainer(configModel);
 // Update global commands for eventual distribution to all guilds
 const discordRest = container.resolve('discordRest');
 const rest = new discordRest({ version: '9' }).setToken(configModel.discordBotToken);
-const commandRoute = container
-    .resolve('discordRoutes')
-    .applicationCommands(configModel.discordClientId);
+const discordRoutes = container.resolve('discordRoutes');
+
+let commandRoute = discordRoutes.applicationCommands(configModel.discordClientId);
+if (env === 'dev') {
+    const guildId = '795053930283139073';
+    commandRoute = discordRoutes.applicationGuildCommands(configModel.discordClientId, guildId);
+}
 
 rest.put(commandRoute, { body: [] })
     .then((/** @type {*[]} */ commandList) => {
-        console.log(`Set ${commandList.length} global Application Commands`);
+        console.log(`✅ Set ${commandList.length} Application Commands`);
     })
     .catch(() => {
-        console.log('Unable to set global Application Commands');
+        console.log('❌ Unable to set Application Commands');
     });
