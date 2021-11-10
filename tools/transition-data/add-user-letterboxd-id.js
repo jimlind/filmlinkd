@@ -26,7 +26,7 @@ async function processData(collection) {
 
         data.letterboxdId = await container
             .resolve('letterboxdLetterboxdIdWeb')
-            .get(data.userName, 10000);
+            .get(data.userName, 100000);
         if (!data.letterboxdId) {
             console.log(`🚫 Failed ${data.userName}`);
             continue;
