@@ -1,6 +1,8 @@
 class User {
     /** @property {string} id Firestore document id */
     id = '';
+    /** @property {string} letterboxdId Letterboxd id */
+    letterboxdId = '';
     /** @property {number} created Unix timestamp for document creation */
     created = 0;
     /** @property {string} userName Letterboxd user name */
