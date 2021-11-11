@@ -24,9 +24,21 @@ async function processData(collection) {
             continue;
         }
 
-        data.letterboxdId = await container.resolve('letterboxdLetterboxdIdWeb').get(data.userName);
-        if (!data.letterboxdId) {
+        try {
+            data.letterboxdId = await container
+                .resolve('letterboxdLetterboxdIdWeb')
+                .get(data.userName);
+        } catch (error) {
             console.log(`🚫 Failed ${data.userName}`);
+            data.letterboxdId = '';
+            await documentSnapshot.ref.update(data);
+            continue;
+        }
+
+        if (!data.letterboxdId) {
+            console.log(`🚫 Empty ${data.userName}`);
+            data.letterboxdId = '';
+            await documentSnapshot.ref.update(data);
             continue;
         }
 
