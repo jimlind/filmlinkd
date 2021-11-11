@@ -7,14 +7,16 @@ const fs = require('fs');
 
 // Load .env into process.env, create config, create container
 dotenv.config();
-const configModel = new ConfigFactory('prod', process.env, {}, fs.existsSync).build();
+const configModel = new ConfigFactory('dev', process.env, {}, fs.existsSync).build();
 const container = new DependencyInjectionContainer(configModel);
-
 const collection = container.resolve('firestoreConnection').getCollection();
-processData(collection);
 
-async function processData(collection) {
-    const querySnapshot = await collection.get();
+//const data = collection;
+const data = collection.where('letterboxdId', '==', '');
+processData(data);
+
+async function processData(data) {
+    const querySnapshot = await data.get();
 
     for (const key in querySnapshot.docs) {
         const documentSnapshot = querySnapshot.docs[key];
