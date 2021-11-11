@@ -58,7 +58,7 @@ class InteractionTranslator {
             });
         }
 
-        const accountName = commandInteraction.options.getString('account') || '';
+        const accountName = commandInteraction.options.getString('account').toLowerCase() || '';
         const channelId = await this.getChannelId(commandInteraction);
         if (!channelId) {
             return this.messageEmbedFactory.createChannelNotFoundMessage();
