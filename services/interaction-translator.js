@@ -140,6 +140,7 @@ class InteractionTranslator {
                 return this.firestoreSubscriptionDao.subscribe(userData, channelId);
             })
             .then((result) => {
+                // TODO: If I spam following somebody this doesn't repeat. Why?
                 this.diaryEntryProcessor.processMostRecentForUser(accountName, channelId);
                 return result.userData;
             });
