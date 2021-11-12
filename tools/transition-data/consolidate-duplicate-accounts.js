@@ -44,13 +44,15 @@ async function processData(data) {
             mergedChannels = mergedChannels.concat(data.channelList);
 
             data.channelList = [];
-            await documentSnapshot.ref.update(data);
+            // This happens async and it screws things up
+            // Don't use this willy nilly
+            //await documentSnapshot.ref.update(data);
         });
 
         const firstDoc = querySnapshot.docs[indexes[0]];
         const firstData = firstDoc.data();
         firstData.channelList = mergedChannels;
-        await firstDoc.ref.update(firstData);
+        //await firstDoc.ref.update(firstData);
     });
 }
 
