@@ -21,6 +21,9 @@ class ConfigFactory {
             config.gcpKeyFile = this.environment.GOOGLE_CLOUD_IDENTITY_KEY_FILE;
         }
 
+        config.letterboxdApiKey = this.environment.LETTERBOXD_API_KEY;
+        config.letterboxdApiSharedSecret = this.environment.LETTERBOXD_API_SHARED_SECRET;
+
         switch (this.argument) {
             case 'prod':
                 config.discordBotToken = this.environment.DISCORD_PROD_BOT_TOKEN;
