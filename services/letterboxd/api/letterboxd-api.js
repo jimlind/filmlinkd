@@ -25,10 +25,9 @@ class LetterboxdApi {
             Authorization: `Signature ${signature}`,
         };
 
-        return this.httpClient
-            .get(url, 1000)
-            .then((response) => (response.status === 200 ? response.data : null))
-            .catch(() => null);
+        return this.httpClient.get(url, 10000).then((response) => {
+            return response.status === 200 ? response.data : null;
+        });
     }
 
     buildUrl(path, paramList) {
