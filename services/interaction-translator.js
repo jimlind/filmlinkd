@@ -2,6 +2,7 @@
 
 class InteractionTranslator {
     /**
+     * @param {import('../commands/diary-command')} diaryCommand
      * @param {import('./discord/discord-connection')} discordConnection
      * @param {import('./diary-entry/diary-entry-processor')} diaryEntryProcessor
      * @param {import('./google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
@@ -12,6 +13,7 @@ class InteractionTranslator {
      * @param {any} subscribedUserList
      */
     constructor(
+        diaryCommand,
         discordConnection,
         diaryEntryProcessor,
         firestoreSubscriptionDao,
@@ -21,6 +23,7 @@ class InteractionTranslator {
         letterboxdLetterboxdIdWeb,
         subscribedUserList,
     ) {
+        this.diaryCommand = diaryCommand;
         this.discordConnection = discordConnection;
         this.diaryEntryProcessor = diaryEntryProcessor;
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
@@ -101,6 +104,8 @@ class InteractionTranslator {
                         return this.messageEmbedFactory.createUnfollowedErrorMessage(accountName);
                     });
                 break;
+            case 'diary':
+                return this.diaryCommand.getMessage(accountName);
             default:
                 return new Promise((resolve) => {
                     return resolve(this.messageEmbedFactory.createHelpMessage());
