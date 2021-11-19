@@ -23,10 +23,10 @@ class LetterboxdMemberApi {
             })
             .then((responseData) => {
                 const memberData = responseData?.items[0]?.member;
-                if (memberData) {
-                    return this.letterboxdMemberFactory.buildFromObject(memberData);
+                if (!memberData) {
+                    throw `Member not found for ${userName}`;
                 }
-                return null;
+                return this.letterboxdMemberFactory.buildFromObject(memberData);
             });
     }
 }
