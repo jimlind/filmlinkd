@@ -5,7 +5,6 @@ class LetterboxdMemberFactory {
         id: 'id',
         userName: 'username',
         displayName: 'displayName',
-        image: 'avatar//sizes//1//url',
         pronoun: 'pronoun//label',
     };
 
@@ -32,6 +31,11 @@ class LetterboxdMemberFactory {
                 }
             }
         }
+
+        const largestImage = memberData.avatar.sizes.reduce((previous, current) =>
+            current.height > previous.height ? current : previous,
+        );
+        letterboxdMember.image = largestImage.url;
 
         return letterboxdMember;
     }
