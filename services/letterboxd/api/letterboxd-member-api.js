@@ -12,7 +12,7 @@ class LetterboxdMemberApi {
 
     /**
      * @param {string} userName
-     * @returns {Promise<Object | null>}
+     * @returns {Promise<Object>}
      */
     get(userName) {
         return this.letterboxdApi
