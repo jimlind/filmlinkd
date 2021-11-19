@@ -121,6 +121,30 @@ class MessageEmbedFactory {
         return embed;
     }
 
+    /**
+     * @param {import('../models/letterboxd/letterboxd-member)} member
+     * @param {import('../models/letterboxd/letterboxd-entry')[]} entryList
+     * @returns {MessageEmbed}
+     */
+    createDiaryListMessage(member, entryList) {
+        const entryTextList = entryList.map((entry) => {
+            let entryFirstLine = `[**${entry.filmName} (${entry.filmYear})**](https://boxd.it/${entry.id})`;
+            let entrySecondLine = entry.date ? `${this.formatDate(entry.date)}` : '';
+            entrySecondLine += this.formatStars(entry.rating);
+            entrySecondLine += entry.rewatch ? ' <:r:851135667546488903>' : '';
+            entrySecondLine += entry.like ? ' <:r:851138401557676073>' : '';
+            entrySecondLine += entry.review ? ' :speech_balloon:' : '';
+
+            return entryFirstLine + '\n' + entrySecondLine;
+        }, '');
+
+        return this.createEmbed()
+            .setTitle(`Recent Diary Activity from ${member.displayName}`)
+            .setURL(`https://boxd.it/${member.id}`)
+            .setThumbnail(member.image)
+            .setDescription(entryTextList.join('\n'));
+    }
+
     createHelpMessage() {
         return this.createEmbed()
             .setTitle('(Help!) I Need Somebody')
@@ -163,6 +187,38 @@ class MessageEmbedFactory {
 
     createEmbed() {
         return new MessageEmbed().setColor(0xa700bd);
+    }
+
+    formatStars(rating) {
+        if (!rating) {
+            return '';
+        }
+
+        // Whole stars
+        const rounded = Math.floor(rating);
+        let starString = '<:s:851134022251970610>'.repeat(rounded);
+        // Half star if neccessary
+        starString += rating % 1 ? '<:h:851199023854649374>' : '';
+
+        return starString;
+    }
+
+    /**
+     * @param {Date} date
+     * @returns string
+     */
+    formatDate(date) {
+        const recentFormat = { month: 'short', day: 'numeric' };
+        const pastFormat = { month: 'short', day: 'numeric', year: 'numeric' };
+        //const format = date - new Date() > 5000000000 ? recentFormat : pastFormat;
+        const format = new Date() - date < 5000000000 ? recentFormat : pastFormat;
+
+        console.log({
+            d: new Date() - date,
+            f: new Date() - date > 5000000000,
+        });
+
+        return date.toLocaleDateString('default', format) + ' ';
     }
 }
 
