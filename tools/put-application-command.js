@@ -67,7 +67,19 @@ const commands = [
     },
     {
         name: 'refresh',
-        description: 'Cool. Updates the Filmlinkd cache for the Letterboxd account.',
+        description: 'Updates the Filmlinkd cache for the Letterboxd account.',
+        options: [
+            {
+                name: 'account',
+                description: 'Letterboxd account name',
+                type: 3,
+                required: true,
+            },
+        ],
+    },
+    {
+        name: 'diary',
+        description: 'Shows the 5 most recent diary entries.',
         options: [
             {
                 name: 'account',
