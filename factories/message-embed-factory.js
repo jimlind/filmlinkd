@@ -210,13 +210,7 @@ class MessageEmbedFactory {
     formatDate(date) {
         const recentFormat = { month: 'short', day: 'numeric' };
         const pastFormat = { month: 'short', day: 'numeric', year: 'numeric' };
-        //const format = date - new Date() > 5000000000 ? recentFormat : pastFormat;
         const format = new Date() - date < 5000000000 ? recentFormat : pastFormat;
-
-        console.log({
-            d: new Date() - date,
-            f: new Date() - date > 5000000000,
-        });
 
         return date.toLocaleDateString('default', format) + ' ';
     }
