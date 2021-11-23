@@ -14,7 +14,7 @@ class LetterboxdMemberApi {
      * @param {string} userName
      * @returns {Promise<Object>}
      */
-    get(userName) {
+    search(userName) {
         return this.letterboxdApi
             .get('search', {
                 input: userName,

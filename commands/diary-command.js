@@ -17,7 +17,7 @@ class DiaryCommand {
      * @returns {import('discord.js').MessageEmbed}
      */
     getMessage(accountName) {
-        const getMember = this.letterboxdMemberApi.get(accountName);
+        const getMember = this.letterboxdMemberApi.search(accountName);
         const getEntryList = getMember.then((member) => {
             return this.letterboxdEntryApi.get(member.id, 5);
         });
