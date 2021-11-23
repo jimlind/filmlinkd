@@ -232,7 +232,7 @@ class InteractionTranslator {
 
         const client = await this.discordConnection.getConnectedClient();
         return client.channels.cache.reduce((accumulator, current) => {
-            if (current?.name === channelInput) {
+            if (current?.name === channelInput && current?.guildId === commandInteraction.guildId) {
                 return current.id;
             }
             return accumulator;
