@@ -145,6 +145,30 @@ class MessageEmbedFactory {
             .setDescription(entryTextList.join('\n'));
     }
 
+    /**
+     * @param {import('../models/letterboxd/letterboxd-film)} film
+     * @param {import('../models/letterboxd/letterboxd-film-statistics')} filmStatistics
+     * @returns {MessageEmbed}
+     */
+    createFilmMessage(film, filmStatistics) {
+        let description = '`' + film.tagline + '`\n';
+        description +=
+            this.formatStars(filmStatistics.rating) + ' ' + filmStatistics.rating.toFixed(2) + '\n';
+        description += `Director(s): ${film.directorList.join(', ')}\n`;
+        description += `${this.formatRuntime(film.runTime)} | ${film.countryList.join(', ')}\n`;
+        description += film.genreList.join('/') + '\n';
+        description +=
+            `:eyes: ${this.formatCount(filmStatistics.watchCount)}, ` +
+            `<:r:851138401557676073> ${this.formatCount(filmStatistics.likeCount)}, ` +
+            `:speech_balloon: ${this.formatCount(filmStatistics.reviewCount)}\n`;
+
+        return this.createEmbed()
+            .setTitle(`${film.name} (${film.year})`)
+            .setURL(`https://boxd.it/${film.id}`)
+            .setThumbnail(film.image)
+            .setDescription(description);
+    }
+
     createHelpMessage() {
         return this.createEmbed()
             .setTitle('(Help!) I Need Somebody')
@@ -185,6 +209,10 @@ class MessageEmbedFactory {
         return this.createEmbed().setDescription('Unable to find the specified channel.');
     }
 
+    createFilmNotFoundMessage() {
+        return this.createEmbed().setDescription('Unable to match a film to those search terms.');
+    }
+
     createEmbed() {
         return new MessageEmbed().setColor(0xa700bd);
     }
@@ -194,11 +222,14 @@ class MessageEmbedFactory {
             return '';
         }
 
+        // Turn into displayable partial stars
+        const cleanRating = Math.round(rating * 2) / 2;
+
         // Whole stars
-        const rounded = Math.floor(rating);
+        const rounded = Math.floor(cleanRating);
         let starString = '<:s:851134022251970610>'.repeat(rounded);
         // Half star if neccessary
-        starString += rating % 1 ? '<:h:851199023854649374>' : '';
+        starString += cleanRating % 1 ? '<:h:851199023854649374>' : '';
 
         return starString;
     }
@@ -213,6 +244,43 @@ class MessageEmbedFactory {
         const format = new Date() - date < 5000000000 ? recentFormat : pastFormat;
 
         return date.toLocaleDateString('default', format) + ' ';
+    }
+
+    /**
+     * @param {number} runTime minutes
+     * @return string
+     */
+    formatRuntime(runTime) {
+        const hours = Math.floor(runTime / 60);
+        const minutes = runTime - hours * 60;
+
+        return `${hours}h ${minutes}m`;
+    }
+
+    /**
+     * @param {number} count
+     * @return string
+     */
+    formatCount(count) {
+        const formatted = count.toLocaleString('de-DE');
+
+        // Create billion, million, thousand
+        let suffix = '';
+        if (formatted.length > 12) {
+            suffix = 'b';
+        } else if (formatted.length > 8) {
+            suffix = 'm';
+        } else if (formatted.length > 4) {
+            suffix = 'k';
+        }
+
+        // Truncate down to appropriate number size
+        let truncated = formatted.slice(0, formatted.indexOf('.') + 2);
+        if (truncated.length == 5) {
+            truncated = truncated.slice(0, 3);
+        }
+
+        return truncated + suffix;
     }
 }
 
