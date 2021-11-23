@@ -5,6 +5,7 @@ class InteractionTranslator {
      * @param {import('../commands/diary-command')} diaryCommand
      * @param {import('./discord/discord-connection')} discordConnection
      * @param {import('./diary-entry/diary-entry-processor')} diaryEntryProcessor
+     * @param {import('../commands/film-command')} filmCommand
      * @param {import('./google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
      * @param {import('./google/firestore/firestore-user-dao')} firestoreUserDao
      * @param {any} messageEmbedFactory
@@ -16,6 +17,7 @@ class InteractionTranslator {
         diaryCommand,
         discordConnection,
         diaryEntryProcessor,
+        filmCommand,
         firestoreSubscriptionDao,
         firestoreUserDao,
         messageEmbedFactory,
@@ -26,6 +28,7 @@ class InteractionTranslator {
         this.diaryCommand = diaryCommand;
         this.discordConnection = discordConnection;
         this.diaryEntryProcessor = diaryEntryProcessor;
+        this.filmCommand = filmCommand;
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
         this.firestoreUserDao = firestoreUserDao;
         this.messageEmbedFactory = messageEmbedFactory;
@@ -62,6 +65,7 @@ class InteractionTranslator {
         }
 
         const accountName = (commandInteraction.options.getString('account') || '').toLowerCase();
+        const filmName = commandInteraction.options.getString('film-name') || '';
         const channelId = await this.getChannelId(commandInteraction);
         if (!channelId) {
             return this.messageEmbedFactory.createChannelNotFoundMessage();
@@ -106,6 +110,8 @@ class InteractionTranslator {
                 break;
             case 'diary':
                 return this.diaryCommand.getMessage(accountName);
+            case 'film':
+                return this.filmCommand.getMessage(filmName);
             default:
                 return new Promise((resolve) => {
                     return resolve(this.messageEmbedFactory.createHelpMessage());
