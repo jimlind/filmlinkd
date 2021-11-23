@@ -262,22 +262,22 @@ class MessageEmbedFactory {
      * @return string
      */
     formatCount(count) {
-        const formatted = count.toLocaleString('de-DE');
-
-        // Create billion, million, thousand
+        const countString = count.toString();
         let suffix = '';
-        if (formatted.length > 12) {
+        if (countString.length >= 10) {
             suffix = 'b';
-        } else if (formatted.length > 8) {
+            count = count / 1000000000;
+        } else if (countString.length >= 7) {
             suffix = 'm';
-        } else if (formatted.length > 4) {
+            count = count / 1000000;
+        } else if (countString.length >= 4) {
             suffix = 'k';
+            count = count / 1000;
         }
 
-        // Truncate down to appropriate number size
-        let truncated = formatted.slice(0, formatted.indexOf('.') + 2);
-        if (truncated.length == 5) {
-            truncated = truncated.slice(0, 3);
+        let truncated = Math.round(count);
+        if (truncated < 100 && suffix) {
+            truncated = count.toFixed(1);
         }
 
         return truncated + suffix;
