@@ -89,6 +89,18 @@ const commands = [
             },
         ],
     },
+    {
+        name: 'film',
+        description: 'Shows a film information snippet.',
+        options: [
+            {
+                name: 'film-name',
+                description: 'Film name',
+                type: 3,
+                required: true,
+            },
+        ],
+    },
 ];
 
 // Update global commands for eventual distribution to all guilds
