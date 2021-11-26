@@ -37,6 +37,7 @@ class FirestoreUserDao {
     /**
      * @param {string} userName
      * @returns {Promise<any>}
+     * @deprecated
      */
     read(userName) {
         return new Promise((resolve, reject) => {
@@ -48,6 +49,22 @@ class FirestoreUserDao {
                     reject();
                 }
             });
+        });
+    }
+
+    /**
+     * @param {string} userName
+     * @returns {Promise<Object>}
+     */
+    getByUserName(userName) {
+        const query = this.firestoreCollection.where('userName', '==', userName).limit(1);
+        return query.get().then((querySnapshot) => {
+            const documentSnapshotList = querySnapshot.docs;
+            if (documentSnapshotList.length !== 1) {
+                throw `User "${userName}" Does Not Exist`;
+            }
+
+            return documentSnapshotList[0]?.data() || null;
         });
     }
 
