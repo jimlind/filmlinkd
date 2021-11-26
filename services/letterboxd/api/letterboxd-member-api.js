@@ -19,14 +19,19 @@ class LetterboxdMemberApi {
             .get('search', {
                 input: userName,
                 include: 'MemberSearchItem',
-                perPage: 1,
+                perPage: 4,
             })
             .then((responseData) => {
-                const memberData = responseData?.items[0]?.member;
-                if (!memberData) {
-                    throw `Member not found for ${userName}`;
+                if (!responseData?.items?.length) {
+                    throw `Member Not Found For ${userName}. (Type 1)`;
                 }
-                return this.letterboxdMemberFactory.buildFromObject(memberData);
+                const filteredMemberList = responseData?.items.filter((data) => {
+                    return data.member.username.toLowerCase() == userName;
+                });
+                if (!filteredMemberList.length) {
+                    throw `Member not found for ${userName} (Type 2)`;
+                }
+                return this.letterboxdMemberFactory.buildFromObject(filteredMemberList[0].member);
             });
     }
 }
