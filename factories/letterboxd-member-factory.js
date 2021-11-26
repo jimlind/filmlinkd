@@ -3,7 +3,6 @@ const LetterboxdMember = require('../models/letterboxd/letterboxd-member');
 class LetterboxdMemberFactory {
     propertyMap = {
         id: 'id',
-        userName: 'username',
         displayName: 'displayName',
         pronoun: 'pronoun//label',
     };
@@ -14,6 +13,8 @@ class LetterboxdMemberFactory {
      */
     buildFromObject(memberData) {
         const letterboxdMember = new LetterboxdMember();
+        letterboxdMember.userName = memberData.username.toLowerCase();
+
         for (const targetPropertyKey in letterboxdMember) {
             const sourcePropertyKey = this.propertyMap[targetPropertyKey];
             if (!sourcePropertyKey) {
