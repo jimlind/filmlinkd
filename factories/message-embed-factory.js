@@ -132,7 +132,7 @@ class MessageEmbedFactory {
             let entrySecondLine = entry.date ? `${this.formatDate(entry.date)}` : '';
             entrySecondLine += this.formatStars(entry.rating);
             entrySecondLine += entry.rewatch ? ' <:r:851135667546488903>' : '';
-            entrySecondLine += entry.like ? ' <:r:851138401557676073>' : '';
+            entrySecondLine += entry.like ? ' <:l:851138401557676073>' : '';
             entrySecondLine += entry.review ? ' :speech_balloon:' : '';
 
             return entryFirstLine + '\n' + entrySecondLine;
