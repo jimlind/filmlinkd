@@ -4,36 +4,33 @@ class InteractionTranslator {
     /**
      * @param {import('../commands/diary-command')} diaryCommand
      * @param {import('./discord/discord-connection')} discordConnection
-     * @param {import('./diary-entry/diary-entry-processor')} diaryEntryProcessor
      * @param {import('../commands/film-command')} filmCommand
      * @param {import('./google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
      * @param {import('./google/firestore/firestore-user-dao')} firestoreUserDao
+     * @param {import('../commands/follow-command')} followCommand
      * @param {any} messageEmbedFactory
      * @param {any} letterboxdProfileWeb
-     * @param {import('./letterboxd/letterboxd-letterboxd-id-web')} letterboxdLetterboxdIdWeb
      * @param {any} subscribedUserList
      */
     constructor(
         diaryCommand,
         discordConnection,
-        diaryEntryProcessor,
         filmCommand,
         firestoreSubscriptionDao,
         firestoreUserDao,
+        followCommand,
         messageEmbedFactory,
         letterboxdProfileWeb,
-        letterboxdLetterboxdIdWeb,
         subscribedUserList,
     ) {
         this.diaryCommand = diaryCommand;
         this.discordConnection = discordConnection;
-        this.diaryEntryProcessor = diaryEntryProcessor;
         this.filmCommand = filmCommand;
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
         this.firestoreUserDao = firestoreUserDao;
+        this.followCommand = followCommand;
         this.messageEmbedFactory = messageEmbedFactory;
         this.letterboxdProfileWeb = letterboxdProfileWeb;
-        this.letterboxdLetterboxdIdWeb = letterboxdLetterboxdIdWeb;
         this.subscribedUserList = subscribedUserList;
     }
 
@@ -53,6 +50,8 @@ class InteractionTranslator {
     }
 
     /**
+     * I already regret what I named this method, but still can't come up with something better
+     *
      * @param {import('discord.js').CommandInteraction} commandInteraction
      * @returns {Promise<import('discord.js').MessageEmbed>}
      */
@@ -73,13 +72,7 @@ class InteractionTranslator {
 
         switch (commandInteraction.commandName) {
             case 'follow':
-                return this.followAccount(accountName, channelId)
-                    .then((userData) => {
-                        return this.messageEmbedFactory.createFollowSuccessMessage(userData);
-                    })
-                    .catch(() => {
-                        return this.messageEmbedFactory.createNoAccountFoundMessage(accountName);
-                    });
+                return this.followCommand.process(accountName, channelId);
                 break;
             case 'following':
                 return this.firestoreSubscriptionDao.list(channelId).then((userList) => {
@@ -142,23 +135,6 @@ class InteractionTranslator {
 
     /**
      * @param {string} accountName
-     * @param {string} channelId
-     * @returns {Promise<import('../models/user')>}
-     */
-    followAccount(accountName, channelId) {
-        return this.getUserDataObjectFromAccountName(accountName)
-            .then((userData) => {
-                return this.firestoreSubscriptionDao.subscribe(userData, channelId);
-            })
-            .then((result) => {
-                // TODO: If I spam following somebody this doesn't repeat. Why?
-                this.diaryEntryProcessor.processMostRecentForUser(accountName, channelId);
-                return result.userData;
-            });
-    }
-
-    /**
-     * @param {string} accountName
      * @returns {Promise<import('../models/user')>}
      */
     refreshAccount(accountName) {
@@ -187,37 +163,6 @@ class InteractionTranslator {
                 }
                 return userData;
             });
-    }
-
-    /**
-     * @param {string} accountName
-     * @returns {Promise<import('../models/user')>}
-     */
-    getUserDataObjectFromAccountName(accountName) {
-        return (
-            this.firestoreUserDao
-                .read(accountName)
-                // User found so resolve on that
-                .then((userData) => userData)
-                // User not found so create a new user from thier Letterboxd profile
-                .catch(() => {
-                    const promiseList = [
-                        this.letterboxdLetterboxdIdWeb.get(accountName),
-                        this.letterboxdProfileWeb.get(accountName),
-                    ];
-
-                    return Promise.all(promiseList)
-                        .then(([letterboxdId, profile]) => {
-                            return this.firestoreUserDao.create(
-                                letterboxdId,
-                                accountName,
-                                profile.name,
-                                profile.image,
-                            );
-                        })
-                        .then((userData) => userData);
-                })
-        );
     }
 
     /**
