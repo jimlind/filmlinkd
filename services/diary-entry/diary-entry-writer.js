@@ -35,7 +35,7 @@ class DiaryEntryWriter {
             // Because we are expecting multiple requests to post a diary entry we maintain
             // the one source of truth on the server that sends messages so we double-check
             // the previous Id.
-            // Ignore this check if there is a channel override because that will go no matter what.
+            // Ignore this check if there is a channel override because we want it to trigger multiple times.
             if (diaryEntry.id <= user.previousId && !channelIdOverride) {
                 return resolve();
             }
