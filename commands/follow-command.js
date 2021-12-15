@@ -7,6 +7,7 @@ class FollowCommand {
      * @param {import('../services/google/firestore/firestore-user-dao')} firestoreUserDao
      * @param {import('../services/letterboxd/api/letterboxd-member-api')} letterboxdMemberApi
      * @param {import('../factories/message-embed-factory')} messageEmbedFactory
+     * @param {import('../services/logger')} logger
      */
     constructor(
         diaryEntryProcessor,
@@ -14,12 +15,14 @@ class FollowCommand {
         firestoreUserDao,
         letterboxdMemberApi,
         messageEmbedFactory,
+        logger,
     ) {
         this.diaryEntryProcessor = diaryEntryProcessor;
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
         this.firestoreUserDao = firestoreUserDao;
         this.letterboxdMemberApi = letterboxdMemberApi;
         this.messageEmbedFactory = messageEmbedFactory;
+        this.logger = logger;
     }
 
     /**
@@ -36,7 +39,23 @@ class FollowCommand {
         ];
 
         return Promise.all(promiseList)
-            .then(([subscribeResult, messageResult, mostRecentResult]) => messageResult)
+            .then(([subscribeResult, messageResult, mostRecentResult]) => {
+                const userResult = subscribeResult.userData;
+                const hourAgo = Date.now() - 60 * 60 * 1000;
+
+                // Attempting to debug some issue with follow nullifying existing data
+                // If user is subscribed to one channel and was created before an hour ago
+                if (userResult.channelList.length === 1 && userResult.created < hourAgo) {
+                    userPromise.then((data) => {
+                        this.logger.info('Existing User Has One Subscribed Channel', {
+                            original: data,
+                            updated: subscribeResult.userData,
+                        });
+                    });
+                }
+
+                return messageResult;
+            })
             .catch(() => this.messageEmbedFactory.createNoAccountFoundMessage(accountName));
     }
 
