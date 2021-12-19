@@ -169,6 +169,31 @@ class MessageEmbedFactory {
             .setDescription(description);
     }
 
+    /**
+     * @param {import('../models/letterboxd/letterboxd-contributor')} contributor
+     * @returns {MessageEmbed}
+     */
+    createContributorMessage(contributor) {
+        const filmographyString = contributor.statistics.contributions
+            .reduce((acc, contribution) => {
+                acc.push(`**${contribution.type}**: ${contribution.filmCount}`);
+                return acc;
+            }, [])
+            .join('\n');
+
+        const linkString = contributor.links
+            .reduce((acc, link) => {
+                acc.push(`[${link.type}](${link.url})`);
+                return acc;
+            }, [])
+            .join(' | ');
+
+        return this.createEmbed()
+            .setTitle(contributor.name)
+            .setURL(`https://boxd.it/${contributor.id}`)
+            .setDescription(filmographyString + '\n' + linkString);
+    }
+
     createHelpMessage() {
         return this.createEmbed()
             .setTitle('(Help!) I Need Somebody')
@@ -211,6 +236,12 @@ class MessageEmbedFactory {
 
     createFilmNotFoundMessage() {
         return this.createEmbed().setDescription('Unable to match a film to those search terms.');
+    }
+
+    createContributorNotFoundMessage() {
+        return this.createEmbed().setDescription(
+            'Unable to match a contributor to those search terms.',
+        );
     }
 
     createEmbed() {
