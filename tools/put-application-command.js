@@ -78,6 +78,18 @@ const commands = [
         ],
     },
     {
+        name: 'contributor',
+        description: "Shows a film contributor's information snippet.",
+        options: [
+            {
+                name: 'contributor-name',
+                description: 'Contributor name',
+                type: 3,
+                required: true,
+            },
+        ],
+    },
+    {
         name: 'diary',
         description: 'Shows the 5 most recent diary entries.',
         options: [
@@ -91,7 +103,7 @@ const commands = [
     },
     {
         name: 'film',
-        description: 'Shows a film information snippet.',
+        description: "Shows a film's information snippet.",
         options: [
             {
                 name: 'film-name',
