@@ -2,6 +2,7 @@
 
 class InteractionTranslator {
     /**
+     * @param {import('../commands/contributor-command')} contributorCommand
      * @param {import('../commands/diary-command')} diaryCommand
      * @param {import('./discord/discord-connection')} discordConnection
      * @param {import('../commands/film-command')} filmCommand
@@ -13,6 +14,7 @@ class InteractionTranslator {
      * @param {any} subscribedUserList
      */
     constructor(
+        contributorCommand,
         diaryCommand,
         discordConnection,
         filmCommand,
@@ -23,6 +25,7 @@ class InteractionTranslator {
         letterboxdProfileWeb,
         subscribedUserList,
     ) {
+        this.contributorCommand = contributorCommand;
         this.diaryCommand = diaryCommand;
         this.discordConnection = discordConnection;
         this.filmCommand = filmCommand;
@@ -64,7 +67,7 @@ class InteractionTranslator {
         }
 
         const accountName = (commandInteraction.options.getString('account') || '').toLowerCase();
-        const filmName = commandInteraction.options.getString('film-name') || '';
+
         const channelId = await this.getChannelId(commandInteraction);
         if (!channelId) {
             return this.messageEmbedFactory.createChannelNotFoundMessage();
@@ -104,7 +107,12 @@ class InteractionTranslator {
             case 'diary':
                 return this.diaryCommand.getMessage(accountName);
             case 'film':
+                const filmName = commandInteraction.options.getString('film-name') || '';
                 return this.filmCommand.getMessage(filmName);
+            case 'contributor':
+                const contributorName =
+                    commandInteraction.options.getString('contributor-name') || '';
+                return this.contributorCommand.getMessage(contributorName);
             default:
                 return new Promise((resolve) => {
                     return resolve(this.messageEmbedFactory.createHelpMessage());
