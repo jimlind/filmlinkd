@@ -1,12 +1,11 @@
+const LetterboxdContributionStatistics = require('../../models/letterboxd/letterboxd-contribution-statistics');
 const LetterboxdContributor = require('../../models/letterboxd/letterboxd-contributor');
 
 class LetterboxdContributorFactory {
     /**
-     * @param {import('./letterboxd-contribution-statistic-factory')} letterboxdContributionStatisticsFactory
      * @param {import('./letterboxd-link-factory')} letterboxdLinkFactory
      */
-    constructor(letterboxdContributionStatisticsFactory, letterboxdLinkFactory) {
-        this.letterboxdContributionStatisticsFactory = letterboxdContributionStatisticsFactory;
+    constructor(letterboxdLinkFactory) {
         this.letterboxdLinkFactory = letterboxdLinkFactory;
     }
 
@@ -22,7 +21,7 @@ class LetterboxdContributorFactory {
         letterboxdContributor.tmdbid = contributorData.tmdbid;
         letterboxdContributor.statistics = {
             contributions: contributorData.statistics.contributions.map(
-                this.letterboxdContributionStatisticsFactory.buildContributionStatisticsFromObject,
+                this.buildContributionStatisticsFromObject,
             ),
         };
         letterboxdContributor.links = contributorData.links.map(
@@ -30,6 +29,19 @@ class LetterboxdContributorFactory {
         );
 
         return letterboxdContributor;
+    }
+
+    /**
+     * @param {Object} contributionStatisticsData
+     * @returns LetterboxdContributionStatistics
+     */
+    buildContributionStatisticsFromObject(contributionStatisticsData) {
+        const letterboxdContributionStatistics = new LetterboxdContributionStatistics();
+
+        letterboxdContributionStatistics.type = contributionStatisticsData.type;
+        letterboxdContributionStatistics.filmCount = contributionStatisticsData.filmCount;
+
+        return letterboxdContributionStatistics;
     }
 }
 
