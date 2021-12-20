@@ -113,6 +113,18 @@ const commands = [
             },
         ],
     },
+    {
+        name: 'user',
+        description: "Shows a users's information snippet.",
+        options: [
+            {
+                name: 'account',
+                description: 'Letterboxd account name',
+                type: 3,
+                required: true,
+            },
+        ],
+    },
 ];
 
 // Update global commands for eventual distribution to all guilds
