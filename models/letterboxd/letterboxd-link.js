@@ -1,5 +1,5 @@
 /**
- * Letterboxd API Contributor Object
+ * Letterboxd API Link Object
  * https://api-docs.letterboxd.com/#/definitions/Link
  */
 
