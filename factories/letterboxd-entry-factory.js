@@ -2,7 +2,7 @@ const LetterboxdEntry = require('../models/letterboxd/letterboxd-entry');
 
 class LetterboxdEntryFactory {
     /**
-     * @param {import('./letterboxd-member-factory')} letterboxdMemberFactory
+     * @param {import('./letterboxd/letterboxd-member-factory')} letterboxdMemberFactory
      */
     constructor(letterboxdMemberFactory) {
         this.letterboxdMemberFactory = letterboxdMemberFactory;
