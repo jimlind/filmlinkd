@@ -1,5 +1,6 @@
 const LetterboxdContributionStatistics = require('../../models/letterboxd/letterboxd-contribution-statistics');
 const LetterboxdContributor = require('../../models/letterboxd/letterboxd-contributor');
+const LetterboxdContributorSummary = require('../../models/letterboxd/letterboxd-contributor-summary');
 
 class LetterboxdContributorFactory {
     /**
@@ -29,6 +30,17 @@ class LetterboxdContributorFactory {
         );
 
         return letterboxdContributor;
+    }
+
+    buildContributorSummaryFromObject(contributorSummaryData) {
+        const letterboxdContributorSummary = new LetterboxdContributorSummary();
+
+        letterboxdContributorSummary.id = contributorSummaryData.id;
+        letterboxdContributorSummary.name = contributorSummaryData.name;
+        letterboxdContributorSummary.characterName = contributorSummaryData.characterName;
+        letterboxdContributorSummary.tmdbid = contributorSummaryData.tmdbid;
+
+        return letterboxdContributorSummary;
     }
 
     /**
