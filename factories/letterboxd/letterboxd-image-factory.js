@@ -1,17 +1,23 @@
+const LetterboxdImage = require('../../models/letterboxd/letterboxd-image');
 const LetterboxdImageSize = require('../../models/letterboxd/letterboxd-image-size');
 
 class LetterboxdImageFactory {
     /**
-     * @param {Object} linkData
-     * @returns {sizes: LetterboxdImagesSize[]}
+     * @param {Object} imageData
+     * @returns LetterboxdImage
      */
     buildImageFromObject(imageData) {
-        const sizeList = imageData.sizes || [];
-        return { sizes: sizeList.map(this.buildImageSizeFromObject) };
+        const letterboxdImage = new LetterboxdImage();
+
+        letterboxdImage.sizes = (imageData.sizes || []).map((size) =>
+            this.buildImageSizeFromObject(size),
+        );
+
+        return letterboxdImage;
     }
 
     /**
-     * @param {Object} linkData
+     * @param {Object} imageSizeData
      * @returns LetterboxdImageSize
      */
     buildImageSizeFromObject(imageSizeData) {
