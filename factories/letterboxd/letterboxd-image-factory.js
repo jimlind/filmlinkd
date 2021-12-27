@@ -4,14 +4,15 @@ const LetterboxdImageSize = require('../../models/letterboxd/letterboxd-image-si
 class LetterboxdImageFactory {
     /**
      * @param {Object} imageData
-     * @returns LetterboxdImage
+     * @returns LetterboxdImage | null
      */
     buildImageFromObject(imageData) {
-        const letterboxdImage = new LetterboxdImage();
+        if (!imageData?.sizes && !imageData?.sizes?.length) {
+            return null;
+        }
 
-        letterboxdImage.sizes = (imageData.sizes || []).map((size) =>
-            this.buildImageSizeFromObject(size),
-        );
+        const letterboxdImage = new LetterboxdImage();
+        letterboxdImage.sizes = imageData.sizes.map((size) => this.buildImageSizeFromObject(size));
 
         return letterboxdImage;
     }
