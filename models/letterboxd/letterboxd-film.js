@@ -11,7 +11,7 @@ class LetterboxdFilm {
     /** @property {string} originalName The original title of the film, if it was first released with a non-English title. */
     originalName = '';
     /** @property {string[]} alternativeNames The other names by which the film is known (including alternative titles and/or foreign translations). */
-    alternativeNames = '';
+    alternativeNames = [];
     /** @property {number} releaseYear The year in which the film was first released. */
     releaseYear = 0;
     /** @property {import('./letterboxd-contributor')[]} directors The list of directors for the film. */
