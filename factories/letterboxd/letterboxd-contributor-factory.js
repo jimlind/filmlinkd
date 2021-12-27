@@ -20,12 +20,12 @@ class LetterboxdContributorFactory {
         letterboxdContributor.name = contributorData.name;
         letterboxdContributor.tmdbid = contributorData.tmdbid;
         letterboxdContributor.statistics = {
-            contributions: contributorData.statistics.contributions.map(
-                this.buildContributionStatisticsFromObject,
+            contributions: (contributorData.statistics.contributions || []).map((statisticsData) =>
+                this.buildContributionStatisticsFromObject(statisticsData),
             ),
         };
-        letterboxdContributor.links = contributorData.links.map(
-            this.letterboxdLinkFactory.buildLinkFromObject,
+        letterboxdContributor.links = (contributorData.links || []).map((linkData) =>
+            this.letterboxdLinkFactory.buildLinkFromObject(linkData),
         );
 
         return letterboxdContributor;
