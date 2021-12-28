@@ -53,8 +53,7 @@ class LetterboxdFilm {
     // TODO: Define this properly
     /** @property {*[]} languages The film’s spoken languages. */
     languages = [];
-    // TODO: Define this properly
-    /** @property {*[]} contributions The film’s contributors (director, cast and crew) grouped by discipline. */
+    /** @property {import('./letterboxd-film-contributions')[]} contributions The film’s contributors (director, cast and crew) grouped by discipline. */
     contributions = [];
     // TODO: Define this properly
     /** @property {*[]} news The related news items for the film. */
