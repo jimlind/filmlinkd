@@ -14,7 +14,7 @@ class LetterboxdFilm {
     alternativeNames = [];
     /** @property {number} releaseYear The year in which the film was first released. */
     releaseYear = 0;
-    /** @property {import('./letterboxd-contributor')[]} directors The list of directors for the film. */
+    /** @property {import('./letterboxd-contributor-summary')[]} directors The list of directors for the film. */
     directors = [];
     /** @property {import('./letterboxd-image')} poster The film’s poster image (2:3 aspect ratio in multiple sizes). Will contain only a single obfuscated image if the adult flag is true. */
     poster = null;
