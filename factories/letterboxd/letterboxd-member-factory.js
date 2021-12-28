@@ -1,4 +1,5 @@
 const LetterboxdMember = require('../../models/letterboxd/letterboxd-member');
+const LetterboxdMemberSummary = require('../../models/letterboxd/letterboxd-member-summary');
 
 class LetterboxdMemberFactory {
     /**
@@ -67,6 +68,34 @@ class LetterboxdMemberFactory {
         letterboxdMember.bio = memberData.bio || '';
 
         return letterboxdMember;
+    }
+
+    /**
+     * @param {Object} memberSummaryData
+     * @returns LetterboxdMemberSummary
+     */
+    buildMemberSummaryFromObject(memberSummaryData) {
+        const letterboxdMemberSummary = new LetterboxdMemberSummary();
+
+        letterboxdMemberSummary.id = memberSummaryData.id || '';
+        letterboxdMemberSummary.userName = (memberSummaryData.username || '').toLowerCase();
+        letterboxdMemberSummary.givenName = memberSummaryData.givenName || '';
+        letterboxdMemberSummary.familyName = memberSummaryData.familyName || '';
+        letterboxdMemberSummary.displayName = memberSummaryData.displayName || '';
+        letterboxdMemberSummary.shortName = memberSummaryData.shortName || '';
+        letterboxdMemberSummary.pronoun = this.letterboxdPronounFactory.buildPronounFromObject(
+            memberSummaryData.pronoun || {},
+        );
+        letterboxdMemberSummary.avatar = this.letterboxdImageFactory.buildImageFromObject(
+            memberSummaryData.avatar || {},
+        );
+        letterboxdMemberSummary.memberStatus = memberSummaryData.memberStatus || '';
+        letterboxdMemberSummary.hideAdsInContent = memberSummaryData.hideAdsInContent || false;
+        letterboxdMemberSummary.commentPolicy = memberSummaryData.commentPolicy || '';
+        letterboxdMemberSummary.accountStatus = memberSummaryData.accountStatus || '';
+        letterboxdMemberSummary.hideAds = memberSummaryData.hideAds || false;
+
+        return letterboxdMemberSummary;
     }
 }
 
