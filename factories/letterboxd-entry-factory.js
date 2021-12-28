@@ -24,7 +24,9 @@ class LetterboxdEntryFactory {
         );
 
         letterboxdEntry.id = entryData.id;
-        letterboxdEntry.member = this.letterboxdMemberFactory.buildFromObject(entryData.owner);
+        letterboxdEntry.member = this.letterboxdMemberFactory.buildMemberSummaryFromObject(
+            entryData.owner,
+        );
         letterboxdEntry.filmName = entryData.film.name;
         letterboxdEntry.filmYear = entryData.film.releaseYear;
         letterboxdEntry.date = date;

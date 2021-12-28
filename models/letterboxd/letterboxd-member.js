@@ -18,7 +18,7 @@ class LetterboxdMember {
     shortName = '';
     /** @property {import('./letterboxd-pronoun')} pronoun The member’s preferred pronoun. Use the /members/pronouns endpoint to request all available pronouns. */
     pronoun = null;
-    /** @property {{sizes: import('./letterboxd-image-size')[]}} avatar The member’s avatar image at multiple sizes. Avatar images to not have an enforced aspect ratio, so should be center-cropped to a square if they are not 1:1. */
+    /** @property {import('./letterboxd-image} avatar The member’s avatar image at multiple sizes. Avatar images to not have an enforced aspect ratio, so should be center-cropped to a square if they are not 1:1. */
     avatar = null;
     // TODO: memberStatus is an enum
     /** @property {string} memberStatus The member’s account type. */

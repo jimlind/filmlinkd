@@ -1,9 +1,13 @@
+/**
+ * This does not match a standard Letterboxd Data Object
+ */
+
 class LetterboxdEntry {
     /** @property {string} id Letterboxd id */
     id = '';
     /** @property {string} url Letterboxd entry link */
     url = '';
-    /** @property {import('./letterboxd-member')} member Letterboxd member object */
+    /** @property {import('./letterboxd-member-summary')} member Letterboxd member summary object */
     member = null;
     /** @property {string} filmName film name */
     filmName = '';

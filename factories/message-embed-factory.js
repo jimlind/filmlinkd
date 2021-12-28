@@ -122,7 +122,7 @@ class MessageEmbedFactory {
     }
 
     /**
-     * @param {import('../models/letterboxd/letterboxd-member)} member
+     * @param {import('../models/letterboxd/letterboxd-member')} member
      * @param {import('../models/letterboxd/letterboxd-entry')[]} entryList
      * @returns {MessageEmbed}
      */
@@ -138,10 +138,14 @@ class MessageEmbedFactory {
             return entryFirstLine + '\n' + entrySecondLine;
         }, '');
 
+        const largestImage = member.avatar.sizes.reduce((previous, current) =>
+            current.height > previous.height ? current : previous,
+        );
+
         return this.createEmbed()
             .setTitle(`Recent Diary Activity from ${member.displayName}`)
             .setURL(`https://boxd.it/${member.id}`)
-            .setThumbnail(member.image)
+            .setThumbnail(largestImage.url)
             .setDescription(entryTextList.join('\n'));
     }
 
