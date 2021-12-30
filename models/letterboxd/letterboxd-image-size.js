@@ -1,5 +1,5 @@
 /**
- * Letterboxd API Link Object
+ * Letterboxd API Image Size Object
  * https://api-docs.letterboxd.com/#/definitions/ImageSize
  */
 
