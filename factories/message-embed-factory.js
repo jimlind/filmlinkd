@@ -210,6 +210,46 @@ class MessageEmbedFactory {
     }
 
     /**
+     * @param {import('../models/letterboxd/letterboxd-member')} member
+     * @param {import('../models/letterboxd/letterboxd-member-statistics')} memberStatistics
+     * @returns {MessageEmbed}
+     */
+    createUserMessage(member, memberStatistics) {
+        let description = '';
+
+        // Add member location to description
+        if (member.location) {
+            description += `***${member.location}***\n`;
+        }
+        // Add member bio to description
+        if (member.bioLbml) {
+            description += this.turndownService.turndown(member.bio) + '\n';
+        }
+
+        // Add favorite film list to description
+        const filmList = member.favoriteFilms.map(
+            (film) => `- [${film.name} (${film.releaseYear})](https://boxd.it/${film.id})`,
+        );
+        description += filmList.join('\n') + '\n';
+
+        // Add member film counts to description
+        const counts = memberStatistics.counts;
+        description += `Logged films: ${counts.watches} total | ${counts.filmsInDiaryThisYear} this year`;
+
+        const pronounList = [
+            member.pronoun.subjectPronoun,
+            member.pronoun.objectPronoun,
+            member.pronoun.possessivePronoun,
+        ];
+
+        return this.createEmbed()
+            .setTitle(`${member.displayName} (${pronounList.join('/')})`)
+            .setURL(`https://boxd.it/${member.id}`)
+            .setThumbnail(this.parseImage(member?.avatar?.sizes))
+            .setDescription(description);
+    }
+
+    /**
      * @param {import('../models/letterboxd/letterboxd-contributor')} contributor
      * @returns {MessageEmbed}
      */
@@ -356,6 +396,17 @@ class MessageEmbedFactory {
         }
 
         return truncated + suffix;
+    }
+
+    /**
+     * @param {import('../models/letterboxd/letterboxd-image-size')[]} sizes
+     * return string
+     */
+    parseImage(sizes) {
+        const findLargest = (previous, current) =>
+            current.height || 0 > previous.height ? current : previous;
+        const largestImage = (sizes || []).reduce(findLargest, {});
+        return largestImage?.url || '';
     }
 }
 

@@ -12,6 +12,7 @@ class InteractionTranslator {
      * @param {any} messageEmbedFactory
      * @param {any} letterboxdProfileWeb
      * @param {any} subscribedUserList
+     * @param {import('../commands/user-command')} userCommand
      */
     constructor(
         contributorCommand,
@@ -24,6 +25,7 @@ class InteractionTranslator {
         messageEmbedFactory,
         letterboxdProfileWeb,
         subscribedUserList,
+        userCommand,
     ) {
         this.contributorCommand = contributorCommand;
         this.diaryCommand = diaryCommand;
@@ -35,6 +37,7 @@ class InteractionTranslator {
         this.messageEmbedFactory = messageEmbedFactory;
         this.letterboxdProfileWeb = letterboxdProfileWeb;
         this.subscribedUserList = subscribedUserList;
+        this.userCommand = userCommand;
     }
 
     /**
@@ -104,15 +107,21 @@ class InteractionTranslator {
                         return this.messageEmbedFactory.createUnfollowedErrorMessage(accountName);
                     });
                 break;
-            case 'diary':
-                return this.diaryCommand.getMessage(accountName);
-            case 'film':
-                const filmName = commandInteraction.options.getString('film-name') || '';
-                return this.filmCommand.getMessage(filmName);
             case 'contributor':
                 const contributorName =
                     commandInteraction.options.getString('contributor-name') || '';
                 return this.contributorCommand.getMessage(contributorName);
+                break;
+            case 'diary':
+                return this.diaryCommand.getMessage(accountName);
+                break;
+            case 'film':
+                const filmName = commandInteraction.options.getString('film-name') || '';
+                return this.filmCommand.getMessage(filmName);
+                break;
+            case 'user':
+                return this.userCommand.getMessage(accountName);
+                break;
             default:
                 return new Promise((resolve) => {
                     return resolve(this.messageEmbedFactory.createHelpMessage());

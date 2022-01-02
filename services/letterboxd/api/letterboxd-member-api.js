@@ -3,7 +3,7 @@
 class LetterboxdMemberApi {
     /**
      * @param {import('./letterboxd-api')} letterboxdApi
-     * @param {import('../../../factories/letterboxd-member-factory')} letterboxdMemberFactory
+     * @param {import('../../../factories/letterboxd/letterboxd-member-factory')} letterboxdMemberFactory
      */
     constructor(letterboxdApi, letterboxdMemberFactory) {
         this.letterboxdApi = letterboxdApi;
@@ -31,8 +31,34 @@ class LetterboxdMemberApi {
                 if (!filteredMemberList.length) {
                     throw `Member not found for ${userName} (Type 2)`;
                 }
-                return this.letterboxdMemberFactory.buildFromObject(filteredMemberList[0].member);
+
+                const memberObject = filteredMemberList[0].member;
+                return this.letterboxdMemberFactory.buildMemberFromObject(memberObject);
             });
+    }
+
+    /**
+     * @param {string} letterboxdId
+     * @returns {Promise<import('../../../models/letterboxd/letterboxd-member')>}
+     */
+    getMember(letterboxdId) {
+        return this.letterboxdApi
+            .get(`member/${letterboxdId}`, {})
+            .then((responseData) =>
+                this.letterboxdMemberFactory.buildMemberFromObject(responseData),
+            );
+    }
+
+    /**
+     * @param {string} letterboxdId
+     * @returns {Promise<import('../../../models/letterboxd/letterboxd-member-statistics')>}
+     */
+    getMemberStatistics(letterboxdId) {
+        return this.letterboxdApi
+            .get(`member/${letterboxdId}/statistics`, {})
+            .then((responseData) =>
+                this.letterboxdMemberFactory.buildMemberStatisticsFromObject(responseData),
+            );
     }
 }
 

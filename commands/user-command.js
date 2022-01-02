@@ -1,16 +1,12 @@
-'use strict';
-
-class DiaryCommand {
+class UserCommand {
     /**
      * @param {import('../services/letterboxd/letterboxd-lid-web')} letterboxdLidWeb
      * @param {import('../services/letterboxd/api/letterboxd-member-api')} letterboxdMemberApi
-     * @param {import('../services/letterboxd/api/letterboxd-entry-api')} letterboxdEntryApi
      * @param {import('../factories/message-embed-factory')} messageEmbedFactory
      */
-    constructor(letterboxdLidWeb, letterboxdMemberApi, letterboxdEntryApi, messageEmbedFactory) {
+    constructor(letterboxdLidWeb, letterboxdMemberApi, messageEmbedFactory) {
         this.letterboxdLidWeb = letterboxdLidWeb;
         this.letterboxdMemberApi = letterboxdMemberApi;
-        this.letterboxdEntryApi = letterboxdEntryApi;
         this.messageEmbedFactory = messageEmbedFactory;
     }
 
@@ -19,18 +15,18 @@ class DiaryCommand {
      * @returns {import('discord.js').MessageEmbed}
      */
     getMessage(accountName) {
-        const lidPromise = this.letterboxdLidWeb.get(accountName);
+        const searchMember = this.letterboxdLidWeb.get(accountName);
         const promiseList = [
-            lidPromise.then((lid) => this.letterboxdMemberApi.getMember(lid)),
-            lidPromise.then((lid) => this.letterboxdEntryApi.get(lid, 5)),
+            searchMember.then((lid) => this.letterboxdMemberApi.getMember(lid)),
+            searchMember.then((lid) => this.letterboxdMemberApi.getMemberStatistics(lid)),
         ];
 
         return Promise.all(promiseList)
-            .then(([member, entryList]) =>
-                this.messageEmbedFactory.createDiaryListMessage(member, entryList),
+            .then(([member, memberStatistics]) =>
+                this.messageEmbedFactory.createUserMessage(member, memberStatistics),
             )
             .catch(() => this.messageEmbedFactory.createNoAccountFoundMessage(accountName));
     }
 }
 
-module.exports = DiaryCommand;
+module.exports = UserCommand;
