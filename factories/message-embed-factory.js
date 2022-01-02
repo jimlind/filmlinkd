@@ -150,26 +150,62 @@ class MessageEmbedFactory {
     }
 
     /**
-     * @param {import('../models/letterboxd/letterboxd-film)} film
+     * @param {import('../models/letterboxd/letterboxd-film')} film
      * @param {import('../models/letterboxd/letterboxd-film-statistics')} filmStatistics
      * @returns {MessageEmbed}
      */
     createFilmMessage(film, filmStatistics) {
-        let description = '`' + film.tagline + '`\n';
-        description +=
-            this.formatStars(filmStatistics.rating) + ' ' + filmStatistics.rating.toFixed(2) + '\n';
-        description += `Director(s): ${film.directorList.join(', ')}\n`;
-        description += `${this.formatRuntime(film.runTime)} | ${film.countryList.join(', ')}\n`;
-        description += film.genreList.join('/') + '\n';
+        let description = '';
+
+        // Add tagline to description
+        if (film.tagline) {
+            description += `**${film.tagline}**\n`;
+        }
+
+        // Add star emoji and text to description
+        if (filmStatistics.rating) {
+            const starEmoji = this.formatStars(filmStatistics.rating);
+            description += `${starEmoji} ${filmStatistics.rating.toFixed(2)} \n`;
+        }
+
+        // Add directors to description
+        const filteredDirectorList = film.contributions.filter((c) => c.type == 'Director');
+        const directorLinkList = (filteredDirectorList[0]?.contributors || []).map(
+            (contributor) => `[${contributor.name}](https://boxd.it/${contributor.id})`,
+        );
+        if (directorLinkList.length) {
+            description += `Director(s): ${directorLinkList.join(', ')}\n`;
+        }
+
+        // Add runtime and countries to description
+        const countryList = film.countries.map((country) => country?.name || '').filter(Boolean);
+        const runTimeString = this.formatRuntime(film.runTime);
+        const lineStrings = [countryList.join(', '), runTimeString].filter(Boolean);
+        if (lineStrings.length) {
+            description += `${lineStrings.join(' | ')}\n`;
+        }
+
+        // Add genre to description
+        const genreList = film.genres.map((genre) => genre?.name || '').filter(Boolean);
+        if (genreList.length) {
+            description += genreList.join('/') + '\n';
+        }
+
+        // Add additional statistics emoji and numbers
         description +=
             `:eyes: ${this.formatCount(filmStatistics.watchCount)}, ` +
             `<:r:851138401557676073> ${this.formatCount(filmStatistics.likeCount)}, ` +
             `:speech_balloon: ${this.formatCount(filmStatistics.reviewCount)}\n`;
 
+        const largestImage = (film?.poster?.sizes || []).reduce(
+            (previous, current) => (current.height || 0 > previous.height ? current : previous),
+            {},
+        );
+
         return this.createEmbed()
-            .setTitle(`${film.name} (${film.year})`)
+            .setTitle(`${film.name} (${film.releaseYear})`)
             .setURL(`https://boxd.it/${film.id}`)
-            .setThumbnail(film.image)
+            .setThumbnail(largestImage?.url || '')
             .setDescription(description);
     }
 
@@ -286,6 +322,10 @@ class MessageEmbedFactory {
      * @return string
      */
     formatRuntime(runTime) {
+        if (!runTime) {
+            return '';
+        }
+
         const hours = Math.floor(runTime / 60);
         const minutes = runTime - hours * 60;
 

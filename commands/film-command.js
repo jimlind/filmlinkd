@@ -16,20 +16,16 @@ class FilmCommand {
      */
     getMessage(filmName) {
         const searchFilm = this.letterboxdFilmApi.search(filmName);
-        const getFilm = searchFilm.then((letterboxdId) => {
-            return this.letterboxdFilmApi.getFilm(letterboxdId);
-        });
-        const getFilmStatistics = searchFilm.then((letterboxdId) => {
-            return this.letterboxdFilmApi.getFilmStatistics(letterboxdId);
-        });
+        const promiseList = [
+            searchFilm.then((lid) => this.letterboxdFilmApi.getFilm(lid)),
+            searchFilm.then((lid) => this.letterboxdFilmApi.getFilmStatistics(lid)),
+        ];
 
-        return Promise.all([getFilm, getFilmStatistics])
+        return Promise.all(promiseList)
             .then(([film, filmStatistics]) =>
                 this.messageEmbedFactory.createFilmMessage(film, filmStatistics),
             )
-            .catch(() => {
-                return this.messageEmbedFactory.createFilmNotFoundMessage();
-            });
+            .catch(() => this.messageEmbedFactory.createFilmNotFoundMessage());
     }
 }
 
