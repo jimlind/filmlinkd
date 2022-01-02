@@ -1,4 +1,7 @@
 const LetterboxdMember = require('../../models/letterboxd/letterboxd-member');
+const LetterboxdMemberIdentifier = require('../../models/letterboxd/letterboxd-member-identifier');
+const LetterboxdMemberStatistics = require('../../models/letterboxd/letterboxd-member-statistics');
+const LetterboxdMemberStatisticsCounts = require('../../models/letterboxd/letterboxd-member-statistics-counts');
 const LetterboxdMemberSummary = require('../../models/letterboxd/letterboxd-member-summary');
 
 class LetterboxdMemberFactory {
@@ -68,6 +71,65 @@ class LetterboxdMemberFactory {
         letterboxdMember.bio = memberData.bio || '';
 
         return letterboxdMember;
+    }
+
+    /**
+     * @param {Object} memberIdentifierData
+     * @returns LetterboxdMemberIdentifier
+     */
+    buildMemberIdentifierFromObject(memberIdentifierData) {
+        const memberIdentifier = new LetterboxdMemberIdentifier();
+
+        memberIdentifier.id = memberIdentifierData.id;
+
+        return memberIdentifier;
+    }
+
+    /**
+     * @param {Object} memberStatisticsData
+     * @returns LetterboxdMemberStatistics
+     */
+    buildMemberStatisticsFromObject(memberStatisticsData) {
+        const memberStatistics = new LetterboxdMemberStatistics();
+
+        memberStatistics.member = this.buildMemberIdentifierFromObject(memberStatisticsData.member);
+        memberStatistics.counts = this.buildMemberStatisticsCountsFromObject(
+            memberStatisticsData.counts,
+        );
+        // TODO: Ratings Histogram
+        memberStatistics.ratingsHistogram = [];
+        memberStatistics.yearsInReview = memberStatisticsData.yearsInReviewl;
+
+        return memberStatistics;
+    }
+
+    /**
+     * @param {Object} memberStatisticsCountsData
+     * @returns LetterboxdMemberStatisticsCounts
+     */
+    buildMemberStatisticsCountsFromObject(memberStatisticsCountsData) {
+        const memberStatisticsCounts = new LetterboxdMemberStatisticsCounts();
+
+        memberStatisticsCounts.filmLikes = memberStatisticsCountsData.filmLikes;
+        memberStatisticsCounts.listLikes = memberStatisticsCountsData.listLikes;
+        memberStatisticsCounts.reviewLikes = memberStatisticsCountsData.reviewLikes;
+        memberStatisticsCounts.watches = memberStatisticsCountsData.watches;
+        memberStatisticsCounts.ratings = memberStatisticsCountsData.ratings;
+        memberStatisticsCounts.reviews = memberStatisticsCountsData.reviews;
+        memberStatisticsCounts.diaryEntries = memberStatisticsCountsData.diaryEntries;
+        memberStatisticsCounts.diaryEntriesThisYear =
+            memberStatisticsCountsData.diaryEntriesThisYear;
+        memberStatisticsCounts.filmsInDiaryThisYear =
+            memberStatisticsCountsData.filmsInDiaryThisYear;
+        memberStatisticsCounts.watchlist = memberStatisticsCountsData.watchlist;
+        memberStatisticsCounts.lists = memberStatisticsCountsData.lists;
+        memberStatisticsCounts.unpublishedLists = memberStatisticsCountsData.unpublishedLists;
+        memberStatisticsCounts.followers = memberStatisticsCountsData.followers;
+        memberStatisticsCounts.following = memberStatisticsCountsData.following;
+        memberStatisticsCounts.listTags = memberStatisticsCountsData.listTags;
+        memberStatisticsCounts.filmTags = memberStatisticsCountsData.filmTags;
+
+        return memberStatisticsCounts;
     }
 
     /**
