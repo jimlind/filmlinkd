@@ -75,10 +75,21 @@ class FollowCommand {
                         letterboxdMember.id,
                         letterboxdMember.userName,
                         letterboxdMember.displayName,
-                        letterboxdMember.image,
+                        this.parseImage(letterboxdMember?.avatar?.sizes),
                     );
                 });
             });
+    }
+
+    /**
+     * @param {import('../models/letterboxd/letterboxd-image-size')[]} sizes
+     * return string
+     */
+    parseImage(sizes) {
+        const findLargest = (previous, current) =>
+            current.height || 0 > previous.height ? current : previous;
+        const largestImage = (sizes || []).reduce(findLargest, {});
+        return largestImage?.url || '';
     }
 }
 
