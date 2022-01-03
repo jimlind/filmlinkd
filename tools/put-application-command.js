@@ -114,6 +114,24 @@ const commands = [
         ],
     },
     {
+        name: 'list',
+        description: "Shows a members's list's information snippet.",
+        options: [
+            {
+                name: 'account',
+                description: 'Letterboxd account name',
+                type: 3,
+                required: true,
+            },
+            {
+                name: 'list-name',
+                description: "Member's list name",
+                type: 3,
+                required: true,
+            },
+        ],
+    },
+    {
         name: 'user',
         description: "Shows a users's information snippet.",
         options: [
