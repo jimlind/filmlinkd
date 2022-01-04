@@ -43,11 +43,6 @@ class DiaryEntryWriter {
             this.firestoreUserDao
                 .getByUserName(diaryEntry.userName)
                 .then((userData) => {
-                    // Rewrite the channel list if there is an override sent
-                    userData.channelList = channelIdOverride
-                        ? [{ channelId: channelIdOverride }]
-                        : userData.channelList;
-
                     // Exit early if no subscribed channels
                     if (userData.channelList.length === 0) {
                         return resolve();
@@ -59,8 +54,12 @@ class DiaryEntryWriter {
                         return resolve();
                     }
 
+                    // Rewrite the channel list if there is an override sent
+                    const channelList = [{ channelId: channelIdOverride }];
+                    const sendingUser = channelIdOverride ? { ...userData, channelList } : userData;
+
                     // Get sender promise list with mapped failures to noops
-                    const promiseList = this.createSenderPromiseList(diaryEntry, userData).map(
+                    const promiseList = this.createSenderPromiseList(diaryEntry, sendingUser).map(
                         (p) => p.catch(() => false),
                     );
                     Promise.all(promiseList).then((results) => {
