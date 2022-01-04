@@ -41,7 +41,7 @@ class DiaryEntryWriter {
             }
 
             this.firestoreUserDao
-                .read(diaryEntry.userName)
+                .getByUserName(diaryEntry.userName)
                 .then((userData) => {
                     // Rewrite the channel list if there is an override sent
                     userData.channelList = channelIdOverride
