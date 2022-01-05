@@ -11,6 +11,7 @@ class InteractionTranslator {
      * @param {import('../commands/follow-command')} followCommand
      * @param {any} messageEmbedFactory
      * @param {any} letterboxdProfileWeb
+     * @param {import('../commands/list-command')} listCommand
      * @param {any} subscribedUserList
      * @param {import('../commands/user-command')} userCommand
      */
@@ -24,6 +25,7 @@ class InteractionTranslator {
         followCommand,
         messageEmbedFactory,
         letterboxdProfileWeb,
+        listCommand,
         subscribedUserList,
         userCommand,
     ) {
@@ -36,6 +38,7 @@ class InteractionTranslator {
         this.followCommand = followCommand;
         this.messageEmbedFactory = messageEmbedFactory;
         this.letterboxdProfileWeb = letterboxdProfileWeb;
+        this.listCommand = listCommand;
         this.subscribedUserList = subscribedUserList;
         this.userCommand = userCommand;
     }
@@ -118,6 +121,10 @@ class InteractionTranslator {
             case 'film':
                 const filmName = commandInteraction.options.getString('film-name') || '';
                 return this.filmCommand.getMessage(filmName);
+                break;
+            case 'list':
+                const listName = commandInteraction.options.getString('list-name') || '';
+                return this.listCommand.getMessage(accountName, listName);
                 break;
             case 'user':
                 return this.userCommand.getMessage(accountName);

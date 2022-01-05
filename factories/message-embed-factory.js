@@ -250,6 +250,35 @@ class MessageEmbedFactory {
     }
 
     /**
+     * @param {import('../models/letterboxd/letterboxd-list-summary')} listSummary
+     * @returns {MessageEmbed}
+     */
+    createListMessage(listSummary) {
+        let description = `**List of ${listSummary.filmCount} films curated by [${listSummary.owner.displayName}](https://boxd.it/${listSummary.owner.id})**\n`;
+        description += this.turndownService.turndown(listSummary.description) + '\n';
+
+        // Add film list to description
+        const filmList = listSummary.previewEntries
+            .map(
+                (entry) =>
+                    `${entry.rank || '-'} [${entry.film.name} (${
+                        entry.film.releaseYear
+                    })](https://boxd.it/${entry.film.id})`,
+            )
+            .slice(0, 6);
+        description += filmList.join('\n');
+        if (listSummary.filmCount > 6) {
+            description += ' ...';
+        }
+
+        return this.createEmbed()
+            .setTitle(listSummary.name)
+            .setURL(`https://boxd.it/${listSummary.id}`)
+            .setThumbnail(this.parseImage(listSummary?.previewEntries[0]?.film?.poster?.sizes))
+            .setDescription(description);
+    }
+
+    /**
      * @param {import('../models/letterboxd/letterboxd-contributor')} contributor
      * @returns {MessageEmbed}
      */
@@ -322,6 +351,11 @@ class MessageEmbedFactory {
         return this.createEmbed().setDescription(
             'Unable to match a contributor to those search terms.',
         );
+    }
+
+    createNoListFoundMessage() {
+        const message = 'Unable to match an account list to those search terms.';
+        return this.createEmbed().setDescription(message);
     }
 
     createEmbed() {
