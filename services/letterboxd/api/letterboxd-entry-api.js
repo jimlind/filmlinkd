@@ -1,7 +1,3 @@
-'use strict';
-
-//const DiaryEntry = require('../../../models/diary-entry');
-
 class LetterboxdEntryApi {
     /**
      * @param {import('./letterboxd-api')} letterboxdApi
@@ -13,14 +9,14 @@ class LetterboxdEntryApi {
     }
 
     /**
-     * @param {string} letterboxdId
+     * @param {string} memberLetterboxdId
      * @param {number} quantity
      * @returns {Promise<Object>}
      */
-    get(letterboxdId, quantity) {
+    get(memberLetterboxdId, quantity) {
         return this.letterboxdApi
             .get('log-entries', {
-                member: letterboxdId,
+                member: memberLetterboxdId,
                 perPage: quantity,
             })
             .then((responseData) => {
