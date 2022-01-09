@@ -15,6 +15,9 @@ class ContributorCommand {
      * @returns {import('discord.js').MessageEmbed}
      */
     getMessage(contributorName) {
+        // TODO:
+        // Also get the image of the contributor from thier Letterboxd page.
+        // It isn't accessible on the API.
         return this.letterboxdContributorApi
             .getContributor(contributorName)
             .then((contributor) => {
