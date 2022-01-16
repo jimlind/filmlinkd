@@ -56,6 +56,11 @@ class DependencyInjectionContainer {
             filter: ['p'],
             replacement: (content) => content + '\n',
         });
+        turndownService.addRule('blockquote', {
+            filter: ['blockquote'],
+            replacement: (content) =>
+                '> ' + content.split(/\r?\n/).filter(Boolean).join('\n> ') + '\n',
+        });
 
         // Create PubSub
         const pubsub = new PubSub({
