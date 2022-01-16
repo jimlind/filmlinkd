@@ -48,16 +48,16 @@ class DependencyInjectionContainer {
 
         // Create configured Turndown service
         const turndownService = new turndown();
-        turndownService.addRule('blockquote', {
-            filter: ['blockquote'],
-            replacement: (content) => '> ' + content,
-        });
         turndownService.addRule('break', {
             filter: ['br'],
             replacement: () => '\n',
         });
+        turndownService.addRule('paragraph', {
+            filter: ['p'],
+            replacement: (content) => content + '\n',
+        });
 
-        // Creast PubSub
+        // Create PubSub
         const pubsub = new PubSub({
             projectId: configModel.googleCloudProjectId,
             keyFilename: configModel.gcpKeyFile,
