@@ -132,6 +132,28 @@ const commands = [
         ],
     },
     {
+        name: 'logged',
+        description: "Shows the user's 5 most recent logged entries for a film.",
+        options: [
+            {
+                name: 'account',
+                description: 'Letterboxd account name',
+                type: 3,
+                required: true,
+            },
+            {
+                name: 'film-name',
+                description: 'Film name',
+                type: 3,
+                required: true,
+            },
+        ],
+    },
+    {
+        name: 'roulette',
+        description: 'Displays random film information snippet.',
+    },
+    {
         name: 'user',
         description: "Shows a users's information snippet.",
         options: [

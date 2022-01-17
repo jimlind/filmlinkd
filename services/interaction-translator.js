@@ -13,6 +13,7 @@ class InteractionTranslator {
      * @param {any} letterboxdProfileWeb
      * @param {import('../commands/list-command')} listCommand
      * @param {import('../commands/logged-command')} loggedCommand
+     * @param {import('../commands/roulette-command')} rouletteCommand
      * @param {any} subscribedUserList
      * @param {import('../commands/user-command')} userCommand
      */
@@ -28,6 +29,7 @@ class InteractionTranslator {
         letterboxdProfileWeb,
         listCommand,
         loggedCommand,
+        rouletteCommand,
         subscribedUserList,
         userCommand,
     ) {
@@ -42,6 +44,7 @@ class InteractionTranslator {
         this.letterboxdProfileWeb = letterboxdProfileWeb;
         this.listCommand = listCommand;
         this.loggedCommand = loggedCommand;
+        this.rouletteCommand = rouletteCommand;
         this.subscribedUserList = subscribedUserList;
         this.userCommand = userCommand;
     }
@@ -134,6 +137,9 @@ class InteractionTranslator {
                 break;
             case 'logged':
                 return this.loggedCommand.getMessage(accountName, filmName);
+                break;
+            case 'roulette':
+                return this.rouletteCommand.getMessage();
                 break;
             case 'user':
                 return this.userCommand.getMessage(accountName);
