@@ -44,13 +44,11 @@ class LetterboxdFilm {
     // TODO: Define this properly
     /** @property {*} trailer The film’s trailer. */
     trailer = null;
-    /** @property {import('./letterboxd-genre')} genres The film’s genres. */
+    /** @property {import('./letterboxd-genre')[]} genres The film’s genres. */
     genres = [];
-    // TODO: Define this properly
-    /** @property {import()} countries The film’s production countries. */
+    /** @property {import('./letterboxd-country')[]} countries The film’s production countries. */
     countries = [];
-    // TODO: Define this properly
-    /** @property {import()} languages The film’s spoken languages. */
+    /** @property {import('./letterboxd-language')[]} languages The film’s spoken languages. */
     languages = [];
     /** @property {import('./letterboxd-film-contributions')[]} contributions The film’s contributors (director, cast and crew) grouped by discipline. */
     contributions = [];
