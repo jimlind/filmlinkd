@@ -33,15 +33,12 @@ class EntryCommand {
             })
             .then((logEntryList) => {
                 if (!logEntryList.length) {
-                    throw 'Empty Entry List Found';
+                    throw 'Empty Logged Entry List Found';
                 }
 
                 return this.messageEmbedFactory.createLoggedMessage(logEntryList);
             })
-            .catch((e) => {
-                console.log(e);
-                return this.messageEmbedFactory.createNoLoggedEntriesFoundMessage();
-            });
+            .catch((e) => this.messageEmbedFactory.createNoLoggedEntriesFoundMessage());
     }
 }
 
