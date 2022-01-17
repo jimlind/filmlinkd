@@ -221,9 +221,14 @@ class MessageEmbedFactory {
         if (member.location) {
             description += `***${member.location}***\n`;
         }
-        // Add member bio to description
+        // Add member bio and horizontal rule to description
         if (member.bioLbml) {
-            description += this.turndownService.turndown(member.bio) + '\n';
+            description +=
+                this.truncateMarkdown(this.turndownService.turndown(member.bio), {
+                    limit: 1000,
+                    ellipsis: true,
+                }) + '\n';
+            description += '┈'.repeat(12) + '\n';
         }
 
         // Add favorite film list to description
@@ -235,11 +240,6 @@ class MessageEmbedFactory {
         // Add member film counts to description
         const counts = memberStatistics.counts;
         description += `Logged films: ${counts.watches} total | ${counts.filmsInDiaryThisYear} this year`;
-
-        // There is a 4096 character limit on bios. Very rarely would we hit it, but adding some protection.
-        // Soft limit of 1000 characters of markdown text but hard limit of 4069 characters total.
-        const truncateData = { limit: 1000, ellipsis: true };
-        description = this.truncateMarkdown(description, truncateData).substring(0, 4096);
 
         const pronounList = [
             member.pronoun.subjectPronoun,
