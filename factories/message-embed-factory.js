@@ -129,7 +129,7 @@ class MessageEmbedFactory {
     createDiaryListMessage(member, entryList) {
         const entryTextList = entryList.map((entry) => {
             let entryFirstLine = `[**${entry.filmName} (${entry.filmYear})**](https://boxd.it/${entry.id})`;
-            let entrySecondLine = entry.date ? `${this.formatDate(entry.date)}` : '';
+            let entrySecondLine = entry.date ? `${this.formatDate(entry.date)} ` : '';
             entrySecondLine += this.formatStars(entry.rating);
             entrySecondLine += entry.rewatch ? ' <:r:851135667546488903>' : '';
             entrySecondLine += entry.like ? ' <:l:851138401557676073>' : '';
@@ -279,6 +279,40 @@ class MessageEmbedFactory {
     }
 
     /**
+     * @param {import('../models/letterboxd/letterboxd-log-entry')[]} logEntryList
+     * @returns {MessageEmbed}
+     */
+    createLoggedMessage(logEntryList) {
+        if (!logEntryList.length) {
+            throw 'Empty List of Log Entry Provided';
+        }
+
+        const logEntryTextList = logEntryList.map((logEntry) => {
+            const actionString = logEntry.review ? 'Reviewed' : 'Watched';
+            const dateString = this.formatDate(new Date(logEntry?.diaryDetails?.diaryDate));
+            const activityLine = `[**${actionString} on ${dateString}**](https://boxd.it/${logEntry.id})`;
+
+            let emojiLine = this.formatStars(Number(logEntry?.rating));
+            emojiLine += logEntry?.diaryDetails?.rewatch ? ' <:r:851135667546488903>' : '';
+            emojiLine += logEntry?.like ? ' <:l:851138401557676073>' : '';
+
+            let reviewText = this.turndownService.turndown(logEntry?.review?.text || '');
+            reviewText = this.truncateMarkdown(reviewText, { limit: 200, ellipsis: true });
+            reviewText = logEntry?.review?.containsSpoilers ? '||' + reviewText + '||' : reviewText;
+
+            return [activityLine, emojiLine.trim(), reviewText].filter(Boolean).join('\n');
+        });
+
+        const firstEntry = logEntryList[0];
+        const title = `${firstEntry?.owner?.displayName}'s Recent Entries for ${firstEntry?.film?.name} (${firstEntry?.film?.releaseYear})`;
+
+        return this.createEmbed()
+            .setTitle(title)
+            .setThumbnail(this.parseImage(logEntryList[0]?.film?.poster?.sizes))
+            .setDescription(logEntryTextList.join('\n'));
+    }
+
+    /**
      * @param {import('../models/letterboxd/letterboxd-contributor')} contributor
      * @returns {MessageEmbed}
      */
@@ -358,6 +392,11 @@ class MessageEmbedFactory {
         return this.createEmbed().setDescription(message);
     }
 
+    createNoLoggedEntriesFoundMessage() {
+        const message = 'Unable to find that film logged for that user.';
+        return this.createEmbed().setDescription(message);
+    }
+
     createEmbed() {
         return new MessageEmbed().setColor(0xa700bd);
     }
@@ -384,11 +423,15 @@ class MessageEmbedFactory {
      * @returns string
      */
     formatDate(date) {
+        if (!(date instanceof Date) || isNaN(date)) {
+            return 'Unknown Date';
+        }
+
         const recentFormat = { month: 'short', day: 'numeric' };
         const pastFormat = { month: 'short', day: 'numeric', year: 'numeric' };
         const format = new Date() - date < 5000000000 ? recentFormat : pastFormat;
 
-        return date.toLocaleDateString('default', format) + ' ';
+        return date.toLocaleDateString('default', format);
     }
 
     /**

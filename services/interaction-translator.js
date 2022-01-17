@@ -12,6 +12,7 @@ class InteractionTranslator {
      * @param {any} messageEmbedFactory
      * @param {any} letterboxdProfileWeb
      * @param {import('../commands/list-command')} listCommand
+     * @param {import('../commands/logged-command')} loggedCommand
      * @param {any} subscribedUserList
      * @param {import('../commands/user-command')} userCommand
      */
@@ -26,6 +27,7 @@ class InteractionTranslator {
         messageEmbedFactory,
         letterboxdProfileWeb,
         listCommand,
+        loggedCommand,
         subscribedUserList,
         userCommand,
     ) {
@@ -39,6 +41,7 @@ class InteractionTranslator {
         this.messageEmbedFactory = messageEmbedFactory;
         this.letterboxdProfileWeb = letterboxdProfileWeb;
         this.listCommand = listCommand;
+        this.loggedCommand = loggedCommand;
         this.subscribedUserList = subscribedUserList;
         this.userCommand = userCommand;
     }
@@ -73,6 +76,7 @@ class InteractionTranslator {
         }
 
         const accountName = (commandInteraction.options.getString('account') || '').toLowerCase();
+        const filmName = commandInteraction.options.getString('film-name') || '';
 
         const channelId = await this.getChannelId(commandInteraction);
         if (!channelId) {
@@ -119,12 +123,14 @@ class InteractionTranslator {
                 return this.diaryCommand.getMessage(accountName);
                 break;
             case 'film':
-                const filmName = commandInteraction.options.getString('film-name') || '';
                 return this.filmCommand.getMessage(filmName);
                 break;
             case 'list':
                 const listName = commandInteraction.options.getString('list-name') || '';
                 return this.listCommand.getMessage(accountName, listName);
+                break;
+            case 'logged':
+                return this.loggedCommand.getMessage(accountName, filmName);
                 break;
             case 'user':
                 return this.userCommand.getMessage(accountName);
