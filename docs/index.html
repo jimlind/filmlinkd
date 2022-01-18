@@ -18,7 +18,7 @@
     <body>
         <div class="jumbotron text-center">
             <h1>Filmlinkd</h1>
-            <p><strong>The Letterboxd Discord Bot for 2021</strong></p>
+            <p><strong>Your Favorite Letterboxd Discord Bot</strong></p>
             <a class="btn btn-info m-2" href="https://www.patreon.com/filmlinkd"
                 ><i class="fab fa-patreon mx-1"></i> Support Filmlinkd on Patreon</a
             >
@@ -29,7 +29,10 @@
 
         <div class="container">
             <h2>Installation Instructions</h2>
-            <h3>1. Authorize the Bot</h3>
+            <p>
+                To install the bot on your server use an admin account and authorize it using the
+                link below.
+            </p>
             <div class="col text-center">
                 <a
                     class="btn btn-primary btn-lg mb-4"
@@ -38,8 +41,6 @@
                     >Authorize Filmlinkd</a
                 >
             </div>
-            <h3>2. Put the Bot to Work</h3>
-            <p>Use the commands to follow your favorite Letterboxd accounds on your server.</p>
             <h2>Commands</h2>
             <dl>
                 <dt>/help</dt>
@@ -47,27 +48,61 @@
                     Replies with a some helpful information and links.
                     <b>ex: /help</b>
                 </dd>
-                <dt>/follow</dt>
+                <dt>/follow account [channel]</dt>
                 <dd>
-                    Adds the Letterboxd account to the following list this channel.
-                    <b>ex: /follow protolexus</b>
+                    Adds the Letterboxd account to the following list in this channel or another
+                    channel if specified.
+                    <b>ex: /follow <i>account:</i> protolexus <i>channel:</i> letterboxd-feed</b>
                 </dd>
-                <dt>/unfollow</dt>
+                <dt>/unfollow account [channel]</dt>
                 <dd>
-                    Removes the Letterboxd account from the following list in this channel.
-                    <b>ex: /unfollow protolexus</b>
+                    Removes the Letterboxd account from the following list in this channel or
+                    another channel if specified..
+                    <b>ex: /unfollow <i>account:</i> protolexus <i>channel:</i> letterboxd-feed</b>
                 </dd>
-                <dt>/refresh</dt>
+                <dt>/refresh account</dt>
                 <dd>
                     Updates the Filmlinkd cache for the Letterboxd account.
-                    <b>ex: /refresh protolexus</b>
+                    <b>ex: /refresh <i>account:</i> protolexus</b>
                 </dd>
                 <dt>/following</dt>
                 <dd>
                     Replies with a list of all accounts followed in this channel.
                     <b>ex: /following</b>
                 </dd>
+                <dt>/contributor contributor-name</dt>
+                <dd>
+                    Replies with the film contributor's information.
+                    <b>ex: /contributor <i>contributor-name:</i> hayao miyazaki</b>
+                </dd>
+                <dt>/diary account</dt>
+                <dd>
+                    Replies with the user's 5 most recent Letterboxd entries.
+                    <b>ex: /diary <i>account:</i> protolexus</b>
+                </dd>
+                <dt>/film film-name</dt>
+                <dd>
+                    Replies with the a film's information snippet.
+                    <b>ex: /film <i>film-name:</i> spirited away</b>
+                </dd>
+                <dt>/list account list-name</dt>
+                <dd>
+                    Replies with a users's list's information snippet.
+                    <b>ex: /list <i>account:</i> protolexus <i>list-name:</i> ghibli ranked</b>
+                </dd>
+                <dt>/logged account film-name</dt>
+                <dd>
+                    Shows a user's entries for a film.
+                    <b>ex: /logged <i>account:</i> protolexus <i>film-name:</i> green knight</b>
+                </dd>
+                <dt>/roulette</dt>
+                <dd>Shows a random film's information snippet. <b>ex: /roulette</b></dd>
+                <dt>/user account</dt>
+                <dd>
+                    Shows a users's information snippet. <b>ex: /user <i>account:</i> protolexus</b>
+                </dd>
             </dl>
+
             <h2>F.A.Q.</h2>
             <dl>
                 <dt>How quickly should I see new diary entries post in my channel?</dt>
@@ -77,13 +112,22 @@
                 </dd>
             </dl>
             <dl>
+                <dt>How do I get the slash commands to work?</dt>
+                <dd>
+                    First try the <i>/help</i> and see if that responds and is able to respond. If
+                    not, you likely have to reauthorize the bot on your server. Click the
+                    <b>Authorize Filmlinkd</b> button above and follow the prompts. You don't have
+                    to unauthorize the bot. The bot will not forget your followed accounts.
+                </dd>
+            </dl>
+            <dl>
                 <dt>What permissions and scope does this application need?</dt>
                 <dd>
                     "View Channel," "Send Messages," "Embed Links," and "Use External Emojis" are
                     the only permissions this bot needs. "View Channel" allows the bot to have a
                     presence in a specific channel. "Send Messages" with "Embed Links" gives it the
                     ability to post your diary entries. "Use External Emojis" allows the bot to use
-                    the custom 1/2 star emoji.
+                    the custom emojis.
                 </dd>
                 <dd>
                     "Applications Commands" and "Bot" are the only scopes that it needs.
@@ -93,11 +137,11 @@
                 </dd>
             </dl>
             <dl>
-                <dt>Where do I go for help?</dt>
+                <dt>Where do I go for help? How do I report a bug? How do I request a feature?</dt>
                 <dd><a href="https://discord.gg/deZ7EUguge">Join the Filmlinkd Discord.</a></dd>
             </dl>
             <dl>
-                <dt>How can I support your work?</dt>
+                <dt>How can I support your work? How can I get a custom footer?</dt>
                 <dd><a href="https://www.patreon.com/filmlinkd">Join the Filmlinkd Patreon.</a></dd>
             </dl>
         </div>

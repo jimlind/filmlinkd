@@ -56,7 +56,7 @@ class InteractionTranslator {
         this.getMessagePromiseAfterNeccesaryAction(commandInteraction).then((message) => {
             if (message instanceof require('discord.js').MessageEmbed) {
                 //There is a 4096 character limit on descriptions so cut things off to keep the bot happy
-                message.setDescription(message.description.substring(0, 4096));
+                message.setDescription((message?.description || '').substring(0, 4096));
 
                 return commandInteraction.editReply({ embeds: [message] });
             } else {

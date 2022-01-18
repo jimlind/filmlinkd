@@ -346,20 +346,18 @@ class MessageEmbedFactory {
         return this.createEmbed()
             .setTitle('(Help!) I Need Somebody')
             .setURL('https://jimlind.github.io/filmlinkd/')
-            .addField('/help', 'Replies with a some helpful information and links.')
-            .addField(
-                '/follow <account>',
-                'Adds the Letterboxd account to the following list this channel.',
-            )
-            .addField(
-                '/unfollow <account>',
-                'Removes the Letterboxd account from the following list in this channel.',
-            )
-            .addField(
-                '/refresh <account>',
-                'Updates the Filmlinkd cache for the Letterboxd account.',
-            )
-            .addField('/following', 'Replies with a list of all accounts followed in this channel.')
+            .addField('/help', 'Shows this message')
+            .addField('/follow account [channel]', 'Listens for new entries')
+            .addField('/unfollow account [channel]', 'Stops listening for new entries')
+            .addField('/following', 'List all users followed in this channel')
+            .addField('/refresh account', 'Refreshes the Filmlinkd cache for the account')
+            .addField('/contributor contributor-name', "Shows a film contributor's information")
+            .addField('/diary account', "Shows a user's 5 most recent entries")
+            .addField('/film film-name', "Shows a film's information")
+            .addField('/list account list-name', "Shows a users's list's information")
+            .addField('/logged account film-name', "Shows a user's entries for a film")
+            .addField('/roulette', 'Shows random film information')
+            .addField('/user account', "Shows a users's information")
             .addField(
                 ':clap: Patreon',
                 '[Support the project on Patreon](https://www.patreon.com/filmlinkd)',
