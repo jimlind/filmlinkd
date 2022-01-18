@@ -342,10 +342,20 @@ class MessageEmbedFactory {
             .setDescription(filmographyString + '\n' + linkString);
     }
 
-    createHelpMessage() {
+    /**
+     *
+     * @param {import('../models/config')} config
+     * @param {number} userCount
+     * @param {number} serverCount
+     * @returns
+     */
+    createHelpMessage(config, userCount, serverCount) {
+        const description = `${config?.packageName} v${config?.packageVersion}\nTracking ${userCount} users on ${serverCount} servers`;
+
         return this.createEmbed()
             .setTitle('(Help!) I Need Somebody')
             .setURL('https://jimlind.github.io/filmlinkd/')
+            .setDescription(description)
             .addField('/help', 'Shows this message')
             .addField('/follow account [channel]', 'Listens for new entries')
             .addField('/unfollow account [channel]', 'Stops listening for new entries')

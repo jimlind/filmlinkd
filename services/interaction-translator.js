@@ -9,6 +9,7 @@ class InteractionTranslator {
      * @param {import('./google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
      * @param {import('./google/firestore/firestore-user-dao')} firestoreUserDao
      * @param {import('../commands/follow-command')} followCommand
+     * @param {import('../commands/help-command')} helpCommand
      * @param {any} messageEmbedFactory
      * @param {any} letterboxdProfileWeb
      * @param {import('../commands/list-command')} listCommand
@@ -25,6 +26,7 @@ class InteractionTranslator {
         firestoreSubscriptionDao,
         firestoreUserDao,
         followCommand,
+        helpCommand,
         messageEmbedFactory,
         letterboxdProfileWeb,
         listCommand,
@@ -40,6 +42,7 @@ class InteractionTranslator {
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
         this.firestoreUserDao = firestoreUserDao;
         this.followCommand = followCommand;
+        this.helpCommand = helpCommand;
         this.messageEmbedFactory = messageEmbedFactory;
         this.letterboxdProfileWeb = letterboxdProfileWeb;
         this.listCommand = listCommand;
@@ -145,9 +148,7 @@ class InteractionTranslator {
                 return this.userCommand.getMessage(accountName);
                 break;
             default:
-                return new Promise((resolve) => {
-                    return resolve(this.messageEmbedFactory.createHelpMessage());
-                });
+                return this.helpCommand.getMessage();
                 break;
         }
     }
