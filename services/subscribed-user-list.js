@@ -2,12 +2,12 @@
 
 class SubscribedUserList {
     /**
-     * @type {{ userName: string; previousId: number;}[]}
+     * @type {{ userName: string; lid: string; previousId: number;}[]}
      */
     cachedData = [];
 
     /**
-     * @type {{ userName: string; previousId: number;}[]}
+     * @type {{ userName: string; lid: string; previousId: number;}[]}
      */
     cachedVipData = [];
 
@@ -22,11 +22,12 @@ class SubscribedUserList {
 
     /**
      * @param {string} userName
+     * @param {string} lid
      * @param {number} previousId
      * @param {boolean} vipStatus
      * @returns {number} The current PreviousID for the user after upsert
      */
-    upsert(userName, previousId, vipStatus = false) {
+    upsert(userName, lid, previousId, vipStatus = false) {
         const dataSource = vipStatus ? this.cachedVipData : this.cachedData;
 
         for (let x = 0; x < dataSource.length; x++) {
@@ -44,6 +45,7 @@ class SubscribedUserList {
         // User not found in the loop so add new record instead
         dataSource.push({
             userName,
+            lid,
             previousId,
         });
         return previousId;
@@ -61,7 +63,7 @@ class SubscribedUserList {
 
     /**
      * @param {string} userName
-     * @returns {{ userName: string; previousId: number;}}
+     * @returns {{ userName: string; lid: string, previousId: number;}}
      */
     get(userName) {
         for (let x = 0; x < this.cachedData.length; x++) {
@@ -69,7 +71,7 @@ class SubscribedUserList {
                 return this.cachedData[x];
             }
         }
-        return { userName, previousId: 0 };
+        return { userName, lid: '', previousId: 0 };
     }
 
     getRandomIndex() {
@@ -83,7 +85,7 @@ class SubscribedUserList {
     /**
      * @param {number} index
      * @param {number} pageSize
-     * @returns {Promise<{ userName: string; previousId: number;}[]>}}
+     * @returns {Promise<{ userName: string; lid: string, previousId: number;}[]>}}
      */
     getActiveSubscriptionsPage(index, pageSize) {
         return new Promise((resolve) => {
@@ -96,7 +98,7 @@ class SubscribedUserList {
     /**
      * @param {number} index
      * @param {number} pageSize
-     * @returns {Promise<{ userName: string; previousId: number;}[]>}}
+     * @returns {Promise<{ userName: string; lid: string; previousId: number;}[]>}}
      */
     getActiveVipSubscriptionsPage(index, pageSize) {
         return new Promise((resolve) => {
@@ -107,7 +109,7 @@ class SubscribedUserList {
     }
 
     /**
-     * @returns {Promise<{ userName: string; previousId: number;}[]>}}
+     * @returns {Promise<{ userName: string; lid: string; previousId: number;}[]>}}
      */
     getAllActiveSubscriptions() {
         return new Promise((resolve) => {
@@ -122,6 +124,7 @@ class SubscribedUserList {
                     this.cachedData = subscriberList.map((subscriber) => {
                         return {
                             userName: subscriber.userName,
+                            lid: subscriber.letterboxdId,
                             previousId: subscriber?.previous?.id || 0,
                         };
                     }, []);
@@ -133,7 +136,7 @@ class SubscribedUserList {
     }
 
     /**
-     * @returns {Promise<{ userName: string; previousId: number;}[]>}}
+     * @returns {Promise<{ userName: string; lid: string; previousId: number;}[]>}}
      */
     getVipActiveSubscriptions() {
         return new Promise((resolve) => {
@@ -148,6 +151,7 @@ class SubscribedUserList {
                     this.cachedVipData = vipList.map((vip) => {
                         return {
                             userName: vip.userName,
+                            lid: vip.letterboxdId,
                             previousId: vip?.previous?.id || 0,
                         };
                     }, []);
