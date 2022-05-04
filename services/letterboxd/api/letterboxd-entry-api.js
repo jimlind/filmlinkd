@@ -11,7 +11,7 @@ class LetterboxdEntryApi {
     /**
      * @param {string} memberLetterboxdId
      * @param {number} quantity
-     * @returns {Promise<Object>}
+     * @returns {Promise<Array>}
      */
     get(memberLetterboxdId, quantity) {
         return this.letterboxdApi
@@ -22,7 +22,7 @@ class LetterboxdEntryApi {
             .then((responseData) => {
                 const entryDataList = responseData?.items;
                 if (!entryDataList.length) {
-                    return {};
+                    return [];
                 }
                 return entryDataList.map((entryData) =>
                     this.letterboxdEntryFactory.buildFromObject(entryData),
