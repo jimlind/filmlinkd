@@ -17,7 +17,7 @@ class DiaryEntry {
     watchedDate = 0;
     /** @property {string} image - URL for the film poster image */
     image = '';
-    /** @property {number} starCoutn - Numerical representation of stars */
+    /** @property {number} starCount - Numerical representation of stars */
     starCount = 0;
     /** @property {string} stars - Unicode string representation of stars */
     stars = '';
