@@ -13,6 +13,29 @@ class LetterboxdLogEntryApi {
      * @param {number} quantity
      * @returns {Promise<Object[]>}
      */
+    getByMember(memberLetterboxdId, quantity) {
+        return this.letterboxdApi
+            .get('log-entries', {
+                member: memberLetterboxdId,
+                perPage: quantity,
+            })
+            .then((responseData) => {
+                const entryDataList = responseData?.items;
+                if (!entryDataList.length) {
+                    return [];
+                }
+                return entryDataList.map((entryData) =>
+                    this.letterboxdLogEntryFactory.buildLogEntryFromObject(entryData),
+                );
+            });
+    }
+
+    /**
+     * @param {string} letterboxdId
+     * @param {string} filmLetterboxdId
+     * @param {number} quantity
+     * @returns {Promise<Object[]>}
+     */
     getByMemberAndFilm(memberLetterboxdId, filmLetterboxdId, quantity) {
         return this.letterboxdApi
             .get('log-entries', {
