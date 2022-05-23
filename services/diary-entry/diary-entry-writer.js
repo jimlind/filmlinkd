@@ -70,7 +70,13 @@ class DiaryEntryWriter {
 
                         // At least one message posted, so update previous data in database and local cache
                         const entryId = diaryEntry.id;
-                        if (this.subscribedUserList.upsert(userData.userName, entryId) == entryId) {
+                        if (
+                            this.subscribedUserList.upsert(
+                                userData.userName,
+                                userData.letterboxdId,
+                                entryId,
+                            ) == entryId
+                        ) {
                             this.firestorePreviousDao.update(userData, diaryEntry);
                         }
                         return resolve();
