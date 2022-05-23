@@ -53,23 +53,24 @@ class DiaryEntryPublisher {
                         const letterboxdLink = (logEntry.links || []).reduce((prev, current) =>
                             current.type == 'letterboxd' ? current.url : prev,
                         );
+                        const publishedTimeMs = new Date(logEntry.whenCreated).getTime();
                         const watchedTimeMs = new Date(logEntry.diaryDetails.diaryDate).getTime();
 
                         const diaryEntry = new DiaryEntry();
                         diaryEntry.adult = logEntry.film.adult;
-                        diaryEntry.containsSpoilers = logEntry.review.containsSpoilers;
+                        diaryEntry.containsSpoilers = logEntry.review?.containsSpoilers || '';
                         diaryEntry.filmTitle = logEntry.film.name;
                         diaryEntry.filmYear = logEntry.film.releaseYear;
                         diaryEntry.id = logEntry.id;
                         diaryEntry.image = largestImage?.url || '';
                         diaryEntry.liked = logEntry.like;
                         diaryEntry.link = letterboxdLink?.url || '';
-                        diaryEntry.publishedDate = logEntry.whenCreated;
-                        diaryEntry.review = logEntry.review.text;
+                        diaryEntry.publishedDate = publishedTimeMs;
+                        diaryEntry.review = logEntry.review?.text || '';
                         diaryEntry.rewatch = logEntry.diaryDetails.rewatch;
                         diaryEntry.starCount = logEntry.rating;
                         diaryEntry.userName = logEntry.owner.userName;
-                        diaryEntry.watchedDate = watchedTimeMs / 1000;
+                        diaryEntry.watchedDate = watchedTimeMs;
 
                         const data = { entry: diaryEntry, channelId: channelIdOverride };
                         const buffer = Buffer.from(JSON.stringify(data));
