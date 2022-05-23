@@ -4,7 +4,6 @@ class DiaryEntryProcessor {
     /**
      * @param {import('../diary-entry/diary-entry-publisher')} diaryEntryPublisher
      * @param {import('../letterboxd/letterboxd-diary-rss')} letterboxdDiaryRss
-     * @param {import('../letterboxd/letterboxd-lid-web')}letterboxdLidWeb
      * @param {import('../letterboxd/letterboxd-likes-web')} letterboxdLikesWeb
      * @param {import('../letterboxd/api/letterboxd-log-entry-api')} letterboxdLogEntryApi
      * @param {import('../letterboxd/letterboxd-viewing-id-web')} letterboxdViewingIdWeb
@@ -14,7 +13,6 @@ class DiaryEntryProcessor {
     constructor(
         diaryEntryPublisher,
         letterboxdDiaryRss,
-        letterboxdLidWeb,
         letterboxdLikesWeb,
         letterboxdLogEntryApi,
         letterboxdViewingIdWeb,
@@ -23,7 +21,6 @@ class DiaryEntryProcessor {
     ) {
         this.diaryEntryPublisher = diaryEntryPublisher;
         this.letterboxdDiaryRss = letterboxdDiaryRss;
-        this.letterboxdLidWeb = letterboxdLidWeb;
         this.letterboxdLikesWeb = letterboxdLikesWeb;
         this.letterboxdLogEntryApi = letterboxdLogEntryApi;
         this.letterboxdViewingIdWeb = letterboxdViewingIdWeb;
@@ -197,6 +194,7 @@ class DiaryEntryProcessor {
                 const newEntryList = [];
 
                 viewingIdList.forEach((viewingId, index) => {
+                    // This is actually comparing a string and a number but JavaScript knows what to do
                     if (viewingId > user.previousId) {
                         const newEntry = entryList?.[index];
                         // TODO: Delete Viewing Id. This is just temporarily being stored here.
