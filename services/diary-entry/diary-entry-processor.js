@@ -4,20 +4,29 @@ class DiaryEntryProcessor {
     /**
      * @param {import('../diary-entry/diary-entry-publisher')} diaryEntryPublisher
      * @param {import('../letterboxd/letterboxd-diary-rss')} letterboxdDiaryRss
+     * @param {import('../letterboxd/letterboxd-lid-web')}letterboxdLidWeb
      * @param {import('../letterboxd/letterboxd-likes-web')} letterboxdLikesWeb
+     * @param {import('../letterboxd/api/letterboxd-log-entry-api')} letterboxdLogEntryApi
+     * @param {import('../letterboxd/letterboxd-viewing-id-web')} letterboxdViewingIdWeb
      * @param {import('../logger')} logger
      * @param {import('../subscribed-user-list')} subscribedUserList
      */
     constructor(
         diaryEntryPublisher,
         letterboxdDiaryRss,
+        letterboxdLidWeb,
         letterboxdLikesWeb,
+        letterboxdLogEntryApi,
+        letterboxdViewingIdWeb,
         logger,
         subscribedUserList,
     ) {
         this.diaryEntryPublisher = diaryEntryPublisher;
         this.letterboxdDiaryRss = letterboxdDiaryRss;
+        this.letterboxdLidWeb = letterboxdLidWeb;
         this.letterboxdLikesWeb = letterboxdLikesWeb;
+        this.letterboxdLogEntryApi = letterboxdLogEntryApi;
+        this.letterboxdViewingIdWeb = letterboxdViewingIdWeb;
         this.logger = logger;
         this.subscribedUserList = subscribedUserList;
     }
@@ -75,26 +84,30 @@ class DiaryEntryProcessor {
 
                     // Create list of promises with noop failures
                     const entryPromiseList = userList
-                        .map((user) => this.getNewEntriesForUser(user, 10))
+                        .map((user) => this.getNewLogEntriesForUser(user, 10))
                         .map((p) => p.catch(() => false));
 
                     Promise.all(entryPromiseList).then((values) => {
-                        values.flat().forEach((diaryEntry) => {
-                            if (typeof diaryEntry == 'boolean') return; // Enforce typing (sort of)
+                        values.flat().forEach((logEntry) => {
+                            if (typeof logEntry == 'boolean') return; // Enforce typing (sort of)
 
-                            const message = `Publishing "${diaryEntry.filmTitle}" from VIP "${diaryEntry.userName}"`;
+                            const message = `Publishing "${logEntry.film.name}" from VIP "${logEntry.owner.userName}"`;
                             this.logger.info(message);
 
-                            this.diaryEntryPublisher.publish([diaryEntry]).then((successList) => {
-                                successList.forEach((success) => {
-                                    this.subscribedUserList.upsert(
-                                        success.user,
-                                        parseInt(success.id),
-                                        true,
-                                    );
+                            this.diaryEntryPublisher
+                                .publishLogEntryList([logEntry])
+                                .then((successList) => {
+                                    successList.forEach((success) => {
+                                        this.subscribedUserList.upsert(
+                                            success.user,
+                                            success.memberLetterboxdId,
+                                            success.id,
+                                            true,
+                                        );
+                                    });
                                 });
-                            });
                         });
+
                         return resolve(userList.length);
                     });
                 });
@@ -149,6 +162,55 @@ class DiaryEntryProcessor {
                     return resolve([]);
                 });
         });
+    }
+
+    /**
+     * This method is a little chaotic because we don't know how to compare api review ids to
+     * the rss review ids so we have to do a additional look-ups against the viewing ids that
+     * are availabe on the letterboxd review header
+     *
+     * @param {{ userName: string; lid: string; previousId: number; }} user
+     * @param {number} maxDiaryEntries
+     * @returns {Promise<import('../../models/letterboxd/letterboxd-log-entry')[]>}
+     */
+    getNewLogEntriesForUser(user, maxDiaryEntries) {
+        const logEntryApiPromise = this.letterboxdLogEntryApi.getByMember(
+            user.lid,
+            maxDiaryEntries,
+        );
+        const createViewIdPromiseList = (logEntryList) => {
+            const entryPromiseList = logEntryList.map((logEntry) => {
+                const url = logEntry.links.reduce(
+                    (previous, current) => (current.type == 'letterboxd' ? current.url : previous),
+                    '',
+                );
+                return this.letterboxdViewingIdWeb.get(url);
+            });
+            return Promise.all(entryPromiseList);
+        };
+
+        const promiseList = [logEntryApiPromise, logEntryApiPromise.then(createViewIdPromiseList)];
+        return Promise.all(promiseList)
+            .then((returnValues) => {
+                const entryList = returnValues?.[0] || [];
+                const viewingIdList = returnValues?.[1] || [];
+                const newEntryList = [];
+
+                viewingIdList.forEach((viewingId, index) => {
+                    if (viewingId > user.previousId) {
+                        const newEntry = entryList?.[index];
+                        // TODO: Delete Viewing Id. This is just temporarily being stored here.
+                        newEntry.viewingId = viewingId;
+                        newEntryList.push(newEntry);
+                    }
+                });
+
+                return newEntryList;
+            })
+            .catch(() => {
+                this.logger.warn(`Could not use Letterboxd API for ${user.lid}`);
+                return [];
+            });
     }
 }
 
