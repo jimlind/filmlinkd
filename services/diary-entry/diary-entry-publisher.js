@@ -54,7 +54,7 @@ class DiaryEntryPublisher {
                             current.type == 'letterboxd' ? current.url : prev,
                         );
                         const publishedTimeMs = new Date(logEntry.whenCreated).getTime();
-                        const watchedTimeMs = new Date(logEntry.diaryDetails.diaryDate).getTime();
+                        const watchedTimeMs = new Date(logEntry.diaryDetails?.diaryDate).getTime();
 
                         const diaryEntry = new DiaryEntry();
                         diaryEntry.adult = logEntry.film.adult;
@@ -67,7 +67,7 @@ class DiaryEntryPublisher {
                         diaryEntry.link = letterboxdLink?.url || '';
                         diaryEntry.publishedDate = publishedTimeMs;
                         diaryEntry.review = logEntry.review?.text || '';
-                        diaryEntry.rewatch = logEntry.diaryDetails.rewatch;
+                        diaryEntry.rewatch = logEntry.diaryDetails?.rewatch;
                         diaryEntry.starCount = logEntry.rating;
                         diaryEntry.userName = logEntry.owner.userName;
                         diaryEntry.watchedDate = watchedTimeMs;
