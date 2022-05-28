@@ -7,7 +7,7 @@ class SubscribedUserList {
     cachedData = [];
 
     /**
-     * @type {{ userName: string; lid: string; previousId: number;}[]}
+     * @type {{ lid: string; previousId: number; }[]}
      */
     cachedVipData = [];
 
@@ -98,7 +98,7 @@ class SubscribedUserList {
     /**
      * @param {number} index
      * @param {number} pageSize
-     * @returns {Promise<{ userName: string; lid: string; previousId: number;}[]>}}
+     * @returns {Promise<{ lid: string; previousId: number;}[]>}}
      */
     getActiveVipSubscriptionsPage(index, pageSize) {
         return new Promise((resolve) => {
@@ -136,7 +136,7 @@ class SubscribedUserList {
     }
 
     /**
-     * @returns {Promise<{ userName: string; lid: string; previousId: number;}[]>}}
+     * @returns {Promise<{ lid: string; previousId: number;}[]>}}
      */
     getVipActiveSubscriptions() {
         return new Promise((resolve) => {
@@ -148,13 +148,16 @@ class SubscribedUserList {
                         userCount: vipList.length,
                     });
 
-                    this.cachedVipData = vipList.map((vip) => {
-                        return {
-                            userName: vip.userName,
-                            lid: vip.letterboxdId,
-                            previousId: vip?.previous?.id || 0,
-                        };
-                    }, []);
+                    const indexedVipList = {};
+                    vipList.forEach((vip) => {
+                        const lid = vip.letterboxdId;
+                        const previousId = vip?.previous?.id || 0;
+                        if ((indexedVipList[lid]?.id || 0) < previousId) {
+                            indexedVipList[lid] = { lid, previousId };
+                        }
+                    });
+
+                    this.cachedVipData = Object.values(indexedVipList);
 
                     return resolve(this.cachedVipData);
                 });

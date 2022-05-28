@@ -166,7 +166,7 @@ class DiaryEntryProcessor {
      * the rss review ids so we have to do a additional look-ups against the viewing ids that
      * are availabe on the letterboxd review header
      *
-     * @param {{ userName: string; lid: string; previousId: number; }} user
+     * @param {{ lid: string; previousId: number; }} user
      * @param {number} maxDiaryEntries
      * @returns {Promise<import('../../models/letterboxd/letterboxd-log-entry')[]>}
      */
