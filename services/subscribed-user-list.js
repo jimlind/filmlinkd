@@ -55,8 +55,6 @@ class SubscribedUserList {
      * @param {number} previousId
      */
     upsertVip(lid, previousId) {
-        console.log({ lid, previousId });
-
         const cache = this.cachedVipData;
         for (let x = 0; x < cache.length; x++) {
             if (cache[x].lid !== lid) continue;
