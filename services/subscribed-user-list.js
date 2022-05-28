@@ -24,11 +24,10 @@ class SubscribedUserList {
      * @param {string} userName
      * @param {string} lid
      * @param {number} previousId
-     * @param {boolean} vipStatus
      * @returns {number} The current PreviousID for the user after upsert
      */
-    upsert(userName, lid, previousId, vipStatus = false) {
-        const dataSource = vipStatus ? this.cachedVipData : this.cachedData;
+    upsert(userName, lid, previousId) {
+        const dataSource = this.cachedData;
 
         for (let x = 0; x < dataSource.length; x++) {
             const user = dataSource[x];
@@ -49,6 +48,24 @@ class SubscribedUserList {
             previousId,
         });
         return previousId;
+    }
+
+    /**
+     * @param {string} lid
+     * @param {number} previousId
+     */
+    upsertVip(lid, previousId) {
+        console.log({ lid, previousId });
+
+        const cache = this.cachedVipData;
+        for (let x = 0; x < cache.length; x++) {
+            if (cache[x].lid !== lid) continue;
+
+            if (cache[x].previousId < previousId) {
+                cache[x].previousId = previousId;
+            }
+            break;
+        }
     }
 
     remove(userName) {

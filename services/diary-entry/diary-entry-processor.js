@@ -95,11 +95,9 @@ class DiaryEntryProcessor {
                                 .publishLogEntryList([logEntry])
                                 .then((successList) => {
                                     successList.forEach((success) => {
-                                        this.subscribedUserList.upsert(
-                                            success.user,
+                                        this.subscribedUserList.upsertVip(
                                             success.memberLetterboxdId,
                                             success.id,
-                                            true,
                                         );
                                     });
                                 });
