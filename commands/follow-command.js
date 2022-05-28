@@ -66,7 +66,7 @@ class FollowCommand {
     }
 
     /**
-     * Gets the user from the datastorage. Creates a record getting fails.
+     * Gets the user from the datastorage. Creates a record if getByUserName fails.
      *
      * @param {string} accountName
      * @returns {Promise<Object>}
