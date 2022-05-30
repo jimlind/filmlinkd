@@ -61,7 +61,7 @@ class DiaryEntryPublisher {
                         diaryEntry.containsSpoilers = logEntry.review?.containsSpoilers || '';
                         diaryEntry.filmTitle = logEntry.film.name;
                         diaryEntry.filmYear = logEntry.film.releaseYear;
-                        diaryEntry.id = logEntry.id;
+                        diaryEntry.id = logEntry.viewingId;
                         diaryEntry.image = largestImage?.url || '';
                         diaryEntry.liked = logEntry.like;
                         diaryEntry.link = letterboxdLink?.url || '';
