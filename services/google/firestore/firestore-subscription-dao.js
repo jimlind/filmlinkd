@@ -106,10 +106,13 @@ class FirestoreSubscriptionDao {
             query
                 .get()
                 .then((querySnapshot) => {
-                    const userList = querySnapshot.docs.reduce(
-                        (acc, current) => [...acc, current.id],
-                        [],
-                    );
+                    const userList = querySnapshot.docs.reduce((accumulator, current) => {
+                        const data = {
+                            userName: current.get('userName'),
+                            lid: current.get('letterboxdId'),
+                        };
+                        return [...accumulator, data];
+                    }, []);
                     resolve(userList);
                 })
                 .catch(() => {
