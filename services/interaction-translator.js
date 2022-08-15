@@ -9,6 +9,7 @@ class InteractionTranslator {
      * @param {import('./google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
      * @param {import('./google/firestore/firestore-user-dao')} firestoreUserDao
      * @param {import('../commands/follow-command')} followCommand
+     * @param {import('../commands/following-command')} followingCommand
      * @param {import('../commands/help-command')} helpCommand
      * @param {any} messageEmbedFactory
      * @param {any} letterboxdProfileWeb
@@ -26,6 +27,7 @@ class InteractionTranslator {
         firestoreSubscriptionDao,
         firestoreUserDao,
         followCommand,
+        followingCommand,
         helpCommand,
         messageEmbedFactory,
         letterboxdProfileWeb,
@@ -42,6 +44,7 @@ class InteractionTranslator {
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
         this.firestoreUserDao = firestoreUserDao;
         this.followCommand = followCommand;
+        this.followingCommand = followingCommand;
         this.helpCommand = helpCommand;
         this.messageEmbedFactory = messageEmbedFactory;
         this.letterboxdProfileWeb = letterboxdProfileWeb;
@@ -97,13 +100,7 @@ class InteractionTranslator {
                 return this.followCommand.process(accountName, channelId);
                 break;
             case 'following':
-                return this.firestoreSubscriptionDao.list(channelId).then((userList) => {
-                    if (userList.length) {
-                        return this.messageEmbedFactory.createFollowingMessage(userList);
-                    } else {
-                        return this.messageEmbedFactory.createEmptyFollowingMessage();
-                    }
-                });
+                return this.followingCommand.process(channelId);
                 break;
             case 'refresh':
                 return this.refreshAccount(accountName)

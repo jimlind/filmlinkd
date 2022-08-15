@@ -54,10 +54,25 @@ class MessageEmbedFactory {
         return this.createEmbed().setDescription(`Unable to refresh ${userName}.`);
     }
 
-    createFollowingMessage(results) {
-        const accountNameString = results.join(' ');
+    createFollowingMessage(resultList) {
+        const resultListSorted = resultList.sort((a, b) => {
+            let lidA = a.lid;
+            let lidB = b.lid;
+            if (lidA.length != lidB.length) {
+                const newLength = Math.max(lidA.length, lidB.length);
+                lidA = lidA.padStart(newLength, '#');
+                lidB = lidB.padStart(newLength, '#');
+            }
+            return lidA > lidB ? 1 : -1;
+        });
+
+        const resultTextList = resultListSorted.reduce((previous, current) => {
+            const string = `• [${current.userName} (${current.lid})](https://boxd.it/${current.lid})\n`;
+            return previous + string;
+        }, '');
+
         return this.createEmbed().setDescription(
-            "Here are the accounts I'm following:" + '```\n' + accountNameString + '\n```',
+            "Here are the accounts I'm following:" + '\n' + resultTextList,
         );
     }
 
