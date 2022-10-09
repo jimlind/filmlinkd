@@ -26,6 +26,7 @@ class FirestorePreviousDao {
         // Set previous and override anything that may have previously existed
         userData.previous = {
             id: diaryEntry.id,
+            lid: diaryEntry.lid,
             published: diaryEntry.publishedDate,
             uri: diaryEntry.link,
         };

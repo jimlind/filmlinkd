@@ -1,6 +1,8 @@
 class DiaryEntry {
-    /** @property {number} id - Letterboxd id for diary entry */
+    /** @property {number} id - Letterboxd id (integer) for diary entry */
     id = 0;
+    /** @property {string} lid - Letterboxd id (string) for diary entry */
+    lid = '';
     /** @property {string} userName - Letterboxd username for diary entry */
     userName = '';
     /** @property {string} type - Mushy string for watched or reviewed status */
