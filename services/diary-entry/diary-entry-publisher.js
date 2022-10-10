@@ -2,6 +2,9 @@
 
 const DiaryEntry = require('../../models/diary-entry');
 
+/**
+ * Class dealing with publishing diary entry events to Google's Pub/Sub messaging service
+ */
 class DiaryEntryPublisher {
     /**
      * @param {import('../google/pubsub/pub-sub-connection')} pubSubConnection

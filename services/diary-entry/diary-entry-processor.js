@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * Entry point for all diary entry logging work.
+ * The RSS feed processor (new entries) is used by the standard feed processor.
+ * The API feed processor (new log entries) is used by the vip feed processor.
+ */
 class DiaryEntryProcessor {
     /**
      * @param {import('../diary-entry/diary-entry-publisher')} diaryEntryPublisher

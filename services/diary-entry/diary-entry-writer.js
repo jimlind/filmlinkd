@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ * Class dealing with writing diary entry events to Discord servers
+ */
 class DiaryEntryWriter {
     /**
      * @param {import('../discord/discord-message-sender')} discordMessageSender
@@ -77,6 +80,7 @@ class DiaryEntryWriter {
                                 entryId,
                             ) == entryId
                         ) {
+                            // TODO: Can we make sure that diary entry has a lid too?
                             this.firestorePreviousDao.update(userData, diaryEntry);
                         }
                         return resolve();
