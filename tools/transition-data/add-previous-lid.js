@@ -38,26 +38,6 @@ async function processData(collection) {
         };
         await documentSnapshot.ref.update(data);
         console.log(`✅ Updated ${data.previous.uri} (${entryLid})`);
-
-        // console.log({ uri: data.previous.uri, entryLid });
-
-        // console.log(`${data.userName} has incomplete previous data`);
-        // let diaryEntryList = [];
-        // try {
-        //     diaryEntryList = await container.resolve('letterboxdDiary').get(data.userName, 1);
-        // } catch {
-        //     console.log(`--- Failure on ${data.userName}`);
-        // }
-        // if (diaryEntryList.length) {
-        //     const diaryEntry = diaryEntryList[0];
-        //     data.previous = {
-        //         id: diaryEntry.id,
-        //         published: diaryEntry.publishedDate,
-        //         uri: diaryEntry.link,
-        //     };
-        //     await documentSnapshot.ref.update(data);
-        //     console.log(`--- Updated ${data.userName}`);
-        // }
     }
 }
 
