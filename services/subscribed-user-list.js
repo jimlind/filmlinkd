@@ -7,16 +7,18 @@ class SubscribedUserList {
     cachedData = [];
 
     /**
-     * @type {{ lid: string; previousId: number; }[]}
+     * @type {[key: string]: {entryId: number; entryLid: string;} | null}
      */
-    cachedVipData = [];
+    cachedVipData = null;
 
     /**
      * @param {import('./google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
+     * @param {import('./letterboxd/letterboxd-lid-comparison')} letterboxdLidComparison
      * @param {import('./logger')} logger
      */
-    constructor(firestoreSubscriptionDao, logger) {
+    constructor(firestoreSubscriptionDao, letterboxdLidComparison, logger) {
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
+        this.letterboxdLidComparison = letterboxdLidComparison;
         this.logger = logger;
     }
 
@@ -51,18 +53,27 @@ class SubscribedUserList {
     }
 
     /**
-     * @param {string} lid
-     * @param {number} previousId
+     * @param {string} userLid
+     * @param {number} entryId
+     * @param {string} entryLid
      */
-    upsertVip(lid, previousId) {
+    upsertVip(userId, entryId, entryLid) {
         const cache = this.cachedVipData;
-        for (let x = 0; x < cache.length; x++) {
-            if (cache[x].lid !== lid) continue;
+        const currentData = cache[userId];
+        const newData = {
+            entryId: entryId || 0,
+            entryLid: entryLid || '',
+        };
 
-            if (cache[x].previousId < previousId) {
-                cache[x].previousId = previousId;
+        if (currentData.entryLid) {
+            if (this.letterboxdLidComparison.compare(currentData.entryLid, entryLid) === 1) {
+                cache[userId] = newData;
             }
-            break;
+            return;
+        }
+
+        if (currentData.entryId < entryId) {
+            cache[userId] = newData;
         }
     }
 
@@ -111,14 +122,28 @@ class SubscribedUserList {
     }
 
     /**
-     * @param {number} index
-     * @param {number} pageSize
-     * @returns {Promise<{ lid: string; previousId: number;}[]>}}
+     * @param {number} index The starting index assuming zero-indexed array
+     * @param {number} pageSize The total number of entries returned
+     * @returns {Promise<{[key: string]: {entryId: number; entryLid: string;}>}}
      */
     getActiveVipSubscriptionsPage(index, pageSize) {
         return new Promise((resolve) => {
             this.getVipActiveSubscriptions().then((vipList) => {
-                return resolve(vipList.slice(index, index + pageSize));
+                const returnData = {};
+                let count = 0;
+                for (const key in vipList) {
+                    if (count < index) {
+                        continue;
+                    }
+
+                    returnData[key] = vipList[key];
+                    count++;
+
+                    if (count == index + pageSize) {
+                        break;
+                    }
+                }
+                return resolve(returnData);
             });
         });
     }
@@ -151,28 +176,26 @@ class SubscribedUserList {
     }
 
     /**
-     * @returns {Promise<{ lid: string; previousId: number;}[]>}}
+     * @returns {Promise<{[key: string]: {entryId: number; entryLid: string;}>}}
      */
     getVipActiveSubscriptions() {
         return new Promise((resolve) => {
-            if (this.cachedVipData.length) {
+            if (this.cachedVipData) {
                 return resolve(this.cachedVipData);
             } else {
+                this.cachedVipData = {};
                 this.firestoreSubscriptionDao.getVipSubscriptions().then((vipList) => {
                     this.logger.info('Loaded and Cached VIPs', {
                         userCount: vipList.length,
                     });
 
-                    const indexedVipList = {};
+                    this.cachedVipData = {};
                     vipList.forEach((vip) => {
-                        const lid = vip.letterboxdId;
-                        const previousId = vip?.previous?.id || 0;
-                        if ((indexedVipList[lid]?.id || 0) < previousId) {
-                            indexedVipList[lid] = { lid, previousId };
-                        }
+                        this.cachedVipData[vip.letterboxdId] = {
+                            entryId: vip?.previous?.id || 0,
+                            entryLid: vip?.previous?.lid || '',
+                        };
                     });
-
-                    this.cachedVipData = Object.values(indexedVipList);
 
                     return resolve(this.cachedVipData);
                 });
