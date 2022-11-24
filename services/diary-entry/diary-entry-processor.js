@@ -9,6 +9,7 @@ class DiaryEntryProcessor {
     /**
      * @param {import('../diary-entry/diary-entry-publisher')} diaryEntryPublisher
      * @param {import('../letterboxd/letterboxd-diary-rss')} letterboxdDiaryRss
+     * @param {import('../letterboxd/letterboxd-lid-comparison')} letterboxdLidComparison
      * @param {import('../letterboxd/letterboxd-likes-web')} letterboxdLikesWeb
      * @param {import('../letterboxd/api/letterboxd-log-entry-api')} letterboxdLogEntryApi
      * @param {import('../letterboxd/letterboxd-viewing-id-web')} letterboxdViewingIdWeb
@@ -18,6 +19,7 @@ class DiaryEntryProcessor {
     constructor(
         diaryEntryPublisher,
         letterboxdDiaryRss,
+        letterboxdLidComparison,
         letterboxdLikesWeb,
         letterboxdLogEntryApi,
         letterboxdViewingIdWeb,
@@ -26,6 +28,7 @@ class DiaryEntryProcessor {
     ) {
         this.diaryEntryPublisher = diaryEntryPublisher;
         this.letterboxdDiaryRss = letterboxdDiaryRss;
+        this.letterboxdLidComparison = letterboxdLidComparison;
         this.letterboxdLikesWeb = letterboxdLikesWeb;
         this.letterboxdLogEntryApi = letterboxdLogEntryApi;
         this.letterboxdViewingIdWeb = letterboxdViewingIdWeb;
@@ -79,7 +82,10 @@ class DiaryEntryProcessor {
         return new Promise((resolve) => {
             this.subscribedUserList
                 .getActiveVipSubscriptionsPage(index, pageSize)
-                .then((userList) => {
+                .then((vipUserList) => {
+                    const userEntryList = Object.entries(vipUserList);
+                    const userList = userEntryList.map((d) => ({ userLid: d[0], ...d[1] }));
+
                     if (!userList.length) {
                         return resolve(0); // If user list is empty exit
                     }
@@ -101,8 +107,9 @@ class DiaryEntryProcessor {
                                 .then((successList) => {
                                     successList.forEach((success) => {
                                         this.subscribedUserList.upsertVip(
-                                            success.memberLetterboxdId,
-                                            success.id,
+                                            success.userLid,
+                                            success.entryId,
+                                            success.entryLid,
                                         );
                                     });
                                 });
@@ -165,51 +172,60 @@ class DiaryEntryProcessor {
     }
 
     /**
-     * This method is a little chaotic because we don't know how to compare api review ids to
-     * the rss review ids so we have to do a additional look-ups against the viewing ids that
-     * are availabe on the letterboxd review header
+     * Get a list of any new log entries based on User LID
      *
-     * @param {{ lid: string; previousId: number; }} user
+     * @param {{ userLid: string; entryId: number; entryLid: string; }} user
      * @param {number} maxDiaryEntries
      * @returns {Promise<import('../../models/letterboxd/letterboxd-log-entry')[]>}
      */
     getNewLogEntriesForUser(user, maxDiaryEntries) {
-        const logEntryApiPromise = this.letterboxdLogEntryApi.getByMember(
-            user.lid,
-            maxDiaryEntries,
-        );
-        const createViewIdPromiseList = (logEntryList) => {
-            const entryPromiseList = logEntryList.map((logEntry) => {
-                const url = logEntry.links.reduce(
-                    (previous, current) => (current.type == 'letterboxd' ? current.url : previous),
-                    '',
-                );
-                return this.letterboxdViewingIdWeb.get(url);
-            });
-            return Promise.all(entryPromiseList);
-        };
+        if (user.entryLid) {
+            // Use Entry LID to get newest entries
+            return this.letterboxdLogEntryApi
+                .getByMember(user.userLid, maxDiaryEntries)
+                .then((logEntryList) => {
+                    return logEntryList.filter((logEntry) => {
+                        const x = this.letterboxdLidComparison.compare(user.entryLid, logEntry.id);
+                        return x === 1;
+                    });
+                })
+                .catch(() => {
+                    const message = `Error getting entries from User LID ${user.userLid} via Entry LID`;
+                    this.logger.warn(message);
+                    return [];
+                });
+        }
 
-        const promiseList = [logEntryApiPromise, logEntryApiPromise.then(createViewIdPromiseList)];
+        // This is the older slower way to process this data. The RSS feed had a "View ID" number that
+        // the API doesn't have because. Luckily I can grab that value from the web. Unluckily there isn't
+        // a way to only get some of those values so I burn bandwidth getting all of them.
+        //
+        // I'll be able to delete this eventually.
+        const entryPromise = this.letterboxdLogEntryApi.getByMember(user.userLid, maxDiaryEntries);
+        const createViewIdPromiseList = (logEntryList) => {
+            const promiseList = logEntryList.map((logEntry) => {
+                const getLetterboxdUrl = (prev, cur) => (cur.type == 'letterboxd' ? cur.url : prev);
+                return this.letterboxdViewingIdWeb.get(logEntry.links.reduce(getLetterboxdUrl, ''));
+            });
+            return Promise.all(promiseList);
+        };
+        const promiseList = [entryPromise, entryPromise.then(createViewIdPromiseList)];
+
         return Promise.all(promiseList)
             .then((returnValues) => {
                 const entryList = returnValues?.[0] || [];
                 const viewingIdList = returnValues?.[1] || [];
-                const newEntryList = [];
 
-                viewingIdList.forEach((viewingId, index) => {
-                    // This is actually comparing a string and a number but JavaScript knows what to do
-                    if (viewingId > user.previousId) {
-                        const newEntry = entryList?.[index];
-                        // TODO: Delete Viewing Id. This is just temporarily being stored here.
-                        newEntry.viewingId = viewingId;
-                        newEntryList.push(newEntry);
-                    }
+                return entryList.filter((entry, index) => {
+                    const viewingId = viewingIdList?.[index];
+                    // Adding the viewingId here is extremely hacky
+                    // I don't want this model to have this value forever and it doesn't follow the API spec
+                    entry.viewingId = viewingId;
+                    return viewingId && viewingId > user.entryId;
                 });
-
-                return newEntryList;
             })
             .catch(() => {
-                this.logger.warn(`Could not use Letterboxd API for ${user.lid}`);
+                this.logger.warn(`Could not use Letterboxd API for ${user.userLid}`);
                 return [];
             });
     }

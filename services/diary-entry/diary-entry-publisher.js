@@ -64,7 +64,7 @@ class DiaryEntryPublisher {
                         diaryEntry.containsSpoilers = logEntry.review?.containsSpoilers || '';
                         diaryEntry.filmTitle = logEntry.film.name;
                         diaryEntry.filmYear = logEntry.film.releaseYear;
-                        diaryEntry.id = logEntry.viewingId;
+                        diaryEntry.id = logEntry.viewingId || 0;
                         diaryEntry.image = largestImage?.url || '';
                         diaryEntry.liked = logEntry.like;
                         diaryEntry.link = letterboxdLink?.url || '';
@@ -74,15 +74,17 @@ class DiaryEntryPublisher {
                         diaryEntry.starCount = logEntry.rating;
                         diaryEntry.userName = logEntry.owner.userName;
                         diaryEntry.watchedDate = watchedTimeMs;
+                        diaryEntry.lid = logEntry.id;
+                        diaryEntry.type = diaryEntry.review ? 'review' : 'watch';
 
                         const data = { entry: diaryEntry, channelId: channelIdOverride };
                         const buffer = Buffer.from(JSON.stringify(data));
                         topic.publish(buffer);
 
                         return {
-                            user: diaryEntry.userName,
-                            memberLetterboxdId: logEntry.owner.id,
-                            id: logEntry.viewingId,
+                            userLid: logEntry.owner.id,
+                            entryId: logEntry.viewingId || '',
+                            entryLid: logEntry.id || '',
                         };
                     });
                 })
