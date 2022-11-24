@@ -122,24 +122,26 @@ class SubscribedUserList {
     }
 
     /**
-     * @param {number} index The starting index assuming zero-indexed array
+     * @param {number} start The starting index assuming zero-indexed array
      * @param {number} pageSize The total number of entries returned
      * @returns {Promise<{[key: string]: {entryId: number; entryLid: string;}>}}
      */
-    getActiveVipSubscriptionsPage(index, pageSize) {
+    getActiveVipSubscriptionsPage(start, pageSize) {
         return new Promise((resolve) => {
             this.getVipActiveSubscriptions().then((vipList) => {
                 const returnData = {};
+                let index = 0;
                 let count = 0;
                 for (const key in vipList) {
-                    if (count < index) {
+                    index++;
+                    if (index <= start) {
                         continue;
                     }
 
                     returnData[key] = vipList[key];
                     count++;
 
-                    if (count == index + pageSize) {
+                    if (count >= pageSize) {
                         break;
                     }
                 }
