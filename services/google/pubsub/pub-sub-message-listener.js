@@ -26,7 +26,7 @@ class PubSubMessageListener {
     filterDuplicate(message, callback) {
         const hash = crypto.createHash('md5').update(message.data).digest('base64');
         if (this.hashList.includes(hash)) {
-            // Skip the messages if something with an identical has was already accepted
+            // Skip the messages if something with an identical hash was already accepted
             message.ack();
         } else {
             // Add the messase to the hash list, and run the callback method
