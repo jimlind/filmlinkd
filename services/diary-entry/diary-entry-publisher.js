@@ -7,12 +7,14 @@ const DiaryEntry = require('../../models/diary-entry');
  */
 class DiaryEntryPublisher {
     /**
-     * @param {import('../google/pubsub/pub-sub-connection')} pubSubConnection
+     * @param {import('../letterboxd/letterboxd-lid-comparison')} letterboxdLidWeb
      * @param {import('../logger')} logger
+     * @param {import('../google/pubsub/pub-sub-connection')} pubSubConnection
      */
-    constructor(pubSubConnection, logger) {
-        this.pubSubConnection = pubSubConnection;
+    constructor(letterboxdLidWeb, logger, pubSubConnection) {
+        this.letterboxdLidWeb = letterboxdLidWeb;
         this.logger = logger;
+        this.pubSubConnection = pubSubConnection;
     }
 
     /**
@@ -24,7 +26,13 @@ class DiaryEntryPublisher {
         return new Promise((resolve) => {
             const promiseList = diaryEntryList
                 .map((diaryEntry) => {
-                    return this.pubSubConnection.getTopic().then((topic) => {
+                    return Promise.all([
+                        this.pubSubConnection.getTopic(),
+                        this.letterboxdLidWeb.getFromUrl(diaryEntry.link),
+                    ]).then((result) => {
+                        const [topic, lid] = result;
+                        diaryEntry.lid = lid;
+
                         const data = { entry: diaryEntry, channelId: channelIdOverride };
                         const buffer = Buffer.from(JSON.stringify(data));
                         topic.publish(buffer);
