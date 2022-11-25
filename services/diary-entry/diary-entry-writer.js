@@ -75,7 +75,7 @@ class DiaryEntryWriter {
                 const channelList = [{ channelId: channelIdOverride }];
                 const sendingUser = channelIdOverride ? { ...userModel, channelList } : userModel;
 
-                // Get sender promise list with mapped failures to noops
+                // Get sender promise list with mapped failures to no-ops
                 return this.createSenderPromise(diaryEntry, sendingUser);
             })
             .then((senderResultList) => {
