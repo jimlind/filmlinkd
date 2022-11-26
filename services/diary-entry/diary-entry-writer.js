@@ -37,7 +37,7 @@ class DiaryEntryWriter {
      * @returns {Promise}
      */
     validateAndWrite(diaryEntry, channelIdOverride) {
-        const noopPromise = new Promise(() => {});
+        const noopPromise = new Promise((resolve) => resolve(null));
         const getViewingId = new Promise((resolve) => {
             resolve(diaryEntry.id || this.letterboxdViewingIdWeb.get(diaryEntry.link));
         });
@@ -61,6 +61,10 @@ class DiaryEntryWriter {
                 return getUserModel;
             })
             .then((userModel) => {
+                if (!userModel) {
+                    return noopPromise;
+                }
+
                 // Exit early if no subscribed channels
                 if (userModel.channelList.length === 0) {
                     return noopPromise;
@@ -79,6 +83,10 @@ class DiaryEntryWriter {
                 return this.createSenderPromise(diaryEntry, sendingUser);
             })
             .then((senderResultList) => {
+                if (!senderResultList) {
+                    return noopPromise;
+                }
+
                 // If we weren't able to post any messages just move on.
                 if (senderResultList.filter(Boolean).length == 0) {
                     return noopPromise;
@@ -86,6 +94,10 @@ class DiaryEntryWriter {
                 return Promise.all([getUserModel, getViewingId]);
             })
             .then((resultList) => {
+                if (!resultList) {
+                    return noopPromise;
+                }
+
                 const [userModel, viewingId] = resultList;
                 diaryEntry.id = viewingId;
                 // At least one message posted, so update previous data in database and local cache
