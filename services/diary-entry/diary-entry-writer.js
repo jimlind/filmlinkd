@@ -46,8 +46,16 @@ class DiaryEntryWriter {
             resolve(diaryEntry.id || this.letterboxdViewingIdWeb.get(diaryEntry.link));
         });
         // Here getUserModel is wrapped in a Promise so duplicate calls to the Dao aren't made
+        // The getByUserName method throws an error when it fails so explicitly wrap it in a catch
         const getUserModel = new Promise((resolve) => {
-            resolve(this.firestoreUserDao.getByUserName(diaryEntry.userName));
+            this.firestoreUserDao
+                .getByUserName(diaryEntry.userName)
+                .then((model) => {
+                    resolve(model);
+                })
+                .catch(() => {
+                    resolve(null);
+                });
         });
 
         return getViewingId
