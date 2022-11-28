@@ -42,7 +42,6 @@ class DiaryEntryWriter {
      * @returns {Promise}
      */
     validateAndWrite(diaryEntry, channelIdOverride) {
-        const noopPromise = new Promise((resolve) => resolve(null));
         const getViewingId = new Promise((resolve) => {
             resolve(diaryEntry.id || this.letterboxdViewingIdWeb.get(diaryEntry.link));
         });
