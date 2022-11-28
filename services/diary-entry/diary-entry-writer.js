@@ -31,6 +31,11 @@ class DiaryEntryWriter {
         this.subscribedUserList = subscribedUserList;
     }
 
+    skipOldDiaryEntry = 'SKIP_OLD_DIARY_ENTRY';
+    skipEmptyChannelList = 'SKIP_EMPTY_CHANNEL_LIST';
+    skipAdultFilm = 'SKIP_ADULT_FILM';
+    skipNoMessagesSent = 'SKIP_NO_MESSAGES_SENT';
+
     /**
      * @param {import('../../models/diary-entry')} diaryEntry
      * @param {string} channelIdOverride
@@ -56,23 +61,19 @@ class DiaryEntryWriter {
                 // the previous Id.
                 // Ignore this check if there is a channel override because we want it to trigger multiple times.
                 if (viewingId <= user.previousId && !channelIdOverride) {
-                    return noopPromise;
+                    throw this.skipOldDiaryEntry;
                 }
                 return getUserModel;
             })
             .then((userModel) => {
-                if (!userModel) {
-                    return noopPromise;
-                }
-
                 // Exit early if no subscribed channels
                 if (userModel.channelList.length === 0) {
-                    return noopPromise;
+                    throw this.skipEmptyChannelList;
                 }
 
                 // Exit early if it is an adult film (maybe a future feature)
                 if (diaryEntry.adult) {
-                    return noopPromise;
+                    throw this.skipAdultFilm;
                 }
 
                 // Rewrite the channel list if there is an override sent
@@ -83,22 +84,13 @@ class DiaryEntryWriter {
                 return this.createSenderPromise(diaryEntry, sendingUser);
             })
             .then((senderResultList) => {
-                if (!senderResultList) {
-                    return noopPromise;
-                }
-
                 // If we weren't able to post any messages just move on.
                 if (senderResultList.filter(Boolean).length == 0) {
-                    return noopPromise;
+                    throw this.skipNoMessagesSent;
                 }
                 return Promise.all([getUserModel, getViewingId]);
             })
-            .then((resultList) => {
-                if (!resultList) {
-                    return noopPromise;
-                }
-
-                const [userModel, viewingId] = resultList;
+            .then(([userModel, viewingId]) => {
                 diaryEntry.id = viewingId;
                 // At least one message posted, so update previous data in database and local cache
                 const upsertResult = this.subscribedUserList.upsert(
@@ -110,9 +102,11 @@ class DiaryEntryWriter {
                     this.firestorePreviousDao.update(userModel, diaryEntry);
                 }
             })
-            .catch(() => {
+            .catch((error) => {
+                const logData = { error, diaryEntry, channelIdOverride };
                 this.logger.warn(
-                    `Entry for "${diaryEntry.filmTitle}" by "${diaryEntry.userName}" failed to validate and write.`,
+                    `Entry for '${diaryEntry?.filmTitle}' by '${diaryEntry?.userName}' did not validate and write.`,
+                    logData,
                 );
             });
     }

@@ -42,6 +42,12 @@ Promise.all([
             .validateAndWrite(diaryEntry, returnData?.channelId)
             .then(() => {
                 message.ack();
+            })
+            .catch((error) => {
+                const data = { error, returnData };
+                container
+                    .resolve('logger')
+                    .error(`Validate and write error for '${diaryEntry?.userName}'`, data);
             });
     });
 
