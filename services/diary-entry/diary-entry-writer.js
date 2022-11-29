@@ -31,6 +31,7 @@ class DiaryEntryWriter {
         this.subscribedUserList = subscribedUserList;
     }
 
+    skipUserNotFound = 'SKIP_USER_NOT_FOUND';
     skipOldDiaryEntry = 'SKIP_OLD_DIARY_ENTRY';
     skipEmptyChannelList = 'SKIP_EMPTY_CHANNEL_LIST';
     skipAdultFilm = 'SKIP_ADULT_FILM';
@@ -42,11 +43,21 @@ class DiaryEntryWriter {
      * @returns {Promise}
      */
     validateAndWrite(diaryEntry, channelIdOverride) {
+        // Here getViewingId is a Promise so we can access data or call another promise
         const getViewingId = new Promise((resolve) => {
-            resolve(diaryEntry.id || this.letterboxdViewingIdWeb.get(diaryEntry.link));
+            if (diaryEntry.id) {
+                resolve(diaryEntry.id);
+            }
+            this.letterboxdViewingIdWeb
+                .get(diaryEntry.link)
+                .then((id) => {
+                    resolve(id);
+                })
+                .catch(() => {
+                    resolve('0');
+                });
         });
-        // Here getUserModel is wrapped in a Promise so duplicate calls to the Dao aren't made
-        // The getByUserName method throws an error when it fails so explicitly wrap it in a catch
+        // Here getUserModel is a Promise so duplicate calls to the Dao aren't made
         const getUserModel = new Promise((resolve) => {
             this.firestoreUserDao
                 .getByUserName(diaryEntry.userName)
@@ -73,13 +84,18 @@ class DiaryEntryWriter {
                 return getUserModel;
             })
             .then((userModel) => {
+                // Exit early if user not found
+                if (!userModel) {
+                    throw this.skipUserNotFound;
+                }
+
                 // Exit early if no subscribed channels
-                if (userModel.channelList.length === 0) {
+                if ((userModel?.channelList || []).length === 0) {
                     throw this.skipEmptyChannelList;
                 }
 
                 // Exit early if it is an adult film (maybe a future feature)
-                if (diaryEntry.adult) {
+                if (diaryEntry?.adult) {
                     throw this.skipAdultFilm;
                 }
 
@@ -124,7 +140,7 @@ class DiaryEntryWriter {
      * @returns {Promise<boolean[]>}
      */
     createSenderPromise(diaryEntry, userModel) {
-        const sendPromiseList = userModel.channelList.map((channel) => {
+        const sendPromiseList = (userModel?.channelList || []).map((channel) => {
             return new Promise((resolve, reject) => {
                 const message = this.messageEmbedFactory.createDiaryEntryMessage(
                     diaryEntry,
