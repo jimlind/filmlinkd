@@ -95,30 +95,6 @@ class FirestoreUserDao {
             });
         });
     }
-
-    /**
-     * @param {string} userName
-     * @returns {Promise<any>}
-     */
-    resetChecked(userName) {
-        return new Promise((resolve, reject) => {
-            const documentReference = this.firestoreCollection.doc(userName);
-            documentReference.get().then((documentSnapshot) => {
-                if (!documentSnapshot.exists) {
-                    reject();
-                    return;
-                }
-
-                const data = {
-                    ...documentSnapshot.data(),
-                    checked: Date.now(),
-                };
-                documentReference.update(data).then(() => {
-                    resolve(data);
-                });
-            });
-        });
-    }
 }
 
 module.exports = FirestoreUserDao;
