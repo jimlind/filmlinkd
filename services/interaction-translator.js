@@ -175,14 +175,9 @@ class InteractionTranslator {
      * @returns {Promise<import('../models/user')>}
      */
     refreshAccount(accountName) {
-        return this.letterboxdProfileWeb
-            .get(accountName)
-            .then((profile) => {
-                return this.firestoreUserDao.update(accountName, profile.name, profile.image);
-            })
-            .then((userData) => {
-                return userData;
-            });
+        return this.letterboxdProfileWeb.get(accountName).then((profile) => {
+            return this.firestoreUserDao.update(accountName, profile.name, profile.image);
+        });
     }
 
     /**

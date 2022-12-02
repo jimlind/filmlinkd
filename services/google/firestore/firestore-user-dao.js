@@ -5,9 +5,11 @@ class FirestoreUserDao {
 
     /**
      * @param {import('./firestore-connection')} firestoreConnection
+     * @param {import('../../logger')} logger
      */
-    constructor(firestoreConnection) {
+    constructor(firestoreConnection, logger) {
         this.firestoreCollection = firestoreConnection.getCollection();
+        this.logger = logger;
     }
 
     /**
@@ -58,14 +60,19 @@ class FirestoreUserDao {
      */
     getByUserName(userName) {
         const query = this.firestoreCollection.where('userName', '==', userName).limit(1);
-        return query.get().then((querySnapshot) => {
-            const documentSnapshotList = querySnapshot.docs;
-            if (documentSnapshotList.length !== 1) {
-                throw `User "${userName}" Does Not Exist`;
-            }
+        return query
+            .get()
+            .then((querySnapshot) => {
+                const documentSnapshotList = querySnapshot.docs;
+                if (documentSnapshotList.length !== 1) {
+                    throw `User "${userName}" Does Not Exist`;
+                }
 
-            return documentSnapshotList[0]?.data() || null;
-        });
+                return documentSnapshotList[0]?.data() || null;
+            })
+            .catch(() => {
+                return null;
+            });
     }
 
     /**
@@ -75,25 +82,33 @@ class FirestoreUserDao {
      * @returns {Promise<any>}
      */
     update(userName, displayName, image) {
-        return new Promise((resolve, reject) => {
-            const documentReference = this.firestoreCollection.doc(userName);
-            documentReference.get().then((documentSnapshot) => {
-                if (!documentSnapshot.exists) {
-                    reject();
-                    return;
+        const getDocumentSnapshot = this.firestoreCollection
+            .where('userName', '==', userName)
+            .limit(1)
+            .get()
+            .then((querySnapshot) => {
+                const documentSnapshot = querySnapshot?.docs?.[0];
+                if (!documentSnapshot) {
+                    this.logger.warn('Unable to Update: User Not Found', userData);
+                    throw 'Update Failed';
                 }
-
-                const data = {
-                    ...documentSnapshot.data(),
-                    displayName,
-                    image,
-                    updated: Date.now(),
-                };
-                documentReference.update(data).then(() => {
-                    resolve(data);
-                });
+                return documentSnapshot;
             });
-        });
+
+        return getDocumentSnapshot
+            .then((documentSnapshot) => {
+                const userData = documentSnapshot.data();
+                userData.displayName = displayName;
+                userData.image = image;
+                userData.updated = Date.now();
+                return documentSnapshot.ref.update(userData);
+            })
+            .then(() => {
+                return getDocumentSnapshot;
+            })
+            .then((documentSnapshot) => {
+                return documentSnapshot.data();
+            });
     }
 }
 
