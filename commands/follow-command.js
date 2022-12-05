@@ -56,7 +56,6 @@ class FollowCommand {
      * @returns {Promise<Object>}
      */
     getUserDataObjectFromAccountName(accountName) {
-        console.log(accountName);
         return this.firestoreUserDao
             .getByUserName(accountName)
             .then((userData) => userData)
