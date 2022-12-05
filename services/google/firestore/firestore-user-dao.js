@@ -60,19 +60,15 @@ class FirestoreUserDao {
      */
     getByUserName(userName) {
         const query = this.firestoreCollection.where('userName', '==', userName).limit(1);
-        return query
-            .get()
-            .then((querySnapshot) => {
-                const documentSnapshotList = querySnapshot.docs;
-                if (documentSnapshotList.length !== 1) {
-                    throw `User "${userName}" Does Not Exist`;
-                }
+        // Don't catch errors from this promise as they an expected failure from being called
+        return query.get().then((querySnapshot) => {
+            const documentSnapshotList = querySnapshot.docs;
+            if (documentSnapshotList.length !== 1) {
+                throw `User "${userName}" Does Not Exist`;
+            }
 
-                return documentSnapshotList[0]?.data() || null;
-            })
-            .catch(() => {
-                return null;
-            });
+            return documentSnapshotList[0]?.data() || null;
+        });
     }
 
     /**

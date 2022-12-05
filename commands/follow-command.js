@@ -45,23 +45,7 @@ class FollowCommand {
         ];
 
         return Promise.all(promiseList)
-            .then(([subscribeResult, messageResult, mostRecentResult]) => {
-                const userResult = subscribeResult.userData;
-                const hourAgo = Date.now() - 60 * 60 * 1000;
-
-                // Attempting to debug some issue with follow nullifying existing data
-                // If user is subscribed to one channel and was created before an hour ago
-                if (userResult.channelList.length === 1 && userResult.created < hourAgo) {
-                    userPromise.then((data) => {
-                        this.logger.info('Existing User Has One Subscribed Channel', {
-                            original: data,
-                            updated: subscribeResult.userData,
-                        });
-                    });
-                }
-
-                return messageResult;
-            })
+            .then(([subscribeResult, messageResult, mostRecentResult]) => messageResult)
             .catch(() => this.messageEmbedFactory.createNoAccountFoundMessage(accountName));
     }
 
@@ -72,6 +56,7 @@ class FollowCommand {
      * @returns {Promise<Object>}
      */
     getUserDataObjectFromAccountName(accountName) {
+        console.log(accountName);
         return this.firestoreUserDao
             .getByUserName(accountName)
             .then((userData) => userData)
