@@ -34,8 +34,8 @@ async function processData(data) {
     console.log(`Found ${list.length} accounts.`);
     console.log(`Found ${uniqueDuplicates.length} duplicative accounts.`);
 
-    uniqueDuplicates.forEach(async (letterboxdId) => {
-        const query = collection.where('letterboxdId', '==', letterboxdId);
+    for (const key in uniqueDuplicates) {
+        const query = collection.where('letterboxdId', '==', uniqueDuplicates[key]);
         const documentSnapshotList = await query.get();
 
         const sameUsers = [];
@@ -44,33 +44,37 @@ async function processData(data) {
             sameUsers.push(data);
         }
         await consolidateUsers(sameUsers);
-    });
+    }
 }
 
 async function consolidateUsers(users) {
-    let newUser = users.pop();
-    let newFooter = newUser.footer;
-    let channelList = newUser.channelList;
-    let oldUserList = [];
+    const newUserList = [];
+    const oldUserList = [];
+    let channelList = [];
 
     for (const key in users) {
         const user = users[key];
-        channelList = channelList.concat(user.channelList);
-
-        if (user.updated > newUser.updated) {
-            oldUserList.push(newUser);
-            newUser = user;
+        const lid = await lidWebService.get(user.userName).catch(() => '');
+        if (lid) {
+            newUserList.push(user);
         } else {
             oldUserList.push(user);
         }
 
         if (user.footer) {
-            newFooter = user.footer;
+            console.log(`🟡 Failure on ${users[0].letterboxdId}. Has footer data.`);
+            return;
         }
+
+        channelList = channelList.concat(user.channelList);
     }
-    if (newFooter) {
-        newUser.footer = newFooter;
+
+    if (newUserList.length !== 1) {
+        console.log(`🟡 Failure on ${users[0].letterboxdId}. No clean new user.`);
+        return;
     }
+
+    const newUser = newUserList[0];
     newUser.channelList = consolidateChannels(channelList);
 
     // SAVE NEW USER
@@ -79,10 +83,12 @@ async function consolidateUsers(users) {
     const n_querySnapshot = await n_data.get();
     const n_documentSnapshot = n_querySnapshot.docs[0];
     await n_documentSnapshot.ref.update(newUser);
-    console.log(`✅ Updated ${newUser.userName}`);
+    console.log(
+        `✅ Updated ${newUser.userName} lid:${newUser.letterboxdId} channels:${newUser.channelList.length}`,
+    );
 
-    // DELETE ALL RECORDS IN OLD USER LIST
     for (const key in oldUserList) {
+        // DELETE OLD USER
         const oldUser = oldUserList[key];
         fs.writeFileSync(deletesFileName, JSON.stringify(oldUser) + '\n', { flag: 'a+' });
 
@@ -90,7 +96,7 @@ async function consolidateUsers(users) {
         const o_querySnapshot = await o_data.get();
         const o_documentSnapshot = o_querySnapshot.docs[0];
         await o_documentSnapshot.ref.delete();
-        console.log(`❌ Deleted ${oldUser.userName}`);
+        console.log(`❌ Deleted ${oldUser.userName} channels:${oldUser.channelList.length}`);
     }
 }
 
