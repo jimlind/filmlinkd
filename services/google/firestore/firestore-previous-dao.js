@@ -25,26 +25,25 @@ class FirestorePreviousDao {
 
         this.firestoreCollection
             .where('letterboxdId', '==', userData.letterboxdId)
-            .limit(1)
             .get()
             .then((querySnapshot) => {
-                const documentSnapshot = querySnapshot?.docs?.[0];
-                if (!documentSnapshot) {
+                if (!querySnapshot.docs.length) {
                     this.logger.warn('Unable to Update Previous: User Not Found', userData);
                     return;
                 }
 
-                const userData = documentSnapshot.data();
-                userData.updated = Date.now();
-                userData.previous = {
-                    id: diaryEntry.id,
-                    lid: diaryEntry.lid,
-                    published: diaryEntry.publishedDate,
-                    uri: diaryEntry.link,
-                };
-
-                documentSnapshot.ref.update(userData).catch(() => {
-                    this.logger.warn('Unable to Update Previous: Update Failed', userData);
+                querySnapshot.docs.forEach((documentSnapshot) => {
+                    const userData = documentSnapshot.data();
+                    userData.updated = Date.now();
+                    userData.previous = {
+                        id: diaryEntry.id,
+                        lid: diaryEntry.lid,
+                        published: diaryEntry.publishedDate,
+                        uri: diaryEntry.link,
+                    };
+                    documentSnapshot.ref.update(userData).catch(() => {
+                        this.logger.warn('Unable to Update Previous: Update Failed', userData);
+                    });
                 });
             });
     }
