@@ -395,12 +395,6 @@ class MessageEmbedFactory {
             );
     }
 
-    createInadequatePermissionsMessage() {
-        return this.createEmbed().setDescription(
-            'Only users with Manage Server permissions are allowed to do that.',
-        );
-    }
-
     createChannelNotFoundMessage() {
         return this.createEmbed().setDescription('Unable to find the specified channel.');
     }

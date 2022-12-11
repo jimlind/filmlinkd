@@ -80,13 +80,6 @@ class InteractionTranslator {
      * @returns {Promise<import('discord.js').MessageEmbed>}
      */
     async getMessagePromiseAfterNeccesaryAction(commandInteraction) {
-        // Check for restricted commands and return the appropriate message
-        if (this.commandIsRestricted(commandInteraction)) {
-            return new Promise((resolve) => {
-                return resolve(this.messageEmbedFactory.createInadequatePermissionsMessage());
-            });
-        }
-
         const accountName = (commandInteraction.options.getString('account') || '').toLowerCase();
         const filmName = commandInteraction.options.getString('film-name') || '';
 
@@ -148,26 +141,6 @@ class InteractionTranslator {
                 return this.helpCommand.getMessage();
                 break;
         }
-    }
-
-    /**
-     * @param {import('discord.js').CommandInteraction} interaction
-     * @returns boolean
-     */
-    commandIsRestricted(interaction) {
-        // If command is not in the protected command list is restricted
-        const protectedCommands = ['follow', 'unfollow'];
-        if (!protectedCommands.includes(interaction.commandName)) {
-            return false;
-        }
-
-        // If member is not a normal guild member command is not restricted
-        if (!(interaction.member instanceof require('discord.js').GuildMember)) {
-            return true;
-        }
-
-        // Nothing is restricted for guild managers
-        return !interaction.member.permissions.has('MANAGE_GUILD');
     }
 
     /**
