@@ -20,6 +20,7 @@ const commands = [
     {
         name: 'follow',
         description: 'Adds the Letterboxd account to the following list this channel.',
+        default_member_permissions: 1 << 5,
         options: [
             {
                 name: 'account',
@@ -38,6 +39,7 @@ const commands = [
     {
         name: 'unfollow',
         description: 'Removes the Letterboxd account from the following list in this channel.',
+        default_member_permissions: 1 << 5,
         options: [
             {
                 name: 'account',
