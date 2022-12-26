@@ -12,7 +12,7 @@ class ContributorCommand {
 
     /**
      * @param {string} contributorName
-     * @returns {import('discord.js').MessageEmbed}
+     * @returns {Promise<import('discord.js').MessageEmbed>}
      */
     getMessage(contributorName) {
         // TODO:
