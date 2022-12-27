@@ -3,6 +3,8 @@
 A Letterboxd Discord Bot
 
 [![NPM Tests Workflow Status](https://github.com/jimlind/filmlinkd/actions/workflows/run-npm-tests.yml/badge.svg)](https://github.com/jimlind/filmlinkd/actions/workflows/run-npm-tests.yml)
+![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/jimlind/filmlinkd)
+![GitHub Liscense](https://img.shields.io/github/license/jimlind/filmlinkd)
 
 ## Links
 
