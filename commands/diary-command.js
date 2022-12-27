@@ -16,7 +16,7 @@ class DiaryCommand {
 
     /**
      * @param {string} accountName
-     * @returns {import('discord.js').MessageEmbed}
+     * @returns {Promise<import('discord.js').MessageEmbed>}
      */
     getMessage(accountName) {
         const lidPromise = this.letterboxdLidWeb.get(accountName);
