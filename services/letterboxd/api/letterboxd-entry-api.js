@@ -11,7 +11,7 @@ class LetterboxdEntryApi {
     /**
      * @param {string} memberLetterboxdId
      * @param {number} quantity
-     * @returns {Promise<Array>}
+     * @returns {Promise<import('../../../models/letterboxd/letterboxd-entry')[]>}
      */
     get(memberLetterboxdId, quantity) {
         return this.letterboxdApi
