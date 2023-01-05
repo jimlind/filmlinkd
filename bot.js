@@ -53,7 +53,8 @@ Promise.all([
 
     // This is the part that posts RSS updates at a regular interval
     // Keeps track of if an active diary entry thread is running
-    let threadRunning = false;
+    // A nasty hack here to say the thread is running so it skips the logic on non-primary shards
+    let threadRunning = !(discordClient?.shard?.ids || [0]).includes(0);
     let interval = null;
 
     // Get a random index from the user list
