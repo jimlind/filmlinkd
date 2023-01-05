@@ -59,9 +59,17 @@ class PubSubConnection {
     }
 
     /**
+     * This method now problematically has state, but has always had order of operation issues
+     * in the grand scheme of things.
+     * On the first run the discord client is needed because it uses that to get the shard id to create
+     * or use an existing topic subscription name
+     * On later runs the discord client isn't needed because it grabs the locally cached version
+     *
+     * @param {import('discord.js').Client | null} discordClient
+     *
      * @returns {Promise<import('@google-cloud/pubsub').Subscription>}
      */
-    getSubscription() {
+    getSubscription(discordClient) {
         return new Promise((resolve, reject) => {
             if (this.subscription) {
                 return resolve(this.subscription);
@@ -72,9 +80,12 @@ class PubSubConnection {
             }
             this.getSubscriptionLocked = true;
 
+            const shardId = String((discordClient?.shard?.ids || [0]).shift()).padStart(3, '0');
+            const subscriptionName = `${this.config.pubSubSubscriptionName}-shard-${shardId}`;
+
             this.getTopic()
                 .then((topic) => {
-                    const subscription = topic.subscription(this.config.pubSubSubscriptionName);
+                    const subscription = topic.subscription(subscriptionName);
                     subscription
                         .exists()
                         .then(([exists]) => {
