@@ -80,7 +80,7 @@ class PubSubConnection {
             }
             this.getSubscriptionLocked = true;
 
-            const shardId = String((discordClient?.shard?.ids || [0]).shift()).padStart(3, '0');
+            const shardId = String(discordClient?.shard?.ids?.[0] || 0).padStart(3, '0');
             const subscriptionName = `${this.config.pubSubSubscriptionName}-shard-${shardId}`;
 
             this.getTopic()
