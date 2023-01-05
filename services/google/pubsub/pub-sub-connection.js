@@ -13,10 +13,12 @@ class PubSubConnection {
     /**
      * @param {import('../../../models/config')} config
      * @param {import('@google-cloud/pubsub').PubSub} pubSub
+     * @param {import('discord.js').Client} discordClient
      */
-    constructor(config, pubSub) {
+    constructor(config, pubSub, discordClient) {
         this.config = config;
         this.pubSub = pubSub;
+        this.discordClient = discordClient;
     }
 
     /**
@@ -59,17 +61,9 @@ class PubSubConnection {
     }
 
     /**
-     * This method now problematically has state, but has always had order of operation issues
-     * in the grand scheme of things.
-     * On the first run the discord client is needed because it uses that to get the shard id to create
-     * or use an existing topic subscription name
-     * On later runs the discord client isn't needed because it grabs the locally cached version
-     *
-     * @param {import('discord.js').Client | null} discordClient
-     *
      * @returns {Promise<import('@google-cloud/pubsub').Subscription>}
      */
-    getSubscription(discordClient) {
+    getSubscription() {
         return new Promise((resolve, reject) => {
             if (this.subscription) {
                 return resolve(this.subscription);
@@ -80,7 +74,7 @@ class PubSubConnection {
             }
             this.getSubscriptionLocked = true;
 
-            const shardId = String(discordClient?.shard?.ids?.[0] || 0).padStart(3, '0');
+            const shardId = String(this.discordClient?.shard?.ids?.[0] || 0).padStart(3, '0');
             const subscriptionName = `${this.config.pubSubSubscriptionName}-shard-${shardId}`;
 
             this.getTopic()
