@@ -1,14 +1,14 @@
 'use strict';
 
 class PubSubConnection {
-    /** @type {import('@google-cloud/pubsub').Topic | null} */
-    topic = null;
-    /** @type {import('@google-cloud/pubsub').Subscription | null} */
-    subscription = null;
-    /** @type boolean */
-    getTopicLocked = false;
-    /** @type boolean */
-    getSubscriptionLocked = false;
+    /** @type {import('@google-cloud/pubsub').Topic[]} */
+    topicList = [];
+    /** @type {import('@google-cloud/pubsub').Subscription[]} */
+    subscriptionList = [];
+    /** @type boolean[] */
+    getTopicLockedList = [];
+    /** @type boolean[] */
+    getSubscriptionLockedList = [];
 
     /**
      * @param {import('../../../models/config')} config
@@ -22,7 +22,7 @@ class PubSubConnection {
     }
 
     /**
-     * Pub/Sub topic for announcing Log Entries
+     * Pub/Sub topic for announcing Log Entries for writing
      *
      * @returns {Promise<import('@google-cloud/pubsub').Topic>}
      */
@@ -31,7 +31,7 @@ class PubSubConnection {
     }
 
     /**
-     * Pub/Sub subscription for announcing Log Entries
+     * Pub/Sub subscription for announcing Log Entries for writing
      *
      * @returns {Promise<import('@google-cloud/pubsub').Subscription>}
      */
@@ -43,33 +43,54 @@ class PubSubConnection {
     }
 
     /**
+     * Pub/Sub topic for announcing Log Entry writing results
+     *
+     * @returns {Promise<import('@google-cloud/pubsub').Topic>}
+     */
+    getLogEntryResultTopic() {
+        return this.getTopic(this.config.pubSubLogEntryResultTopicName);
+    }
+
+    /**
+     * Pub/Sub subscription for announcing Log Entry writing results
+     *
+     * @returns {Promise<import('@google-cloud/pubsub').Subscription>}
+     */
+    getLogEntryResultSubscription() {
+        return this.getSubscription(
+            this.config.pubSubLogEntryResultTopicName,
+            this.config.pubSubLogEntryResultSubscriptionName,
+        );
+    }
+
+    /**
      * @param {string} topicName
      *
      * @returns {Promise<import('@google-cloud/pubsub').Topic>}
      */
     getTopic(topicName) {
         return new Promise((resolve, reject) => {
-            if (this.topic) {
-                return resolve(this.topic);
+            if (this.topicList[topicName]) {
+                return resolve(this.topicList[topicName]);
             }
 
-            if (this.getTopicLocked) {
+            if (this.getTopicLockedList[topicName]) {
                 return reject('Duplicating initial topic getting requests');
             }
-            this.getTopicLocked = true;
+            this.getTopicLockedList[topicName] = true;
 
             const topic = this.pubSub.topic(topicName);
             topic
                 .exists()
                 .then(([exists]) => {
                     if (exists) {
-                        this.topic = topic;
+                        this.topicList[topicName] = topic;
                         return resolve(topic);
                     } else {
                         topic
                             .create()
                             .then(([result]) => {
-                                this.topic = result;
+                                this.topicList[topicName] = result;
                                 return resolve(result);
                             })
                             .catch(() => {
@@ -91,14 +112,14 @@ class PubSubConnection {
      */
     getSubscription(topicName, subsciptionName) {
         return new Promise((resolve, reject) => {
-            if (this.subscription) {
-                return resolve(this.subscription);
+            if (this.subscriptionList[subsciptionName]) {
+                return resolve(this.subscriptionList[subsciptionName]);
             }
 
-            if (this.getSubscriptionLocked) {
+            if (this.getSubscriptionLockedList[subsciptionName]) {
                 return reject('Duplicating initial subscription getting requests.');
             }
-            this.getSubscriptionLocked = true;
+            this.getSubscriptionLockedList[subsciptionName] = true;
 
             const shardId = String(this.discordClient?.shard?.ids?.[0] || 0).padStart(3, '0');
             const subscriptionNameFull = `${subsciptionName}-shard-${shardId}`;
@@ -110,11 +131,11 @@ class PubSubConnection {
                         .exists()
                         .then(([exists]) => {
                             if (exists) {
-                                this.subscription = subscription;
+                                this.subscriptionList[subsciptionName] = subscription;
                                 return resolve(subscription);
                             } else {
                                 subscription.create().then(([result]) => {
-                                    this.subscription = result;
+                                    this.subscriptionList[subsciptionName] = result;
                                     return resolve(result);
                                 });
                             }

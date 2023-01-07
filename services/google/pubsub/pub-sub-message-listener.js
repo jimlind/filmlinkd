@@ -13,12 +13,21 @@ class PubSubMessageListener {
     /**
      * @param {function} callback
      */
-    onMessage(callback) {
-        this.hashList = this.hashList.slice(0, 999);
-        this.pubSubConnection.getSubscription().then((subsciption) => {
+    onLogEntryMessage(callback) {
+        this.pubSubConnection.getLogEntrySubscription().then((subsciption) => {
             subsciption.on('message', (message) => this.filterDuplicate(message, callback));
         });
     }
+
+    /**
+     * @param {function} callback
+     */
+    onLogEntryResultMessage(callback) {
+        this.pubSubConnection.getLogEntryResultSubscription().then((subsciption) => {
+            subsciption.on('message', callback);
+        });
+    }
+
     /**
      * @param {import('@google-cloud/pubsub').Message} message
      * @param {function} callback
@@ -29,7 +38,8 @@ class PubSubMessageListener {
             // Skip the messages if something with an identical hash was already accepted
             message.ack();
         } else {
-            // Add the messase to the hash list, and run the callback method
+            // Add the messase to the hash list, limit total hashes, and run the callback method
+            this.hashList = this.hashList.slice(0, 9999);
             this.hashList.unshift(hash);
             callback(message);
         }
