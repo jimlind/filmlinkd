@@ -123,6 +123,7 @@ class DiaryEntryWriter {
                     userName: userModel.userName,
                     userLid: userModel.letterboxdId,
                     previousId: viewingId,
+                    diaryEntry: diaryEntry, // TODO: Don't include this whole thing.
                 };
                 const buffer = Buffer.from(JSON.stringify(data));
                 topic.publish(buffer);
