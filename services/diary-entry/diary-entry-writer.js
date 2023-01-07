@@ -6,29 +6,29 @@
 class DiaryEntryWriter {
     /**
      * @param {import('../discord/discord-message-sender')} discordMessageSender
-     * @param {import('../google/firestore/firestore-previous-dao')} firestorePreviousDao
      * @param {import('../google/firestore/firestore-user-dao')} firestoreUserDao
      * @param {import('../letterboxd/letterboxd-viewing-id-web')} letterboxdViewingIdWeb
      * @param {import('../logger')} logger
      * @param {import('../../factories/message-embed-factory')} messageEmbedFactory
      * @param {import('../subscribed-user-list')} subscribedUserList
+     * @param {import('../google/pubsub/pub-sub-connection')} pubSubConnection
      */
     constructor(
         discordMessageSender,
-        firestorePreviousDao,
         firestoreUserDao,
         letterboxdViewingIdWeb,
         logger,
         messageEmbedFactory,
         subscribedUserList,
+        pubSubConnection,
     ) {
         this.discordMessageSender = discordMessageSender;
-        this.firestorePreviousDao = firestorePreviousDao;
         this.firestoreUserDao = firestoreUserDao;
         this.letterboxdViewingIdWeb = letterboxdViewingIdWeb;
         this.logger = logger;
         this.messageEmbedFactory = messageEmbedFactory;
         this.subscribedUserList = subscribedUserList;
+        this.pubSubConnection = pubSubConnection;
     }
 
     skipUserNotFound = 'SKIP_USER_NOT_FOUND';
@@ -111,19 +111,21 @@ class DiaryEntryWriter {
                 if (senderResultList.filter(Boolean).length == 0) {
                     throw this.skipNoMessagesSent;
                 }
-                return Promise.all([getUserModel, getViewingId]);
+                return Promise.all([
+                    getUserModel,
+                    getViewingId,
+                    this.pubSubConnection.getLogEntryResultTopic(),
+                ]);
             })
-            .then(([userModel, viewingId]) => {
-                diaryEntry.id = viewingId;
-                // At least one message posted, so update previous data in database and local cache
-                const upsertResult = this.subscribedUserList.upsert(
-                    userModel.userName,
-                    userModel.letterboxdId,
-                    diaryEntry.id,
-                );
-                if (upsertResult == diaryEntry.id) {
-                    this.firestorePreviousDao.update(userModel, diaryEntry);
-                }
+            .then(([userModel, viewingId, topic]) => {
+                // Publish Diary/Log Entry message posting result to Pub/Sub
+                const data = {
+                    userName: userModel.userName,
+                    userLid: userModel.letterboxdId,
+                    previousId: viewingId,
+                };
+                const buffer = Buffer.from(JSON.stringify(data));
+                topic.publish(buffer);
             })
             .catch((error) => {
                 // Don't log any of the normal rejection reasons, these are already logged.
