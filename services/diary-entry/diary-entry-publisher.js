@@ -18,34 +18,28 @@ class DiaryEntryPublisher {
     }
 
     /**
+     * Publish a list of Diary Entries (Log Entries) in the appropriate Pub/Sub
+     * Attaches a LID to the Entry for forward compatibility
+     *
      * @param {import('../../models/diary-entry')[]} diaryEntryList
      * @param {string} channelIdOverride
-     * @return {Promise<{user:string, id: string}[]>}
+     * @return {Promise}
      */
     publish(diaryEntryList, channelIdOverride = '') {
-        return new Promise((resolve) => {
-            const promiseList = diaryEntryList
-                .map((diaryEntry) => {
-                    return Promise.all([
-                        this.pubSubConnection.getLogEntryTopic(),
-                        this.letterboxdLidWeb.getFromUrl(diaryEntry.link),
-                    ]).then((result) => {
-                        const [topic, lid] = result;
-                        diaryEntry.lid = lid;
+        const promiseList = diaryEntryList.map((diaryEntry) => {
+            return Promise.all([
+                this.pubSubConnection.getLogEntryTopic(),
+                this.letterboxdLidWeb.getFromUrl(diaryEntry.link),
+            ]).then(([topic, lid]) => {
+                diaryEntry.lid = lid;
 
-                        const data = { entry: diaryEntry, channelId: channelIdOverride };
-                        const buffer = Buffer.from(JSON.stringify(data));
-                        topic.publish(buffer);
-
-                        return { user: diaryEntry.userName, id: diaryEntry.id };
-                    });
-                })
-                .map((p) => p.catch(() => null));
-
-            Promise.all(promiseList).then((promiseResult) => {
-                resolve(promiseResult.filter(Boolean));
+                const data = { entry: diaryEntry, channelId: channelIdOverride };
+                const buffer = Buffer.from(JSON.stringify(data));
+                topic.publish(buffer);
             });
         });
+
+        return Promise.all(promiseList);
     }
 
     /**
