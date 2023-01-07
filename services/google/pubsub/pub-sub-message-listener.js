@@ -38,7 +38,7 @@ class PubSubMessageListener {
             // Skip the messages if something with an identical hash was already accepted
             message.ack();
         } else {
-            // Add the messase to the hash list, limit total hashes, and run the callback method
+            // Add the message to the hash list, limit total hashes, and run the callback method
             this.hashList = this.hashList.slice(0, 9999);
             this.hashList.unshift(hash);
             callback(message);
