@@ -6,6 +6,8 @@ class Config {
     googleCloudProjectId = '';
     pubSubLogEntryTopicName = '';
     pubSubLogEntrySubscriptionName = '';
+    pubSubLogEntryResultTopicName = '';
+    pubSubLogEntryResultSubscriptionName = '';
     letterboxdApiKey = '';
     letterboxdApiSharedSecret = '';
 
