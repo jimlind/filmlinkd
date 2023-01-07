@@ -24,21 +24,23 @@ class ConfigFactory {
         config.letterboxdApiKey = this.environment.LETTERBOXD_API_KEY;
         config.letterboxdApiSharedSecret = this.environment.LETTERBOXD_API_SHARED_SECRET;
 
+        const env = this.environment;
+
         switch (this.argument) {
             case 'prod':
-                config.discordBotToken = this.environment.DISCORD_PROD_BOT_TOKEN;
-                config.discordClientId = this.environment.DISCORD_CLIENT_ID;
-                config.firestoreCollectionId = this.environment.FIRESTORE_PROD_COLLECTION_ID;
-                config.pubSubTopicName = this.environment.PUB_SUB_PROD_TOPIC_NAME;
-                config.pubSubSubscriptionName = this.environment.PUB_SUB_PROD_SUBSCRIPTION_NAME;
+                config.discordBotToken = env.DISCORD_PROD_BOT_TOKEN;
+                config.discordClientId = env.DISCORD_CLIENT_ID;
+                config.firestoreCollectionId = env.FIRESTORE_PROD_COLLECTION_ID;
+                config.pubSubLogEntryTopicName = env.PUB_SUB_PROD_TOPIC_NAME;
+                config.pubSubLogEntrySubscriptionName = env.PUB_SUB_PROD_SUBSCRIPTION_NAME;
                 config.isDev = false;
                 break;
             case 'dev':
-                config.discordBotToken = this.environment.DISCORD_DEV_BOT_TOKEN;
-                config.discordClientId = this.environment.DISCORD_DEV_CLIENT_ID;
-                config.firestoreCollectionId = this.environment.FIRESTORE_DEV_COLLECTION_ID;
-                config.pubSubTopicName = this.environment.PUB_SUB_DEV_TOPIC_NAME;
-                config.pubSubSubscriptionName = this.environment.PUB_SUB_DEV_SUBSCRIPTION_NAME;
+                config.discordBotToken = env.DISCORD_DEV_BOT_TOKEN;
+                config.discordClientId = env.DISCORD_DEV_CLIENT_ID;
+                config.firestoreCollectionId = env.FIRESTORE_DEV_COLLECTION_ID;
+                config.pubSubLogEntryTopicName = env.PUB_SUB_DEV_TOPIC_NAME;
+                config.pubSubLogEntrySubscriptionName = env.PUB_SUB_DEV_SUBSCRIPTION_NAME;
                 config.isDev = true;
                 break;
         }

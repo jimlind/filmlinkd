@@ -22,9 +22,32 @@ class PubSubConnection {
     }
 
     /**
+     * Pub/Sub topic for announcing Log Entries
+     *
      * @returns {Promise<import('@google-cloud/pubsub').Topic>}
      */
-    getTopic() {
+    getLogEntryTopic() {
+        return this.getTopic(this.config.pubSubLogEntryTopicName);
+    }
+
+    /**
+     * Pub/Sub subscription for announcing Log Entries
+     *
+     * @returns {Promise<import('@google-cloud/pubsub').Subscription>}
+     */
+    getLogEntrySubscription() {
+        return this.getSubscription(
+            this.config.pubSubLogEntryTopicName,
+            this.config.pubSubLogEntrySubscriptionName,
+        );
+    }
+
+    /**
+     * @param {string} topicName
+     *
+     * @returns {Promise<import('@google-cloud/pubsub').Topic>}
+     */
+    getTopic(topicName) {
         return new Promise((resolve, reject) => {
             if (this.topic) {
                 return resolve(this.topic);
@@ -35,7 +58,7 @@ class PubSubConnection {
             }
             this.getTopicLocked = true;
 
-            const topic = this.pubSub.topic(this.config.pubSubTopicName);
+            const topic = this.pubSub.topic(topicName);
             topic
                 .exists()
                 .then(([exists]) => {
@@ -61,9 +84,12 @@ class PubSubConnection {
     }
 
     /**
+     * @param {string} topicName
+     * @param {string} subsciptionName
+     *
      * @returns {Promise<import('@google-cloud/pubsub').Subscription>}
      */
-    getSubscription() {
+    getSubscription(topicName, subsciptionName) {
         return new Promise((resolve, reject) => {
             if (this.subscription) {
                 return resolve(this.subscription);
@@ -75,11 +101,11 @@ class PubSubConnection {
             this.getSubscriptionLocked = true;
 
             const shardId = String(this.discordClient?.shard?.ids?.[0] || 0).padStart(3, '0');
-            const subscriptionName = `${this.config.pubSubSubscriptionName}-shard-${shardId}`;
+            const subscriptionNameFull = `${subsciptionName}-shard-${shardId}`;
 
-            this.getTopic()
+            this.getTopic(topicName)
                 .then((topic) => {
-                    const subscription = topic.subscription(subscriptionName);
+                    const subscription = topic.subscription(subscriptionNameFull);
                     subscription
                         .exists()
                         .then(([exists]) => {

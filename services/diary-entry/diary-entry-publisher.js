@@ -27,7 +27,7 @@ class DiaryEntryPublisher {
             const promiseList = diaryEntryList
                 .map((diaryEntry) => {
                     return Promise.all([
-                        this.pubSubConnection.getTopic(),
+                        this.pubSubConnection.getLogEntryTopic(),
                         this.letterboxdLidWeb.getFromUrl(diaryEntry.link),
                     ]).then((result) => {
                         const [topic, lid] = result;
@@ -57,7 +57,7 @@ class DiaryEntryPublisher {
         return new Promise((resolve) => {
             const promiseList = logEntryList
                 .map((logEntry) => {
-                    return this.pubSubConnection.getTopic().then((topic) => {
+                    return this.pubSubConnection.getLogEntryTopic().then((topic) => {
                         const largestImage = (logEntry.film.poster.sizes || []).reduce(
                             (prev, current) => (current.height || 0 > prev.height ? current : prev),
                         );
