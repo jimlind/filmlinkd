@@ -16,6 +16,12 @@ class HelpCommand {
      * @returns {import('discord.js').MessageEmbed}
      */
     getMessage() {
+        // ******
+        // Disable this until sharding operations finished
+        // ******
+        const configData = { packageName: 'filmlinkd', packageVersion: '0.0.0' };
+        return this.messageEmbedFactory.createHelpMessage(configData, 0, 0);
+
         const promiseList = [
             this.discordConnection.getConnectedClient(),
             this.subscribedUserList.getAllActiveSubscriptions(),

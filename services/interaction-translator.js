@@ -140,7 +140,11 @@ class InteractionTranslator {
                 return this.loggedCommand.getMessage(accountName, filmName);
                 break;
             case 'roulette':
-                return this.rouletteCommand.getMessage();
+                // ******
+                // Disable this until sharding operations finished
+                // ******
+                //return this.rouletteCommand.getMessage();
+                return this.helpCommand.getMessage();
                 break;
             case 'user':
                 return this.userCommand.getMessage(accountName);
