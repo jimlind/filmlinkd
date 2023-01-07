@@ -90,7 +90,11 @@ class InteractionTranslator {
 
         switch (commandInteraction.commandName) {
             case 'follow':
-                return this.followCommand.process(accountName, channelId);
+                // ******
+                // Disable this until sharding operations finished
+                // ******
+                // return this.followCommand.process(accountName, channelId);
+                return this.helpCommand.getMessage();
                 break;
             case 'following':
                 return this.followingCommand.process(channelId);
@@ -105,13 +109,17 @@ class InteractionTranslator {
                     });
                 break;
             case 'unfollow':
-                return this.unfollowAccount(accountName, channelId)
-                    .then((userData) => {
-                        return this.messageEmbedFactory.createUnfollowedSuccessMessage(userData);
-                    })
-                    .catch(() => {
-                        return this.messageEmbedFactory.createUnfollowedErrorMessage(accountName);
-                    });
+                // ******
+                // Disable this until sharding operations finished
+                // ******
+                // return this.unfollowAccount(accountName, channelId)
+                //     .then((userData) => {
+                //         return this.messageEmbedFactory.createUnfollowedSuccessMessage(userData);
+                //     })
+                //     .catch(() => {
+                //         return this.messageEmbedFactory.createUnfollowedErrorMessage(accountName);
+                //     });
+                return this.helpCommand.getMessage();
                 break;
             case 'contributor':
                 const contributorName =
