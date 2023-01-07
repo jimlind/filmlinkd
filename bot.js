@@ -88,15 +88,9 @@ Promise.all([
             .resolve('subscribedUserList')
             .getRandomIndex()
             .then((index) => {
-                const diaryRestInterval = 15 * 1000; // Give it 30 seconds to rest
-                const startTime = Date.now();
+                const diaryRestInterval = 60 * 1000; // Give it 60 seconds to rest
                 interval = setInterval(() => {
                     if (threadRunning) return;
-
-                    if (Date.now() > startTime + 4 * 60 * 60000) {
-                        container.resolve('logger').info('4 Hour Reset');
-                        return process.exit();
-                    }
 
                     if (!discordClient.isReady()) {
                         container.resolve('logger').info('Client Not Ready Reset');
