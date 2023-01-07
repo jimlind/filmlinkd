@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+console.log('Disabled until after I can sort out sharding completely.');
+return;
+
 const ConfigFactory = require('./factories/config-factory');
 const DependencyInjectionContainer = require('./dependency-injection-container');
 const death = require('death');
