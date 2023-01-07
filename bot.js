@@ -23,8 +23,9 @@ const configModel = new ConfigFactory(
 const container = new DependencyInjectionContainer(configModel);
 Promise.all([
     container.resolve('discordConnection').getConnectedClient(),
-    container.resolve('pubSubConnection').getSubscription(),
-]).then(([discordClient, pubSubSubscription]) => {
+    container.resolve('pubSubConnection').getLogEntrySubscription(),
+    container.resolve('pubSubConnection').getLogEntryResultSubscription(),
+]).then(([discordClient, pubSubLogEntrySubscription, pubSubLogEntryResultSubscription]) => {
     const serverCount = discordClient.guilds.cache.size;
     container.resolve('logger').info(`Discord Client Logged In on ${serverCount} Servers`);
 
@@ -33,8 +34,8 @@ Promise.all([
         container.resolve('interactionTranslator').translate(commandInteraction);
     });
 
-    // Listen for PubSub messages posted and respond
-    container.resolve('pubSubMessageListener').onMessage((message) => {
+    // Listen for LogEntry PubSub messages posted and respond
+    container.resolve('pubSubMessageListener').onLogEntryMessage((message) => {
         const returnData = JSON.parse(message.data.toString());
         const diaryEntry = Object.assign(new DiaryEntry(), returnData?.entry);
         container
@@ -47,54 +48,81 @@ Promise.all([
                 const data = { error, returnData };
                 container
                     .resolve('logger')
-                    .error(`Validate and write error for '${diaryEntry?.userName}'`, data);
+                    .error(
+                        `Entry for '${diaryEntry?.filmTitle}' by '${diaryEntry?.userName}' did not validate and write. [002]`,
+                    );
             });
     });
 
     // This is the part that posts RSS updates at a regular interval
     // Keeps track of if an active diary entry thread is running
-    // A nasty hack here to say the thread is running so it skips the logic on non-primary shards
-    let threadRunning = !(discordClient?.shard?.ids || [0]).includes(0);
+    let threadRunning = false;
     let interval = null;
 
-    // Get a random index from the user list
-    container
-        .resolve('subscribedUserList')
-        .getRandomIndex()
-        .then((index) => {
-            const diaryRestInterval = 30 * 1000; // Give it 30 seconds to rest
-            const startTime = Date.now();
-            interval = setInterval(() => {
-                if (threadRunning) return;
+    const isShardZero = (discordClient?.shard?.ids || [0]).includes(0);
 
-                if (Date.now() > startTime + 4 * 60 * 60000) {
-                    container.resolve('logger').info('4 Hour Reset');
-                    return process.exit();
-                }
+    // Listen for LogEntryResult PubSub messages posted and respond
+    container.resolve('pubSubMessageListener').onLogEntryResultMessage((message) => {
+        message.ack();
+        if (isShardZero) {
+            const returnData = JSON.parse(message.data.toString());
+            const upsertResult = container
+                .resolve('subscribedUserList')
+                .upsert(returnData.userName, returnData.userLid, returnData.previousId);
 
-                if (!discordClient.isReady()) {
-                    container.resolve('logger').info('Client Not Ready Reset');
-                    return process.exit();
-                }
-
-                const config = container.resolve('config');
+            if (upsertResult == returnData.previousId) {
+                const diaryEntry = returnData.diaryEntry;
                 container
-                    .resolve('diaryEntryProcessor')
-                    .processPageOfEntries(index, config.pageSize)
-                    .then((pageCount) => {
-                        threadRunning = false;
-                        index = pageCount === 0 ? 0 : index + pageCount;
+                    .resolve('firestoreUserDao')
+                    .getByUserName(diaryEntry.userName)
+                    .then((userModel) => {
+                        container.resolve('firestorePreviousDao').update(userModel, diaryEntry);
                     });
+            }
+        }
+    });
 
-                threadRunning = true;
-            }, diaryRestInterval);
-        });
+    if (isShardZero) {
+        // Get a random index from the user list
+        container
+            .resolve('subscribedUserList')
+            .getRandomIndex()
+            .then((index) => {
+                const diaryRestInterval = 15 * 1000; // Give it 30 seconds to rest
+                const startTime = Date.now();
+                interval = setInterval(() => {
+                    if (threadRunning) return;
+
+                    if (Date.now() > startTime + 4 * 60 * 60000) {
+                        container.resolve('logger').info('4 Hour Reset');
+                        return process.exit();
+                    }
+
+                    if (!discordClient.isReady()) {
+                        container.resolve('logger').info('Client Not Ready Reset');
+                        return process.exit();
+                    }
+
+                    const config = container.resolve('config');
+                    container
+                        .resolve('diaryEntryProcessor')
+                        .processPageOfEntries(index, config.pageSize)
+                        .then((pageCount) => {
+                            threadRunning = false;
+                            index = pageCount === 0 ? 0 : index + pageCount;
+                        });
+
+                    threadRunning = true;
+                }, diaryRestInterval);
+            });
+    }
 
     // Clean up when process is told to end
     death((signal, error) => {
         clearInterval(interval);
         discordClient.destroy();
-        pubSubSubscription.close();
+        pubSubLogEntrySubscription.close();
+        pubSubLogEntryResultSubscription.close();
         container.resolve('logger').info('Program Terminated', { signal, error });
     });
 });
