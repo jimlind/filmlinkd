@@ -126,6 +126,18 @@ class DiaryEntryWriter {
                 }
             })
             .catch((error) => {
+                // Don't log any of the normal rejection reasons, these are already logged.
+                const allowedErrorList = [
+                    this.skipUserNotFound,
+                    this.skipOldDiaryEntry,
+                    this.skipEmptyChannelList,
+                    this.skipAdultFilm,
+                    this.skipNoMessagesSent,
+                ];
+                if (allowedErrorList.includes(error)) {
+                    return;
+                }
+
                 const logData = { error, diaryEntry, channelIdOverride };
                 this.logger.warn(
                     `Entry for '${diaryEntry?.filmTitle}' by '${diaryEntry?.userName}' did not validate and write.`,
