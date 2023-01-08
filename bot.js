@@ -36,14 +36,12 @@ Promise.all([
 
     // Listen for LogEntry PubSub messages posted and respond
     container.resolve('pubSubMessageListener').onLogEntryMessage((message) => {
+        message.ack();
         const returnData = JSON.parse(message.data.toString());
         const diaryEntry = Object.assign(new DiaryEntry(), returnData?.entry);
         container
             .resolve('diaryEntryWriter')
             .validateAndWrite(diaryEntry, returnData?.channelId)
-            .then(() => {
-                message.ack();
-            })
             .catch((error) => {
                 const data = { error, returnData };
                 container
