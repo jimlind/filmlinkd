@@ -88,7 +88,7 @@ Promise.all([
             .resolve('subscribedUserList')
             .getRandomIndex()
             .then((index) => {
-                const diaryRestInterval = 60 * 1000; // Give it 60 seconds to rest
+                const diaryRestInterval = 30 * 1000; // Give it 30 seconds to rest
                 interval = setInterval(() => {
                     if (threadRunning) return;
 
