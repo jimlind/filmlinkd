@@ -21,21 +21,34 @@ class ConfigFactory {
             config.gcpKeyFile = this.environment.GOOGLE_CLOUD_IDENTITY_KEY_FILE;
         }
 
+        config.letterboxdApiKey = this.environment.LETTERBOXD_API_KEY;
+        config.letterboxdApiSharedSecret = this.environment.LETTERBOXD_API_SHARED_SECRET;
+
         switch (this.argument) {
             case 'prod':
                 config.discordBotToken = this.environment.DISCORD_PROD_BOT_TOKEN;
                 config.discordClientId = this.environment.DISCORD_CLIENT_ID;
                 config.firestoreCollectionId = this.environment.FIRESTORE_PROD_COLLECTION_ID;
-                config.pubSubTopicName = this.environment.PUB_SUB_PROD_TOPIC_NAME;
-                config.pubSubSubscriptionName = this.environment.PUB_SUB_PROD_SUBSCRIPTION_NAME;
+                config.pubSubLogEntryTopicName = this.environment.PUB_SUB_PROD_TOPIC_NAME;
+                config.pubSubLogEntrySubscriptionName =
+                    this.environment.PUB_SUB_PROD_SUBSCRIPTION_NAME;
+                config.pubSubLogEntryResultTopicName =
+                    this.environment.PUB_SUB_PROD_LOG_ENTRY_RESULT_TOPIC_NAME;
+                config.pubSubLogEntryResultSubscriptionName =
+                    this.environment.PUB_SUB_PROD_LOG_ENTRY_RESULT_SUBSCRIPTION_NAME;
                 config.isDev = false;
                 break;
             case 'dev':
                 config.discordBotToken = this.environment.DISCORD_DEV_BOT_TOKEN;
                 config.discordClientId = this.environment.DISCORD_DEV_CLIENT_ID;
                 config.firestoreCollectionId = this.environment.FIRESTORE_DEV_COLLECTION_ID;
-                config.pubSubTopicName = this.environment.PUB_SUB_DEV_TOPIC_NAME;
-                config.pubSubSubscriptionName = this.environment.PUB_SUB_DEV_SUBSCRIPTION_NAME;
+                config.pubSubLogEntryTopicName = this.environment.PUB_SUB_DEV_TOPIC_NAME;
+                config.pubSubLogEntrySubscriptionName =
+                    this.environment.PUB_SUB_DEV_SUBSCRIPTION_NAME;
+                config.pubSubLogEntryResultTopicName =
+                    this.environment.PUB_SUB_DEV_LOG_ENTRY_RESULT_TOPIC_NAME;
+                config.pubSubLogEntryResultSubscriptionName =
+                    this.environment.PUB_SUB_DEV_LOG_ENTRY_RESULT_SUBSCRIPTION_NAME;
                 config.isDev = true;
                 break;
         }

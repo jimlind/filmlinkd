@@ -5,10 +5,6 @@ const User = require('../../../models/user');
 class FirestoreSubscriptionDao {
     /** @type FirebaseFirestore.CollectionReference */
     firestoreCollection;
-    /** @type {import('./firestore-vip-dao')} */
-    firestoreVipDao;
-    /** @type {import('../../logger')} */
-    logger;
 
     /**
      * @param {import('./firestore-connection')} firestoreConnection
@@ -22,9 +18,9 @@ class FirestoreSubscriptionDao {
     }
 
     /**
-     * @param {User} userData
+     * @param {object} userData
      * @param {string} channelId
-     * @returns {Promise<{userData: User, success: boolean}>}
+     * @returns {Promise<{userData: object, success: boolean}>}
      */
     subscribe(userData, channelId) {
         return new Promise((resolve, reject) => {
@@ -110,10 +106,13 @@ class FirestoreSubscriptionDao {
             query
                 .get()
                 .then((querySnapshot) => {
-                    const userList = querySnapshot.docs.reduce(
-                        (acc, current) => [...acc, current.id],
-                        [],
-                    );
+                    const userList = querySnapshot.docs.reduce((accumulator, current) => {
+                        const data = {
+                            userName: current.get('userName'),
+                            lid: current.get('letterboxdId'),
+                        };
+                        return [...accumulator, data];
+                    }, []);
                     resolve(userList);
                 })
                 .catch(() => {

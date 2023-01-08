@@ -13,8 +13,14 @@ class LetterboxdLidWeb {
      * @returns {Promise<string>}
      */
     get(userName) {
-        const url = 'https://letterboxd.com/' + userName;
+        return this.getFromUrl('https://letterboxd.com/' + userName);
+    }
 
+    /**
+     * @param {string} url
+     * @returns {Promise<string>}
+     */
+    getFromUrl(url) {
         return this.httpClient.head(url, 10000).then((response) => {
             const letterboxdId = response?.headers['x-letterboxd-identifier'] || '';
             if (!letterboxdId) {

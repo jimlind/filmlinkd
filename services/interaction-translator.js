@@ -2,33 +2,57 @@
 
 class InteractionTranslator {
     /**
+     * @param {import('../commands/contributor-command')} contributorCommand
+     * @param {import('../commands/diary-command')} diaryCommand
      * @param {import('./discord/discord-connection')} discordConnection
-     * @param {import('./diary-entry/diary-entry-processor')} diaryEntryProcessor
+     * @param {import('../commands/film-command')} filmCommand
      * @param {import('./google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
      * @param {import('./google/firestore/firestore-user-dao')} firestoreUserDao
+     * @param {import('../commands/follow-command')} followCommand
+     * @param {import('../commands/following-command')} followingCommand
+     * @param {import('../commands/help-command')} helpCommand
      * @param {any} messageEmbedFactory
      * @param {any} letterboxdProfileWeb
-     * @param {import('./letterboxd/letterboxd-letterboxd-id-web')} letterboxdLetterboxdIdWeb
+     * @param {import('../commands/list-command')} listCommand
+     * @param {import('../commands/logged-command')} loggedCommand
+     * @param {import('../commands/roulette-command')} rouletteCommand
      * @param {any} subscribedUserList
+     * @param {import('../commands/user-command')} userCommand
      */
     constructor(
+        contributorCommand,
+        diaryCommand,
         discordConnection,
-        diaryEntryProcessor,
+        filmCommand,
         firestoreSubscriptionDao,
         firestoreUserDao,
+        followCommand,
+        followingCommand,
+        helpCommand,
         messageEmbedFactory,
         letterboxdProfileWeb,
-        letterboxdLetterboxdIdWeb,
+        listCommand,
+        loggedCommand,
+        rouletteCommand,
         subscribedUserList,
+        userCommand,
     ) {
+        this.contributorCommand = contributorCommand;
+        this.diaryCommand = diaryCommand;
         this.discordConnection = discordConnection;
-        this.diaryEntryProcessor = diaryEntryProcessor;
+        this.filmCommand = filmCommand;
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
         this.firestoreUserDao = firestoreUserDao;
+        this.followCommand = followCommand;
+        this.followingCommand = followingCommand;
+        this.helpCommand = helpCommand;
         this.messageEmbedFactory = messageEmbedFactory;
         this.letterboxdProfileWeb = letterboxdProfileWeb;
-        this.letterboxdLetterboxdIdWeb = letterboxdLetterboxdIdWeb;
+        this.listCommand = listCommand;
+        this.loggedCommand = loggedCommand;
+        this.rouletteCommand = rouletteCommand;
         this.subscribedUserList = subscribedUserList;
+        this.userCommand = userCommand;
     }
 
     /**
@@ -37,6 +61,9 @@ class InteractionTranslator {
     translate(commandInteraction) {
         this.getMessagePromiseAfterNeccesaryAction(commandInteraction).then((message) => {
             if (message instanceof require('discord.js').MessageEmbed) {
+                //There is a 4096 character limit on descriptions so cut things off to keep the bot happy
+                message.setDescription((message?.description || '').substring(0, 4096));
+
                 return commandInteraction.editReply({ embeds: [message] });
             } else {
                 return commandInteraction.editReply(
@@ -47,18 +74,15 @@ class InteractionTranslator {
     }
 
     /**
+     * I already regret what I named this method, but still can't come up with something better
+     *
      * @param {import('discord.js').CommandInteraction} commandInteraction
      * @returns {Promise<import('discord.js').MessageEmbed>}
      */
     async getMessagePromiseAfterNeccesaryAction(commandInteraction) {
-        // Check for restricted commands and return the appropriate message
-        if (this.commandIsRestricted(commandInteraction)) {
-            return new Promise((resolve) => {
-                return resolve(this.messageEmbedFactory.createInadequatePermissionsMessage());
-            });
-        }
-
         const accountName = (commandInteraction.options.getString('account') || '').toLowerCase();
+        const filmName = commandInteraction.options.getString('film-name') || '';
+
         const channelId = await this.getChannelId(commandInteraction);
         if (!channelId) {
             return this.messageEmbedFactory.createChannelNotFoundMessage();
@@ -66,22 +90,14 @@ class InteractionTranslator {
 
         switch (commandInteraction.commandName) {
             case 'follow':
-                return this.followAccount(accountName, channelId)
-                    .then((userData) => {
-                        return this.messageEmbedFactory.createFollowSuccessMessage(userData);
-                    })
-                    .catch(() => {
-                        return this.messageEmbedFactory.createNoAccountFoundMessage(accountName);
-                    });
+                // ******
+                // Disable this until sharding operations finished
+                // ******
+                // return this.followCommand.process(accountName, channelId);
+                return this.helpCommand.getMessage();
                 break;
             case 'following':
-                return this.firestoreSubscriptionDao.list(channelId).then((userList) => {
-                    if (userList.length) {
-                        return this.messageEmbedFactory.createFollowingMessage(userList);
-                    } else {
-                        return this.messageEmbedFactory.createEmptyFollowingMessage();
-                    }
-                });
+                return this.followingCommand.process(channelId);
                 break;
             case 'refresh':
                 return this.refreshAccount(accountName)
@@ -93,57 +109,50 @@ class InteractionTranslator {
                     });
                 break;
             case 'unfollow':
-                return this.unfollowAccount(accountName, channelId)
-                    .then((userData) => {
-                        return this.messageEmbedFactory.createUnfollowedSuccessMessage(userData);
-                    })
-                    .catch(() => {
-                        return this.messageEmbedFactory.createUnfollowedErrorMessage(accountName);
-                    });
+                // ******
+                // Disable this until sharding operations finished
+                // ******
+                // return this.unfollowAccount(accountName, channelId)
+                //     .then((userData) => {
+                //         return this.messageEmbedFactory.createUnfollowedSuccessMessage(userData);
+                //     })
+                //     .catch(() => {
+                //         return this.messageEmbedFactory.createUnfollowedErrorMessage(accountName);
+                //     });
+                return this.helpCommand.getMessage();
+                break;
+            case 'contributor':
+                const contributorName =
+                    commandInteraction.options.getString('contributor-name') || '';
+                return this.contributorCommand.getMessage(contributorName);
+                break;
+            case 'diary':
+                return this.diaryCommand.getMessage(accountName);
+                break;
+            case 'film':
+                return this.filmCommand.getMessage(filmName);
+                break;
+            case 'list':
+                const listName = commandInteraction.options.getString('list-name') || '';
+                return this.listCommand.getMessage(accountName, listName);
+                break;
+            case 'logged':
+                return this.loggedCommand.getMessage(accountName, filmName);
+                break;
+            case 'roulette':
+                // ******
+                // Disable this until sharding operations finished
+                // ******
+                //return this.rouletteCommand.getMessage();
+                return this.helpCommand.getMessage();
+                break;
+            case 'user':
+                return this.userCommand.getMessage(accountName);
                 break;
             default:
-                return new Promise((resolve) => {
-                    return resolve(this.messageEmbedFactory.createHelpMessage());
-                });
+                return this.helpCommand.getMessage();
                 break;
         }
-    }
-
-    /**
-     * @param {import('discord.js').CommandInteraction} interaction
-     * @returns boolean
-     */
-    commandIsRestricted(interaction) {
-        // If command is not in the protected command list is restricted
-        const protectedCommands = ['follow', 'unfollow'];
-        if (!protectedCommands.includes(interaction.commandName)) {
-            return false;
-        }
-
-        // If member is not a normal guild member command is not restricted
-        if (!(interaction.member instanceof require('discord.js').GuildMember)) {
-            return true;
-        }
-
-        // Nothing is restricted for guild managers
-        return !interaction.member.permissions.has('MANAGE_GUILD');
-    }
-
-    /**
-     * @param {string} accountName
-     * @param {string} channelId
-     * @returns {Promise<import('../models/user')>}
-     */
-    followAccount(accountName, channelId) {
-        return this.getUserDataObjectFromAccountName(accountName)
-            .then((userData) => {
-                return this.firestoreSubscriptionDao.subscribe(userData, channelId);
-            })
-            .then((result) => {
-                // TODO: If I spam following somebody this doesn't repeat. Why?
-                this.diaryEntryProcessor.processMostRecentForUser(accountName, channelId);
-                return result.userData;
-            });
     }
 
     /**
@@ -151,14 +160,9 @@ class InteractionTranslator {
      * @returns {Promise<import('../models/user')>}
      */
     refreshAccount(accountName) {
-        return this.letterboxdProfileWeb
-            .get(accountName)
-            .then((profile) => {
-                return this.firestoreUserDao.update(accountName, profile.name, profile.image);
-            })
-            .then((userData) => {
-                return userData;
-            });
+        return this.letterboxdProfileWeb.get(accountName).then((profile) => {
+            return this.firestoreUserDao.update(accountName, profile.name, profile.image);
+        });
     }
 
     /**
@@ -179,37 +183,6 @@ class InteractionTranslator {
     }
 
     /**
-     * @param {string} accountName
-     * @returns {Promise<import('../models/user')>}
-     */
-    getUserDataObjectFromAccountName(accountName) {
-        return (
-            this.firestoreUserDao
-                .read(accountName)
-                // User found so resolve on that
-                .then((userData) => userData)
-                // User not found so create a new user from thier Letterboxd profile
-                .catch(() => {
-                    const promiseList = [
-                        this.letterboxdLetterboxdIdWeb.get(accountName),
-                        this.letterboxdProfileWeb.get(accountName),
-                    ];
-
-                    return Promise.all(promiseList)
-                        .then(([letterboxdId, profile]) => {
-                            return this.firestoreUserDao.create(
-                                letterboxdId,
-                                accountName,
-                                profile.name,
-                                profile.image,
-                            );
-                        })
-                        .then((userData) => userData);
-                })
-        );
-    }
-
-    /**
      * @param {import('discord.js').CommandInteraction} commandInteraction
      * @returns string
      */
@@ -221,7 +194,7 @@ class InteractionTranslator {
 
         const client = await this.discordConnection.getConnectedClient();
         return client.channels.cache.reduce((accumulator, current) => {
-            if (current?.name === channelInput) {
+            if (current?.name === channelInput && current?.guildId === commandInteraction.guildId) {
                 return current.id;
             }
             return accumulator;

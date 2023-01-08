@@ -15,27 +15,35 @@ processData(collection);
 
 async function processData(collection) {
     const querySnapshot = await collection.get();
-    const channelList = querySnapshot.docs.reduce(reduceDocsToChannels, {});
+    let channelList = querySnapshot.docs.reduce(reduceDocsToChannels, []).sort();
+    channelList = [...new Set(channelList)];
+
     const client = await container.resolve('discordConnection').getConnectedClient();
     const fileName = 'Bad Channel Deletes ' + new Date().toString() + '.txt';
 
     for (var i = 0; i < 10; i++) {
-        console.log(`${Object.values(channelList).length} channels to check...`);
-        for (const channelId in channelList) {
+        console.log(`------------------------------`);
+        console.log(`${channelList.length} channels to check...`);
+        console.log(`------------------------------`);
+        for (const index in channelList) {
+            const channelId = channelList[index];
             const channel = client.channels.cache.find((ch) => ch.id === channelId);
             const botPermissions = channel?.permissionsFor(client.user || '');
-            if (botPermissions?.has(['VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS'])) {
-                console.log(`+++ Success with ${channelId}`);
-                delete channelList[channelId];
+            if (botPermissions?.has(['SEND_MESSAGES', 'EMBED_LINKS'])) {
+                console.log(`✅ Channel ${channelId} is all good`);
+                delete channelList[index];
+            } else if (channel) {
+                console.log(`❌ Channel ${channelId} doesn't have proper permissions`);
             } else {
-                console.log(`--- Failure with ${channelId}`);
+                console.log(`❌ Channel ${channelId} doesn't exist`);
             }
         }
+        channelList = channelList.sort().filter(Boolean);
     }
 
-    for (const channelId in channelList) {
-        const guildId = channelList[channelId];
-        deleteChannelUsers(channelId, guildId, fileName);
+    for (const index in channelList) {
+        const channelId = channelList[index];
+        deleteChannelUsers(channelId, fileName);
     }
 
     client.destroy();
@@ -43,29 +51,31 @@ async function processData(collection) {
 
 function reduceDocsToChannels(acc, current) {
     current.data().channelList.forEach((channel) => {
-        acc[channel.channelId] = channel.guildId;
+        acc.push(channel.channelId);
     });
-
     return acc;
 }
 
-async function deleteChannelUsers(channelId, guildId, fileName) {
+async function deleteChannelUsers(channelId, fileName) {
     let channel = { channelId: channelId };
-    if (guildId) {
-        channel = { channelId: channelId, guildId: guildId };
-    }
     const query = collection.where('channelList', 'array-contains', channel);
     const querySnapshot = await query.get();
 
     for (const key in querySnapshot.docs) {
         const documentSnapshot = querySnapshot.docs[key];
         const data = documentSnapshot.data();
-        const content = data.userName + '||' + channelId + '||' + guildId + '\n';
+        const content = data.userName + '||' + channelId + '\n';
         fs.writeFileSync(fileName, content, { flag: 'a+' });
+
+        const originalContent = data.userName + '||' + JSON.stringify(data.channelList) + '\n';
+        fs.writeFileSync(`Original ${fileName}`, originalContent, { flag: 'a+' });
 
         data.channelList = data.channelList.filter((channel) => {
             return channel.channelId !== channelId;
         });
+
+        const cleanContent = data.userName + '||' + JSON.stringify(data.channelList) + '\n';
+        fs.writeFileSync(`Clean ${fileName}`, cleanContent, { flag: 'a+' });
 
         await documentSnapshot.ref.update(data);
         console.log(`Removed channel ${channelId} from user ${data.userName}`);

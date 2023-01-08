@@ -1,26 +1,41 @@
 'use strict';
 
+/**
+ * Class dealing with writing diary entry events to Discord servers
+ */
 class DiaryEntryWriter {
     /**
      * @param {import('../discord/discord-message-sender')} discordMessageSender
-     * @param {import('../google/firestore/firestore-previous-dao')} firestorePreviousDao
      * @param {import('../google/firestore/firestore-user-dao')} firestoreUserDao
+     * @param {import('../letterboxd/letterboxd-viewing-id-web')} letterboxdViewingIdWeb
+     * @param {import('../logger')} logger
      * @param {import('../../factories/message-embed-factory')} messageEmbedFactory
      * @param {import('../subscribed-user-list')} subscribedUserList
+     * @param {import('../google/pubsub/pub-sub-connection')} pubSubConnection
      */
     constructor(
         discordMessageSender,
-        firestorePreviousDao,
         firestoreUserDao,
+        letterboxdViewingIdWeb,
+        logger,
         messageEmbedFactory,
         subscribedUserList,
+        pubSubConnection,
     ) {
         this.discordMessageSender = discordMessageSender;
-        this.firestorePreviousDao = firestorePreviousDao;
         this.firestoreUserDao = firestoreUserDao;
+        this.letterboxdViewingIdWeb = letterboxdViewingIdWeb;
+        this.logger = logger;
         this.messageEmbedFactory = messageEmbedFactory;
         this.subscribedUserList = subscribedUserList;
+        this.pubSubConnection = pubSubConnection;
     }
+
+    skipUserNotFound = 'SKIP_USER_NOT_FOUND';
+    skipOldDiaryEntry = 'SKIP_OLD_DIARY_ENTRY';
+    skipEmptyChannelList = 'SKIP_EMPTY_CHANNEL_LIST';
+    skipAdultFilm = 'SKIP_ADULT_FILM';
+    skipNoMessagesSent = 'SKIP_NO_MESSAGES_SENT';
 
     /**
      * @param {import('../../models/diary-entry')} diaryEntry
@@ -28,73 +43,123 @@ class DiaryEntryWriter {
      * @returns {Promise}
      */
     validateAndWrite(diaryEntry, channelIdOverride) {
-        return new Promise((resolve) => {
-            // Get the user data from cache
-            const user = this.subscribedUserList.get(diaryEntry.userName);
-
-            // Because we are expecting multiple requests to post a diary entry we maintain
-            // the one source of truth on the server that sends messages so we double-check
-            // the previous Id.
-            // Ignore this check if there is a channel override because that will go no matter what.
-            if (diaryEntry.id <= user.previousId && !channelIdOverride) {
-                return resolve();
+        // Here getViewingId is a Promise so we can access data or call another promise
+        const getViewingId = new Promise((resolve) => {
+            if (diaryEntry.id) {
+                resolve(diaryEntry.id);
             }
-
-            this.firestoreUserDao
-                .read(diaryEntry.userName)
-                .then((userData) => {
-                    // Rewrite the channel list if there is an override sent
-                    userData.channelList = channelIdOverride
-                        ? [{ channelId: channelIdOverride }]
-                        : userData.channelList;
-
-                    // Exit early if no subscribed channels
-                    if (userData.channelList.length === 0) {
-                        return resolve();
-                    }
-
-                    // Exit early if it is an adult film
-                    // I'll selectively enable them for specific servers later
-                    if (diaryEntry.adult) {
-                        return resolve();
-                    }
-
-                    // Get sender promise list with mapped failures to noops
-                    const promiseList = this.createSenderPromiseList(diaryEntry, userData).map(
-                        (p) => p.catch(() => false),
-                    );
-                    Promise.all(promiseList).then((results) => {
-                        // If we weren't able to post any messages just move on.
-                        if (results.filter(Boolean).length == 0) {
-                            return resolve();
-                        }
-
-                        // At least one message posted, so update previous data in database and local cache
-                        const entryId = diaryEntry.id;
-                        if (this.subscribedUserList.upsert(userData.userName, entryId) == entryId) {
-                            this.firestorePreviousDao.update(userData, diaryEntry);
-                        }
-                        return resolve();
-                    });
+            this.letterboxdViewingIdWeb
+                .get(diaryEntry.link)
+                .then((id) => {
+                    resolve(id);
                 })
                 .catch(() => {
-                    // TODO: Log on user read failure or something
-                    return resolve();
+                    resolve('0');
                 });
         });
+        // Here getUserModel is a Promise so duplicate calls to the Dao aren't made
+        const getUserModel = new Promise((resolve) => {
+            this.firestoreUserDao
+                .getByUserName(diaryEntry.userName)
+                .then((model) => {
+                    resolve(model);
+                })
+                .catch(() => {
+                    resolve(null);
+                });
+        });
+
+        return getViewingId
+            .then((viewingId) => {
+                // Get the user data from cache
+                const user = this.subscribedUserList.get(diaryEntry.userName);
+
+                // Because we are expecting multiple requests to post a diary entry we maintain
+                // the one source of truth on the server that sends messages so we double-check
+                // the previous Id.
+                // Ignore this check if there is a channel override because we want it to trigger multiple times.
+                if (viewingId <= user.previousId && !channelIdOverride) {
+                    throw this.skipOldDiaryEntry;
+                }
+                return getUserModel;
+            })
+            .then((userModel) => {
+                // Exit early if user not found
+                if (!userModel) {
+                    throw this.skipUserNotFound;
+                }
+
+                // Exit early if no subscribed channels
+                if ((userModel?.channelList || []).length === 0) {
+                    throw this.skipEmptyChannelList;
+                }
+
+                // Exit early if it is an adult film (maybe a future feature)
+                if (diaryEntry?.adult) {
+                    throw this.skipAdultFilm;
+                }
+
+                // Rewrite the channel list if there is an override sent
+                const channelList = [{ channelId: channelIdOverride }];
+                const sendingUser = channelIdOverride ? { ...userModel, channelList } : userModel;
+
+                // Get sender promise list with mapped failures to no-ops
+                return this.createSenderPromise(diaryEntry, sendingUser);
+            })
+            .then((senderResultList) => {
+                // If we weren't able to post any messages just move on.
+                if (senderResultList.filter(Boolean).length == 0) {
+                    throw this.skipNoMessagesSent;
+                }
+                return Promise.all([
+                    getUserModel,
+                    getViewingId,
+                    this.pubSubConnection.getLogEntryResultTopic(),
+                ]);
+            })
+            .then(([userModel, viewingId, topic]) => {
+                // Publish Diary/Log Entry message posting result to Pub/Sub
+                const data = {
+                    userName: userModel.userName,
+                    userLid: userModel.letterboxdId,
+                    previousId: viewingId,
+                    diaryEntry: diaryEntry, // TODO: Don't include this whole thing.
+                };
+                const buffer = Buffer.from(JSON.stringify(data));
+                topic.publish(buffer);
+            })
+            .catch((error) => {
+                // Don't log any of the normal rejection reasons, these are already logged.
+                const allowedErrorList = [
+                    this.skipUserNotFound,
+                    this.skipOldDiaryEntry,
+                    this.skipEmptyChannelList,
+                    this.skipAdultFilm,
+                    this.skipNoMessagesSent,
+                ];
+                if (allowedErrorList.includes(error)) {
+                    return;
+                }
+
+                const logData = { error, diaryEntry, channelIdOverride };
+                this.logger.warn(
+                    `Entry for '${diaryEntry?.filmTitle}' by '${diaryEntry?.userName}' did not validate and write.`,
+                    logData,
+                );
+            });
     }
 
     /**
      * @param {import("../../models/diary-entry")} diaryEntry
-     * @param {import("../../models/user")} userData
-     * @returns {Promise<boolean>[]}
+     * @param {import("../../models/user")} userModel
+     * @returns {Promise<boolean[]>}
      */
-    createSenderPromiseList(diaryEntry, userData) {
-        const permissionsPromiseList = userData.channelList.map((channel) => {
+    createSenderPromise(diaryEntry, userModel) {
+        const sendPromiseList = (userModel?.channelList || []).map((channel) => {
             return new Promise((resolve, reject) => {
                 const message = this.messageEmbedFactory.createDiaryEntryMessage(
                     diaryEntry,
-                    userData,
+                    userModel,
                 );
                 this.discordMessageSender
                     .send(channel.channelId, message)
@@ -109,7 +174,8 @@ class DiaryEntryWriter {
             });
         });
 
-        return permissionsPromiseList;
+        const cleanedPromiseList = sendPromiseList.map((p) => p.catch(() => false));
+        return Promise.all(cleanedPromiseList);
     }
 }
 

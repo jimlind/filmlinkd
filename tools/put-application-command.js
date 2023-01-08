@@ -20,6 +20,7 @@ const commands = [
     {
         name: 'follow',
         description: 'Adds the Letterboxd account to the following list this channel.',
+        default_member_permissions: 1 << 5,
         options: [
             {
                 name: 'account',
@@ -38,6 +39,7 @@ const commands = [
     {
         name: 'unfollow',
         description: 'Removes the Letterboxd account from the following list in this channel.',
+        default_member_permissions: 1 << 5,
         options: [
             {
                 name: 'account',
@@ -67,7 +69,95 @@ const commands = [
     },
     {
         name: 'refresh',
-        description: 'Cool. Updates the Filmlinkd cache for the Letterboxd account.',
+        description: 'Updates the Filmlinkd cache for the Letterboxd account.',
+        options: [
+            {
+                name: 'account',
+                description: 'Letterboxd account name',
+                type: 3,
+                required: true,
+            },
+        ],
+    },
+    {
+        name: 'contributor',
+        description: "Shows a film contributor's information snippet.",
+        options: [
+            {
+                name: 'contributor-name',
+                description: 'Contributor name',
+                type: 3,
+                required: true,
+            },
+        ],
+    },
+    {
+        name: 'diary',
+        description: 'Shows the 5 most recent diary entries.',
+        options: [
+            {
+                name: 'account',
+                description: 'Letterboxd account name',
+                type: 3,
+                required: true,
+            },
+        ],
+    },
+    {
+        name: 'film',
+        description: "Shows a film's information snippet.",
+        options: [
+            {
+                name: 'film-name',
+                description: 'Film name',
+                type: 3,
+                required: true,
+            },
+        ],
+    },
+    {
+        name: 'list',
+        description: "Shows a members's list's information snippet.",
+        options: [
+            {
+                name: 'account',
+                description: 'Letterboxd account name',
+                type: 3,
+                required: true,
+            },
+            {
+                name: 'list-name',
+                description: "Member's list name",
+                type: 3,
+                required: true,
+            },
+        ],
+    },
+    {
+        name: 'logged',
+        description: "Shows the user's 5 most recent logged entries for a film.",
+        options: [
+            {
+                name: 'account',
+                description: 'Letterboxd account name',
+                type: 3,
+                required: true,
+            },
+            {
+                name: 'film-name',
+                description: 'Film name',
+                type: 3,
+                required: true,
+            },
+        ],
+    },
+    {
+        name: 'roulette',
+        description: 'Displays random film information snippet.',
+    },
+    {
+        name: 'user',
+        description: "Shows a users's information snippet.",
         options: [
             {
                 name: 'account',

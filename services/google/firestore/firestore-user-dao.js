@@ -5,9 +5,11 @@ class FirestoreUserDao {
 
     /**
      * @param {import('./firestore-connection')} firestoreConnection
+     * @param {import('../../logger')} logger
      */
-    constructor(firestoreConnection) {
+    constructor(firestoreConnection, logger) {
         this.firestoreCollection = firestoreConnection.getCollection();
+        this.logger = logger;
     }
 
     /**
@@ -37,6 +39,7 @@ class FirestoreUserDao {
     /**
      * @param {string} userName
      * @returns {Promise<any>}
+     * @deprecated
      */
     read(userName) {
         return new Promise((resolve, reject) => {
@@ -53,54 +56,55 @@ class FirestoreUserDao {
 
     /**
      * @param {string} userName
-     * @param {string} displayName
-     * @param {string} image
-     * @returns {Promise<any>}
+     * @returns {Promise<Object>}
      */
-    update(userName, displayName, image) {
-        return new Promise((resolve, reject) => {
-            const documentReference = this.firestoreCollection.doc(userName);
-            documentReference.get().then((documentSnapshot) => {
-                if (!documentSnapshot.exists) {
-                    reject();
-                    return;
-                }
+    getByUserName(userName) {
+        const query = this.firestoreCollection.where('userName', '==', userName).limit(1);
+        // Don't catch errors from this promise as they an expected failure from being called
+        return query.get().then((querySnapshot) => {
+            const documentSnapshotList = querySnapshot.docs;
+            if (documentSnapshotList.length !== 1) {
+                throw `User "${userName}" Does Not Exist`;
+            }
 
-                const data = {
-                    ...documentSnapshot.data(),
-                    displayName,
-                    image,
-                    updated: Date.now(),
-                };
-                documentReference.update(data).then(() => {
-                    resolve(data);
-                });
-            });
+            return documentSnapshotList[0]?.data() || null;
         });
     }
 
     /**
      * @param {string} userName
+     * @param {string} displayName
+     * @param {string} image
      * @returns {Promise<any>}
      */
-    resetChecked(userName) {
-        return new Promise((resolve, reject) => {
-            const documentReference = this.firestoreCollection.doc(userName);
-            documentReference.get().then((documentSnapshot) => {
-                if (!documentSnapshot.exists) {
-                    reject();
-                    return;
+    update(userName, displayName, image) {
+        const getDocumentSnapshot = this.firestoreCollection
+            .where('userName', '==', userName)
+            .limit(1)
+            .get()
+            .then((querySnapshot) => {
+                const documentSnapshot = querySnapshot?.docs?.[0];
+                if (!documentSnapshot) {
+                    this.logger.warn('Unable to Update: User Not Found', userData);
+                    throw 'Update Failed';
                 }
-
-                const data = {
-                    ...documentSnapshot.data(),
-                    checked: Date.now(),
-                };
-                documentReference.update(data).then(() => {
-                    resolve(data);
-                });
+                return documentSnapshot;
             });
-        });
+
+        return getDocumentSnapshot
+            .then((documentSnapshot) => {
+                const userData = documentSnapshot.data();
+                userData.displayName = displayName;
+                userData.image = image;
+                userData.updated = Date.now();
+                return documentSnapshot.ref.update(userData);
+            })
+            .then(() => {
+                return getDocumentSnapshot;
+            })
+            .then((documentSnapshot) => {
+                return documentSnapshot.data();
+            });
     }
 }
 

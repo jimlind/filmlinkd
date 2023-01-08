@@ -1,5 +1,3 @@
-'use strict';
-
 class DiscordMessageSender {
     constructor(discordConnection, logger) {
         this.discordConnection = discordConnection;
@@ -12,11 +10,18 @@ class DiscordMessageSender {
                 const channel = client.channels.cache.find((ch) => ch.id === channelId);
 
                 if (!channel) {
+                    this.logger.debug(
+                        `Unable to Send Message: Client Can't Find Channel: '${channelId}'`,
+                    );
+                    return reject();
+                }
+
+                if (!channel.isText()) {
                     const metadata = {
                         channelId,
                         messageEmbed: message.toJSON(),
                     };
-                    this.logger.warn('Unable to Send Message: Bad Channel Id', metadata);
+                    this.logger.warn('Unable to Send Message: Not Text Channel', metadata);
                     return reject();
                 }
 

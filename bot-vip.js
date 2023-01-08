@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+console.log('Disabled until after I can sort out sharding completely.');
+return;
+
 const ConfigFactory = require('./factories/config-factory');
 const DependencyInjectionContainer = require('./dependency-injection-container');
 const death = require('death');
@@ -19,7 +22,7 @@ const configModel = new ConfigFactory(
 ).build();
 
 const container = new DependencyInjectionContainer(configModel);
-const botRestingTime = 5000; // 5 seconds
+const botRestingTime = 10000; // 10 seconds
 
 // Keeps track of if an active diary entry thread is running
 let threadRunning = false;

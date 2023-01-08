@@ -48,16 +48,21 @@ class DependencyInjectionContainer {
 
         // Create configured Turndown service
         const turndownService = new turndown();
-        turndownService.addRule('blockquote', {
-            filter: ['blockquote'],
-            replacement: (content) => '> ' + content,
-        });
         turndownService.addRule('break', {
             filter: ['br'],
             replacement: () => '\n',
         });
+        turndownService.addRule('paragraph', {
+            filter: ['p'],
+            replacement: (content) => content + '\n',
+        });
+        turndownService.addRule('blockquote', {
+            filter: ['blockquote'],
+            replacement: (content) =>
+                '> ' + content.split(/\r?\n/).filter(Boolean).join('\n> ') + '\n',
+        });
 
-        // Creast PubSub
+        // Create PubSub
         const pubsub = new PubSub({
             projectId: configModel.googleCloudProjectId,
             keyFilename: configModel.gcpKeyFile,
@@ -79,7 +84,7 @@ class DependencyInjectionContainer {
             pubSub: awilix.asValue(pubsub),
         });
 
-        this.container.loadModules(['factories/**/*.js', 'services/**/*.js', 'compiled/**/*.js'], {
+        this.container.loadModules(['commands/**/*.js', 'factories/**/*.js', 'services/**/*.js'], {
             formatName: 'camelCase',
             resolverOptions: {
                 lifetime: awilix.Lifetime.SINGLETON,
