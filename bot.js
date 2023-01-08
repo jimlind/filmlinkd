@@ -42,8 +42,7 @@ Promise.all([
         container
             .resolve('diaryEntryWriter')
             .validateAndWrite(diaryEntry, returnData?.channelId)
-            .catch((error) => {
-                const data = { error, returnData };
+            .catch(() => {
                 container
                     .resolve('logger')
                     .error(
@@ -72,7 +71,7 @@ Promise.all([
                 const diaryEntry = returnData.diaryEntry;
                 container
                     .resolve('firestoreUserDao')
-                    .getByUserName(diaryEntry.userName)
+                    .getByUserName(returnData.userName)
                     .then((userModel) => {
                         container.resolve('firestorePreviousDao').update(userModel, diaryEntry);
                     });
@@ -108,6 +107,19 @@ Promise.all([
                 }, diaryRestInterval);
             });
     }
+
+    // Log as much as I can about a failed promise
+    // It might help me debug the wierd failure that happens
+    process.on('unhandledRejection', (reason, promise) => {
+        container.resolve('logger').error('Unhandled Rejection', {
+            reasonType: typeof reason,
+            reasonObject: reason,
+            promiseType: typeof promise,
+            promiseObject: promise,
+            discordClientObject: discordClient,
+            isShardZero,
+        });
+    });
 
     // Clean up when process is told to end
     death((signal, error) => {

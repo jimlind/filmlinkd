@@ -123,10 +123,15 @@ class DiaryEntryWriter {
                     userName: userModel.userName,
                     userLid: userModel.letterboxdId,
                     previousId: viewingId,
-                    diaryEntry: diaryEntry, // TODO: Don't include this whole thing.
+                    diaryEntry: {
+                        id: diaryEntry.id,
+                        lid: diaryEntry.lid,
+                        publishedDate: diaryEntry.publishedDate,
+                        link: diaryEntry.link,
+                    },
                 };
                 const buffer = Buffer.from(JSON.stringify(data));
-                topic.publish(buffer);
+                topic.publishMessage({ data: buffer });
             })
             .catch((error) => {
                 // Don't log any of the normal rejection reasons, these are already logged.

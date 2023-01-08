@@ -35,7 +35,7 @@ class DiaryEntryPublisher {
 
                 const data = { entry: diaryEntry, channelId: channelIdOverride };
                 const buffer = Buffer.from(JSON.stringify(data));
-                topic.publish(buffer);
+                topic.publishMessage({ data: buffer });
             });
         });
 
@@ -81,7 +81,7 @@ class DiaryEntryPublisher {
 
                         const data = { entry: diaryEntry, channelId: channelIdOverride };
                         const buffer = Buffer.from(JSON.stringify(data));
-                        topic.publish(buffer);
+                        topic.publishMessage({ data: buffer });
 
                         return {
                             userLid: logEntry.owner.id,
