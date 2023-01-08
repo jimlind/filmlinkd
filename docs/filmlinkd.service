@@ -7,7 +7,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/opt/app/filmlinkd
-ExecStart=/usr/bin/node --optimize_for_size /opt/app/filmlinkd/bot.js prod
+ExecStart=/usr/bin/node --optimize_for_size /opt/app/filmlinkd/bot-shard.js prod
 Restart=always
 RestartSec=120
 
