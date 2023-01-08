@@ -4,10 +4,14 @@ class Config {
     firestoreCollectionId = '';
     gcpKeyFile = '';
     googleCloudProjectId = '';
+
     pubSubLogEntryTopicName = '';
     pubSubLogEntrySubscriptionName = '';
     pubSubLogEntryResultTopicName = '';
     pubSubLogEntryResultSubscriptionName = '';
+    pubSubCommandTopicName = '';
+    pubSubCommandSubscriptionName = '';
+
     letterboxdApiKey = '';
     letterboxdApiSharedSecret = '';
 

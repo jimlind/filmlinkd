@@ -36,6 +36,9 @@ class ConfigFactory {
                     this.environment.PUB_SUB_PROD_LOG_ENTRY_RESULT_TOPIC_NAME;
                 config.pubSubLogEntryResultSubscriptionName =
                     this.environment.PUB_SUB_PROD_LOG_ENTRY_RESULT_SUBSCRIPTION_NAME;
+                config.pubSubCommandTopicName = this.environment.PUB_SUB_PROD_COMMAND_TOPIC_NAME;
+                config.pubSubCommandSubscriptionName =
+                    this.environment.PUB_SUB_PROD_COMMAND_SUBSCRIPTION_NAME;
                 config.isDev = false;
                 break;
             case 'dev':
@@ -49,6 +52,9 @@ class ConfigFactory {
                     this.environment.PUB_SUB_DEV_LOG_ENTRY_RESULT_TOPIC_NAME;
                 config.pubSubLogEntryResultSubscriptionName =
                     this.environment.PUB_SUB_DEV_LOG_ENTRY_RESULT_SUBSCRIPTION_NAME;
+                config.pubSubCommandTopicName = this.environment.PUB_SUB_DEV_COMMAND_TOPIC_NAME;
+                config.pubSubCommandSubscriptionName =
+                    this.environment.PUB_SUB_DEV_COMMAND_SUBSCRIPTION_NAME;
                 config.isDev = true;
                 break;
         }

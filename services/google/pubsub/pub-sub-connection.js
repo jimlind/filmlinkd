@@ -64,6 +64,27 @@ class PubSubConnection {
     }
 
     /**
+     * Pub/Sub topic for announcing select user commands
+     *
+     * @returns {Promise<import('@google-cloud/pubsub').Topic>}
+     */
+    getCommandTopic() {
+        return this.getTopic(this.config.pubSubCommandTopicName);
+    }
+
+    /**
+     * Pub/Sub subscription for announcing select user commands
+     *
+     * @returns {Promise<import('@google-cloud/pubsub').Subscription>}
+     */
+    getCommandSubscription() {
+        return this.getSubscription(
+            this.config.pubSubCommandTopicName,
+            this.config.pubSubCommandSubscriptionName,
+        );
+    }
+
+    /**
      * @param {string} topicName
      *
      * @returns {Promise<import('@google-cloud/pubsub').Topic>}
