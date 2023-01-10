@@ -23,6 +23,9 @@ class SubscribedUserList {
     }
 
     /**
+     * Add new users to the Subscribed User List or update existing user data if it
+     * already exists
+     *
      * @param {string} userName
      * @param {string} lid
      * @param {number} previousId
@@ -163,6 +166,8 @@ class SubscribedUserList {
                         userCount: subscriberList.length,
                     });
 
+                    // We could probably use the this.upsert method to properly "dog food" and use
+                    // the same method internally and externally, but this is a bit of a shortcut
                     this.cachedData = subscriberList.map((subscriber) => {
                         return {
                             userName: subscriber.userName,

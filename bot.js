@@ -63,6 +63,7 @@ Promise.all([
         message.ack();
         if (isShardZero) {
             const returnData = JSON.parse(message.data.toString());
+            // Add new users to the cached user list or update existing data
             const upsertResult = container
                 .resolve('subscribedUserList')
                 .upsert(returnData.userName, returnData.userLid, returnData.previousId);
