@@ -90,11 +90,7 @@ class InteractionTranslator {
 
         switch (commandInteraction.commandName) {
             case 'follow':
-                // ******
-                // Disable this until sharding operations finished
-                // ******
-                // return this.followCommand.process(accountName, channelId);
-                return this.helpCommand.getMessage();
+                return this.followCommand.process(accountName, channelId);
                 break;
             case 'following':
                 return this.followingCommand.process(channelId);
