@@ -124,7 +124,7 @@ class DiaryEntryWriter {
                     userLid: userModel.letterboxdId,
                     previousId: viewingId,
                     diaryEntry: {
-                        id: diaryEntry.id,
+                        id: viewingId,
                         lid: diaryEntry.lid,
                         publishedDate: diaryEntry.publishedDate,
                         link: diaryEntry.link,

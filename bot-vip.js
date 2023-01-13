@@ -1,8 +1,5 @@
 #!/usr/bin/env node
 
-console.log('Disabled until after I can sort out sharding completely.');
-return;
-
 const ConfigFactory = require('./factories/config-factory');
 const DependencyInjectionContainer = require('./dependency-injection-container');
 const death = require('death');
@@ -31,8 +28,10 @@ let interval = null;
 // Keeps track of the pagination for diary processor
 let index = 0;
 
-Promise.all([container.resolve('pubSubConnection').getSubscription()]).then(
-    ([pubSubSubscription]) => {
+container
+    .resolve('pubSubConnection')
+    .getLogEntrySubscription()
+    .then((subscription) => {
         const startTime = Date.now();
         interval = setInterval(() => {
             if (Date.now() > startTime + 12 * 60 * 60000) {
@@ -56,8 +55,7 @@ Promise.all([container.resolve('pubSubConnection').getSubscription()]).then(
         // Clean up when process is told to end
         death((signal, error) => {
             clearInterval(interval);
-            pubSubSubscription.close();
+            subscription.close();
             container.resolve('logger').info('Program Terminated', { signal, error });
         });
-    },
-);
+    });
