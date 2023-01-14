@@ -185,6 +185,12 @@ class DiaryEntryProcessor {
                 .getByMember(user.userLid, maxDiaryEntries)
                 .then((logEntryList) => {
                     return logEntryList.filter((logEntry) => {
+                        // Filter out entries that are less than 3 minutes old
+                        if (Date.now() - Date.parse(logEntry.whenCreated) < 180000) {
+                            return false;
+                        }
+
+                        // Filter out entries that are older than the current
                         const x = this.letterboxdLidComparison.compare(user.entryLid, logEntry.id);
                         return x === 1;
                     });
