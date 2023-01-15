@@ -17,6 +17,7 @@ class InteractionTranslator {
      * @param {import('../commands/logged-command')} loggedCommand
      * @param {import('../commands/roulette-command')} rouletteCommand
      * @param {any} subscribedUserList
+     * @param {import('../commands/unfollow-command')} unfollowCommand
      * @param {import('../commands/user-command')} userCommand
      */
     constructor(
@@ -35,6 +36,7 @@ class InteractionTranslator {
         loggedCommand,
         rouletteCommand,
         subscribedUserList,
+        unfollowCommand,
         userCommand,
     ) {
         this.contributorCommand = contributorCommand;
@@ -52,6 +54,7 @@ class InteractionTranslator {
         this.loggedCommand = loggedCommand;
         this.rouletteCommand = rouletteCommand;
         this.subscribedUserList = subscribedUserList;
+        this.unfollowCommand = unfollowCommand;
         this.userCommand = userCommand;
     }
 
@@ -105,17 +108,7 @@ class InteractionTranslator {
                     });
                 break;
             case 'unfollow':
-                // ******
-                // Disable this until sharding operations finished
-                // ******
-                // return this.unfollowAccount(accountName, channelId)
-                //     .then((userData) => {
-                //         return this.messageEmbedFactory.createUnfollowedSuccessMessage(userData);
-                //     })
-                //     .catch(() => {
-                //         return this.messageEmbedFactory.createUnfollowedErrorMessage(accountName);
-                //     });
-                return this.helpCommand.getMessage();
+                return this.unfollowCommand.process(accountName, channelId);
                 break;
             case 'contributor':
                 const contributorName =
@@ -159,23 +152,6 @@ class InteractionTranslator {
         return this.letterboxdProfileWeb.get(accountName).then((profile) => {
             return this.firestoreUserDao.update(accountName, profile.name, profile.image);
         });
-    }
-
-    /**
-     * @param {string} accountName
-     * @param {string} channelId
-     * @returns {Promise<import('../models/user')>}
-     */
-    unfollowAccount(accountName, channelId) {
-        return this.firestoreSubscriptionDao
-            .unsubscribe(accountName, channelId)
-            .then((userData) => {
-                // If the account no longer has any channels remove it from local cache
-                if (!userData?.channelList?.length) {
-                    this.subscribedUserList.remove(userData.userName);
-                }
-                return userData;
-            });
     }
 
     /**
