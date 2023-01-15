@@ -29,6 +29,18 @@ class PubSubMessageListener {
     }
 
     /**
+     * Not Used
+     * I thought I'd want this, but I haven't found a need for it yet.
+     *
+     * @param {function} callback
+     */
+    onCommandMessage(callback) {
+        this.pubSubConnection.getCommandSubscription().then((subsciption) => {
+            subsciption.on('message', callback);
+        });
+    }
+
+    /**
      * @param {import('@google-cloud/pubsub').Message} message
      * @param {function} callback
      */

@@ -65,6 +65,7 @@ class PubSubConnection {
 
     /**
      * Pub/Sub topic for announcing select user commands
+     * Not Used; I thought I'd want this, but I haven't found a need for it yet.
      *
      * @returns {Promise<import('@google-cloud/pubsub').Topic>}
      */
@@ -74,6 +75,7 @@ class PubSubConnection {
 
     /**
      * Pub/Sub subscription for announcing select user commands
+     * Not Used; I thought I'd want this, but I haven't found a need for it yet.
      *
      * @returns {Promise<import('@google-cloud/pubsub').Subscription>}
      */
