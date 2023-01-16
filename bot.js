@@ -51,11 +51,6 @@ Promise.all([
             });
     });
 
-    // This is the part that posts RSS updates at a regular interval
-    // Keeps track of if an active diary entry thread is running
-    let threadRunning = false;
-    let interval = null;
-
     const isShardZero = (discordClient?.shard?.ids || [0]).includes(0);
 
     // Listen for LogEntryResult PubSub messages posted and respond
@@ -68,6 +63,7 @@ Promise.all([
                 .resolve('subscribedUserList')
                 .upsert(returnData.userName, returnData.userLid, returnData.previousId);
 
+            // Update the database if the cache changed
             if (upsertResult == returnData.previousId) {
                 const diaryEntry = returnData.diaryEntry;
                 container
@@ -79,6 +75,11 @@ Promise.all([
             }
         }
     });
+
+    // This is the part that posts RSS updates at a regular interval
+    // Keeps track of if an active diary entry thread is running
+    let threadRunning = true;
+    let interval = null;
 
     discordClient.filmLinkdUserCount = 0;
     if (isShardZero) {

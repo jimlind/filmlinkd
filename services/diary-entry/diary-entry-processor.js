@@ -37,12 +37,18 @@ class DiaryEntryProcessor {
     }
 
     /**
-     * @param {string} userName
+     * @param {Object} userModel
      * @param {string} channelId
      */
-    processMostRecentForUser(userName, channelId) {
-        const user = { userName, previousId: 0 };
+    processMostRecentForUser(userModel, channelId) {
+        const user = { userName: userModel.userName, previousId: 0 };
         this.getNewEntriesForUser(user, 1).then((diaryEntryList) => {
+            // If the most recent diary entry is newer than our existing data then override the channel
+            // and send the entry to all channels that the user might be followed in
+            const diaryEntryId = diaryEntryList[0]?.id || 0;
+            const previousDiaryEntryId = userModel?.previous?.id || 0;
+            channelId = diaryEntryId > previousDiaryEntryId ? '' : channelId;
+
             this.diaryEntryPublisher.publish(diaryEntryList, channelId);
         });
     }
