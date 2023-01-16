@@ -78,7 +78,7 @@ Promise.all([
 
     // This is the part that posts RSS updates at a regular interval
     // Keeps track of if an active diary entry thread is running
-    let threadRunning = true;
+    let threadRunning = false;
     let interval = null;
 
     discordClient.filmLinkdUserCount = 0;
