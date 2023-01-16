@@ -9,11 +9,22 @@ class LetterboxdLidWeb {
     }
 
     /**
+     * Unfortunatly I named this method and created docs for it before I discovered what it could be used for.
+     * It should be refactored to a clearer name.
+     *
      * @param {string} userName
      * @returns {Promise<string>}
      */
     get(userName) {
         return this.getFromUrl('https://letterboxd.com/' + userName);
+    }
+
+    /**
+     * @param {string} path
+     * @returns {Promise<string>}
+     */
+    getFromPath(path) {
+        return this.getFromUrl('https://letterboxd.com' + path);
     }
 
     /**

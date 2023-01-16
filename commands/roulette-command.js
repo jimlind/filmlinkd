@@ -1,45 +1,84 @@
 class RouletteCommand {
     /**
-     * @param {import('../commands/film-command')} filmCommand
-     * @param {import('../services/letterboxd/api/letterboxd-entry-api')}letterboxdEntryApi
+     * @param {import('../http-client')} httpClient
+     * @param {import('../services/letterboxd/api/letterboxd-film-api')} letterboxdFilmApi
      * @param {import('../services/letterboxd/letterboxd-lid-web')} letterboxdLidWeb
      * @param {import('../factories/message-embed-factory')} messageEmbedFactory
-     * @param {import('../services/subscribed-user-list')} subscribedUserList
      */
-    constructor(
-        filmCommand,
-        letterboxdEntryApi,
-        letterboxdLidWeb,
-        messageEmbedFactory,
-        subscribedUserList,
-    ) {
-        this.filmCommand = filmCommand;
-        this.letterboxdEntryApi = letterboxdEntryApi;
+    constructor(httpClient, letterboxdFilmApi, letterboxdLidWeb, messageEmbedFactory) {
+        this.httpClient = httpClient;
+        this.letterboxdFilmApi = letterboxdFilmApi;
         this.letterboxdLidWeb = letterboxdLidWeb;
         this.messageEmbedFactory = messageEmbedFactory;
-        this.subscribedUserList = subscribedUserList;
     }
 
     /**
      * @returns {import('discord.js').MessageEmbed}
      */
     getMessage() {
-        return this.subscribedUserList
-            .getAllActiveSubscriptions()
-            .then((subscriberList) => {
-                const index = Math.floor(Math.random() * subscriberList.length);
-                return subscriberList[index]?.userName;
-            })
-            .then((userName) => this.letterboxdLidWeb.get(userName))
-            .then((memberLetterboxdId) => this.letterboxdEntryApi.get(memberLetterboxdId, 10))
-            .then((entryList) => {
-                const index = Math.floor(Math.random() * entryList.length);
-                return entryList[index]?.filmName;
-            })
-            .then((filmName) => {
-                return this.filmCommand.getMessage(filmName);
-            })
+        return this.getRandomFilmPath()
+            .then((path) => this.letterboxdLidWeb.getFromPath(path))
+            .then((lid) =>
+                Promise.all([
+                    this.letterboxdFilmApi.getFilm(lid),
+                    this.letterboxdFilmApi.getFilmStatistics(lid),
+                ]),
+            )
+            .then(([film, filmStatistics]) =>
+                this.messageEmbedFactory.createFilmMessage(film, filmStatistics),
+            )
             .catch(() => this.messageEmbedFactory.createFilmNotFoundMessage());
+    }
+
+    /**
+     *  Get a path for a random film on Letterboxd
+     *
+     * @param {string} path
+     * @returns string
+     */
+    getRandomFilmPath(path = '') {
+        if (path.length < 3) {
+            path = this.getRandomLID();
+        }
+
+        return this.httpClient
+            .get('https://boxd.it/' + path, 50000)
+            .then((response) => {
+                const letterboxdType = response?.headers['x-letterboxd-type'] || '';
+                switch (letterboxdType) {
+                    case 'Film':
+                        return response.request.path;
+                    case 'LogEntry':
+                        const result = /data-film-link="(.+?)"/.exec(response.data)[1];
+                        return result;
+                    default:
+                        const resultList = /data-film-slug="(.+?)"/.exec(response.data);
+                        if (resultList) {
+                            return resultList[1];
+                        }
+                }
+                throw null;
+            })
+            .catch(() => {
+                // Shorten the path by 1 and try again
+                return this.getRandomFilmPath(path.substring(1));
+            });
+    }
+
+    /**
+     * Get a random 6 character length string that confirms to the LID style
+     * This string is too long so almost gauranteed that it will 404 as-is
+     *
+     * @returns string
+     */
+    getRandomLID() {
+        return Array(6)
+            .fill('')
+            .map(() => {
+                const x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                return x[Math.floor(Math.random() * x.length)];
+            })
+            .join('');
     }
 }
 
