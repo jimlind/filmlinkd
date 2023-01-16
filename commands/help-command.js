@@ -16,22 +16,20 @@ class HelpCommand {
      * @returns {import('discord.js').MessageEmbed}
      */
     getMessage() {
-        // ******
-        // Disable this until sharding operations finished
-        // ******
-        const configData = { packageName: 'filmlinkd', packageVersion: '0.0.0' };
-        return this.messageEmbedFactory.createHelpMessage(configData, 0, 0);
+        const getClient = this.discordConnection.getConnectedClient();
+        const getUserCount = getClient.then((client) => {
+            return client.shard.fetchClientValues('filmLinkdUserCount').then((results) => {
+                return results.reduce((acc, current) => acc + current, 0);
+            });
+        });
+        const getServerCount = getClient.then((client) => {
+            return client.shard.fetchClientValues('guilds.cache.size').then((results) => {
+                return results.reduce((acc, current) => acc + current, 0);
+            });
+        });
 
-        const promiseList = [
-            this.discordConnection.getConnectedClient(),
-            this.subscribedUserList.getAllActiveSubscriptions(),
-        ];
-
-        return Promise.all(promiseList)
-            .then(([discordClient, subscriptionList]) => {
-                const serverCount = discordClient.guilds.cache.size;
-                const userCount = subscriptionList.length;
-
+        return Promise.all([getUserCount, getServerCount])
+            .then(([userCount, serverCount]) => {
                 return this.messageEmbedFactory.createHelpMessage(
                     this.config,
                     userCount,

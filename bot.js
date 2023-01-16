@@ -80,12 +80,17 @@ Promise.all([
         }
     });
 
+    discordClient.filmLinkdUserCount = 0;
     if (isShardZero) {
         // Get a random index from the user list
         container
             .resolve('subscribedUserList')
             .getRandomIndex()
             .then((index) => {
+                // Attach this data to the client so other shards can read it
+                const userCount = container.resolve('subscribedUserList').cachedData.length;
+                discordClient.filmLinkdUserCount = userCount;
+
                 const diaryRestInterval = 30 * 1000; // Give it 30 seconds to rest
                 interval = setInterval(() => {
                     if (threadRunning) return;
