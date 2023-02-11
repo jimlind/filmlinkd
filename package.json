@@ -10,7 +10,7 @@
         "url": "https://github.com/jimlind/filmlinkd"
     },
     "engines": {
-        "node": ">=16"
+        "node": "16.x.x"
     },
     "scripts": {
         "start": "node bot.js dev",
@@ -21,6 +21,7 @@
         "@google-cloud/firestore": "^4.15.1",
         "@google-cloud/logging-winston": "^4.1.1",
         "@google-cloud/pubsub": "^3.2.1",
+        "@google-cloud/secret-manager": "^4.2.0",
         "awilix": "^5.0.1",
         "axios": "^0.23.0",
         "death": "^1.1.0",

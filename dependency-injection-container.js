@@ -3,6 +3,7 @@
 const { REST: DiscordRest } = require('@discordjs/rest');
 const { LoggingWinston } = require('@google-cloud/logging-winston');
 const { PubSub } = require('@google-cloud/pubsub');
+const { SecretManagerServiceClient } = require('@google-cloud/secret-manager').v1;
 const awilix = require('awilix');
 const axios = require('axios').default;
 const { Routes: DiscordRoutes } = require('discord-api-types/v9');
@@ -68,6 +69,11 @@ class DependencyInjectionContainer {
             keyFilename: configModel.gcpKeyFile,
         });
 
+        // Create configured Secret Manager client
+        const secretManagerClient = new SecretManagerServiceClient({
+            keyFilename: configModel.gcpKeyFile,
+        });
+
         this.container.register({
             config: awilix.asValue(configModel),
             discordClient: awilix.asValue(discordClient),
@@ -82,6 +88,7 @@ class DependencyInjectionContainer {
             truncateMarkdown: awilix.asValue(truncateMarkdown),
             winston: awilix.asValue(winston),
             pubSub: awilix.asValue(pubsub),
+            secretManagerClient: awilix.asValue(secretManagerClient),
         });
 
         this.container.loadModules(['commands/**/*.js', 'factories/**/*.js', 'services/**/*.js'], {
