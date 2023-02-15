@@ -26,7 +26,7 @@ class ConfigFactory {
 
         switch (this.argument) {
             case 'prod':
-                config.discordBotToken = this.environment.DISCORD_PROD_BOT_TOKEN;
+                config.discordBotTokenKey = this.environment.DISCORD_PROD_BOT_TOKEN_KEY;
                 config.discordClientId = this.environment.DISCORD_CLIENT_ID;
                 config.firestoreCollectionId = this.environment.FIRESTORE_PROD_COLLECTION_ID;
                 config.pubSubLogEntryTopicName = this.environment.PUB_SUB_PROD_TOPIC_NAME;
@@ -42,7 +42,7 @@ class ConfigFactory {
                 config.isDev = false;
                 break;
             case 'dev':
-                config.discordBotToken = this.environment.DISCORD_DEV_BOT_TOKEN;
+                config.discordBotTokenKey = this.environment.DISCORD_DEV_BOT_TOKEN_KEY;
                 config.discordClientId = this.environment.DISCORD_DEV_CLIENT_ID;
                 config.firestoreCollectionId = this.environment.FIRESTORE_DEV_COLLECTION_ID;
                 config.pubSubLogEntryTopicName = this.environment.PUB_SUB_DEV_TOPIC_NAME;
