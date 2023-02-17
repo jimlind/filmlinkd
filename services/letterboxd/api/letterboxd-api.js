@@ -5,28 +5,41 @@ const uuid = require('uuid');
 
 class LetterboxdApi {
     root = 'https://api.letterboxd.com/api/v0/';
+    letterboxdApiSharedSecret = '';
 
     /**
      * @param {import('../../../models/config')} config
      * @param {import('../../http-client')} httpClient
+     * @param {import('../../google/secret-manager')} secretManager
      */
-    constructor(config, httpClient) {
+    constructor(config, httpClient, secretManager) {
         this.config = config;
         this.httpClient = httpClient;
+        this.secretManager = secretManager;
     }
 
     get(path, paramList) {
-        const url = this.buildUrl(path, paramList);
-        const signature = this.buildSignature('GET', url);
+        const getLetterboxdApiSharedSecret = new Promise((resolve) => {
+            if (this.letterboxdApiSharedSecret) {
+                return resolve(this.letterboxdApiSharedSecret);
+            }
+            this.secretManager
+                .getValue(this.config.letterboxdApiSharedSecretName)
+                .then((letterboxdApiSharedSecret) => {
+                    this.letterboxdApiSharedSecret = letterboxdApiSharedSecret;
+                    resolve(letterboxdApiSharedSecret);
+                });
+        });
 
-        // TODO: Move this header setting into the 'get' method probably.
-        this.httpClient.headers = {
-            ...this.httpClient.headers,
-            Authorization: `Signature ${signature}`,
-        };
+        getLetterboxdApiSharedSecret.then((letterboxdApiSharedSecret) => {
+            const url = this.buildUrl(path, paramList);
+            const signature = this.buildSignature('GET', url, letterboxdApiSharedSecret);
+            const auth = { Authorization: `Signature ${signature}` };
 
-        return this.httpClient.get(url, 10000).then((response) => {
-            return response.status === 200 ? response.data : null;
+            this.httpClient.headers = { ...this.httpClient.headers, ...auth };
+            return this.httpClient.get(url, 10000).then((response) => {
+                return response.status === 200 ? response.data : null;
+            });
         });
     }
 

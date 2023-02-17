@@ -18,7 +18,7 @@ class DiscordConnection {
     }
 
     getConnectedClient() {
-        return this.secretManager.getValue(this.config.discordBotTokenKey).then((token) => {
+        return this.secretManager.getValue(this.config.discordBotTokenName).then((token) => {
             // If no token set reject the request
             if (!token) {
                 throw new Error('No Discord Bot Token Set');

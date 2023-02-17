@@ -22,11 +22,11 @@ class ConfigFactory {
         }
 
         config.letterboxdApiKey = this.environment.LETTERBOXD_API_KEY;
-        config.letterboxdApiSharedSecret = this.environment.LETTERBOXD_API_SHARED_SECRET;
+        config.letterboxdApiSharedSecretName = this.environment.LETTERBOXD_API_SHARED_SECRET_NAME;
 
         switch (this.argument) {
             case 'prod':
-                config.discordBotTokenKey = this.environment.DISCORD_PROD_BOT_TOKEN_KEY;
+                config.discordBotTokenName = this.environment.DISCORD_PROD_BOT_TOKEN_NAME;
                 config.discordClientId = this.environment.DISCORD_CLIENT_ID;
                 config.firestoreCollectionId = this.environment.FIRESTORE_PROD_COLLECTION_ID;
                 config.pubSubLogEntryTopicName = this.environment.PUB_SUB_PROD_TOPIC_NAME;
@@ -42,7 +42,7 @@ class ConfigFactory {
                 config.isDev = false;
                 break;
             case 'dev':
-                config.discordBotTokenKey = this.environment.DISCORD_DEV_BOT_TOKEN_KEY;
+                config.discordBotTokenName = this.environment.DISCORD_DEV_BOT_TOKEN_NAME;
                 config.discordClientId = this.environment.DISCORD_DEV_CLIENT_ID;
                 config.firestoreCollectionId = this.environment.FIRESTORE_DEV_COLLECTION_ID;
                 config.pubSubLogEntryTopicName = this.environment.PUB_SUB_DEV_TOPIC_NAME;

@@ -13,7 +13,7 @@
         "node": "18.x.x"
     },
     "scripts": {
-        "start": "node bot.js dev",
+        "start": "node server.js",
         "test": "mocha ./test --recursive"
     },
     "dependencies": {

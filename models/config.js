@@ -1,5 +1,5 @@
 class Config {
-    discordBotTokenKey = '';
+    discordBotTokenName = '';
     discordClientId = '';
     firestoreCollectionId = '';
     gcpKeyFile = '';
@@ -13,7 +13,7 @@ class Config {
     pubSubCommandSubscriptionName = '';
 
     letterboxdApiKey = '';
-    letterboxdApiSharedSecret = '';
+    letterboxdApiSharedSecretName = '';
 
     isDev = false;
     isVIP = false;
