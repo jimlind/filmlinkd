@@ -1,0 +1,18 @@
+{
+    "discordBotTokenName": "DISCORD_PROD_BOT_TOKEN",
+    "firestoreCollectionId": "users",
+    "pubSub": {
+        "logEntry": {
+            "topicName": "filmlinkd-log-entry-topic",
+            "subscriptionName": "filmlinkd-log-entry-subscription"
+        },
+        "logEntryResult": {
+            "topicName": "filmlinkd-log-entry-result-topic",
+            "subscriptionName": "filmlinkd-log-entry-result-subscription"
+        },
+        "command": {
+            "topicName": "filmlinkd-command-topic",
+            "subscriptionName": "filmlinkd-command-subscription"
+        }
+    }
+}

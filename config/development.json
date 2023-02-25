@@ -1,0 +1,19 @@
+{
+    "googleCloudIdentityKeyFile": "./.gcp-key.json",
+    "discordBotTokenName": "DISCORD_DEV_BOT_TOKEN",
+    "firestoreCollectionId": "users-dev",
+    "pubSub": {
+        "logEntry": {
+            "topicName": "filmlinkd-dev-log-entry-topic",
+            "subscriptionName": "filmlinkd-dev-log-entry-subscription"
+        },
+        "logEntryResult": {
+            "topicName": "filmlinkd-dev-log-entry-result-topic",
+            "subscriptionName": "filmlinkd-dev-log-entry-result-subscription"
+        },
+        "command": {
+            "topicName": "filmlinkd-dev-command-topic",
+            "subscriptionName": "filmlinkd-dev-command-subscription"
+        }
+    }
+}
