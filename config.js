@@ -1,11 +1,17 @@
 const convict = require('convict');
 
 var config = convict({
-    env: {
-        doc: 'The application environment.',
-        format: ['production', 'development'],
-        default: 'development',
-        env: 'NODE_ENV',
+    live: {
+        doc: 'Use live data',
+        format: Boolean,
+        default: 'false',
+        env: 'npm_config_live',
+    },
+    vip: {
+        doc: 'Run as a special scraper only for VIP users',
+        format: Boolean,
+        default: false,
+        env: 'npm_config_vip',
     },
     googleCloudProjectId: {
         format: String,
@@ -61,8 +67,8 @@ var config = convict({
     },
 });
 
-var env = config.get('env');
-config.loadFile('./config/' + env + '.json');
+var environment = config.get('live') ? 'production' : 'development';
+config.loadFile('./config/' + environment + '.json');
 config.validate({ allowed: 'strict' });
 
 module.exports = config.getProperties();
