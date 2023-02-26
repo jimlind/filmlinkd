@@ -32,6 +32,10 @@ const config = convict({
         format: String,
         default: '',
     },
+    letterboxdApiKeyName: {
+        format: String,
+        default: 'LETTERBOXD_API_KEY',
+    },
     letterboxdApiSharedSecretName: {
         format: String,
         default: 'LETTERBOXD_API_SHARED_SECRET',
