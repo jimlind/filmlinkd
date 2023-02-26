@@ -18,8 +18,6 @@ class SecretManager {
         const projectName = this.config.get('googleCloudProjectId');
         const name = `projects/${projectName}/secrets/${secretName}/versions/latest`;
 
-        console.log({ name });
-
         return this.secretManagerClient
             .accessSecretVersion({ name })
             .then(([response]) => response.payload.data.toString('utf8'));
