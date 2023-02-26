@@ -11,7 +11,7 @@ class PubSubConnection {
     getSubscriptionLockedList = [];
 
     /**
-     * @param {import('../../../models/config')} config
+     * @param {import('convict').Config} config
      * @param {import('@google-cloud/pubsub').PubSub} pubSub
      * @param {import('discord.js').Client} discordClient
      */
@@ -27,7 +27,7 @@ class PubSubConnection {
      * @returns {Promise<import('@google-cloud/pubsub').Topic>}
      */
     getLogEntryTopic() {
-        return this.getTopic(this.config.pubSubLogEntryTopicName);
+        return this.getTopic(this.config.get('pubSubLogEntryTopicName'));
     }
 
     /**
@@ -37,8 +37,8 @@ class PubSubConnection {
      */
     getLogEntrySubscription() {
         return this.getSubscription(
-            this.config.pubSubLogEntryTopicName,
-            this.config.pubSubLogEntrySubscriptionName,
+            this.config.get('pubSub.logEntry.topicName'),
+            this.config.get('pubSub.logEntry.subscriptionName'),
         );
     }
 
@@ -48,7 +48,7 @@ class PubSubConnection {
      * @returns {Promise<import('@google-cloud/pubsub').Topic>}
      */
     getLogEntryResultTopic() {
-        return this.getTopic(this.config.pubSubLogEntryResultTopicName);
+        return this.getTopic(this.config.get('pubSubLogEntryResultTopicName'));
     }
 
     /**
@@ -58,8 +58,8 @@ class PubSubConnection {
      */
     getLogEntryResultSubscription() {
         return this.getSubscription(
-            this.config.pubSubLogEntryResultTopicName,
-            this.config.pubSubLogEntryResultSubscriptionName,
+            this.config.get('pubSubLogEntryResultTopicName'),
+            this.config.get('pubSubLogEntryResultSubscriptionName'),
         );
     }
 
@@ -70,7 +70,7 @@ class PubSubConnection {
      * @returns {Promise<import('@google-cloud/pubsub').Topic>}
      */
     getCommandTopic() {
-        return this.getTopic(this.config.pubSubCommandTopicName);
+        return this.getTopic(this.config.get('pubSubCommandTopicName'));
     }
 
     /**
@@ -81,8 +81,8 @@ class PubSubConnection {
      */
     getCommandSubscription() {
         return this.getSubscription(
-            this.config.pubSubCommandTopicName,
-            this.config.pubSubCommandSubscriptionName,
+            this.config.get('pubSubCommandTopicName'),
+            this.config.get('pubSubCommandSubscriptionName'),
         );
     }
 

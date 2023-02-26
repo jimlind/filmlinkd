@@ -3,7 +3,7 @@
 const { Firestore } = require('@google-cloud/firestore');
 
 class FirestoreVipDao {
-    /** @type {import("../../../models/config")} */
+    /** @type {import("convict").Config} */
     config;
     /** @type {FirebaseFirestore.CollectionReference} */
     configCollection;
@@ -14,8 +14,8 @@ class FirestoreVipDao {
     constructor(config) {
         this.config = config;
         const database = new Firestore({
-            projectId: this.config.googleCloudProjectId,
-            keyFilename: this.config.gcpKeyFile,
+            projectId: this.config.get('googleCloudProjectId'),
+            keyFilename: this.config.get('gcpKeyFile'),
         });
         this.configCollection = database.collection('vip');
     }
