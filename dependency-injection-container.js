@@ -15,7 +15,10 @@ const turndown = require('turndown');
 const winston = require('winston');
 
 class DependencyInjectionContainer {
-    constructor(configModel) {
+    /**
+     * @param {import('convict').Config} config
+     */
+    constructor(config) {
         this.container = awilix.createContainer();
 
         // Create Discord Client
@@ -36,12 +39,12 @@ class DependencyInjectionContainer {
         // Create logger transport for the GCP console
         const googleCloudWinstonTransport = new LoggingWinston({
             labels: {
-                app: configModel.packageName,
-                version: configModel.packageVersion + (configModel.isDev ? '-dev' : ''),
+                app: config.get('packageName'),
+                version: config.get('packageVersion') + (config.get('live') ? '' : '-dev'),
             },
-            prefix: configModel.isDev ? 'DEV' : null,
-            projectId: configModel.googleCloudProjectId,
-            keyFilename: configModel.gcpKeyFile,
+            prefix: config.get('live') ? null : 'DEV',
+            projectId: config.get('googleCloudProjectId'),
+            keyFilename: config.get('gcpKeyFile'),
         });
 
         // Create logger for the JS console
@@ -65,17 +68,17 @@ class DependencyInjectionContainer {
 
         // Create PubSub
         const pubsub = new PubSub({
-            projectId: configModel.googleCloudProjectId,
-            keyFilename: configModel.gcpKeyFile,
+            projectId: config.get('googleCloudProjectId'),
+            keyFilename: config.get('gcpKeyFile'),
         });
 
         // Create configured Secret Manager client
         const secretManagerClient = new SecretManagerServiceClient({
-            keyFilename: configModel.gcpKeyFile,
+            keyFilename: config.get('gcpKeyFile'),
         });
 
         this.container.register({
-            config: awilix.asValue(configModel),
+            config: awilix.asValue(config),
             discordClient: awilix.asValue(discordClient),
             discordRest: awilix.asValue(DiscordRest),
             discordRoutes: awilix.asValue(DiscordRoutes),
@@ -105,4 +108,4 @@ class DependencyInjectionContainer {
     }
 }
 
-module.exports = DependencyInjectionContainer;
+module.exports = (config) => new DependencyInjectionContainer(config);
