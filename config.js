@@ -1,6 +1,5 @@
 const convict = require('convict');
-
-var config = convict({
+const config = convict({
     live: {
         doc: 'Use live data',
         format: Boolean,
@@ -12,6 +11,14 @@ var config = convict({
         format: Boolean,
         default: false,
         env: 'npm_config_vip',
+    },
+    packageName: {
+        format: String,
+        default: 'filmlinkd',
+    },
+    packageVersion: {
+        format: String,
+        default: '0',
     },
     googleCloudProjectId: {
         format: String,
@@ -65,10 +72,21 @@ var config = convict({
             },
         },
     },
+    gcpKeyFile: {
+        format: String,
+        nullable: true,
+        default: null,
+    },
 });
 
 var environment = config.get('live') ? 'production' : 'development';
 config.loadFile('./config/' + environment + '.json');
+
+const packageJson = convict({}).loadFile('package.json');
+const packageJsonProperties = packageJson.getProperties();
+
+config.set('packageName', packageJsonProperties.name);
+config.set('packageVersion', packageJsonProperties.version);
 config.validate({ allowed: 'strict' });
 
-module.exports = config.getProperties();
+module.exports = config;
