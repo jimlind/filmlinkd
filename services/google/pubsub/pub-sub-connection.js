@@ -27,7 +27,7 @@ class PubSubConnection {
      * @returns {Promise<import('@google-cloud/pubsub').Topic>}
      */
     getLogEntryTopic() {
-        return this.getTopic(this.config.get('pubSubLogEntryTopicName'));
+        return this.getTopic(this.config.get('pubSub.logEntry.topicName'));
     }
 
     /**
@@ -48,7 +48,7 @@ class PubSubConnection {
      * @returns {Promise<import('@google-cloud/pubsub').Topic>}
      */
     getLogEntryResultTopic() {
-        return this.getTopic(this.config.get('pubSubLogEntryResultTopicName'));
+        return this.getTopic(this.config.get('pubSub.logEntryResult.topicName'));
     }
 
     /**
@@ -58,8 +58,8 @@ class PubSubConnection {
      */
     getLogEntryResultSubscription() {
         return this.getSubscription(
-            this.config.get('pubSubLogEntryResultTopicName'),
-            this.config.get('pubSubLogEntryResultSubscriptionName'),
+            this.config.get('pubSub.logEntryResult.topicName'),
+            this.config.get('pubSub.logEntryResult.subscriptionName'),
         );
     }
 
@@ -70,7 +70,7 @@ class PubSubConnection {
      * @returns {Promise<import('@google-cloud/pubsub').Topic>}
      */
     getCommandTopic() {
-        return this.getTopic(this.config.get('pubSubCommandTopicName'));
+        return this.getTopic(this.config.get('pubSub.command.topicName'));
     }
 
     /**
@@ -81,8 +81,8 @@ class PubSubConnection {
      */
     getCommandSubscription() {
         return this.getSubscription(
-            this.config.get('pubSubCommandTopicName'),
-            this.config.get('pubSubCommandSubscriptionName'),
+            this.config.get('pubSub.command.topicName'),
+            this.config.get('pubSub.command.subscriptionName'),
         );
     }
 

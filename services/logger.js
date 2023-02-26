@@ -13,7 +13,7 @@ class Logger {
         });
 
         // If the environment is dev, then also log to console
-        if (config.getIsDev()) {
+        if (!config.get('live')) {
             this.winstonLogger.add(consoleTransport);
         }
     }
