@@ -1,4 +1,4 @@
-class BotVip {
+class Vip {
     /** @type {number} */
     botRestingTime = 10000; // 10 seconds
     /** @type {boolean} */
@@ -51,4 +51,4 @@ class BotVip {
     }
 }
 
-module.exports = BotVip;
+module.exports = Vip;

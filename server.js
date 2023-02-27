@@ -4,9 +4,9 @@ const config = require('./config.js');
 const container = require('./dependency-injection-container')(config);
 
 if (config.get('vip')) {
-    const botVipClass = require('./process/bot-vip.js');
-    const botVip = new botVipClass(container);
-    botVip.run();
+    const vipClass = require('./process/vip.js');
+    const vip = new vipClass(container);
+    vip.run();
 
     return;
 }
