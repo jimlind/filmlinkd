@@ -87,6 +87,9 @@ class PubSubConnection {
     }
 
     /**
+     * TODO: Introduce a lock to avoid multiple connections.
+     * TODO: Can this be cleaned up?
+     *
      * @param {string} topicName
      *
      * @returns {Promise<import('@google-cloud/pubsub').Topic>}
@@ -128,6 +131,10 @@ class PubSubConnection {
     }
 
     /**
+     * TODO: Introduce a lock to avoid multiple connections.
+     * TODO: Can this be cleaned up?
+     * TODO: Some way to do a better write up of how sharding works here?
+     *
      * @param {string} topicName
      * @param {string} subsciptionName
      *
