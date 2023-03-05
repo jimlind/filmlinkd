@@ -39,13 +39,11 @@ class Vip {
     cleanUp(signal, error) {
         // Stop the recurring task
         clearInterval(this.interval);
-        // Close the subscription
+        // Close the PubSub connection
         this.container
             .resolve('pubSubConnection')
             .getLogEntrySubscription()
-            .then((subscription) => {
-                subscription.close();
-            });
+            .then((subscription) => subscription.close());
         // Log termination
         this.container.resolve('logger').info('Program Terminated', { signal, error });
     }
