@@ -3,14 +3,14 @@ const config = convict({
     live: {
         doc: 'Use live data',
         format: Boolean,
-        default: 'false',
+        default: false,
         env: 'npm_config_live',
     },
-    vip: {
-        doc: 'Run as a special scraper only for VIP users',
-        format: Boolean,
-        default: false,
-        env: 'npm_config_vip',
+    mode: {
+        doc: 'How we should be running the bot',
+        format: ['solo', 'sharded', 'vip'],
+        default: 'solo',
+        env: 'npm_config_mode',
     },
     packageName: {
         format: String,

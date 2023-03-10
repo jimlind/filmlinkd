@@ -36,7 +36,7 @@ class Vip {
             });
     }
 
-    cleanUp(signal, error) {
+    cleanUp() {
         // Stop the recurring task
         clearInterval(this.interval);
         // Close the PubSub connection
@@ -44,8 +44,6 @@ class Vip {
             .resolve('pubSubConnection')
             .getLogEntrySubscription()
             .then((subscription) => subscription.close());
-        // Log termination
-        this.container.resolve('logger').info('Program Terminated', { signal, error });
     }
 }
 
