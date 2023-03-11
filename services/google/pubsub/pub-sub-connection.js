@@ -32,6 +32,7 @@ class PubSubConnection {
 
     /**
      * Pub/Sub subscription for announcing Log Entries for writing
+     * Configured for multiple listeners
      *
      * @returns {Promise<import('@google-cloud/pubsub').Subscription>}
      */
@@ -39,6 +40,7 @@ class PubSubConnection {
         return this.getSubscription(
             this.config.get('pubSub.logEntry.topicName'),
             this.config.get('pubSub.logEntry.subscriptionName'),
+            true,
         );
     }
 
@@ -53,6 +55,7 @@ class PubSubConnection {
 
     /**
      * Pub/Sub subscription for announcing Log Entry writing results
+     * Configured for single listener
      *
      * @returns {Promise<import('@google-cloud/pubsub').Subscription>}
      */
@@ -60,6 +63,7 @@ class PubSubConnection {
         return this.getSubscription(
             this.config.get('pubSub.logEntryResult.topicName'),
             this.config.get('pubSub.logEntryResult.subscriptionName'),
+            false,
         );
     }
 
@@ -76,6 +80,7 @@ class PubSubConnection {
     /**
      * Pub/Sub subscription for announcing select user commands
      * Not Used; I thought I'd want this, but I haven't found a need for it yet.
+     * Configured for multiple listeners
      *
      * @returns {Promise<import('@google-cloud/pubsub').Subscription>}
      */
@@ -83,6 +88,7 @@ class PubSubConnection {
         return this.getSubscription(
             this.config.get('pubSub.command.topicName'),
             this.config.get('pubSub.command.subscriptionName'),
+            true,
         );
     }
 
@@ -137,10 +143,11 @@ class PubSubConnection {
      *
      * @param {string} topicName
      * @param {string} subsciptionName
+     * @param {boolean} shard
      *
      * @returns {Promise<import('@google-cloud/pubsub').Subscription>}
      */
-    getSubscription(topicName, subsciptionName) {
+    getSubscription(topicName, subsciptionName, shard = false) {
         return new Promise((resolve, reject) => {
             if (this.subscriptionList[subsciptionName]) {
                 return resolve(this.subscriptionList[subsciptionName]);
@@ -151,12 +158,14 @@ class PubSubConnection {
             }
             this.getSubscriptionLockedList[subsciptionName] = true;
 
-            const shardId = String(this.discordClient?.shard?.ids?.[0] || 0).padStart(3, '0');
-            const subscriptionNameFull = `${subsciptionName}-shard-${shardId}`;
+            if (shard) {
+                const shardId = String(this.discordClient?.shard?.ids?.[0] || 0).padStart(3, '0');
+                subsciptionName = `${subsciptionName}-shard-${shardId}`;
+            }
 
             this.getTopic(topicName)
                 .then((topic) => {
-                    const subscription = topic.subscription(subscriptionNameFull);
+                    const subscription = topic.subscription(subsciptionName);
                     subscription
                         .exists()
                         .then(([exists]) => {
