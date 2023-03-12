@@ -1,7 +1,7 @@
 {
     "name": "filmlinkd",
     "description": "Filmlinkd - A Letterboxd Discord Bot",
-    "version": "4.0.0-alpha.2",
+    "version": "4.0.0-alpha.3",
     "private": true,
     "license": "AGPL-3.0",
     "author": "Jim Lind",
@@ -18,7 +18,7 @@
     },
     "dependencies": {
         "@discordjs/rest": "^0.1.0-canary.0",
-        "@google-cloud/firestore": "^4.15.1",
+        "@google-cloud/firestore": "^6.5.0",
         "@google-cloud/logging-winston": "^4.1.1",
         "@google-cloud/pubsub": "^3.2.1",
         "@google-cloud/secret-manager": "^4.2.1",
