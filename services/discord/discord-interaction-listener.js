@@ -25,8 +25,9 @@ class DiscordInteractionListener {
                         .then(() => {
                             callback(interaction);
                         })
-                        .catch(() => {
-                            this.logger.warn('Unable to defer reply on interaction.', interaction);
+                        .catch((error) => {
+                            const data = { error, interaction };
+                            this.logger.warn('Unable to defer reply on interaction.', data);
                         });
                 },
             );
