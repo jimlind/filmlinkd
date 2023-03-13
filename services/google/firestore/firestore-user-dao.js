@@ -55,6 +55,18 @@ class FirestoreUserDao {
     }
 
     /**
+     * @returns {Promise<number>}
+     */
+    count() {
+        return this.firestoreCollection
+            .count()
+            .get()
+            .then((countSnapshot) => {
+                return countSnapshot.data().count;
+            });
+    }
+
+    /**
      * @param {string} userName
      * @returns {Promise<Object>}
      */

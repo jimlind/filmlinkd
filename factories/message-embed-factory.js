@@ -358,40 +358,51 @@ class MessageEmbedFactory {
     }
 
     /**
-     *
-     * @param {import('../models/config')} config
+     * @param {import('../config')} config
      * @param {number} userCount
      * @param {number} serverCount
      * @returns
      */
     createHelpMessage(config, userCount, serverCount) {
-        const description = `${config?.packageName} v${config?.packageVersion}\nTracking ${userCount} users on ${serverCount} servers`;
+        const name = config.get('packageName');
+        const version = config.get('packageVersion');
+        const description = `${name} v${version}\nTracking ${userCount} users on ${serverCount} servers`;
 
         return this.createEmbed()
             .setTitle('(Help!) I Need Somebody')
             .setURL('https://jimlind.github.io/filmlinkd/')
             .setDescription(description)
-            .addField('/help', 'Shows this message')
-            .addField('/follow account [channel]', 'Listens for new entries')
-            .addField('/unfollow account [channel]', 'Stops listening for new entries')
-            .addField('/following', 'List all users followed in this channel')
-            .addField('/refresh account', 'Refreshes the Filmlinkd cache for the account')
-            .addField('/contributor contributor-name', "Shows a film contributor's information")
-            .addField('/diary account', "Shows a user's 5 most recent entries")
-            .addField('/film film-name', "Shows a film's information")
-            .addField('/list account list-name', "Shows a users's list's information")
-            .addField('/logged account film-name', "Shows a user's entries for a film")
-            .addField('/roulette', 'Shows random film information')
-            .addField('/user account', "Shows a users's information")
-            .addField(
-                ':clap: Patreon',
-                '[Support the project on Patreon](https://www.patreon.com/filmlinkd)',
-                true,
+            .addFields(
+                { name: '/help', value: 'Shows this message' },
+                { name: '/follow account [channel]', value: 'Listens for new entries' },
+                { name: '/unfollow account [channel]', value: 'Stops listening for new entries' },
+                { name: '/following', value: 'List all users followed in this channel' },
+                {
+                    name: '/refresh account',
+                    value: 'Refreshes the Filmlinkd cache for the account',
+                },
+                {
+                    name: '/contributor contributor-name',
+                    value: "Shows a film contributor's information",
+                },
+                { name: '/diary account', value: "Shows a user's 5 most recent entries" },
+                { name: '/film film-name', value: "Shows a film's information" },
+                { name: '/list account list-name', value: "Shows a users's list's information" },
+                { name: '/logged account film-name', value: "Shows a user's entries for a film" },
+                { name: '/roulette', value: 'Shows random film information' },
+                { name: '/user account', value: "Shows a users's information" },
             )
-            .addField(
-                ':left_speech_bubble: Discord',
-                '[Chat with a human on Discord](https://discord.gg/deZ7EUguge)',
-                true,
+            .addFields(
+                {
+                    name: ':clap: Patreon',
+                    value: '[Support the project on Patreon](https://www.patreon.com/filmlinkd)',
+                    inline: true,
+                },
+                {
+                    name: ':left_speech_bubble: Discord',
+                    value: '[Chat with a human on Discord](https://discord.gg/deZ7EUguge)',
+                    inline: true,
+                },
             );
     }
 

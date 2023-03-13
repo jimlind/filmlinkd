@@ -38,9 +38,9 @@ class FollowCommand {
         const promiseList = [
             userPromise.then((data) => this.firestoreSubscriptionDao.subscribe(data, channelId)),
             userPromise.then((data) => this.messageEmbedFactory.createFollowSuccessMessage(data)),
-            userPromise.then((data) =>
+            userPromise.then(() =>
                 // There is a timing edge case here. Wait for the user promise before processing.
-                this.diaryEntryProcessor.processMostRecentForUser(data, channelId),
+                this.diaryEntryProcessor.processMostRecentForUser(accountName, channelId),
             ),
         ];
 
