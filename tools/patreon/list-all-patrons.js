@@ -1,16 +1,12 @@
 #!/usr/bin/env node
-'use strict';
 
-const ConfigFactory = require('../../factories/config-factory');
-const DependencyInjectionContainer = require('../../dependency-injection-container');
-const dotenv = require('dotenv');
-const fs = require('fs');
+// Use production data but use the key so it can be accessed remotely
+process.env.npm_config_live = true;
+const config = require('../../config.js');
+config.set('gcpKeyFile', './.gcp-key.json');
 
-// Load .env into process.env, create config, create container
-dotenv.config();
-const configModel = new ConfigFactory('prod', process.env, {}, fs.existsSync).build();
-const container = new DependencyInjectionContainer(configModel);
-
+// ...and go!
+const container = require('../../dependency-injection-container')(config);
 const collection = container.resolve('firestoreConnection').getCollection();
 processData(collection);
 
