@@ -43,8 +43,14 @@ class DiaryEntryProcessor {
     processMostRecentForUser(userModel, channelId) {
         const user = { userName: userModel.userName, previousId: 0 };
         this.getNewEntriesForUser(user, 1).then((diaryEntryList) => {
-            // If the most recent diary entry is newer than our existing data then override the channel
-            // and send the entry to all channels that the user might be followed in
+            // There is some slightly convoluted logic here.
+            // We want to process the most recent entry for a user and post it BUT if that same most recent
+            // entry isn't already posted on all the channels where the account is followed it could cause
+            // issues where the post for a single channel is considered a global post and the database is
+            // updated.
+            // To attempt to compensate for this check if the entry that we find here from a fresh scrape is
+            // the most recent diary entry. If it is same continue as usual. If it is new then unset the
+            // channel value so that the entry will be sent to all channels.
             const diaryEntryId = diaryEntryList[0]?.id || 0;
             const previousDiaryEntryId = userModel?.previous?.id || 0;
             channelId = diaryEntryId > previousDiaryEntryId ? '' : channelId;
