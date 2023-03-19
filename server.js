@@ -1,6 +1,17 @@
 #!/usr/bin/env node
 
 const config = require('./config.js');
+
+// Run the clustering class without dependency injection because that large object
+// isn't needed for cluster management
+if (config.get('mode') === 'sharded') {
+    const clusterClass = require('./process/sharding/cluster.js');
+    const cluster = new clusterClass(config);
+    cluster.run();
+
+    return;
+}
+
 const container = require('./dependency-injection-container')(config);
 
 require('death')((signal, error) => {
