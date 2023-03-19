@@ -45,6 +45,13 @@ class PubSubConnection {
     }
 
     /**
+     * Close Pub/Sub subscription for announcing Log Entries for writing
+     */
+    closeLogEntrySubscription() {
+        this.closeSubscription(this.config.get('pubSub.logEntry.subscriptionName'), true);
+    }
+
+    /**
      * Pub/Sub topic for announcing Log Entry writing results
      *
      * @returns {Promise<import('@google-cloud/pubsub').Topic>}
@@ -142,39 +149,35 @@ class PubSubConnection {
      * TODO: Some way to do a better write up of how sharding works here?
      *
      * @param {string} topicName
-     * @param {string} subsciptionName
+     * @param {string} subscriptionName
      * @param {boolean} shard
      *
      * @returns {Promise<import('@google-cloud/pubsub').Subscription>}
      */
-    getSubscription(topicName, subsciptionName, shard = false) {
+    getSubscription(topicName, subscriptionName, shard = false) {
+        subscriptionName = this.getFullSubscriptionName(subscriptionName, shard);
         return new Promise((resolve, reject) => {
-            if (this.subscriptionList[subsciptionName]) {
-                return resolve(this.subscriptionList[subsciptionName]);
+            if (this.subscriptionList[subscriptionName]) {
+                return resolve(this.subscriptionList[subscriptionName]);
             }
 
-            if (this.getSubscriptionLockedList[subsciptionName]) {
+            if (this.getSubscriptionLockedList[subscriptionName]) {
                 return reject('Duplicating initial subscription getting requests.');
             }
-            this.getSubscriptionLockedList[subsciptionName] = true;
-
-            if (shard) {
-                const shardId = String(this.discordClient?.shard?.ids?.[0] || 0).padStart(3, '0');
-                subsciptionName = `${subsciptionName}-shard-${shardId}`;
-            }
+            this.getSubscriptionLockedList[subscriptionName] = true;
 
             this.getTopic(topicName)
                 .then((topic) => {
-                    const subscription = topic.subscription(subsciptionName);
+                    const subscription = topic.subscription(subscriptionName);
                     subscription
                         .exists()
                         .then(([exists]) => {
                             if (exists) {
-                                this.subscriptionList[subsciptionName] = subscription;
+                                this.subscriptionList[subscriptionName] = subscription;
                                 return resolve(subscription);
                             } else {
                                 subscription.create().then(([result]) => {
-                                    this.subscriptionList[subsciptionName] = result;
+                                    this.subscriptionList[subscriptionName] = result;
                                     return resolve(result);
                                 });
                             }
@@ -187,6 +190,37 @@ class PubSubConnection {
                     return reject('Unable to get topic: ' + e);
                 });
         });
+    }
+
+    /**
+     *
+     * @param {string} subscriptionName
+     * @param {boolean} shard
+     * @returns
+     */
+    closeSubscription(subscriptionName, shard) {
+        subscriptionName = this.getFullSubscriptionName(subscriptionName, shard);
+        const subscription = this.subscriptionList[subscriptionName];
+
+        if (!subscription) {
+            return;
+        }
+
+        subscription.close();
+    }
+
+    /**
+     *
+     * @param {string} name
+     * @param {boolean} shard
+     */
+    getFullSubscriptionName(name, shard) {
+        if (!shard) {
+            return name;
+        }
+
+        const shardId = String(this.discordClient?.shard?.ids?.[0] || 0).padStart(3, '0');
+        return `${name}-shard-${shardId}`;
     }
 }
 

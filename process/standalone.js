@@ -44,18 +44,13 @@ class Standalone {
     }
 
     cleanUp() {
-        // Stop the recurring task
-        clearInterval(this.interval);
         // Close the Discord connection
         this.container
             .resolve('discordConnection')
             .getConnectedClient()
             .then((client) => client.destroy());
         // Close the PubSub connection for LogEntry
-        this.container
-            .resolve('pubSubConnection')
-            .getLogEntrySubscription()
-            .then((subscription) => subscription.close());
+        this.container.resolve('pubSubConnection').closeLogEntrySubscription();
     }
 }
 

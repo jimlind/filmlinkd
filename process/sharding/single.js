@@ -53,10 +53,7 @@ class Single {
             .getConnectedClient()
             .then((client) => client.destroy());
         // Close the PubSub connection for LogEntry
-        this.container
-            .resolve('pubSubConnection')
-            .getLogEntrySubscription()
-            .then((subscription) => subscription.close());
+        this.container.resolve('pubSubConnection').closeLogEntrySubscription();
     }
 }
 
