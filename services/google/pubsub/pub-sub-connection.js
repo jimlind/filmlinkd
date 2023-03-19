@@ -75,6 +75,13 @@ class PubSubConnection {
     }
 
     /**
+     * Close Pub/Sub subscription for announcing Log Entry writing results
+     */
+    closeLogEntryResultSubscription() {
+        this.closeSubscription(this.config.get('pubSub.logEntryResult.subscriptionName'), false);
+    }
+
+    /**
      * Pub/Sub topic for announcing select user commands
      * Not Used; I thought I'd want this, but I haven't found a need for it yet.
      *
