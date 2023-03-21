@@ -26,11 +26,11 @@ class HelpCommand {
     getMessage() {
         const getUserCount = this.firestoreUserDao.count();
         const getServerCount = this.discordConnection.getConnectedClient().then((client) => {
-            if (client.shard === null) {
+            if (!client.cluster) {
                 return client.guilds.cache.size;
             }
 
-            return client.shard.fetchClientValues('guilds.cache.size').then((results) => {
+            return client.cluster.broadcastEval(`this.guilds.cache.size`).then((results) => {
                 return results.reduce((acc, current) => acc + current, 0);
             });
         });

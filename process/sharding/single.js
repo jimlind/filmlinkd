@@ -1,10 +1,11 @@
-const { getInfo } = require('discord-hybrid-sharding');
+const { ClusterClient, getInfo } = require('discord-hybrid-sharding');
 const DiaryEntry = require('../../models/diary-entry');
 
 class Single {
     constructor(container) {
         this.container = container;
         this.client = this.container.resolve('discordClient');
+        this.client.cluster = new ClusterClient(this.client);
         this.client.options.shards = getInfo().SHARD_LIST;
         this.client.options.shardCount = getInfo().TOTAL_SHARDS;
 
