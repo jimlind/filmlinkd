@@ -72,10 +72,7 @@ class Scraper {
         // Stop the recurring task
         clearInterval(this.interval);
         // Close the PubSub connection
-        this.container
-            .resolve('pubSubConnection')
-            .getLogEntryResultSubscription()
-            .then((subscription) => subscription.close());
+        this.container.resolve('pubSubConnection').closeLogEntryResultSubscription();
     }
 }
 
