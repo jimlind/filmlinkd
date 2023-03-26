@@ -13,7 +13,7 @@ class FirestoreConnection {
 
         const database = new Firestore({
             projectId: this.config.get('googleCloudProjectId'),
-            keyFilename: this.config.get('gcpKeyFile'),
+            keyFilename: this.config.get('googleCloudIdentityKeyFile'),
         });
         this.collection = database.collection(this.config.get('firestoreCollectionId'));
     }

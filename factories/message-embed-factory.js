@@ -122,7 +122,7 @@ class MessageEmbedFactory {
 
         const rule = reviewTitle && reviewText ? '┈'.repeat(12) + '\n' : '';
         const embed = this.createEmbed()
-            .setAuthor(authorTitle, profileImage, profileURL)
+            .setAuthor(authorTitle, profileImage, profileURL) // DEPRECATED!
             .setTitle(adult + entry.filmTitle + ' ' + releaseYear)
             .setURL(entry.link)
             .setThumbnail(entry.image)

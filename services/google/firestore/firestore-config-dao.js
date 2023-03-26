@@ -1,6 +1,4 @@
-"use strict";
-
-const { Firestore } = require("@google-cloud/firestore");
+const { Firestore } = require('@google-cloud/firestore');
 
 class FirestoreConfigDao {
     configCollection;
@@ -8,14 +6,14 @@ class FirestoreConfigDao {
     constructor(config) {
         this.config = config;
         const database = new Firestore({
-            projectId: this.config.googleCloudProjectId,
-            keyFilename: this.config.gcpKeyFile,
+            projectId: this.config.get('googleCloudProjectId'),
+            keyFilename: this.config.get('googleCloudIdentityKeyFile'),
         });
-        this.configCollection = database.collection("config");
+        this.configCollection = database.collection('config');
     }
 
     read() {
-        const configId = this.config.isDev ? "development" : "production";
+        const configId = this.config.isDev ? 'development' : 'production';
         return new Promise((resolve, reject) => {
             const documentReference = this.configCollection.doc(configId);
             documentReference.get().then((documentSnapshot) => {

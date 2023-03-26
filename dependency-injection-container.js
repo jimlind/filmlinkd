@@ -44,7 +44,7 @@ class DependencyInjectionContainer {
             },
             prefix: config.get('live') ? null : 'DEV',
             projectId: config.get('googleCloudProjectId'),
-            keyFilename: config.get('gcpKeyFile'),
+            keyFilename: config.get('googleCloudIdentityKeyFile'),
         });
 
         // Create logger for the JS console
@@ -69,12 +69,12 @@ class DependencyInjectionContainer {
         // Create PubSub
         const pubsub = new PubSub({
             projectId: config.get('googleCloudProjectId'),
-            keyFilename: config.get('gcpKeyFile'),
+            keyFilename: config.get('googleCloudIdentityKeyFile'),
         });
 
         // Create configured Secret Manager client
         const secretManagerClient = new SecretManagerServiceClient({
-            keyFilename: config.get('gcpKeyFile'),
+            keyFilename: config.get('googleCloudIdentityKeyFile'),
         });
 
         this.container.register({

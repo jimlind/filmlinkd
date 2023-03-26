@@ -15,6 +15,5 @@
             "topicName": "filmlinkd-dev-command-topic",
             "subscriptionName": "filmlinkd-dev-command-subscription"
         }
-    },
-    "gcpKeyFile": "./.gcp-key.json"
+    }
 }

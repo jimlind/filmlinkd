@@ -21,7 +21,7 @@ class Cluster {
 
         // Setup the secret manager manually because we are avoiding the overhead of the
         // dependency injection container
-        const keyFilename = this.config.get('gcpKeyFile');
+        const keyFilename = this.config.get('googleCloudIdentityKeyFile');
         const secretManagerClient = new SecretManagerServiceClient({ keyFilename });
         const secretManager = new SecretManager(this.config, secretManagerClient);
 

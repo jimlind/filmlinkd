@@ -3,7 +3,7 @@
 // Use production data but use the key so it can be accessed remotely
 process.env.npm_config_live = true;
 const config = require('../../config.js');
-config.set('gcpKeyFile', './.gcp-key.json');
+config.set('googleCloudIdentityKeyFile', './.gcp-key.json');
 
 // ...and go!
 const container = require('../../dependency-injection-container')(config);
