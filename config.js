@@ -12,6 +12,12 @@ const config = convict({
         default: 'solo',
         env: 'npm_config_mode',
     },
+    port: {
+        doc: 'The port to bind.',
+        format: 'port',
+        default: 8080,
+        env: 'PORT',
+    },
     packageName: {
         format: String,
         default: 'filmlinkd',
