@@ -9,13 +9,13 @@ class FirestoreVipDao {
     configCollection;
 
     /**
-     * @param {import("../../../models/config")} config
+     * @param {import("convict").Config} config
      */
     constructor(config) {
         this.config = config;
         const database = new Firestore({
             projectId: this.config.get('googleCloudProjectId'),
-            keyFilename: this.config.get('gcpKeyFile'),
+            keyFilename: this.config.get('googleCloudIdentityKeyFile'),
         });
         this.configCollection = database.collection('vip');
     }

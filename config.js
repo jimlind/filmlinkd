@@ -32,7 +32,8 @@ const config = convict({
     },
     googleCloudIdentityKeyFile: {
         format: String,
-        default: '',
+        nullable: true,
+        default: null,
     },
     discordBotTokenName: {
         format: String,
@@ -81,11 +82,6 @@ const config = convict({
                 default: '',
             },
         },
-    },
-    gcpKeyFile: {
-        format: String,
-        nullable: true,
-        default: null,
     },
 });
 
