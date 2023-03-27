@@ -1,0 +1,27 @@
+## Directions for myself
+
+### Run the development bot
+
+> npm start --mode=solo
+
+### Run the development VIP scraper
+
+> npm start --mode=vip
+
+### Run the production bot
+
+> npm start --live --mode=sharded
+
+### Run the development VIP scraper
+
+> npm start --live --mode=vip
+
+## Use in Google Clound Run
+
+* Create a new service
+* Give it a descriptive service name
+* Set it to continuisly deploy from the `release` branch
+* For a production VIP set _Container Arguments_ to `--live --mode=vip` (or appropriate)
+* In the security tab select the Filmlinkd Service Account
+* Hit "CREATE" and it'll create and fail.
+* Edit the inline config so it uses a builder with node 18 `--builder=gcr.io/buildpacks/builder:google-22`
