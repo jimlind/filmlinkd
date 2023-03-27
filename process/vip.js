@@ -1,10 +1,14 @@
 class Vip {
     /** @type {number} */
-    botRestingTime = 10000; // 10 seconds
+    fetchRestingTime = 10000; // 10 seconds
     /** @type {boolean} */
-    threadRunning = false;
+    fetchThreadRunning = false;
     /** @type {number} */
-    interval = 0;
+    fetchInterval = 0;
+    /** @type {number} */
+    resetRestingTime = 43200000; // 12 hours
+    /** @type {number} */
+    resetInterval = 0;
     /** @type {number} */
     currentPage = 0;
 
@@ -19,26 +23,32 @@ class Vip {
     }
 
     run() {
-        this.interval = setInterval(this.recurringTask.bind(this), this.botRestingTime);
+        this.fetchInterval = setInterval(this.recurringFetchTask.bind(this), this.fetchRestingTime);
+        this.resetInterval = setInterval(this.recurringResetTask.bind(this), this.resetRestingTime);
     }
 
-    recurringTask() {
+    recurringFetchTask() {
         // This variable is reset after a page of entries processing has completed
-        if (this.threadRunning) return;
-        this.threadRunning = true;
+        if (this.fetchThreadRunning) return;
+        this.fetchThreadRunning = true;
 
         this.container
             .resolve('diaryEntryProcessor')
             .processPageOfVipEntries(this.currentPage, 30)
             .then((pageCount) => {
-                this.threadRunning = false;
+                this.fetchThreadRunning = false;
                 this.currentPage = pageCount === 0 ? 0 : this.currentPage + pageCount;
             });
     }
 
+    recurringResetTask() {
+        this.container.resolve('subscribedUserList').cachedVipData = null;
+    }
+
     cleanUp() {
-        // Stop the recurring task
-        clearInterval(this.interval);
+        // Stop the recurring tasks
+        clearInterval(this.fetchInterval);
+        clearInterval(this.resetInterval);
         // Close the PubSub connection
         this.container.resolve('pubSubConnection').closeLogEntrySubscription();
     }
