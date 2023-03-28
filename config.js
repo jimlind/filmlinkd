@@ -8,7 +8,7 @@ const config = convict({
     },
     mode: {
         doc: 'How we should be running the bot',
-        format: ['solo', 'sharded', 'vip'],
+        format: ['solo', 'sharded', 'scraper', 'vip'],
         default: 'solo',
         env: 'npm_config_mode',
     },

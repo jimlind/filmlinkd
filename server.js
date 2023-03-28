@@ -20,11 +20,14 @@ if (config.get('mode') === 'sharded') {
     return;
 }
 
+// Create the dependency injection container now for all single thread operations.
 const container = require('./dependency-injection-container')(config);
 
 require('death')((signal, error) => {
     container.resolve('logger').info('Program Terminated', { signal, error });
-    // TODO: Close any of the pubsub connections if they are open
+    // Ensure all the PubSub connections are closed
+    this.container.resolve('pubSubConnection').closeLogEntrySubscription();
+    this.container.resolve('pubSubConnection').closeLogEntryResultSubscription();
 });
 
 if (config.get('mode') === 'solo') {
@@ -32,6 +35,14 @@ if (config.get('mode') === 'solo') {
     const standalone = new standaloneClass(container);
     standalone.run();
 
+    const scraperClass = require('./process/scraper.js');
+    const scraper = new scraperClass(container);
+    scraper.run();
+
+    return;
+}
+
+if (config.get('mode') === 'scraper') {
     const scraperClass = require('./process/scraper.js');
     const scraper = new scraperClass(container);
     scraper.run();
