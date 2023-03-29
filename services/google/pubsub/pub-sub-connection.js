@@ -107,36 +107,44 @@ class PubSubConnection {
     }
 
     /**
-     * TODO: Introduce a lock to avoid multiple connections.
-     * TODO: Can this be cleaned up?
-     *
      * @param {string} topicName
      *
      * @returns {Promise<import('@google-cloud/pubsub').Topic>}
      */
     getTopic(topicName) {
         return new Promise((resolve, reject) => {
+            // If topic is already available use it
             if (this.topicList[topicName]) {
                 return resolve(this.topicList[topicName]);
             }
 
+            // If this method is locked wait until the topic is set
             if (this.getTopicLockedList[topicName]) {
-                return reject('Duplicating initial topic getting requests');
+                const interval = setInterval(() => {
+                    if (!this.getTopicLockedList[topicName]) {
+                        clearInterval(interval);
+                        resolve(this.topicList[topicName]);
+                    }
+                }, 140); // Mostly arbitrary timing of how long it takes on my dev environment
             }
+            // Lock this method if not available and not already locked
             this.getTopicLockedList[topicName] = true;
 
+            // Get or create topic
             const topic = this.pubSub.topic(topicName);
             topic
                 .exists()
                 .then(([exists]) => {
                     if (exists) {
                         this.topicList[topicName] = topic;
+                        this.getTopicLockedList[topicName] = false;
                         return resolve(topic);
                     } else {
                         topic
                             .create()
                             .then(([result]) => {
                                 this.topicList[topicName] = result;
+                                this.getTopicLockedList[topicName] = false;
                                 return resolve(result);
                             })
                             .catch(() => {
