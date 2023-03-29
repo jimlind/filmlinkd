@@ -26,8 +26,8 @@ const container = require('./dependency-injection-container')(config);
 require('death')((signal, error) => {
     container.resolve('logger').info('Program Terminated', { signal, error });
     // Ensure all the PubSub connections are closed
-    this.container.resolve('pubSubConnection').closeLogEntrySubscription();
-    this.container.resolve('pubSubConnection').closeLogEntryResultSubscription();
+    container.resolve('pubSubConnection').closeLogEntrySubscription();
+    container.resolve('pubSubConnection').closeLogEntryResultSubscription();
 });
 
 if (config.get('mode') === 'solo') {
