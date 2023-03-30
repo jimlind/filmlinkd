@@ -1,10 +1,14 @@
 class Scraper {
     /** @type {number} */
-    botRestingTime = 30000; // 30 seconds
+    fetchRestingTime = 30000; // 30 seconds
     /** @type {boolean} */
-    threadRunning = false;
+    fetchThreadRunning = false;
     /** @type {number} */
-    interval = 0;
+    fetchInterval = 0;
+    /** @type {number} */
+    resetRestingTime = 86400000; // 24 hours
+    /** @type {number} */
+    resetInterval = 0;
     /** @type {number} */
     pageSize = 60;
 
@@ -24,18 +28,18 @@ class Scraper {
             .resolve('subscribedUserList')
             .getRandomIndex()
             .then((index) => {
-                this.interval = setInterval(() => {
-                    if (this.threadRunning) return;
-                    this.threadRunning = true;
+                this.fetchInterval = setInterval(() => {
+                    if (this.fetchThreadRunning) return;
+                    this.fetchThreadRunning = true;
 
                     this.container
                         .resolve('diaryEntryProcessor')
                         .processPageOfEntries(index, 60)
                         .then((pageCount) => {
-                            this.threadRunning = false;
+                            this.fetchThreadRunning = false;
                             index = pageCount === 0 ? 0 : index + pageCount;
                         });
-                }, this.botRestingTime);
+                }, this.fetchRestingTime);
             });
 
         // Listen for LogEntryResult PubSub messages posted and respond
@@ -66,11 +70,18 @@ class Scraper {
                         .update(userModel, returnData.diaryEntry);
                 });
         });
+
+        this.resetInterval = setInterval(this.recurringResetTask.bind(this), this.resetRestingTime);
+    }
+
+    recurringResetTask() {
+        this.container.resolve('subscribedUserList').cachedData = [];
     }
 
     cleanUp() {
-        // Stop the recurring task
-        clearInterval(this.interval);
+        // Stop the recurring tasks
+        clearInterval(this.fetchInterval);
+        clearInterval(this.resetInterval);
         // Close the PubSub connection
         this.container.resolve('pubSubConnection').closeLogEntryResultSubscription();
     }
