@@ -48,13 +48,19 @@ class Single {
     }
 
     cleanUp() {
-        // Close the Discord connection
+        // Ensure all the PubSub connections are closed
+        this.container.resolve('pubSubConnection').closeLogEntrySubscription();
+        this.container.resolve('pubSubConnection').closeLogEntryResultSubscription();
+
+        // Close the Discord connection and exit the process
         this.container
             .resolve('discordConnection')
             .getConnectedClient()
-            .then((client) => client.destroy());
-        // Close the PubSub connection for LogEntry
-        this.container.resolve('pubSubConnection').closeLogEntrySubscription();
+            .then((client) => {
+                client.destroy();
+                // Force a process exit due to how the discord-hybrid-sharding library works
+                process.exit();
+            });
     }
 }
 

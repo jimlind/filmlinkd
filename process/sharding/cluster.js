@@ -32,10 +32,8 @@ class Cluster {
     }
 
     cleanUp() {
-        // Nullify all manager attributes so it can close out safely
-        this.manager.totalClusters = 0;
-        this.manager.totalShards = 0;
-        this.manager.respawn = false;
+        // Force a process exit due to how the discord-hybrid-sharding library works
+        process.exit();
     }
 }
 
