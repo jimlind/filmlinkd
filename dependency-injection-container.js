@@ -1,13 +1,11 @@
 'use strict';
 
-const { REST: DiscordRest } = require('@discordjs/rest');
 const { LoggingWinston } = require('@google-cloud/logging-winston');
 const { PubSub } = require('@google-cloud/pubsub');
 const { SecretManagerServiceClient } = require('@google-cloud/secret-manager').v1;
 const awilix = require('awilix');
 const axios = require('axios').default;
-const { Routes: DiscordRoutes } = require('discord-api-types/v9');
-const { Client: DiscordClient, Intents: DiscordIntents } = require('discord.js');
+const { Client: DiscordClient, GatewayIntentBits } = require('discord.js');
 const domSerializer = require('dom-serializer').default;
 const htmlparser2 = require('htmlparser2');
 const truncateMarkdown = require('markdown-truncate');
@@ -23,7 +21,7 @@ class DependencyInjectionContainer {
 
         // Create Discord Client
         const discordClient = new DiscordClient({
-            intents: [DiscordIntents.FLAGS.GUILDS],
+            intents: [GatewayIntentBits.Guilds],
             presence: {
                 status: 'online',
                 activities: [
@@ -80,8 +78,6 @@ class DependencyInjectionContainer {
         this.container.register({
             config: awilix.asValue(config),
             discordClient: awilix.asValue(discordClient),
-            discordRest: awilix.asValue(DiscordRest),
-            discordRoutes: awilix.asValue(DiscordRoutes),
             axios: awilix.asValue(axios),
             domSerializer: awilix.asValue(domSerializer),
             htmlParser2: awilix.asValue(htmlparser2),
