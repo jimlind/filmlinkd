@@ -35,6 +35,10 @@ const config = convict({
         nullable: true,
         default: null,
     },
+    discordApplicationId: {
+        format: String,
+        default: '',
+    },
     discordBotTokenName: {
         format: String,
         default: '',

@@ -1,32 +1,34 @@
 #!/usr/bin/env node
 
-const ConfigFactory = require('../factories/config-factory');
-const DependencyInjectionContainer = require('../dependency-injection-container');
-const dotenv = require('dotenv');
-const fs = require('fs');
+const { REST, Routes } = require('discord.js');
 
-// Load .env into process.env, create config, create container
-dotenv.config();
-
-const env = process.argv[2] || 'dev';
-const configModel = new ConfigFactory(env, process.env, {}, fs.existsSync).build();
-const container = new DependencyInjectionContainer(configModel);
-
-// Update global commands for eventual distribution to all guilds
-const discordRest = container.resolve('discordRest');
-const rest = new discordRest({ version: '9' }).setToken(configModel.discordBotToken);
-const discordRoutes = container.resolve('discordRoutes');
-
-let commandRoute = discordRoutes.applicationCommands(configModel.discordClientId);
-if (env === 'dev') {
-    const guildId = '795053930283139073';
-    commandRoute = discordRoutes.applicationGuildCommands(configModel.discordClientId, guildId);
+process.env.npm_config_live = process.argv[2] == 'prod' || false;
+const config = require('../config.js');
+if (process.env.npm_config_live) {
+    config.set('googleCloudIdentityKeyFile', './.gcp-key.json');
 }
 
-rest.put(commandRoute, { body: [] })
-    .then((/** @type {*[]} */ commandList) => {
-        console.log(`✅ Set ${commandList.length} Application Commands`);
-    })
-    .catch(() => {
-        console.log('❌ Unable to set Application Commands');
-    });
+const container = require('../dependency-injection-container')(config);
+processCommands();
+
+async function processCommands() {
+    const config = container.resolve('config');
+    const discordApplicationId = config.get('discordApplicationId');
+    const discordTokenName = config.get('discordBotTokenName');
+    const discordToken = await container.resolve('secretManager').getValue(discordTokenName);
+    const rest = new REST({ version: '10' }).setToken(discordToken);
+
+    let commandRoute = Routes.applicationCommands(discordApplicationId);
+    if (process.env.npm_config_live === false) {
+        const guildId = 's795053930283139073';
+        commandRoute = Routes.applicationGuildCommands(discordApplicationId, guildId);
+    }
+
+    rest.put(commandRoute, { body: [] })
+        .then((commandList) => {
+            console.log(`✅  Set ${commandList.length} Application Commands`);
+        })
+        .catch(() => {
+            console.log('❌ Unable to set Application Commands');
+        });
+}

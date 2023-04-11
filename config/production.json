@@ -1,4 +1,5 @@
 {
+    "discordApplicationId": "794271558570213409",
     "discordBotTokenName": "DISCORD_PROD_BOT_TOKEN",
     "firestoreCollectionId": "users",
     "pubSub": {

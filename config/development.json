@@ -1,5 +1,6 @@
 {
     "googleCloudIdentityKeyFile": "./.gcp-key.json",
+    "discordApplicationId": "798975436855312455",
     "discordBotTokenName": "DISCORD_DEV_BOT_TOKEN",
     "firestoreCollectionId": "users-dev",
     "pubSub": {
