@@ -5,13 +5,13 @@ class InteractionTranslator {
      * @param {import('../commands/contributor-command')} contributorCommand
      * @param {import('../commands/diary-command')} diaryCommand
      * @param {import('./discord/discord-connection')} discordConnection
+     * @param {any} embedBuilderFactory
      * @param {import('../commands/film-command')} filmCommand
      * @param {import('./google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
      * @param {import('./google/firestore/firestore-user-dao')} firestoreUserDao
      * @param {import('../commands/follow-command')} followCommand
      * @param {import('../commands/following-command')} followingCommand
      * @param {import('../commands/help-command')} helpCommand
-     * @param {any} messageEmbedFactory
      * @param {any} letterboxdProfileWeb
      * @param {import('../commands/list-command')} listCommand
      * @param {import('../commands/logged-command')} loggedCommand
@@ -24,13 +24,13 @@ class InteractionTranslator {
         contributorCommand,
         diaryCommand,
         discordConnection,
+        embedBuilderFactory,
         filmCommand,
         firestoreSubscriptionDao,
         firestoreUserDao,
         followCommand,
         followingCommand,
         helpCommand,
-        messageEmbedFactory,
         letterboxdProfileWeb,
         listCommand,
         loggedCommand,
@@ -42,13 +42,13 @@ class InteractionTranslator {
         this.contributorCommand = contributorCommand;
         this.diaryCommand = diaryCommand;
         this.discordConnection = discordConnection;
+        this.embedBuilderFactory = embedBuilderFactory;
         this.filmCommand = filmCommand;
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
         this.firestoreUserDao = firestoreUserDao;
         this.followCommand = followCommand;
         this.followingCommand = followingCommand;
         this.helpCommand = helpCommand;
-        this.messageEmbedFactory = messageEmbedFactory;
         this.letterboxdProfileWeb = letterboxdProfileWeb;
         this.listCommand = listCommand;
         this.loggedCommand = loggedCommand;
@@ -63,7 +63,7 @@ class InteractionTranslator {
      */
     translate(commandInteraction) {
         this.getMessagePromiseAfterNeccesaryAction(commandInteraction).then((message) => {
-            if (message instanceof require('discord.js').MessageEmbed) {
+            if (message instanceof require('discord.js').EmbedBuilder) {
                 //There is a 4096 character limit on descriptions so cut things off to keep the bot happy
                 message.setDescription((message?.description || '').substring(0, 4096));
 
@@ -80,7 +80,7 @@ class InteractionTranslator {
      * I already regret what I named this method, but still can't come up with something better
      *
      * @param {import('discord.js').CommandInteraction} commandInteraction
-     * @returns {Promise<import('discord.js').MessageEmbed>}
+     * @returns {Promise<import('discord.js').EmbedBuilder>}
      */
     async getMessagePromiseAfterNeccesaryAction(commandInteraction) {
         const accountName = (commandInteraction.options.getString('account') || '').toLowerCase();
@@ -88,7 +88,7 @@ class InteractionTranslator {
 
         const channelId = await this.getChannelId(commandInteraction);
         if (!channelId) {
-            return this.messageEmbedFactory.createChannelNotFoundMessage();
+            return this.embedBuilderFactory.createChannelNotFoundEmbed();
         }
 
         switch (commandInteraction.commandName) {
@@ -101,10 +101,10 @@ class InteractionTranslator {
             case 'refresh':
                 return this.refreshAccount(accountName)
                     .then((userData) => {
-                        return this.messageEmbedFactory.createRefreshSuccessMessage(userData);
+                        return this.embedBuilderFactory.createRefreshSuccessEmbed(userData);
                     })
                     .catch(() => {
-                        return this.messageEmbedFactory.createRefreshErrorMessage(accountName);
+                        return this.embedBuilderFactory.createRefreshErrorEmbed(accountName);
                     });
                 break;
             case 'unfollow':
@@ -113,29 +113,29 @@ class InteractionTranslator {
             case 'contributor':
                 const contributorName =
                     commandInteraction.options.getString('contributor-name') || '';
-                return this.contributorCommand.getMessage(contributorName);
+                return this.contributorCommand.getEmbed(contributorName);
                 break;
             case 'diary':
-                return this.diaryCommand.getMessage(accountName);
+                return this.diaryCommand.getEmbed(accountName);
                 break;
             case 'film':
-                return this.filmCommand.getMessage(filmName);
+                return this.filmCommand.getEmbed(filmName);
                 break;
             case 'list':
                 const listName = commandInteraction.options.getString('list-name') || '';
-                return this.listCommand.getMessage(accountName, listName);
+                return this.listCommand.getEmbed(accountName, listName);
                 break;
             case 'logged':
-                return this.loggedCommand.getMessage(accountName, filmName);
+                return this.loggedCommand.getEmbed(accountName, filmName);
                 break;
             case 'roulette':
-                return this.rouletteCommand.getMessage();
+                return this.rouletteCommand.getEmbed();
                 break;
             case 'user':
-                return this.userCommand.getMessage(accountName);
+                return this.userCommand.getEmbed(accountName);
                 break;
             default:
-                return this.helpCommand.getMessage();
+                return this.helpCommand.getEmbed();
                 break;
         }
     }
