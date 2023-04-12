@@ -2,17 +2,17 @@ class UserCommand {
     /**
      * @param {import('../services/letterboxd/letterboxd-lid-web')} letterboxdLidWeb
      * @param {import('../services/letterboxd/api/letterboxd-member-api')} letterboxdMemberApi
-     * @param {import('../factories/message-embed-factory')} messageEmbedFactory
+     * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
      */
-    constructor(letterboxdLidWeb, letterboxdMemberApi, messageEmbedFactory) {
+    constructor(letterboxdLidWeb, letterboxdMemberApi, embedBuilderFactory) {
         this.letterboxdLidWeb = letterboxdLidWeb;
         this.letterboxdMemberApi = letterboxdMemberApi;
-        this.messageEmbedFactory = messageEmbedFactory;
+        this.embedBuilderFactory = embedBuilderFactory;
     }
 
     /**
      * @param {string} accountName
-     * @returns {import('discord.js').MessageEmbed}
+     * @returns {import('discord.js').EmbedBuilder}
      */
     getMessage(accountName) {
         const searchMember = this.letterboxdLidWeb.get(accountName);
@@ -23,9 +23,9 @@ class UserCommand {
 
         return Promise.all(promiseList)
             .then(([member, memberStatistics]) =>
-                this.messageEmbedFactory.createUserMessage(member, memberStatistics),
+                this.embedBuilderFactory.createUserEmbed(member, memberStatistics),
             )
-            .catch(() => this.messageEmbedFactory.createNoAccountFoundMessage(accountName));
+            .catch(() => this.embedBuilderFactory.createNoAccountFoundEmbed(accountName));
     }
 }
 

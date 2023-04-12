@@ -3,27 +3,27 @@
 class ContributorCommand {
     /**
      * @param {import('../services/letterboxd/api/letterboxd-contributor-api')} letterboxdContributorApi
-     * @param {import('../factories/message-embed-factory')} messageEmbedFactory
+     * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
      */
-    constructor(letterboxdContributorApi, messageEmbedFactory) {
+    constructor(letterboxdContributorApi, embedBuilderFactory) {
         this.letterboxdContributorApi = letterboxdContributorApi;
-        this.messageEmbedFactory = messageEmbedFactory;
+        this.embedBuilderFactory = embedBuilderFactory;
     }
 
     /**
      * @param {string} contributorName
-     * @returns {Promise<import('discord.js').MessageEmbed>}
+     * @returns {Promise<import('discord.js').EmbedBuilder>}
      */
-    getMessage(contributorName) {
+    getEmbed(contributorName) {
         // TODO:
         // Also get the image of the contributor from thier Letterboxd page.
         // It isn't accessible on the API.
         return this.letterboxdContributorApi
             .getContributor(contributorName)
             .then((contributor) => {
-                return this.messageEmbedFactory.createContributorMessage(contributor);
+                return this.embedBuilderFactory.createContributorEmbed(contributor);
             })
-            .catch(() => this.messageEmbedFactory.createContributorNotFoundMessage());
+            .catch(() => this.embedBuilderFactory.createContributorNotFoundEmbed());
     }
 }
 

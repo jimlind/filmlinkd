@@ -5,20 +5,20 @@ class DiaryCommand {
      * @param {import('../services/letterboxd/letterboxd-lid-web')} letterboxdLidWeb
      * @param {import('../services/letterboxd/api/letterboxd-member-api')} letterboxdMemberApi
      * @param {import('../services/letterboxd/api/letterboxd-entry-api')} letterboxdEntryApi
-     * @param {import('../factories/message-embed-factory')} messageEmbedFactory
+     * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
      */
-    constructor(letterboxdLidWeb, letterboxdMemberApi, letterboxdEntryApi, messageEmbedFactory) {
+    constructor(letterboxdLidWeb, letterboxdMemberApi, letterboxdEntryApi, embedBuilderFactory) {
         this.letterboxdLidWeb = letterboxdLidWeb;
         this.letterboxdMemberApi = letterboxdMemberApi;
         this.letterboxdEntryApi = letterboxdEntryApi;
-        this.messageEmbedFactory = messageEmbedFactory;
+        this.embedBuilderFactory = embedBuilderFactory;
     }
 
     /**
      * @param {string} accountName
-     * @returns {Promise<import('discord.js').MessageEmbed>}
+     * @returns {Promise<import('discord.js').EmbedBuilder>}
      */
-    getMessage(accountName) {
+    getEmbed(accountName) {
         const lidPromise = this.letterboxdLidWeb.get(accountName);
         const promiseList = [
             lidPromise.then((lid) => this.letterboxdMemberApi.getMember(lid)),
@@ -27,9 +27,9 @@ class DiaryCommand {
 
         return Promise.all(promiseList)
             .then(([member, entryList]) =>
-                this.messageEmbedFactory.createDiaryListMessage(member, entryList),
+                this.embedBuilderFactory.createDiaryListEmbed(member, entryList),
             )
-            .catch(() => this.messageEmbedFactory.createNoAccountFoundMessage(accountName));
+            .catch(() => this.embedBuilderFactory.createNoAccountFoundEmbed(accountName));
     }
 }
 

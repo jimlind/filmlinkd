@@ -3,16 +3,16 @@
 class FilmCommand {
     /**
      * @param {import('../services/letterboxd/api/letterboxd-film-api')} letterboxdFilmApi
-     * @param {import('../factories/message-embed-factory')} messageEmbedFactory
+     * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
      */
-    constructor(letterboxdFilmApi, messageEmbedFactory) {
+    constructor(letterboxdFilmApi, embedBuilderFactory) {
         this.letterboxdFilmApi = letterboxdFilmApi;
-        this.messageEmbedFactory = messageEmbedFactory;
+        this.embedBuilderFactory = embedBuilderFactory;
     }
 
     /**
      * @param {string} filmName
-     * @returns {import('discord.js').MessageEmbed}
+     * @returns {import('discord.js').EmbedBuilder}
      */
     getMessage(filmName) {
         const searchFilm = this.letterboxdFilmApi.search(filmName);
@@ -23,9 +23,9 @@ class FilmCommand {
 
         return Promise.all(promiseList)
             .then(([film, filmStatistics]) =>
-                this.messageEmbedFactory.createFilmMessage(film, filmStatistics),
+                this.embedBuilderFactory.createFilmEmbed(film, filmStatistics),
             )
-            .catch(() => this.messageEmbedFactory.createFilmNotFoundMessage());
+            .catch(() => this.embedBuilderFactory.createFilmNotFoundEmbed());
     }
 }
 

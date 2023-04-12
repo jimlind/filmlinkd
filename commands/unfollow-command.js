@@ -1,11 +1,11 @@
 class UserCommand {
     /**
      * @param {import('../services/google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
-     * @param {import('../factories/message-embed-factory')} messageEmbedFactory
+     * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
      */
-    constructor(firestoreSubscriptionDao, messageEmbedFactory) {
+    constructor(firestoreSubscriptionDao, embedBuilderFactory) {
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
-        this.messageEmbedFactory = messageEmbedFactory;
+        this.embedBuilderFactory = embedBuilderFactory;
     }
 
     /**
@@ -14,16 +14,16 @@ class UserCommand {
      *
      * @param {string} accountName
      * @param {string} channelId
-     * @returns {import('discord.js').MessageEmbed}
+     * @returns {import('discord.js').EmbedBuilder}
      */
     process(accountName, channelId) {
         return this.firestoreSubscriptionDao
             .unsubscribe(accountName, channelId)
             .then((userData) => {
-                return this.messageEmbedFactory.createUnfollowedSuccessMessage(userData);
+                return this.embedBuilderFactory.createUnfollowedSuccessEmbed(userData);
             })
             .catch(() => {
-                return this.messageEmbedFactory.createUnfollowedErrorMessage(accountName);
+                return this.embedBuilderFactory.createUnfollowedErrorEmbed(accountName);
             });
     }
 }

@@ -3,25 +3,25 @@ class HelpCommand {
      * @param {import('../config')} config
      * @param {import('../services/discord/discord-connection')} discordConnection
      * @param {import('../services/google/firestore/firestore-user-dao')} firestoreUserDao
-     * @param {import('../factories/message-embed-factory')} messageEmbedFactory
+     * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
      * @param {import('../services/subscribed-user-list')} subscribedUserList
      */
     constructor(
         config,
         discordConnection,
         firestoreUserDao,
-        messageEmbedFactory,
+        embedBuilderFactory,
         subscribedUserList,
     ) {
         this.config = config;
         this.discordConnection = discordConnection;
         this.firestoreUserDao = firestoreUserDao;
-        this.messageEmbedFactory = messageEmbedFactory;
+        this.embedBuilderFactory = embedBuilderFactory;
         this.subscribedUserList = subscribedUserList;
     }
 
     /**
-     * @returns {import('discord.js').MessageEmbed}
+     * @returns {import('discord.js').EmbedBuilder}
      */
     getMessage() {
         const getUserCount = this.firestoreUserDao.count();
@@ -37,14 +37,14 @@ class HelpCommand {
 
         return Promise.all([getUserCount, getServerCount])
             .then(([userCount, serverCount]) => {
-                return this.messageEmbedFactory.createHelpMessage(
+                return this.embedBuilderFactory.createHelpEmbed(
                     this.config,
                     userCount,
                     serverCount,
                 );
             })
             .catch(() => {
-                return this.messageEmbedFactory.createHelpMessage(this.config, 0, 0);
+                return this.embedBuilderFactory.createHelpEmbed(this.config, 0, 0);
             });
     }
 }

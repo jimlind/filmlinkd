@@ -7,7 +7,7 @@ class FollowCommand {
      * @param {import('../services/google/firestore/firestore-user-dao')} firestoreUserDao
      * @param {import('../services/letterboxd/letterboxd-lid-web')} letterboxdLidWeb
      * @param {import('../services/letterboxd/api/letterboxd-member-api')} letterboxdMemberApi
-     * @param {import('../factories/message-embed-factory')} messageEmbedFactory
+     * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
      * @param {import('../services/logger')} logger
      */
     constructor(
@@ -16,7 +16,7 @@ class FollowCommand {
         firestoreUserDao,
         letterboxdLidWeb,
         letterboxdMemberApi,
-        messageEmbedFactory,
+        embedBuilderFactory,
         logger,
     ) {
         this.diaryEntryProcessor = diaryEntryProcessor;
@@ -24,20 +24,20 @@ class FollowCommand {
         this.firestoreUserDao = firestoreUserDao;
         this.letterboxdLidWeb = letterboxdLidWeb;
         this.letterboxdMemberApi = letterboxdMemberApi;
-        this.messageEmbedFactory = messageEmbedFactory;
+        this.embedBuilderFactory = embedBuilderFactory;
         this.logger = logger;
     }
 
     /**
      * @param {string} accountName
      * @param {string} channelId
-     * @returns {import('discord.js').MessageEmbed}
+     * @returns {import('discord.js').EmbedBuilder}
      */
     process(accountName, channelId) {
         const userPromise = this.getUserDataObjectFromAccountName(accountName);
         const promiseList = [
             userPromise.then((data) => this.firestoreSubscriptionDao.subscribe(data, channelId)),
-            userPromise.then((data) => this.messageEmbedFactory.createFollowSuccessMessage(data)),
+            userPromise.then((data) => this.embedBuilderFactory.createFollowSuccessEmbed(data)),
             userPromise.then((data) =>
                 this.diaryEntryProcessor.processMostRecentForUser(data, channelId),
             ),
@@ -45,7 +45,7 @@ class FollowCommand {
 
         return Promise.all(promiseList)
             .then(([subscribeResult, messageResult, mostRecentResult]) => messageResult)
-            .catch(() => this.messageEmbedFactory.createNoAccountFoundMessage(accountName));
+            .catch(() => this.embedBuilderFactory.createNoAccountFoundEmbed(accountName));
     }
 
     /**

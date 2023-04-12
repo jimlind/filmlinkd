@@ -3,17 +3,17 @@ class RouletteCommand {
      * @param {import('../http-client')} httpClient
      * @param {import('../services/letterboxd/api/letterboxd-film-api')} letterboxdFilmApi
      * @param {import('../services/letterboxd/letterboxd-lid-web')} letterboxdLidWeb
-     * @param {import('../factories/message-embed-factory')} messageEmbedFactory
+     * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
      */
-    constructor(httpClient, letterboxdFilmApi, letterboxdLidWeb, messageEmbedFactory) {
+    constructor(httpClient, letterboxdFilmApi, letterboxdLidWeb, embedBuilderFactory) {
         this.httpClient = httpClient;
         this.letterboxdFilmApi = letterboxdFilmApi;
         this.letterboxdLidWeb = letterboxdLidWeb;
-        this.messageEmbedFactory = messageEmbedFactory;
+        this.embedBuilderFactory = embedBuilderFactory;
     }
 
     /**
-     * @returns {import('discord.js').MessageEmbed}
+     * @returns {import('discord.js').EmbedBuilder}
      */
     getMessage() {
         return this.getRandomFilmPath()
@@ -25,9 +25,9 @@ class RouletteCommand {
                 ]),
             )
             .then(([film, filmStatistics]) =>
-                this.messageEmbedFactory.createFilmMessage(film, filmStatistics),
+                this.embedBuilderFactory.createFilmEmbed(film, filmStatistics),
             )
-            .catch(() => this.messageEmbedFactory.createFilmNotFoundMessage());
+            .catch(() => this.embedBuilderFactory.createFilmNotFoundEmbed());
     }
 
     /**

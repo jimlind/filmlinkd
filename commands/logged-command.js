@@ -3,19 +3,19 @@ class EntryCommand {
      * @param {import('../services/letterboxd/api/letterboxd-log-entry-api')} letterboxdLogEntryApi
      * @param {import('../services/letterboxd/api/letterboxd-film-api')} letterboxdFilmApi
      * @param {import('../services/letterboxd/letterboxd-lid-web')} letterboxdLidWeb
-     * @param {import('../factories/message-embed-factory')} messageEmbedFactory
+     * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
      */
-    constructor(letterboxdFilmApi, letterboxdLidWeb, letterboxdLogEntryApi, messageEmbedFactory) {
+    constructor(letterboxdFilmApi, letterboxdLidWeb, letterboxdLogEntryApi, embedBuilderFactory) {
         this.letterboxdFilmApi = letterboxdFilmApi;
         this.letterboxdLidWeb = letterboxdLidWeb;
         this.letterboxdLogEntryApi = letterboxdLogEntryApi;
-        this.messageEmbedFactory = messageEmbedFactory;
+        this.embedBuilderFactory = embedBuilderFactory;
     }
 
     /**
      * @param {string} accountName
      * @param {string} filmName
-     * @returns {import('discord.js').MessageEmbed}
+     * @returns {import('discord.js').EmbedBuilder}
      */
     getMessage(accountName, filmName) {
         const promiseList = [
@@ -36,9 +36,9 @@ class EntryCommand {
                     throw 'Empty Logged Entry List Found';
                 }
 
-                return this.messageEmbedFactory.createLoggedMessage(logEntryList);
+                return this.embedBuilderFactory.createLoggedEmbed(logEntryList);
             })
-            .catch((e) => this.messageEmbedFactory.createNoLoggedEntriesFoundMessage());
+            .catch((e) => this.embedBuilderFactory.createNoLoggedEntriesFoundEmbed());
     }
 }
 

@@ -2,18 +2,18 @@ class ListCommand {
     /**
      * @param {import('../services/letterboxd/letterboxd-lid-web')} letterboxdLidWeb
      * @param {import('../services/letterboxd/api/letterboxd-list-api')} letterboxdListApi
-     * @param {import('../factories/message-embed-factory')} messageEmbedFactory
+     * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
      */
-    constructor(letterboxdLidWeb, letterboxdListApi, messageEmbedFactory) {
+    constructor(letterboxdLidWeb, letterboxdListApi, embedBuilderFactory) {
         this.letterboxdLidWeb = letterboxdLidWeb;
         this.letterboxdListApi = letterboxdListApi;
-        this.messageEmbedFactory = messageEmbedFactory;
+        this.embedBuilderFactory = embedBuilderFactory;
     }
 
     /**
      * @param {string} accountName
      * @param {string} listName
-     * @returns {import('discord.js').MessageEmbed}
+     * @returns {import('discord.js').EmbedBuilder}
      */
     getMessage(accountName, listName) {
         const cleanListName = listName.toLocaleLowerCase().replace(/[^a-z0-9]/g, '');
@@ -28,9 +28,9 @@ class ListCommand {
                 if (selectedList.length == 0) {
                     throw `List:"${listName}" for Account:"${accountName}" can't be found.`;
                 }
-                return this.messageEmbedFactory.createListMessage(selectedList[0]);
+                return this.embedBuilderFactory.createListEmbed(selectedList[0]);
             })
-            .catch(() => this.messageEmbedFactory.createNoListFoundMessage());
+            .catch(() => this.embedBuilderFactory.createNoListFoundEmbed());
     }
 }
 

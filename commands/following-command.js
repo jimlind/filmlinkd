@@ -3,23 +3,23 @@
 class FollowingCommand {
     /**
      * @param {import('../services/google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
-     * @param {import('../factories/message-embed-factory')} messageEmbedFactory
+     * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
      */
-    constructor(firestoreSubscriptionDao, messageEmbedFactory) {
+    constructor(firestoreSubscriptionDao, embedBuilderFactory) {
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
-        this.messageEmbedFactory = messageEmbedFactory;
+        this.embedBuilderFactory = embedBuilderFactory;
     }
 
     /**
      * @param {string} channelId
-     * @returns {import('discord.js').MessageEmbed}
+     * @returns {import('discord.js').EmbedBuilder}
      */
     process(channelId) {
         return this.firestoreSubscriptionDao.list(channelId).then((userList) => {
             if (userList.length) {
-                return this.messageEmbedFactory.createFollowingMessage(userList);
+                return this.embedBuilderFactory.createFollowingEmbed(userList);
             } else {
-                return this.messageEmbedFactory.createEmptyFollowingMessage();
+                return this.embedBuilderFactory.createEmptyFollowingEmbed();
             }
         });
     }
