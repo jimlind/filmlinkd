@@ -62,12 +62,13 @@ class InteractionTranslator {
      * @param {import('discord.js').CommandInteraction} commandInteraction
      */
     translate(commandInteraction) {
-        this.getMessagePromiseAfterNeccesaryAction(commandInteraction).then((message) => {
-            if (message instanceof require('discord.js').EmbedBuilder) {
+        this.getEmbedBuilderPromiseAfterNeccesaryAction(commandInteraction).then((embedBuilder) => {
+            if (embedBuilder instanceof require('discord.js').EmbedBuilder) {
                 //There is a 4096 character limit on descriptions so cut things off to keep the bot happy
-                message.setDescription((message?.description || '').substring(0, 4096));
+                const description = embedBuilder?.data?.description || '';
+                embedBuilder.setDescription(description.substring(0, 4096));
 
-                return commandInteraction.editReply({ embeds: [message] });
+                return commandInteraction.editReply({ embeds: [embedBuilder] });
             } else {
                 return commandInteraction.editReply(
                     'Something has gone terribly wrong. Please enter a bug report',
@@ -82,7 +83,7 @@ class InteractionTranslator {
      * @param {import('discord.js').CommandInteraction} commandInteraction
      * @returns {Promise<import('discord.js').EmbedBuilder>}
      */
-    async getMessagePromiseAfterNeccesaryAction(commandInteraction) {
+    async getEmbedBuilderPromiseAfterNeccesaryAction(commandInteraction) {
         const accountName = (commandInteraction.options.getString('account') || '').toLowerCase();
         const filmName = commandInteraction.options.getString('film-name') || '';
 

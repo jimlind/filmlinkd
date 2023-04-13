@@ -23,7 +23,7 @@ class HelpCommand {
     /**
      * @returns {import('discord.js').EmbedBuilder}
      */
-    getMessage() {
+    getEmbed() {
         const getUserCount = this.firestoreUserDao.count();
         const getServerCount = this.discordConnection.getConnectedClient().then((client) => {
             if (!client.cluster) {
