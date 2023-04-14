@@ -1,10 +1,12 @@
+const { ChannelType } = require('discord.js');
+
 class DiscordMessageSender {
     constructor(discordConnection, logger) {
         this.discordConnection = discordConnection;
         this.logger = logger;
     }
 
-    send(channelId, message) {
+    send(channelId, embed) {
         return new Promise((resolve, reject) => {
             this.discordConnection.getConnectedClient().then((client) => {
                 const channel = client.channels.cache.find((ch) => ch.id === channelId);
@@ -16,10 +18,10 @@ class DiscordMessageSender {
                     return reject();
                 }
 
-                if (!channel.isText()) {
+                if (channel.type !== ChannelType.GuildText) {
                     const metadata = {
                         channelId,
-                        messageEmbed: message.toJSON(),
+                        messageEmbed: embed.toJSON(),
                     };
                     this.logger.warn('Unable to Send Message: Not Text Channel', metadata);
                     return reject();
@@ -28,20 +30,20 @@ class DiscordMessageSender {
                 if (!channel.viewable) {
                     const metadata = {
                         channelId,
-                        messageEmbed: message.toJSON(),
+                        messageEmbed: embed.toJSON(),
                     };
                     this.logger.warn('Unable to Send Message: Channel Not Visibile', metadata);
                     return reject();
                 }
 
                 channel
-                    .send({ embeds: [message] })
+                    .send({ embeds: [embed] })
                     .then(() => {
                         const metadata = {
                             channelId,
                             guild: channel.guild.name,
                             channel: channel.name,
-                            messageEmbed: message.toJSON(),
+                            messageEmbed: embed.toJSON(),
                         };
                         this.logger.debug('Successfully Sent Message', metadata);
                         return resolve();
@@ -51,7 +53,7 @@ class DiscordMessageSender {
                             channelId,
                             guild: channel.guild.name,
                             channel: channel.name,
-                            messageEmbed: message.toJSON(),
+                            messageEmbed: embed.toJSON(),
                         };
                         this.logger.warn(
                             'Unable to Send Message: Bad Channel Permissions',

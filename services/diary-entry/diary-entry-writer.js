@@ -9,7 +9,7 @@ class DiaryEntryWriter {
      * @param {import('../google/firestore/firestore-user-dao')} firestoreUserDao
      * @param {import('../letterboxd/letterboxd-viewing-id-web')} letterboxdViewingIdWeb
      * @param {import('../logger')} logger
-     * @param {import('../../factories/message-embed-factory')} messageEmbedFactory
+     * @param {import('../../factories/embed-builder-factory')} embedBuilderFactory
      * @param {import('../subscribed-user-list')} subscribedUserList
      * @param {import('../google/pubsub/pub-sub-connection')} pubSubConnection
      */
@@ -18,7 +18,7 @@ class DiaryEntryWriter {
         firestoreUserDao,
         letterboxdViewingIdWeb,
         logger,
-        messageEmbedFactory,
+        embedBuilderFactory,
         subscribedUserList,
         pubSubConnection,
     ) {
@@ -26,7 +26,7 @@ class DiaryEntryWriter {
         this.firestoreUserDao = firestoreUserDao;
         this.letterboxdViewingIdWeb = letterboxdViewingIdWeb;
         this.logger = logger;
-        this.messageEmbedFactory = messageEmbedFactory;
+        this.embedBuilderFactory = embedBuilderFactory;
         this.subscribedUserList = subscribedUserList;
         this.pubSubConnection = pubSubConnection;
     }
@@ -162,12 +162,9 @@ class DiaryEntryWriter {
     createSenderPromise(diaryEntry, userModel) {
         const sendPromiseList = (userModel?.channelList || []).map((channel) => {
             return new Promise((resolve, reject) => {
-                const message = this.messageEmbedFactory.createDiaryEntryMessage(
-                    diaryEntry,
-                    userModel,
-                );
+                const embed = this.embedBuilderFactory.createDiaryEntryEmbed(diaryEntry, userModel);
                 this.discordMessageSender
-                    .send(channel.channelId, message)
+                    .send(channel.channelId, embed)
                     .then(() => {
                         // Successfully posted message
                         return resolve(true);
