@@ -124,7 +124,7 @@ class EmbedBuilderFactory {
 
         const rule = reviewTitle && reviewText ? '┈'.repeat(12) + '\n' : '';
         const embed = this.createEmbedBuilder()
-            .setAuthor(authorTitle, profileImage, profileURL) // DEPRECATED!
+            .setAuthor({ name: authorTitle, iconURL: profileImage, url: profileURL })
             .setTitle(adult + entry.filmTitle + ' ' + releaseYear)
             .setURL(entry.link)
             .setThumbnail(entry.image)
