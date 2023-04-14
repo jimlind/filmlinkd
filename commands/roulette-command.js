@@ -15,7 +15,7 @@ class RouletteCommand {
     /**
      * @returns {import('discord.js').EmbedBuilder}
      */
-    getMessage() {
+    getEmbed() {
         return this.getRandomFilmPath()
             .then((path) => this.letterboxdLidWeb.getFromPath(path))
             .then((lid) =>

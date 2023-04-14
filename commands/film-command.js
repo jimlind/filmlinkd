@@ -14,7 +14,7 @@ class FilmCommand {
      * @param {string} filmName
      * @returns {import('discord.js').EmbedBuilder}
      */
-    getMessage(filmName) {
+    getEmbed(filmName) {
         const searchFilm = this.letterboxdFilmApi.search(filmName);
         const promiseList = [
             searchFilm.then((lid) => this.letterboxdFilmApi.getFilm(lid)),

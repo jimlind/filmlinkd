@@ -17,7 +17,7 @@ class EntryCommand {
      * @param {string} filmName
      * @returns {import('discord.js').EmbedBuilder}
      */
-    getMessage(accountName, filmName) {
+    getEmbed(accountName, filmName) {
         const promiseList = [
             this.letterboxdLidWeb.get(accountName),
             this.letterboxdFilmApi.search(filmName),

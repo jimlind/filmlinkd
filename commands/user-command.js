@@ -14,7 +14,7 @@ class UserCommand {
      * @param {string} accountName
      * @returns {import('discord.js').EmbedBuilder}
      */
-    getMessage(accountName) {
+    getEmbed(accountName) {
         const searchMember = this.letterboxdLidWeb.get(accountName);
         const promiseList = [
             searchMember.then((lid) => this.letterboxdMemberApi.getMember(lid)),

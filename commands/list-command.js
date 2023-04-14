@@ -15,7 +15,7 @@ class ListCommand {
      * @param {string} listName
      * @returns {import('discord.js').EmbedBuilder}
      */
-    getMessage(accountName, listName) {
+    getEmbed(accountName, listName) {
         const cleanListName = listName.toLocaleLowerCase().replace(/[^a-z0-9]/g, '');
 
         return this.letterboxdLidWeb
