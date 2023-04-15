@@ -29,10 +29,14 @@ class DiscordConnection {
                 return this.discordClient;
             }
 
-            // If the connecting process is happening reject additional attempts
-            // Multiple connections means something terrible has happened
+            // If this method is locked wait until the topic is set
             if (this.locked) {
-                throw new Error('Multiple Discord Client Connection Attempts');
+                const interval = setInterval(() => {
+                    if (this.connected) {
+                        clearInterval(interval);
+                        return this.discordClient;
+                    }
+                }, 200); // Completely arbitrary timing choice
             }
 
             // Indicate the connecting process is active
