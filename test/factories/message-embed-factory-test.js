@@ -4,7 +4,7 @@ const sinon = require('sinon');
 
 const crypto = require('crypto');
 const DiaryEntry = require('../../models/diary-entry');
-const MessageEmbedFactory = require('../../factories/message-embed-factory');
+const EmbedBuilderFactory = require('../../factories/message-embed-factory');
 const User = require('../../models/user');
 
 describe('Message Embed Factory', () => {
@@ -15,7 +15,7 @@ describe('Message Embed Factory', () => {
         entry.review = randomText;
         const user = new User();
 
-        const messageEmbedFactory = new MessageEmbedFactory(
+        const messageEmbedFactory = new EmbedBuilderFactory(
             setupTruncateMarkdownStub(),
             setupTurndownStub(),
         );
@@ -32,7 +32,7 @@ describe('Message Embed Factory', () => {
         entry.containsSpoilers = true;
         entry.review = randomText;
 
-        const messageEmbedFactory = new MessageEmbedFactory(
+        const messageEmbedFactory = new EmbedBuilderFactory(
             setupTruncateMarkdownStub(),
             setupTurndownStub(),
         );

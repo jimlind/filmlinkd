@@ -3,13 +3,13 @@ const crypto = require('crypto');
 const describe = require('mocha').describe;
 const sinon = require('sinon');
 
-const MessageEmbed = require('discord.js').MessageEmbed;
+const EmbedBuilder = require('discord.js').EmbedBuilder;
 
 const DiaryCommand = require('../../commands/diary-command');
 const LetterboxdLidWeb = require('../../services/letterboxd/letterboxd-lid-web');
 const LetterboxdMemberApi = require('../../services/letterboxd/api/letterboxd-member-api');
 const LetterboxdEntryApi = require('../../services/letterboxd/api/letterboxd-entry-api');
-const MessageEmbedFactory = require('../../factories/message-embed-factory');
+const EmbedBuilderFactory = require('../../factories/message-embed-factory');
 
 describe('Diary Command', () => {
     it('Account name passes directly into LID web scraper', async () => {
@@ -19,7 +19,7 @@ describe('Diary Command', () => {
             letterboxdLidWebStub,
             setupLetterboxdMemberApi(),
             setupLetterboxdEntryApi(),
-            setupMessageEmbedFactory(),
+            setupEmbedBuilderFactory(),
         );
         const accountName = getRandomString();
         await diaryCommand.getMessage(accountName);
@@ -39,7 +39,7 @@ describe('Diary Command', () => {
             letterboxdLidWebStub,
             letterboxdMemberApiStub,
             letterboxdEntryApiStub,
-            setupMessageEmbedFactory(),
+            setupEmbedBuilderFactory(),
         );
         await diaryCommand.getMessage();
 
@@ -56,7 +56,7 @@ describe('Diary Command', () => {
         const entryList = [sinon.stub];
         letterboxdEntryApiStub.get.resolves(entryList);
 
-        const messageEmbedFactoryStub = setupMessageEmbedFactory();
+        const messageEmbedFactoryStub = setupEmbedBuilderFactory();
 
         const diaryCommand = new DiaryCommand(
             setupLetterboxdLidWeb(),
@@ -75,8 +75,8 @@ describe('Diary Command', () => {
     });
 
     it('All successful promises means DiaryListMessage result returned', async () => {
-        const messageEmbedFactoryStub = setupMessageEmbedFactory();
-        const message = setupMessageEmbed();
+        const messageEmbedFactoryStub = setupEmbedBuilderFactory();
+        const message = setupEmbedBuilder();
         messageEmbedFactoryStub.createDiaryListMessage.returns(message);
 
         const diaryCommand = new DiaryCommand(
@@ -98,8 +98,8 @@ describe('Diary Command', () => {
         const letterboxdLidWebStub = setupLetterboxdLidWeb();
         letterboxdLidWebStub.get.rejects();
 
-        const messageEmbedFactoryStub = setupMessageEmbedFactory();
-        const message = setupMessageEmbed();
+        const messageEmbedFactoryStub = setupEmbedBuilderFactory();
+        const message = setupEmbedBuilder();
         messageEmbedFactoryStub.createNoAccountFoundMessage.returns(message);
 
         const diaryCommand = new DiaryCommand(
@@ -121,8 +121,8 @@ describe('Diary Command', () => {
         const letterboxdMemberApiStub = setupLetterboxdMemberApi();
         letterboxdMemberApiStub.getMember.rejects();
 
-        const messageEmbedFactoryStub = setupMessageEmbedFactory();
-        const message = setupMessageEmbed();
+        const messageEmbedFactoryStub = setupEmbedBuilderFactory();
+        const message = setupEmbedBuilder();
         messageEmbedFactoryStub.createNoAccountFoundMessage.returns(message);
 
         const diaryCommand = new DiaryCommand(
@@ -144,8 +144,8 @@ describe('Diary Command', () => {
         const letterboxdEntryApiStub = setupLetterboxdEntryApi();
         letterboxdEntryApiStub.get.rejects();
 
-        const messageEmbedFactoryStub = setupMessageEmbedFactory();
-        const message = setupMessageEmbed();
+        const messageEmbedFactoryStub = setupEmbedBuilderFactory();
+        const message = setupEmbedBuilder();
         messageEmbedFactoryStub.createNoAccountFoundMessage.returns(message);
 
         const diaryCommand = new DiaryCommand(
@@ -195,17 +195,17 @@ function setupLetterboxdEntryApi() {
 }
 
 /**
- * @returns {sinon.SinonStubbedInstance<MessageEmbedFactory>}
+ * @returns {sinon.SinonStubbedInstance<EmbedBuilderFactory>}
  */
-function setupMessageEmbedFactory() {
-    return sinon.createStubInstance(MessageEmbedFactory);
+function setupEmbedBuilderFactory() {
+    return sinon.createStubInstance(EmbedBuilderFactory);
 }
 
 /**
- * @returns {sinon.SinonStubbedInstance<MessageEmbed>}
+ * @returns {sinon.SinonStubbedInstance<EmbedBuilder>}
  */
-function setupMessageEmbed() {
-    return sinon.createStubInstance(MessageEmbed);
+function setupEmbedBuilder() {
+    return sinon.createStubInstance(EmbedBuilder);
 }
 
 /**

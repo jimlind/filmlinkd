@@ -2,18 +2,18 @@ const assert = require('assert');
 const crypto = require('crypto');
 const describe = require('mocha').describe;
 const sinon = require('sinon');
-const MessageEmbed = require('discord.js').MessageEmbed;
+const EmbedBuilder = require('discord.js').EmbedBuilder;
 
 const ContributorCommand = require('../../commands/contributor-command');
 const LetterboxdContributorApi = require('../../services/letterboxd/api/letterboxd-contributor-api');
-const MessageEmbedFactory = require('../../factories/message-embed-factory');
+const EmbedBuilderFactory = require('../../factories/message-embed-factory');
 
 describe('Contributor Command', () => {
     it('Input passes directly into the API', () => {
         const apiStub = setupLetterboxdContributorApi();
         apiStub.getContributor.resolves();
 
-        const contributorCommand = new ContributorCommand(apiStub, setupMessageEmbedFactory());
+        const contributorCommand = new ContributorCommand(apiStub, setupEmbedBuilderFactory());
         const contributorInput = getRandomString();
         contributorCommand.getMessage(contributorInput);
 
@@ -25,8 +25,8 @@ describe('Contributor Command', () => {
         const contributorOutput = getRandomString();
         apiStub.getContributor.resolves(contributorOutput);
 
-        const messageFactoryStub = setupMessageEmbedFactory();
-        const message = setupMessageEmbed();
+        const messageFactoryStub = setupEmbedBuilderFactory();
+        const message = setupEmbedBuilder();
         messageFactoryStub.createContributorMessage.returns(message);
 
         const contributorCommand = new ContributorCommand(apiStub, messageFactoryStub);
@@ -44,8 +44,8 @@ describe('Contributor Command', () => {
         const apiStub = setupLetterboxdContributorApi();
         apiStub.getContributor.rejects();
 
-        const messageFactoryStub = setupMessageEmbedFactory();
-        const message = sinon.createStubInstance(MessageEmbed);
+        const messageFactoryStub = setupEmbedBuilderFactory();
+        const message = sinon.createStubInstance(EmbedBuilder);
         messageFactoryStub.createContributorNotFoundMessage.returns(message);
 
         const contributorCommand = new ContributorCommand(apiStub, messageFactoryStub);
@@ -65,17 +65,17 @@ function setupLetterboxdContributorApi() {
 }
 
 /**
- * @returns {sinon.SinonStubbedInstance<MessageEmbedFactory>}
+ * @returns {sinon.SinonStubbedInstance<EmbedBuilderFactory>}
  */
-function setupMessageEmbedFactory() {
-    return sinon.createStubInstance(MessageEmbedFactory);
+function setupEmbedBuilderFactory() {
+    return sinon.createStubInstance(EmbedBuilderFactory);
 }
 
 /**
- * @returns {sinon.SinonStubbedInstance<MessageEmbed>}
+ * @returns {sinon.SinonStubbedInstance<EmbedBuilder>}
  */
-function setupMessageEmbed() {
-    return sinon.createStubInstance(MessageEmbed);
+function setupEmbedBuilder() {
+    return sinon.createStubInstance(EmbedBuilder);
 }
 
 /**
