@@ -22,14 +22,21 @@ class Single {
                 const message = `Discord Client Logged In on ${discordClient.guilds.cache.size} Servers`;
                 this.container.resolve('logger').info(message);
 
-                // Listen for discord interactions and respond
-                this.container
-                    .resolve('discordInteractionListener')
-                    .onInteraction((interaction) =>
-                        this.container.resolve('interactionTranslator').translate(interaction),
-                    );
+                this.startInteractionListener();
+                this.startPubSubMessageListener();
             });
+    }
 
+    startInteractionListener() {
+        // Listen for discord interactions and respond
+        this.container
+            .resolve('discordInteractionListener')
+            .onInteraction((interaction) =>
+                this.container.resolve('interactionTranslator').translate(interaction),
+            );
+    }
+
+    startPubSubMessageListener() {
         // Listen for LogEntry PubSub messages posted and respond
         this.container.resolve('pubSubMessageListener').onLogEntryMessage((message) => {
             // Acknowledge the message immediatly to remove it from the queue
