@@ -5,7 +5,7 @@ const { PubSub } = require('@google-cloud/pubsub');
 const { SecretManagerServiceClient } = require('@google-cloud/secret-manager').v1;
 const awilix = require('awilix');
 const axios = require('axios').default;
-const { Client: DiscordClient, GatewayIntentBits } = require('discord.js');
+const { Client: DiscordClient, ActivityType, GatewayIntentBits } = require('discord.js');
 const domSerializer = require('dom-serializer').default;
 const htmlparser2 = require('htmlparser2');
 const truncateMarkdown = require('markdown-truncate');
@@ -27,7 +27,7 @@ class DependencyInjectionContainer {
                 activities: [
                     {
                         name: 'Slash Commands',
-                        type: 'LISTENING',
+                        type: ActivityType.Listening,
                         url: 'https://jimlind.github.io/filmlinkd/',
                     },
                 ],
