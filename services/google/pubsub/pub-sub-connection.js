@@ -234,8 +234,9 @@ class PubSubConnection {
             return name;
         }
 
-        const shardId = String(this.discordClient?.shard?.ids?.[0] || 0).padStart(3, '0');
-        return `${name}-shard-${shardId}`;
+        const shardList = this.discordClient?.options?.shards;
+        const shardString = shardList.map((id) => String(id).padStart(3, '0')).join('-');
+        return `${name}-shard-${shardString}`;
     }
 }
 
