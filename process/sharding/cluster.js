@@ -27,7 +27,9 @@ class Cluster {
 
         secretManager.getValue(this.config.get('discordBotTokenName')).then((token) => {
             this.manager.token = token;
-            this.manager.spawn({ timeout: -1 });
+            this.manager.spawn({ timeout: -1 }).catch((response) => {
+                throw `Failed to Spawn ClusterManager: [${response.statusText}]`;
+            });
         });
     }
 
