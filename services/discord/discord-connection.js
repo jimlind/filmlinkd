@@ -18,6 +18,8 @@ class DiscordConnection {
     }
 
     getConnectedClient() {
+        // TODO: The secret manager is only used the first time.
+        // I should fix that eventually.
         return this.secretManager.getValue(this.config.get('discordBotTokenName')).then((token) => {
             // If no token set reject the request
             if (!token) {
