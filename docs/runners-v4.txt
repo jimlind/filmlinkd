@@ -25,3 +25,8 @@
 * In the security tab select the Filmlinkd Service Account
 * Hit "CREATE" and it'll create and fail.
 * Edit the inline config so it uses a builder with node 18 `--builder=gcr.io/buildpacks/builder:google-22`
+
+## Run locally
+
+>> pack build --builder=gcr.io/buildpacks/builder:google-22 filmlinkd-app
+>> docker run -it filmlinkd-app --env "--live" --env "--mode=vip"
