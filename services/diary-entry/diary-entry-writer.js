@@ -4,38 +4,39 @@
  * Class dealing with writing diary entry events to Discord servers
  */
 class DiaryEntryWriter {
-    /**
-     * @param {import('../discord/discord-message-sender')} discordMessageSender
-     * @param {import('../google/firestore/firestore-user-dao')} firestoreUserDao
-     * @param {import('../letterboxd/letterboxd-viewing-id-web')} letterboxdViewingIdWeb
-     * @param {import('../logger')} logger
-     * @param {import('../../factories/embed-builder-factory')} embedBuilderFactory
-     * @param {import('../subscribed-user-list')} subscribedUserList
-     * @param {import('../google/pubsub/pub-sub-connection')} pubSubConnection
-     */
-    constructor(
-        discordMessageSender,
-        firestoreUserDao,
-        letterboxdViewingIdWeb,
-        logger,
-        embedBuilderFactory,
-        subscribedUserList,
-        pubSubConnection,
-    ) {
-        this.discordMessageSender = discordMessageSender;
-        this.firestoreUserDao = firestoreUserDao;
-        this.letterboxdViewingIdWeb = letterboxdViewingIdWeb;
-        this.logger = logger;
-        this.embedBuilderFactory = embedBuilderFactory;
-        this.subscribedUserList = subscribedUserList;
-        this.pubSubConnection = pubSubConnection;
-    }
-
     skipUserNotFound = 'SKIP_USER_NOT_FOUND';
     skipOldDiaryEntry = 'SKIP_OLD_DIARY_ENTRY';
     skipEmptyChannelList = 'SKIP_EMPTY_CHANNEL_LIST';
     skipAdultFilm = 'SKIP_ADULT_FILM';
     skipNoMessagesSent = 'SKIP_NO_MESSAGES_SENT';
+    /**
+     * @type {{}}
+     */
+    cachedPreviousData = {};
+
+    /**
+     * @param {import('../discord/discord-message-sender')} discordMessageSender
+     * @param {import('../../factories/embed-builder-factory')} embedBuilderFactory
+     * @param {import('../google/firestore/firestore-user-dao')} firestoreUserDao
+     * @param {import('../letterboxd/letterboxd-viewing-id-web')} letterboxdViewingIdWeb
+     * @param {import('../logger')} logger
+     * @param {import('../google/pubsub/pub-sub-connection')} pubSubConnection
+     */
+    constructor(
+        discordMessageSender,
+        embedBuilderFactory,
+        firestoreUserDao,
+        letterboxdViewingIdWeb,
+        logger,
+        pubSubConnection,
+    ) {
+        this.discordMessageSender = discordMessageSender;
+        this.embedBuilderFactory = embedBuilderFactory;
+        this.firestoreUserDao = firestoreUserDao;
+        this.letterboxdViewingIdWeb = letterboxdViewingIdWeb;
+        this.logger = logger;
+        this.pubSubConnection = pubSubConnection;
+    }
 
     /**
      * @param {import('../../models/diary-entry')} diaryEntry
@@ -43,7 +44,7 @@ class DiaryEntryWriter {
      * @returns {Promise}
      */
     validateAndWrite(diaryEntry, channelIdOverride) {
-        // Here getViewingId is a Promise so we can access data or call another promise
+        // getViewingId is a Promise so we can access data or call another promise
         const getViewingId = new Promise((resolve) => {
             if (diaryEntry.id) {
                 resolve(diaryEntry.id);
@@ -57,7 +58,8 @@ class DiaryEntryWriter {
                     resolve('0');
                 });
         });
-        // Here getUserModel is a Promise so duplicate calls to the Dao aren't made
+
+        // getUserModel is a Promise so duplicate calls to the Dao aren't made
         const getUserModel = new Promise((resolve) => {
             this.firestoreUserDao
                 .getByUserName(diaryEntry.userName)
@@ -71,19 +73,21 @@ class DiaryEntryWriter {
 
         return getViewingId
             .then((viewingId) => {
-                // Get the user data from cache
-                const user = this.subscribedUserList.get(diaryEntry.userName);
+                // We are expecting multiple requests to post a diary entry so we maintain
+                // the one source of truth on the server that sends messages. We keep a local cache current.
+                const cleanViewingId = parseInt(viewingId);
+                const previousList = this.cachedPreviousData[diaryEntry.userName] || [];
 
-                // Because we are expecting multiple requests to post a diary entry we maintain
-                // the one source of truth on the server that sends messages so we double-check
-                // the previous Id.
                 // Ignore this check if there is a channel override because we want it to trigger multiple times.
-                if (viewingId <= user.previousId && !channelIdOverride) {
+                if (!channelIdOverride && previousList.includes(cleanViewingId)) {
                     throw this.skipOldDiaryEntry;
                 }
-                return getUserModel;
+                previousList.unshift(cleanViewingId);
+                this.cachedPreviousData[diaryEntry.userName] = previousList.slice(0, 10);
+
+                return Promise.all([getUserModel, getViewingId]);
             })
-            .then((userModel) => {
+            .then(([userModel, viewingId]) => {
                 // Exit early if user not found
                 if (!userModel) {
                     throw this.skipUserNotFound;
@@ -97,6 +101,12 @@ class DiaryEntryWriter {
                 // Exit early if it is an adult film (maybe a future feature)
                 if (diaryEntry?.adult) {
                     throw this.skipAdultFilm;
+                }
+
+                // Double check that the entry is newer than what was stored in the database
+                // Ignore this check if there is a channel override because we want it to trigger multiple times.
+                if (!channelIdOverride && (userModel?.previous?.id || 0) >= viewingId) {
+                    throw this.skipOldDiaryEntry;
                 }
 
                 // Rewrite the channel list if there is an override sent
