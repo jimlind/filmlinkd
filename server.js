@@ -1,14 +1,5 @@
 #!/usr/bin/env node
-
 const config = require('./config.js');
-
-// Setup a dummy http server for Google Cloud Run to verify server is running
-const server = require('http').createServer((req, res) => {
-    const g = (i) => config.get(i);
-    res.end(`${g('packageName')} v${g('packageVersion')}\nlive:${g('live')}\nmode:${g('mode')}`);
-});
-server.listen(config.get('port'));
-require('death')(() => server.close());
 
 // Run the clustering class without dependency injection because that large object
 // isn't needed for cluster management
