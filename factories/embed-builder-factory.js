@@ -132,7 +132,7 @@ class EmbedBuilderFactory {
 
         // If there is footer data with actual data then include it.
         if (data.footer?.text || data.footer?.icon) {
-            embed.setFooter(data.footer.text, data.footer.icon);
+            embed.setFooter({ text: data.footer.text, iconURL: data.footer.icon });
         }
 
         return embed;
