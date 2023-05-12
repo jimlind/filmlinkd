@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
-const ConfigFactory = require('../factories/config-factory');
-const DependencyInjectionContainer = require('../dependency-injection-container');
-const dotenv = require('dotenv');
+const { PermissionsBitField } = require('discord.js');
 const fs = require('fs');
 
-// Load .env into process.env, create config, create container
-dotenv.config();
-const configModel = new ConfigFactory('prod', process.env, {}, fs.existsSync).build();
-const container = new DependencyInjectionContainer(configModel);
+// Use production data but use the key so it can be accessed remotely
+process.env.npm_config_live = true;
+const config = require('../config.js');
+config.set('googleCloudIdentityKeyFile', './.gcp-key.json');
 
+// ...and go!
+const container = require('../dependency-injection-container')(config);
 const collection = container.resolve('firestoreConnection').getCollection();
 processData(collection);
 
@@ -18,7 +18,7 @@ async function processData(collection) {
     let channelList = querySnapshot.docs.reduce(reduceDocsToChannels, []).sort();
     channelList = [...new Set(channelList)];
 
-    const client = await container.resolve('discordConnection').getConnectedClient();
+    const client = await container.resolve('discordConnection').getConnectedAutoShardedClient();
     const fileName = 'Bad Channel Deletes ' + new Date().toString() + '.txt';
 
     for (var i = 0; i < 10; i++) {
@@ -27,15 +27,22 @@ async function processData(collection) {
         console.log(`------------------------------`);
         for (const index in channelList) {
             const channelId = channelList[index];
-            const channel = client.channels.cache.find((ch) => ch.id === channelId);
-            const botPermissions = channel?.permissionsFor(client.user || '');
-            if (botPermissions?.has(['SEND_MESSAGES', 'EMBED_LINKS'])) {
+            let botPermissions = null;
+            try {
+                const channel = await client.channels.fetch(channelId);
+                botPermissions = channel?.permissionsFor(client.user || '');
+            } catch (error) {}
+
+            const hasPermissions = botPermissions?.has([
+                PermissionsBitField.Flags.SendMessages,
+                PermissionsBitField.Flags.EmbedLinks,
+            ]);
+
+            if (hasPermissions) {
                 console.log(`✅ Channel ${channelId} is all good`);
                 delete channelList[index];
-            } else if (channel) {
-                console.log(`❌ Channel ${channelId} doesn't have proper permissions`);
             } else {
-                console.log(`❌ Channel ${channelId} doesn't exist`);
+                console.log(`❌ Channel ${channelId} failed checks`);
             }
         }
         channelList = channelList.sort().filter(Boolean);

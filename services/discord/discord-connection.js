@@ -57,6 +57,26 @@ class DiscordConnection {
             });
         });
     }
+
+    /**
+     * This is a strictly utilitarian class that will get a specially setup client without any
+     * of the niceties of getConnectedClient (avoiding multiple connectsion, etc).
+     *
+     * @returns Promise<any>
+     */
+    getConnectedAutoShardedClient() {
+        return this.secretManager.getValue(this.config.get('discordBotTokenName')).then((token) => {
+            return new Promise((resolve) => {
+                this.discordClient.on('ready', () => {
+                    this.logger.info('Auto Sharded Discord Client is Ready');
+                    resolve(this.discordClient);
+                });
+                // Enable auto sharding on the client. This is generally accepted as not a great solution
+                this.discordClient.options.shards = 'auto';
+                this.discordClient.login(token);
+            });
+        });
+    }
 }
 
 module.exports = DiscordConnection;
