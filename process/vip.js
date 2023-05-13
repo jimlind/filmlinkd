@@ -10,7 +10,9 @@ class Vip {
     /** @type {number} */
     resetInterval = 0;
     /** @type {number} */
-    currentPage = 0;
+    pageSize = 30;
+    /** @type {number} */
+    index = 0;
 
     /**
      * @param {import('../dependency-injection-container')} container
@@ -34,10 +36,10 @@ class Vip {
 
         this.container
             .resolve('diaryEntryProcessor')
-            .processPageOfVipEntries(this.currentPage, 30)
+            .processPageOfVipEntries(this.index, this.pageSize)
             .then((pageCount) => {
                 this.fetchThreadRunning = false;
-                this.currentPage = pageCount === 0 ? 0 : this.currentPage + pageCount;
+                this.index = pageCount === 0 ? 0 : this.index + pageCount;
             });
     }
 
