@@ -25,3 +25,8 @@ They are recieved on the "filmlinkd-log-entry-result-subscription" subscription.
 In hindsight, I'm not sure if the result needs to be in Pub/Sub.
 It is used to write to the database and to update the user list cache but I'm not sure if that requires
 a whole new queue to take care of.
+
+_I THINK_ the idea was that I only wanted to let the scraper update thier cache after it was successfully
+posted. That idea likely was carry over from a pre-VIP scraper where it generally made sense and likely
+came from the idea that it was when the database was updated. Then some how those two pieces of logic got
+conjoined and because a one thing that happens together so it made to put them behind a Pub/Sub.
