@@ -26,9 +26,9 @@ class SubscribedUserList {
      * Add new users to the Subscribed User List or update existing user data if it
      * already exists
      *
-     * @param {string} userName
-     * @param {string} lid
-     * @param {number} previousId
+     * @param {string} userName   Letterboxd Username
+     * @param {string} lid        Letterboxd User Id
+     * @param {number} previousId Letterboxd Diary Entry Id
      * @returns {number} The current PreviousID for the user after upsert
      */
     upsert(userName, lid, previousId) {
