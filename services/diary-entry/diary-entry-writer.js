@@ -170,24 +170,21 @@ class DiaryEntryWriter {
      * @returns {Promise<boolean[]>}
      */
     createSenderPromise(diaryEntry, userModel) {
-        const sendPromiseList = (userModel?.channelList || []).map((channel) => {
-            return new Promise((resolve, reject) => {
-                const embed = this.embedBuilderFactory.createDiaryEntryEmbed(diaryEntry, userModel);
-                this.discordMessageSender
-                    .send(channel.channelId, embed)
-                    .then(() => {
-                        // Successfully posted message
-                        return resolve(true);
-                    })
-                    .catch(() => {
-                        // Failure posting message
-                        return reject();
-                    });
-            });
-        });
+        try {
+            var embed = this.embedBuilderFactory.createDiaryEntryEmbed(diaryEntry, userModel);
+        } catch (error) {
+            const message = `Creating Diary Entry Embed for '${diaryEntry?.filmTitle}' by '${diaryEntry?.userName}' failed.`;
+            this.logger.warn(message);
+            return Promise.all([]);
+        }
 
-        const cleanedPromiseList = sendPromiseList.map((p) => p.catch(() => false));
-        return Promise.all(cleanedPromiseList);
+        const sendPromiseList = (userModel?.channelList || []).map((channel) => {
+            return this.discordMessageSender
+                .send(channel.channelId, embed)
+                .then(() => true)
+                .catch(() => false);
+        });
+        return Promise.all(sendPromiseList);
     }
 }
 
