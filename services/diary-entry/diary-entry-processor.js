@@ -65,31 +65,37 @@ class DiaryEntryProcessor {
      * @returns {Promise<number>}
      */
     processPageOfEntries(index, pageSize) {
-        return new Promise((resolve) => {
-            this.subscribedUserList.getActiveSubscriptionsPage(index, pageSize).then((userList) => {
-                // Special usecase for empty user list returned.
+        return this.subscribedUserList
+            .getActiveSubscriptionsPage(index, 12)
+            .then((userList) => {
                 if (!userList.length) {
-                    this.logger.info('Empty page of users. Resetting pagination.');
-                    return resolve(0);
+                    this.logger.info('Returning empty page of normal users. Should reset.');
+                    return Promise.all([]);
                 }
-
-                // Loop over the users and with a slight delay between each request
-                let userListPostCount = 0;
-                userList.forEach((user, userIndex) => {
-                    setTimeout(() => {
-                        this.getNewEntriesForUser(user, 10).then((diaryEntryList) => {
-                            this.diaryEntryPublisher.publish(diaryEntryList);
-                        });
-                        userListPostCount++;
-                        if (userList.length === userListPostCount) {
-                            return resolve(userListPostCount);
-                        }
-                    }, userIndex * 100);
+                const promiseList = userList.map((user) => {
+                    // Limit to 10 entries
+                    return this.getNewEntriesForUser(user, 10).then((diaryEntryList) => {
+                        this.diaryEntryPublisher.publish(diaryEntryList);
+                        return { userName: user.userName, userLid: user.lid, diaryEntryList };
+                    });
                 });
+                return Promise.all(promiseList);
+            })
+            .then((results) => {
+                results.forEach((result) => {
+                    result.diaryEntryList.forEach((entry) => {
+                        this.subscribedUserList.upsert(result.userName, result.userLid, entry.id);
+                    });
+                });
+                return results.length;
             });
-        });
     }
 
+    /**
+     * @param {number} index
+     * @param {number} pageSize
+     * @returns {Promise<number>}
+     */
     processPageOfVipEntries(index, pageSize) {
         return new Promise((resolve) => {
             this.subscribedUserList
@@ -99,7 +105,8 @@ class DiaryEntryProcessor {
                     const userList = userEntryList.map((d) => ({ userLid: d[0], ...d[1] }));
 
                     if (!userList.length) {
-                        return resolve(0); // If user list is empty exit
+                        this.logger.info('Returning empty page of VIP users. Should reset.');
+                        return resolve(0);
                     }
 
                     // Create list of promises with noop failures
