@@ -82,6 +82,7 @@ class DiaryEntryProcessor {
                 return Promise.all(promiseList);
             })
             .then((results) => {
+                // Update local cache of previous entry id
                 results.forEach((result) => {
                     result.diaryEntryList.forEach((entry) => {
                         this.subscribedUserList.upsert(result.userName, result.userLid, entry.id);
