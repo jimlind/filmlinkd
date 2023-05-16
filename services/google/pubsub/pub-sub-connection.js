@@ -191,7 +191,11 @@ class PubSubConnection {
                                 this.subscriptionList[subscriptionName] = subscription;
                                 return resolve(subscription);
                             } else {
-                                subscription.create().then(([result]) => {
+                                const options = {
+                                    messageRetentionDuration: { seconds: 43200 },
+                                    expirationPolicy: { ttl: { seconds: 86400 } },
+                                };
+                                subscription.create(options).then(([result]) => {
                                     this.subscriptionList[subscriptionName] = result;
                                     return resolve(result);
                                 });
