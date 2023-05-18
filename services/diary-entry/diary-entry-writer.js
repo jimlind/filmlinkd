@@ -128,6 +128,10 @@ class DiaryEntryWriter {
                 ]);
             })
             .then(([userModel, viewingId, topic]) => {
+                // TODO: Don't publish this to the Pub/Sub
+                // Have the `then` in the scraper (level above this) write to the database
+                // Means we can delete this subscription/topic completely
+
                 // Publish Diary/Log Entry message posting result to Pub/Sub
                 const data = {
                     userName: userModel.userName,
