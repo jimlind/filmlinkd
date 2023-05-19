@@ -82,8 +82,8 @@ class DiaryEntryWriter {
                 if (!channelIdOverride && previousList.includes(cleanViewingId)) {
                     throw this.skipOldDiaryEntry;
                 }
-                previousList.unshift(cleanViewingId);
-                this.cachedPreviousData[diaryEntry.userName] = previousList.slice(0, 10);
+                previousList.push(cleanViewingId);
+                this.cachedPreviousData[diaryEntry.userName] = previousList.sort().slice(-10);
 
                 return Promise.all([getUserModel, getViewingId]);
             })
