@@ -1,5 +1,7 @@
 'use strict';
 
+const pLimit = require('p-limit');
+
 /**
  * Entry point for all diary entry logging work.
  * The RSS feed processor (new entries) is used by the standard feed processor.
@@ -98,47 +100,62 @@ class DiaryEntryProcessor {
      * @returns {Promise<number>}
      */
     processPageOfVipEntries(index, pageSize) {
-        return new Promise((resolve) => {
-            this.subscribedUserList
-                .getActiveVipSubscriptionsPage(index, pageSize)
-                .then((vipUserList) => {
-                    const userEntryList = Object.entries(vipUserList);
-                    const userList = userEntryList.map((d) => ({ userLid: d[0], ...d[1] }));
+        const getVipPage = this.subscribedUserList.getActiveVipSubscriptionsPage(index, pageSize);
 
-                    if (!userList.length) {
-                        this.logger.info('Returning empty page of VIP users. Should reset.');
-                        return resolve(0);
-                    }
+        return getVipPage
+            .then((vipUserList) => {
+                const userEntryList = Object.entries(vipUserList);
+                const userList = userEntryList.map((d) => ({ userLid: d[0], ...d[1] }));
 
-                    // Create list of promises with noop failures
-                    const entryPromiseList = userList
-                        .map((user) => this.getNewLogEntriesForUser(user, 10))
-                        .map((p) => p.catch(() => false));
+                if (!userList.length) {
+                    this.logger.info('Returning empty page of VIP users. Should reset.');
+                    return [];
+                }
 
-                    Promise.all(entryPromiseList).then((values) => {
-                        values.flat().forEach((logEntry) => {
-                            if (typeof logEntry == 'boolean') return; // Enforce typing (sort of)
+                const limit = pLimit(4);
+                const promiseList = userList.map((user) =>
+                    limit(() => this.getNewLogEntriesForUser(user, 10)),
+                );
+                return Promise.all(promiseList);
+            })
+            .then((logEntryCollection) => {
+                const limit = pLimit(1);
+                const promiseList = logEntryCollection.map((userLogEntryList) => {
+                    return limit(() => {
+                        if (userLogEntryList.length === 0) {
+                            return Promise.all([]);
+                        }
 
-                            const message = `Publishing "${logEntry.film.name}" from VIP "${logEntry.owner.userName}"`;
-                            this.logger.info(message);
+                        const logEntry = userLogEntryList[0];
+                        const message = `Publishing ${userLogEntryList.length}x films from VIP "${logEntry.owner.userName}"`;
+                        this.logger.info(message);
 
-                            this.diaryEntryPublisher
-                                .publishLogEntryList([logEntry])
-                                .then((successList) => {
-                                    successList.forEach((success) => {
-                                        this.subscribedUserList.upsertVip(
-                                            success.userLid,
-                                            success.entryId,
-                                            success.entryLid,
-                                        );
-                                    });
-                                });
-                        });
-
-                        return resolve(userList.length);
+                        return this.diaryEntryPublisher.publishLogEntryList(userLogEntryList);
                     });
                 });
-        });
+
+                return Promise.all(promiseList);
+            })
+            .then((successList) => {
+                const limit = pLimit(1);
+                const promiseList = successList.flat().map((success) => {
+                    return limit(() => {
+                        return new Promise((resolve) => {
+                            this.subscribedUserList.upsertVip(
+                                success.userLid,
+                                success.entryId,
+                                success.entryLid,
+                            );
+                            resolve(success.entryLid);
+                        });
+                    });
+                });
+
+                return Promise.all(promiseList);
+            })
+            .then(() => getVipPage)
+            .then((vipUserList) => Object.entries(vipUserList).length)
+            .catch(() => 0);
     }
 
     /**

@@ -29,6 +29,7 @@
         "discord.js": "^14.11.0",
         "htmlparser2": "^9.0.0",
         "markdown-truncate": "^1.1.0",
+        "p-limit": "^3.1.0",
         "turndown": "^7.1.2",
         "winston": "^3.8.2"
     },
