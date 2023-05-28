@@ -47,6 +47,20 @@ class Single {
             this.container
                 .resolve('diaryEntryWriter')
                 .validateAndWrite(diaryEntry, returnData?.channelId)
+                .then(([userModel, viewingId, diaryEntry]) => {
+                    // Override id because not always set
+                    diaryEntry.id = viewingId;
+
+                    // Exit early if the existing diary entry id is older than the incoming diary entry id
+                    if ((userModel?.previous?.id || 0) >= viewingId) {
+                        return Promise.all([]);
+                    }
+
+                    // Write to the database
+                    return this.container
+                        .resolve('firestorePreviousDao')
+                        .update(userModel, diaryEntry);
+                })
                 .catch(() => {
                     const message = `Error on diaryEntryWriter::validateAndWrite for '${diaryEntry?.filmTitle}' by '${diaryEntry?.userName}'`;
                     container.resolve('logger').error(message);

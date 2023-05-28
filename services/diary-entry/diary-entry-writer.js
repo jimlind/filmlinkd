@@ -121,31 +121,10 @@ class DiaryEntryWriter {
                 if (senderResultList.filter(Boolean).length == 0) {
                     throw this.skipNoMessagesSent;
                 }
-                return Promise.all([
-                    getUserModel,
-                    getViewingId,
-                    this.pubSubConnection.getLogEntryResultTopic(),
-                ]);
-            })
-            .then(([userModel, viewingId, topic]) => {
-                // TODO: Don't publish this to the Pub/Sub
-                // Have the `then` in the scraper (level above this) write to the database
-                // Means we can delete this subscription/topic completely
-
-                // Publish Diary/Log Entry message posting result to Pub/Sub
-                const data = {
-                    userName: userModel.userName,
-                    userLid: userModel.letterboxdId,
-                    previousId: viewingId,
-                    diaryEntry: {
-                        id: viewingId,
-                        lid: diaryEntry.lid,
-                        publishedDate: diaryEntry.publishedDate,
-                        link: diaryEntry.link,
-                    },
-                };
-                const buffer = Buffer.from(JSON.stringify(data));
-                topic.publishMessage({ data: buffer });
+                // Pass a bunch of worthwhile data to the promise reciever.
+                // Probably too much stuff if I can be honest, but for now
+                // this is better than it used to be.
+                return Promise.all([getUserModel, getViewingId, diaryEntry]);
             })
             .catch((error) => {
                 // Don't log any of the normal rejection reasons, these are already logged.

@@ -37,34 +37,6 @@ class Scraper {
             const resetTAsk = this.recurringResetTask.bind(this);
             this.resetInterval = setInterval(resetTAsk, this.resetRestingTime);
         });
-
-        // HOPEFULLY DEPRECATED
-        // Because the version of the primary bot that is running still expects this to be listening to
-        // these events I need to keep it around for a bit longer to be backward compatible.
-        //
-        // Listen for LogEntryResult PubSub messages posted and respond
-        this.container.resolve('pubSubMessageListener').onLogEntryResultMessage((message) => {
-            // Acknowledge the message to remove it from the queue
-            message.ack();
-
-            // Parse the message data
-            const returnData = JSON.parse(message.data.toString());
-
-            // Write the current (most recent) message to the database
-            this.container
-                .resolve('firestoreUserDao')
-                .getByUserName(returnData.userName)
-                .then((userModel) => {
-                    // Exit early if the existing diary entry id is older than the incoming diary entry id
-                    if ((userModel?.previous?.id || 0) >= returnData.previousId) {
-                        return;
-                    }
-
-                    this.container
-                        .resolve('firestorePreviousDao')
-                        .update(userModel, returnData.diaryEntry);
-                });
-        });
     }
 
     recurringFetchTask() {
