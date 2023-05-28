@@ -47,7 +47,12 @@ class Single {
             this.container
                 .resolve('diaryEntryWriter')
                 .validateAndWrite(diaryEntry, returnData?.channelId)
-                .then(([userModel, viewingId, diaryEntry]) => {
+                .then(([userModel, viewingId]) => {
+                    // Exit early if no values from validate and write.
+                    if (!userModel || !viewingId) {
+                        return Promise.all([]);
+                    }
+
                     // Override id because not always set
                     diaryEntry.id = viewingId;
 

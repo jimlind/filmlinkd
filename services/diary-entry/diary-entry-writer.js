@@ -121,10 +121,10 @@ class DiaryEntryWriter {
                 if (senderResultList.filter(Boolean).length == 0) {
                     throw this.skipNoMessagesSent;
                 }
-                // Pass a bunch of worthwhile data to the promise reciever.
-                // Probably too much stuff if I can be honest, but for now
+                // Pass some worthwhile data to the promise reciever.
+                // Probably too much data if I can be honest, but for now
                 // this is better than it used to be.
-                return Promise.all([getUserModel, getViewingId, diaryEntry]);
+                return Promise.all([getUserModel, getViewingId]);
             })
             .catch((error) => {
                 // Don't log any of the normal rejection reasons, these are already logged.
@@ -136,7 +136,7 @@ class DiaryEntryWriter {
                     this.skipNoMessagesSent,
                 ];
                 if (allowedErrorList.includes(error)) {
-                    return;
+                    return [false, false];
                 }
 
                 const logData = { error, diaryEntry, channelIdOverride };
@@ -144,6 +144,7 @@ class DiaryEntryWriter {
                     `Entry for '${diaryEntry?.filmTitle}' by '${diaryEntry?.userName}' did not validate and write.`,
                     logData,
                 );
+                return [false, false];
             });
     }
 
