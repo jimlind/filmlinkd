@@ -52,8 +52,9 @@ class DiaryEntryPublisher {
             const promiseList = logEntryList
                 .map((logEntry) => {
                     return this.pubSubConnection.getLogEntryTopic().then((topic) => {
-                        const largestImage = (logEntry.film.poster.sizes || []).reduce(
+                        const largestImage = (logEntry.film.poster?.sizes || []).reduce(
                             (prev, current) => (current.height || 0 > prev.height ? current : prev),
+                            {},
                         );
                         const letterboxdLink = (logEntry.links || []).reduce((prev, current) =>
                             current.type == 'letterboxd' ? current.url : prev,
