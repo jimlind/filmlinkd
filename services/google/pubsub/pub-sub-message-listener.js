@@ -1,11 +1,6 @@
 'use strict';
 
-const crypto = require('crypto');
-
 class PubSubMessageListener {
-    /** @type string[] */
-    hashList = [];
-
     constructor(pubSubConnection) {
         this.pubSubConnection = pubSubConnection;
     }
@@ -15,7 +10,7 @@ class PubSubMessageListener {
      */
     onLogEntryMessage(callback) {
         this.pubSubConnection.getLogEntrySubscription().then((subsciption) => {
-            subsciption.on('message', (message) => this.filterDuplicate(message, callback));
+            subsciption.on('message', callback);
         });
     }
 
@@ -26,35 +21,6 @@ class PubSubMessageListener {
         this.pubSubConnection.getLogEntryResultSubscription().then((subsciption) => {
             subsciption.on('message', callback);
         });
-    }
-
-    /**
-     * Not Used
-     * I thought I'd want this, but I haven't found a need for it yet.
-     *
-     * @param {function} callback
-     */
-    onCommandMessage(callback) {
-        this.pubSubConnection.getCommandSubscription().then((subsciption) => {
-            subsciption.on('message', callback);
-        });
-    }
-
-    /**
-     * @param {import('@google-cloud/pubsub').Message} message
-     * @param {function} callback
-     */
-    filterDuplicate(message, callback) {
-        const hash = crypto.createHash('md5').update(message.data).digest('base64');
-        if (this.hashList.includes(hash)) {
-            // Skip the messages if something with an identical hash was already accepted
-            message.ack();
-        } else {
-            // Add the message to the hash list, limit total hashes, and run the callback method
-            this.hashList = this.hashList.slice(0, 9999);
-            this.hashList.unshift(hash);
-            callback(message);
-        }
     }
 }
 
