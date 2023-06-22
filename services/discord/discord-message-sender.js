@@ -20,7 +20,9 @@ class DiscordMessageSender {
                         return reject();
                     }
 
-                    if (channel.type !== ChannelType.GuildText) {
+                    // Text and News channels can get posts
+                    const textChannelTypes = [ChannelType.GuildAnnouncement, ChannelType.GuildText];
+                    if (!textChannelTypes.includes(channel.type)) {
                         const metadata = {
                             channelId,
                             messageEmbed: embed.toJSON(),

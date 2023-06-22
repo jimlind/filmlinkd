@@ -397,12 +397,17 @@ class EmbedBuilderFactory {
             .addFields(
                 {
                     name: ':clap: Patreon',
-                    value: '[Support the project on Patreon](https://www.patreon.com/filmlinkd)',
+                    value: '[Support on Patreon](https://www.patreon.com/filmlinkd)',
+                    inline: true,
+                },
+                {
+                    name: ':coffee: Ko-fi',
+                    value: '[Support on Ko-fi](https://ko-fi.com/filmlinkd)',
                     inline: true,
                 },
                 {
                     name: ':left_speech_bubble: Discord',
-                    value: '[Chat with a human on Discord](https://discord.gg/deZ7EUguge)',
+                    value: '[Join the Discord](https://discord.gg/deZ7EUguge)',
                     inline: true,
                 },
             );
