@@ -1,5 +1,3 @@
 .DS_Store
 .gcp-key.json
-clean-up-archive
 node_modules
-compiled
