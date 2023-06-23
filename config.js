@@ -76,16 +76,6 @@ const config = convict({
                 default: '',
             },
         },
-        command: {
-            topicName: {
-                format: String,
-                default: '',
-            },
-            subscriptionName: {
-                format: String,
-                default: '',
-            },
-        },
     },
 });
 

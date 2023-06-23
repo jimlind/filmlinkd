@@ -10,10 +10,6 @@
         "logEntryResult": {
             "topicName": "filmlinkd-log-entry-result-topic",
             "subscriptionName": "filmlinkd-log-entry-result-subscription"
-        },
-        "command": {
-            "topicName": "filmlinkd-command-topic",
-            "subscriptionName": "filmlinkd-command-subscription"
         }
     }
 }

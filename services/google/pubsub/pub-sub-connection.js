@@ -82,31 +82,6 @@ class PubSubConnection {
     }
 
     /**
-     * Pub/Sub topic for announcing select user commands
-     * Not Used; I thought I'd want this, but I haven't found a need for it yet.
-     *
-     * @returns {Promise<import('@google-cloud/pubsub').Topic>}
-     */
-    getCommandTopic() {
-        return this.getTopic(this.config.get('pubSub.command.topicName'));
-    }
-
-    /**
-     * Pub/Sub subscription for announcing select user commands
-     * Not Used; I thought I'd want this, but I haven't found a need for it yet.
-     * Configured for multiple listeners
-     *
-     * @returns {Promise<import('@google-cloud/pubsub').Subscription>}
-     */
-    getCommandSubscription() {
-        return this.getSubscription(
-            this.config.get('pubSub.command.topicName'),
-            this.config.get('pubSub.command.subscriptionName'),
-            true,
-        );
-    }
-
-    /**
      * @param {string} topicName
      *
      * @returns {Promise<import('@google-cloud/pubsub').Topic>}
