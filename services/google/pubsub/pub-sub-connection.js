@@ -1,5 +1,3 @@
-'use strict';
-
 class PubSubConnection {
     /** @type {import('@google-cloud/pubsub').Topic[]} */
     topicList = [];
@@ -79,6 +77,14 @@ class PubSubConnection {
      */
     closeLogEntryResultSubscription() {
         this.closeSubscription(this.config.get('pubSub.logEntryResult.subscriptionName'), false);
+    }
+
+    /**
+     * Close all Pub/Sub subscriptions
+     */
+    closeAllSubscriptions() {
+        this.closeLogEntrySubscription();
+        this.closeLogEntryResultSubscription();
     }
 
     /**

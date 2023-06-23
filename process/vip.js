@@ -51,8 +51,8 @@ class Vip {
         // Stop the recurring tasks
         clearInterval(this.fetchInterval);
         clearInterval(this.resetInterval);
-        // Close the PubSub connection
-        this.container.resolve('pubSubConnection').closeLogEntrySubscription();
+        // Close all possible PubSub connections
+        this.container.resolve('pubSubConnection').closeAllSubscriptions();
     }
 }
 
