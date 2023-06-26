@@ -8,7 +8,7 @@ if (process.env.npm_config_live) {
 }
 
 // ...and go!
-const container = require('../dependency-injection-container')(config);
+const container = require('../dependency-injection-container.js')(config);
 const httpClient = container.resolve('httpClient');
 const collection = container.resolve('firestoreConnection').getCollection();
 processData(collection);
@@ -17,7 +17,6 @@ async function processData(collection) {
     // hard code some limits here so I can do the process in steps
     const querySnapshot = await collection.orderBy('userName').startAt('a').endAt('b').get();
     var documentList = querySnapshot.docs;
-    const fileName = 'Bad User Deletes ' + new Date().toString() + '.txt';
 
     for (var i = 0; i < 10; i++) {
         console.log(`${documentList.length} users to check...`);
@@ -53,8 +52,8 @@ async function processData(collection) {
             data.letterboxdId = userLid;
             data.userName = realUserName;
 
-            const documentSnapshot = querySnapshot.docs[key];
-            await documentSnapshot.ref.update(data);
+            // const documentSnapshot = querySnapshot.docs[key];
+            await document.ref.update(data);
         } else {
             console.log(`❌ /${id}/ not able to validate with document key`);
             await document.ref.delete();
