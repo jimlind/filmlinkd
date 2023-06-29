@@ -34,6 +34,7 @@ async function processData(collection) {
         documentList = documentList.filter((x) => !!x);
     }
 
+    console.log(`\n👉 Updating Records`);
     for (const key in documentList) {
         const document = documentList[key];
         const id = documentList[key].id;
