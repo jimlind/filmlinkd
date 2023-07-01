@@ -104,18 +104,16 @@ class DiaryEntryProcessor {
 
         return getVipPage
             .then((vipUserList) => {
-                const userEntryList = Object.entries(vipUserList);
-                const userList = userEntryList.map((d) => ({ userLid: d[0], ...d[1] }));
-
-                if (!userList.length) {
+                if (Object.keys(vipUserList).length == 0) {
                     this.logger.info('Returning empty page of VIP users. Should reset.');
                     return [];
                 }
 
                 const limit = pLimit(4);
-                const promiseList = userList.map((user) =>
-                    limit(() => this.getNewLogEntriesForUser(user, 10)),
+                const promiseList = Object.entries(vipUserList).map((data) =>
+                    limit(() => this.getNewLogEntriesForUser(data[0], data[1], 10)),
                 );
+
                 return Promise.all(promiseList);
             })
             .then((logEntryCollection) => {
@@ -141,11 +139,7 @@ class DiaryEntryProcessor {
                 const promiseList = successList.flat().map((success) => {
                     return limit(() => {
                         return new Promise((resolve) => {
-                            this.subscribedUserList.upsertVip(
-                                success.userLid,
-                                success.entryId,
-                                success.entryLid,
-                            );
+                            this.subscribedUserList.upsertVip(success.userLid, success.entryLid);
                             resolve(success.entryLid);
                         });
                     });
@@ -211,64 +205,31 @@ class DiaryEntryProcessor {
     /**
      * Get a list of any new log entries based on User LID
      *
-     * @param {{ userLid: string; entryId: number; entryLid: string; }} user
+     * Test to make sure everything still works.
+     *
+     * @param {string} userLid
+     * @param {string} entryLid
      * @param {number} maxDiaryEntries
      * @returns {Promise<import('../../models/letterboxd/letterboxd-log-entry')[]>}
      */
-    getNewLogEntriesForUser(user, maxDiaryEntries) {
-        if (user.entryLid) {
-            // Use Entry LID to get newest entries
-            return this.letterboxdLogEntryApi
-                .getByMember(user.userLid, maxDiaryEntries)
-                .then((logEntryList) => {
-                    return logEntryList.filter((logEntry) => {
-                        // Filter out entries that are less than 3 minutes old
-                        if (Date.now() - Date.parse(logEntry.whenCreated) < 180000) {
-                            return false;
-                        }
+    getNewLogEntriesForUser(userLid, entryLid, maxDiaryEntries) {
+        return this.letterboxdLogEntryApi
+            .getByMember(userLid, maxDiaryEntries)
+            .then((logEntryList) => {
+                return logEntryList.filter((logEntry) => {
+                    // Filter out entries that are less than 3 minutes old
+                    if (Date.now() - Date.parse(logEntry.whenCreated) < 180000) {
+                        return false;
+                    }
 
-                        // Filter out entries that are older than the current
-                        const x = this.letterboxdLidComparison.compare(user.entryLid, logEntry.id);
-                        return x === 1;
-                    });
-                })
-                .catch(() => {
-                    const message = `Error getting entries from User LID ${user.userLid} via Entry LID`;
-                    this.logger.warn(message);
-                    return [];
-                });
-        }
-
-        // This is the older slower way to process this data. The RSS feed had a "View ID" number that
-        // the API doesn't have because. Luckily I can grab that value from the web. Unluckily there isn't
-        // a way to only get some of those values so I burn bandwidth getting all of them.
-        //
-        // I'll be able to delete this eventually.
-        const entryPromise = this.letterboxdLogEntryApi.getByMember(user.userLid, maxDiaryEntries);
-        const createViewIdPromiseList = (logEntryList) => {
-            const promiseList = logEntryList.map((logEntry) => {
-                const getLetterboxdUrl = (prev, cur) => (cur.type == 'letterboxd' ? cur.url : prev);
-                return this.letterboxdViewingIdWeb.get(logEntry.links.reduce(getLetterboxdUrl, ''));
-            });
-            return Promise.all(promiseList);
-        };
-        const promiseList = [entryPromise, entryPromise.then(createViewIdPromiseList)];
-
-        return Promise.all(promiseList)
-            .then((returnValues) => {
-                const entryList = returnValues?.[0] || [];
-                const viewingIdList = returnValues?.[1] || [];
-
-                return entryList.filter((entry, index) => {
-                    const viewingId = viewingIdList?.[index];
-                    // Adding the viewingId here is extremely hacky
-                    // I don't want this model to have this value forever and it doesn't follow the API spec
-                    entry.viewingId = viewingId;
-                    return viewingId && viewingId > user.entryId;
+                    // Filter out entries that are older than the current
+                    const x = this.letterboxdLidComparison.compare(entryLid, logEntry.id);
+                    return x === 1;
                 });
             })
             .catch(() => {
-                this.logger.warn(`Could not use Letterboxd API for ${user.userLid}`);
+                const message = `Error getting entries from User LID ${userLid} via Entry LID`;
+                this.logger.warn(message);
                 return [];
             });
     }

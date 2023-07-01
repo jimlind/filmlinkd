@@ -69,8 +69,7 @@ async function getEntryLid(entryUri) {
 
 async function getPreviousData(userLid) {
     const processor = container.resolve('diaryEntryProcessor');
-    const user = { userLid, entryId: 0, entryLid: '' };
-    entries = await processor.getNewLogEntriesForUser(user, 1);
+    entries = await processor.getNewLogEntriesForUser(userLid, '', 1);
 
     if (!entries.length) {
         return false;

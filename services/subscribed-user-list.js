@@ -7,7 +7,7 @@ class SubscribedUserList {
     cachedData = [];
 
     /**
-     * @type {[key: string]: {entryId: number; entryLid: string;} | null}
+     * @type {[key: string]: string} | null}
      */
     cachedVipData = null;
 
@@ -57,26 +57,13 @@ class SubscribedUserList {
 
     /**
      * @param {string} userLid
-     * @param {number} entryId
      * @param {string} entryLid
      */
-    upsertVip(userId, entryId, entryLid) {
-        const cache = this.cachedVipData;
-        const currentData = cache[userId];
-        const newData = {
-            entryId: entryId || 0,
-            entryLid: entryLid || '',
-        };
+    upsertVip(userId, entryLid) {
+        const oldEntryLid = this.cachedVipData[userId] || '';
 
-        if (currentData.entryLid) {
-            if (this.letterboxdLidComparison.compare(currentData.entryLid, entryLid) === 1) {
-                cache[userId] = newData;
-            }
-            return;
-        }
-
-        if (currentData.entryId < entryId) {
-            cache[userId] = newData;
+        if (this.letterboxdLidComparison.compare(oldEntryLid, entryLid) === 1) {
+            this.cachedVipData[userId] = entryLid;
         }
     }
 
@@ -183,7 +170,7 @@ class SubscribedUserList {
     }
 
     /**
-     * @returns {Promise<{[key: string]: {entryId: number; entryLid: string;}>}}
+     * @returns {Promise<{[key: string]: string>}}
      */
     getVipActiveSubscriptions() {
         return new Promise((resolve) => {
@@ -192,16 +179,12 @@ class SubscribedUserList {
             } else {
                 this.cachedVipData = {};
                 this.firestoreSubscriptionDao.getVipSubscriptions().then((vipList) => {
-                    this.logger.info('Loaded and Cached VIPs', {
-                        userCount: vipList.length,
-                    });
+                    const data = { userCount: vipList.length };
+                    this.logger.info('Loaded and Cached VIPs', data);
 
                     this.cachedVipData = {};
                     vipList.forEach((vip) => {
-                        this.cachedVipData[vip.letterboxdId] = {
-                            entryId: vip?.previous?.id || 0,
-                            entryLid: vip?.previous?.lid || '',
-                        };
+                        this.cachedVipData[vip.letterboxdId] = vip?.previous?.lid || '';
                     });
 
                     return resolve(this.cachedVipData);
