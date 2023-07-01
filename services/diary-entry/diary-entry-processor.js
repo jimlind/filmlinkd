@@ -68,7 +68,7 @@ class DiaryEntryProcessor {
      */
     processPageOfEntries(index, pageSize) {
         return this.subscribedUserList
-            .getActiveSubscriptionsPage(index, 12)
+            .getActiveSubscriptionsPage(index, pageSize)
             .then((userList) => {
                 if (!userList.length) {
                     this.logger.info('Returning empty page of normal users. Should reset.');

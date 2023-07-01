@@ -1,6 +1,6 @@
 class Scraper {
     /** @type {number} */
-    fetchRestingTime = 30000; // 30 seconds
+    fetchRestingTime = 20000; // 20 seconds
     /** @type {boolean} */
     fetchThreadRunning = false;
     /** @type {number} */
@@ -43,6 +43,7 @@ class Scraper {
         // This variable is reset after a page of entries processing has completed
         if (this.fetchThreadRunning) return;
         this.fetchThreadRunning = true;
+
         this.container
             .resolve('diaryEntryProcessor')
             .processPageOfEntries(this.index, this.pageSize)
@@ -60,8 +61,8 @@ class Scraper {
         // Stop the recurring tasks
         clearInterval(this.fetchInterval);
         clearInterval(this.resetInterval);
-        // Close the PubSub connection
-        this.container.resolve('pubSubConnection').closeLogEntryResultSubscription();
+        // Close all possible PubSub connections
+        this.container.resolve('pubSubConnection').closeAllSubscriptions();
     }
 }
 
