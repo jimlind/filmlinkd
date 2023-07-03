@@ -2,7 +2,7 @@
 
 const DiaryEntry = require('../../models/diary-entry');
 
-class LetterboxdDiaryRss {
+class LegacyLetterboxdDiaryRss {
     /**
      * @param {import('dom-serializer').default} domSerializer
      * @param {import('../http-client')} httpClient
@@ -291,4 +291,4 @@ class LetterboxdDiaryRss {
     }
 }
 
-module.exports = LetterboxdDiaryRss;
+module.exports = LegacyLetterboxdDiaryRss;

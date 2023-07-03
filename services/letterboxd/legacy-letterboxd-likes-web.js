@@ -2,7 +2,7 @@
 
 const DiaryEntry = require('../../models/diary-entry');
 
-class LetterboxdLikesWeb {
+class LegacyLetterboxdLikesWeb {
     root = 'https://letterboxd.com';
 
     /**
@@ -124,4 +124,4 @@ class LetterboxdLikesWeb {
     }
 }
 
-module.exports = LetterboxdLikesWeb;
+module.exports = LegacyLetterboxdLikesWeb;
