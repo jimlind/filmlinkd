@@ -2,9 +2,9 @@
 
 class SubscribedUserList {
     /**
-     * @type {{ userName: string; lid: string; previousId: number;}[]}
+     * @type {[key: string]: string} | null}
      */
-    cachedData = [];
+    cachedData = null;
 
     /**
      * @type {[key: string]: string} | null}
@@ -23,61 +23,33 @@ class SubscribedUserList {
     }
 
     /**
-     * Add new users to the Subscribed User List or update existing user data if it
-     * already exists
-     *
-     * @param {string} userName   Letterboxd Username
-     * @param {string} lid        Letterboxd User Id
-     * @param {number} previousId Letterboxd Diary Entry Id
-     * @returns {number} The current PreviousID for the user after upsert
+     * @param {string} userLid
+     * @param {string} entryLid
      */
-    upsert(userName, lid, previousId) {
-        const dataSource = this.cachedData;
+    upsert(userLid, entryLid) {
+        const oldEntryLid = this.cachedData[userLid] || '';
 
-        for (let x = 0; x < dataSource.length; x++) {
-            const user = dataSource[x];
-            // If the user already exists
-            if (user.userName === userName) {
-                // If the Id is newer than the last one
-                if (user.previousId < previousId) {
-                    dataSource[x].previousId = previousId;
-                }
-                // Break the loop. User was found so method is complete.
-                return dataSource[x].previousId;
-            }
+        if (this.letterboxdLidComparison.compare(oldEntryLid, entryLid) === 1) {
+            this.cachedData[userLid] = entryLid;
         }
-        // User not found in the loop so add new record instead
-        dataSource.push({
-            userName,
-            lid,
-            previousId,
-        });
-        return previousId;
     }
 
     /**
      * @param {string} userLid
      * @param {string} entryLid
      */
-    upsertVip(userId, entryLid) {
-        const oldEntryLid = this.cachedVipData[userId] || '';
+    upsertVip(userLid, entryLid) {
+        const oldEntryLid = this.cachedVipData[userLid] || '';
 
         if (this.letterboxdLidComparison.compare(oldEntryLid, entryLid) === 1) {
-            this.cachedVipData[userId] = entryLid;
+            this.cachedVipData[userLid] = entryLid;
         }
-    }
-
-    remove(userName) {
-        for (let x = 0; x < this.cachedData.length; x++) {
-            if (this.cachedData[x].userName === userName) {
-                this.cachedData.splice(x, 1);
-                break;
-            }
-        }
-        //TODO: Does it make sense to call firestore here?
     }
 
     /**
+     * This is gonna be seriously broken.
+     * I dont think it is even used any more. Need to explore.
+     *
      * @param {string} userName
      * @returns {{ userName: string; lid: string, previousId: number;}}
      */
@@ -93,7 +65,7 @@ class SubscribedUserList {
     getRandomIndex() {
         return new Promise((resolve) => {
             this.getAllActiveSubscriptions().then((subscriberList) => {
-                return resolve(Math.floor(Math.random() * subscriberList.length));
+                return resolve(Math.floor(Math.random() * Object.values(subscriberList).length));
             });
         });
     }
@@ -101,12 +73,15 @@ class SubscribedUserList {
     /**
      * @param {number} index
      * @param {number} pageSize
-     * @returns {Promise<{ userName: string; lid: string, previousId: number;}[]>}}
+     * @returns {Promise<{ userLid: string; entryLid: string}[]>}}
      */
     getActiveSubscriptionsPage(index, pageSize) {
         return new Promise((resolve) => {
-            this.getAllActiveSubscriptions().then((subscriberList) => {
-                return resolve(subscriberList.slice(index, index + pageSize));
+            this.getAllActiveSubscriptions().then((subscriberListObject) => {
+                const entryList = Object.entries(subscriberListObject);
+                const userList = entryList.map((d) => ({ userLid: d[0], entryLid: d[1] }));
+
+                return resolve(userList.slice(index, index + pageSize));
             });
         });
     }
@@ -141,27 +116,22 @@ class SubscribedUserList {
     }
 
     /**
-     * @returns {Promise<{ userName: string; lid: string; previousId: number;}[]>}}
+     * @returns {Promise<{[key: string]: string>}}
      */
     getAllActiveSubscriptions() {
         return new Promise((resolve) => {
-            if (this.cachedData.length) {
+            if (this.cachedData) {
                 return resolve(this.cachedData);
             } else {
-                this.firestoreSubscriptionDao.getActiveSubscriptions().then((subscriberList) => {
-                    this.logger.info('Loaded and Cached Users', {
-                        userCount: subscriberList.length,
-                    });
+                this.cachedData = {};
+                this.firestoreSubscriptionDao.getActiveSubscriptions().then((userList) => {
+                    const data = { userCount: userList.length };
+                    this.logger.info('Loaded and Cached Users', data);
 
-                    // We could probably use the this.upsert method to properly "dog food" and use
-                    // the same method internally and externally, but this is a bit of a shortcut
-                    this.cachedData = subscriberList.map((subscriber) => {
-                        return {
-                            userName: subscriber.userName,
-                            lid: subscriber.letterboxdId,
-                            previousId: subscriber?.previous?.id || 0,
-                        };
-                    }, []);
+                    this.cachedData = {};
+                    userList.forEach((user) => {
+                        this.cachedData[user.letterboxdId] = user?.previous?.lid || '';
+                    });
 
                     return resolve(this.cachedData);
                 });
