@@ -23,45 +23,52 @@ class SubscribedUserList {
     }
 
     /**
-     * @param {string} userLid
-     * @param {string} entryLid
+     * @returns {Promise<{[key: string]: string>}}
      */
-    upsert(userLid, entryLid) {
-        const oldEntryLid = this.cachedData[userLid] || '';
-
-        if (this.letterboxdLidComparison.compare(oldEntryLid, entryLid) === 1) {
-            this.cachedData[userLid] = entryLid;
-        }
+    getAllActiveSubscriptions() {
+        const dao = this.firestoreSubscriptionDao;
+        const method = dao.getActiveSubscriptions.bind(dao);
+        return this.getActiveSubscriptionsBaseMethod(method, 'cachedData', 'users');
     }
 
     /**
-     * @param {string} userLid
-     * @param {string} entryLid
+     * @returns {Promise<{[key: string]: string>}}
      */
-    upsertVip(userLid, entryLid) {
-        const oldEntryLid = this.cachedVipData[userLid] || '';
-
-        if (this.letterboxdLidComparison.compare(oldEntryLid, entryLid) === 1) {
-            this.cachedVipData[userLid] = entryLid;
-        }
+    getVipActiveSubscriptions() {
+        const dao = this.firestoreSubscriptionDao;
+        const method = dao.getVipSubscriptions.bind(dao);
+        return this.getActiveSubscriptionsBaseMethod(method, 'cachedVipData', 'VIPs');
     }
 
     /**
-     * This is gonna be seriously broken.
-     * I dont think it is even used any more. Need to explore.
-     *
-     * @param {string} userName
-     * @returns {{ userName: string; lid: string, previousId: number;}}
+     * @param {*} daoMethod
+     * @param {string} cacheName
+     * @param {string} userLabel
+     * @returns {Promise<{[key: string]: string>}}
      */
-    get(userName) {
-        for (let x = 0; x < this.cachedData.length; x++) {
-            if (this.cachedData[x].userName === userName) {
-                return this.cachedData[x];
-            }
+    getActiveSubscriptionsBaseMethod(daoMethod, cacheName, userLabel) {
+        if (this[cacheName]) {
+            return new Promise((resolve) => resolve(this[cacheName]));
         }
-        return { userName, lid: '', previousId: 0 };
+
+        return daoMethod()
+            .then((userList) => {
+                const logData = { userCount: userList.length };
+                this.logger.info(`Loaded and cached ${userLabel}`, logData);
+
+                const reducer = (data, user) =>
+                    Object.assign(data, { [user.letterboxdId]: user?.previous?.lid || '' });
+                return userList.reduce(reducer, {});
+            })
+            .then((dataObject) => {
+                this[cacheName] = dataObject;
+                return dataObject;
+            });
     }
 
+    /**
+     * @returns {Promise<{ number }>}}
+     */
     getRandomIndex() {
         return new Promise((resolve) => {
             this.getAllActiveSubscriptions().then((subscriberList) => {
@@ -71,19 +78,16 @@ class SubscribedUserList {
     }
 
     /**
-     * @param {number} index
-     * @param {number} pageSize
+     * @param {number} start The starting index assuming zero-indexed array
+     * @param {number} pageSize The total number of entries returned
      * @returns {Promise<{ userLid: string; entryLid: string}[]>}}
      */
-    getActiveSubscriptionsPage(index, pageSize) {
-        return new Promise((resolve) => {
-            this.getAllActiveSubscriptions().then((subscriberListObject) => {
-                const entryList = Object.entries(subscriberListObject);
-                const userList = entryList.map((d) => ({ userLid: d[0], entryLid: d[1] }));
-
-                return resolve(userList.slice(index, index + pageSize));
-            });
-        });
+    getActiveSubscriptionsPage(start, pageSize) {
+        return this.getActiveSubscriptionsPageBaseMethod(
+            start,
+            pageSize,
+            this.getAllActiveSubscriptions,
+        );
     }
 
     /**
@@ -92,75 +96,57 @@ class SubscribedUserList {
      * @returns {Promise<{[key: string]: {entryId: number; entryLid: string;}>}}
      */
     getActiveVipSubscriptionsPage(start, pageSize) {
-        return new Promise((resolve) => {
-            this.getVipActiveSubscriptions().then((vipList) => {
-                const returnData = {};
-                let index = 0;
-                let count = 0;
-                for (const key in vipList) {
-                    index++;
-                    if (index <= start) {
-                        continue;
-                    }
+        return this.getActiveSubscriptionsPageBaseMethod(
+            start,
+            pageSize,
+            this.getVipActiveSubscriptions,
+        );
+    }
 
-                    returnData[key] = vipList[key];
-                    count++;
+    /**
+     * @param {number} start The starting index assuming zero-indexed array
+     * @param {number} pageSize The total number of entries returned
+     * @param {*} userMethod
+     * @returns {Promise<{[key: string]: {entryId: number; entryLid: string;}>}}
+     */
+    getActiveSubscriptionsPageBaseMethod(start, pageSize, userMethod) {
+        return userMethod.call(this).then((subscriberListObject) => {
+            const entryList = Object.entries(subscriberListObject);
+            const userList = entryList.map((d) => ({ userLid: d[0], entryLid: d[1] }));
 
-                    if (count >= pageSize) {
-                        break;
-                    }
-                }
-                return resolve(returnData);
-            });
+            return userList.slice(start, start + pageSize);
         });
     }
 
     /**
-     * @returns {Promise<{[key: string]: string>}}
+     * @param {string} userLid
+     * @param {string} entryLid
      */
-    getAllActiveSubscriptions() {
-        return new Promise((resolve) => {
-            if (this.cachedData) {
-                return resolve(this.cachedData);
-            } else {
-                this.cachedData = {};
-                this.firestoreSubscriptionDao.getActiveSubscriptions().then((userList) => {
-                    const data = { userCount: userList.length };
-                    this.logger.info('Loaded and Cached Users', data);
-
-                    this.cachedData = {};
-                    userList.forEach((user) => {
-                        this.cachedData[user.letterboxdId] = user?.previous?.lid || '';
-                    });
-
-                    return resolve(this.cachedData);
-                });
-            }
-        });
+    upsert(userLid, entryLid) {
+        this.cachedData = this.upsertBaseMethod(userLid, entryLid, this.cachedData);
     }
 
     /**
-     * @returns {Promise<{[key: string]: string>}}
+     * @param {string} userLid
+     * @param {string} entryLid
      */
-    getVipActiveSubscriptions() {
-        return new Promise((resolve) => {
-            if (this.cachedVipData) {
-                return resolve(this.cachedVipData);
-            } else {
-                this.cachedVipData = {};
-                this.firestoreSubscriptionDao.getVipSubscriptions().then((vipList) => {
-                    const data = { userCount: vipList.length };
-                    this.logger.info('Loaded and Cached VIPs', data);
+    upsertVip(userLid, entryLid) {
+        this.cachedVipData = this.upsertBaseMethod(userLid, entryLid, this.cachedVipData);
+    }
 
-                    this.cachedVipData = {};
-                    vipList.forEach((vip) => {
-                        this.cachedVipData[vip.letterboxdId] = vip?.previous?.lid || '';
-                    });
+    /**
+     * @param {string} userLid
+     * @param {string} entryLid
+     * @param {[key: string]: string} cache
+     * @returns {[key: string]: string}
+     */
+    upsertBaseMethod(userLid, newEntryLid, cache) {
+        const oldEntryLid = cache[userLid] || '';
+        if (this.letterboxdLidComparison.compare(oldEntryLid, newEntryLid) === 1) {
+            return Object.assign({}, cache, { [userLid]: newEntryLid });
+        }
 
-                    return resolve(this.cachedVipData);
-                });
-            }
-        });
+        return cache;
     }
 }
 

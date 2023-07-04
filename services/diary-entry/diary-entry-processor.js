@@ -117,15 +117,15 @@ class DiaryEntryProcessor {
         const getVipPage = this.subscribedUserList.getActiveVipSubscriptionsPage(index, pageSize);
 
         return getVipPage
-            .then((vipUserList) => {
-                if (Object.keys(vipUserList).length == 0) {
+            .then((userList) => {
+                if (userList.length == 0) {
                     this.logger.info('Returning empty page of VIP users. Should reset.');
                     return [];
                 }
 
                 const limit = pLimit(4);
-                const promiseList = Object.entries(vipUserList).map((data) =>
-                    limit(() => this.getNewLogEntriesForUser(data[0], data[1], 10)),
+                const promiseList = userList.map((user) =>
+                    limit(() => this.getNewLogEntriesForUser(user.userLid, user.entryLid, 10)),
                 );
 
                 return Promise.all(promiseList);
