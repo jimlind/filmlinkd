@@ -149,7 +149,7 @@ class FirestoreSubscriptionDao {
                     resolve(userList);
                 })
                 .catch(() => {
-                    reject('nope nope');
+                    reject('Error getting VIP subscribers');
                 });
         });
     }
