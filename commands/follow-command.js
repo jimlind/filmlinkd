@@ -8,7 +8,6 @@ class FollowCommand {
      * @param {import('../services/letterboxd/letterboxd-lid-web')} letterboxdLidWeb
      * @param {import('../services/letterboxd/api/letterboxd-member-api')} letterboxdMemberApi
      * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
-     * @param {import('../services/logger')} logger
      */
     constructor(
         diaryEntryProcessor,
@@ -17,7 +16,6 @@ class FollowCommand {
         letterboxdLidWeb,
         letterboxdMemberApi,
         embedBuilderFactory,
-        logger,
     ) {
         this.diaryEntryProcessor = diaryEntryProcessor;
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
@@ -25,7 +23,6 @@ class FollowCommand {
         this.letterboxdLidWeb = letterboxdLidWeb;
         this.letterboxdMemberApi = letterboxdMemberApi;
         this.embedBuilderFactory = embedBuilderFactory;
-        this.logger = logger;
     }
 
     /**
