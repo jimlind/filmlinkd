@@ -1,6 +1,6 @@
 import death from 'death';
 
-export class Vip {
+export default class Vip {
     /** @type {number} */
     fetchRestingTime = 10000; // 10 seconds
     /** @type {boolean} */
@@ -51,7 +51,7 @@ export class Vip {
 
     cleanUp(signal, error) {
         // Log process closure
-        this.container.resolve('logger').info('Program Terminated', { signal, error });
+        this.container.resolve('logger').info('VIP Process Terminated', { signal, error });
         // Stop the recurring tasks
         clearInterval(this.fetchInterval);
         clearInterval(this.resetInterval);

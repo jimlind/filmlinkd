@@ -1,6 +1,6 @@
 import death from 'death';
 
-export class Scraper {
+export default class Scraper {
     /** @type {number} */
     fetchRestingTime = 20000; // 20 seconds
     /** @type {boolean} */
@@ -59,7 +59,9 @@ export class Scraper {
         this.container.resolve('subscribedUserList').cachedData = [];
     }
 
-    cleanUp() {
+    cleanUp(signal, error) {
+        // Log process closure
+        this.container.resolve('logger').info('Scraper Process Terminated', { signal, error });
         // Stop the recurring tasks
         clearInterval(this.fetchInterval);
         clearInterval(this.resetInterval);
@@ -67,5 +69,3 @@ export class Scraper {
         this.container.resolve('pubSubConnection').closeAllSubscriptions();
     }
 }
-
-module.exports = Scraper;
