@@ -1,6 +1,4 @@
-'use strict';
-
-class SubscribedUserList {
+export default class SubscribedUserList {
     /**
      * @type {[key: string]: string} | null}
      */
@@ -149,5 +147,3 @@ class SubscribedUserList {
         return cache;
     }
 }
-
-module.exports = SubscribedUserList;
