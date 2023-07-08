@@ -1,6 +1,6 @@
 'use strict';
 
-class FollowingCommand {
+export default class FollowingCommand {
     /**
      * @param {import('../services/google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
      * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
@@ -24,5 +24,3 @@ class FollowingCommand {
         });
     }
 }
-
-module.exports = FollowingCommand;

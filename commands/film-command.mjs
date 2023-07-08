@@ -1,6 +1,6 @@
 'use strict';
 
-class FilmCommand {
+export default class FilmCommand {
     /**
      * @param {import('../services/letterboxd/api/letterboxd-film-api')} letterboxdFilmApi
      * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
@@ -28,5 +28,3 @@ class FilmCommand {
             .catch(() => this.embedBuilderFactory.createFilmNotFoundEmbed());
     }
 }
-
-module.exports = FilmCommand;

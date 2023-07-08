@@ -1,4 +1,4 @@
-class RouletteCommand {
+export default class RouletteCommand {
     /**
      * @param {import('../http-client')} httpClient
      * @param {import('../services/letterboxd/api/letterboxd-film-api')} letterboxdFilmApi
@@ -81,5 +81,3 @@ class RouletteCommand {
             .join('');
     }
 }
-
-module.exports = RouletteCommand;

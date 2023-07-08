@@ -1,6 +1,6 @@
 'use strict';
 
-class ContributorCommand {
+export default class ContributorCommand {
     /**
      * @param {import('../services/letterboxd/api/letterboxd-contributor-api')} letterboxdContributorApi
      * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
@@ -26,5 +26,3 @@ class ContributorCommand {
             .catch(() => this.embedBuilderFactory.createContributorNotFoundEmbed());
     }
 }
-
-module.exports = ContributorCommand;

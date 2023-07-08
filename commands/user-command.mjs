@@ -1,4 +1,4 @@
-class UserCommand {
+export default class UserCommand {
     /**
      * @param {import('../services/letterboxd/letterboxd-lid-web')} letterboxdLidWeb
      * @param {import('../services/letterboxd/api/letterboxd-member-api')} letterboxdMemberApi
@@ -28,5 +28,3 @@ class UserCommand {
             .catch(() => this.embedBuilderFactory.createNoAccountFoundEmbed(accountName));
     }
 }
-
-module.exports = UserCommand;

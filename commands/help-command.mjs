@@ -1,23 +1,15 @@
-class HelpCommand {
+export default class HelpCommand {
     /**
      * @param {import('../config')} config
      * @param {import('../services/discord/discord-connection')} discordConnection
      * @param {import('../services/google/firestore/firestore-user-dao')} firestoreUserDao
      * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
-     * @param {import('../services/subscribed-user-list')} subscribedUserList
      */
-    constructor(
-        config,
-        discordConnection,
-        firestoreUserDao,
-        embedBuilderFactory,
-        subscribedUserList,
-    ) {
+    constructor(config, discordConnection, firestoreUserDao, embedBuilderFactory) {
         this.config = config;
         this.discordConnection = discordConnection;
         this.firestoreUserDao = firestoreUserDao;
         this.embedBuilderFactory = embedBuilderFactory;
-        this.subscribedUserList = subscribedUserList;
     }
 
     /**
@@ -48,5 +40,3 @@ class HelpCommand {
             });
     }
 }
-
-module.exports = HelpCommand;

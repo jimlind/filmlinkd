@@ -1,6 +1,6 @@
 'use strict';
 
-class DiaryCommand {
+export default class DiaryCommand {
     /**
      * @param {import('../services/letterboxd/letterboxd-lid-web')} letterboxdLidWeb
      * @param {import('../services/letterboxd/api/letterboxd-member-api')} letterboxdMemberApi
@@ -32,5 +32,3 @@ class DiaryCommand {
             .catch(() => this.embedBuilderFactory.createNoAccountFoundEmbed(accountName));
     }
 }
-
-module.exports = DiaryCommand;

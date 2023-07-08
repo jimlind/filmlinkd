@@ -1,4 +1,4 @@
-class UserCommand {
+export default class UserCommand {
     /**
      * @param {import('../services/google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
      * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
@@ -27,5 +27,3 @@ class UserCommand {
             });
     }
 }
-
-module.exports = UserCommand;

@@ -1,4 +1,4 @@
-class EntryCommand {
+export default class EntryCommand {
     /**
      * @param {import('../services/letterboxd/api/letterboxd-log-entry-api')} letterboxdLogEntryApi
      * @param {import('../services/letterboxd/api/letterboxd-film-api')} letterboxdFilmApi
@@ -41,5 +41,3 @@ class EntryCommand {
             .catch((e) => this.embedBuilderFactory.createNoLoggedEntriesFoundEmbed());
     }
 }
-
-module.exports = EntryCommand;

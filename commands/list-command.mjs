@@ -1,4 +1,4 @@
-class ListCommand {
+export default class ListCommand {
     /**
      * @param {import('../services/letterboxd/letterboxd-lid-web')} letterboxdLidWeb
      * @param {import('../services/letterboxd/api/letterboxd-list-api')} letterboxdListApi
@@ -33,5 +33,3 @@ class ListCommand {
             .catch(() => this.embedBuilderFactory.createNoListFoundEmbed());
     }
 }
-
-module.exports = ListCommand;

@@ -1,6 +1,6 @@
 'use strict';
 
-class FollowCommand {
+export default class FollowCommand {
     /**
      * @param {import('../services/diary-entry/diary-entry-processor')} diaryEntryProcessor
      * @param {import('../services/google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
@@ -83,5 +83,3 @@ class FollowCommand {
         return largestImage?.url || '';
     }
 }
-
-module.exports = FollowCommand;
