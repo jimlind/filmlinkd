@@ -2,7 +2,7 @@ import death from 'death';
 
 export default class Scraper {
     /** @type {number} */
-    fetchRestingTime = 20000; // 20 seconds
+    fetchRestingTime = 15000; // 15 seconds
     /** @type {boolean} */
     fetchThreadRunning = false;
     /** @type {number} */
@@ -12,7 +12,7 @@ export default class Scraper {
     /** @type {number} */
     resetInterval = 0;
     /** @type {number} */
-    pageSize = 45;
+    pageSize = 30;
     /** @type {number} */
     index = 0;
 
