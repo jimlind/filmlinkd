@@ -17,6 +17,13 @@ class DependencyInjectionContainer {
      * @param {import('convict').Config} config
      */
     constructor(config) {
+        this.config = config;
+    }
+
+    /**
+     * @returns {Promise<import('awilix').AwilixContainer>}
+     */
+    initialize() {
         this.container = awilix.createContainer();
 
         // Create Discord Client
@@ -37,12 +44,13 @@ class DependencyInjectionContainer {
         // Create logger transport for the GCP console
         const googleCloudWinstonTransport = new LoggingWinston({
             labels: {
-                app: config.get('packageName'),
-                version: config.get('packageVersion') + (config.get('live') ? '' : '-dev'),
+                app: this.config.get('packageName'),
+                version:
+                    this.config.get('packageVersion') + (this.config.get('live') ? '' : '-dev'),
             },
-            prefix: config.get('live') ? null : 'DEV',
-            projectId: config.get('googleCloudProjectId'),
-            keyFilename: config.get('googleCloudIdentityKeyFile'),
+            prefix: this.config.get('live') ? null : 'DEV',
+            projectId: this.config.get('googleCloudProjectId'),
+            keyFilename: this.config.get('googleCloudIdentityKeyFile'),
         });
 
         // Create logger for the JS console
@@ -66,17 +74,17 @@ class DependencyInjectionContainer {
 
         // Create PubSub
         const pubsub = new PubSub({
-            projectId: config.get('googleCloudProjectId'),
-            keyFilename: config.get('googleCloudIdentityKeyFile'),
+            projectId: this.config.get('googleCloudProjectId'),
+            keyFilename: this.config.get('googleCloudIdentityKeyFile'),
         });
 
         // Create configured Secret Manager client
         const secretManagerClient = new SecretManagerServiceClient({
-            keyFilename: config.get('googleCloudIdentityKeyFile'),
+            keyFilename: this.config.get('googleCloudIdentityKeyFile'),
         });
 
         this.container.register({
-            config: awilix.asValue(config),
+            config: awilix.asValue(this.config),
             discordClient: awilix.asValue(discordClient),
             axios: awilix.asValue(axios),
             domSerializer: awilix.asValue(domSerializer),
@@ -90,7 +98,8 @@ class DependencyInjectionContainer {
             secretManagerClient: awilix.asValue(secretManagerClient),
         });
 
-        this.container.loadModules(['commands/**/*.js', 'factories/**/*.js', 'services/**/*.js'], {
+        return this.container.loadModules(['(commands|factories|services)/**/*.(m)?js'], {
+            esModules: true,
             formatName: 'camelCase',
             resolverOptions: {
                 lifetime: awilix.Lifetime.SINGLETON,
