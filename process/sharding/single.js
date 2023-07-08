@@ -90,7 +90,7 @@ class Single {
     }
 }
 
-const config = require('../../config');
+const config = require('../../config.mjs');
 const container = require('../../dependency-injection-container')(config);
 const single = new Single(container);
 single.run();

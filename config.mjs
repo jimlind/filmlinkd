@@ -1,4 +1,5 @@
-const convict = require('convict');
+import convict from 'convict';
+
 const config = convict({
     live: {
         doc: 'Use live data',
@@ -89,4 +90,4 @@ config.set('packageName', packageJsonProperties.name);
 config.set('packageVersion', packageJsonProperties.version);
 config.validate({ allowed: 'strict' });
 
-module.exports = config;
+export default config;

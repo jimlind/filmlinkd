@@ -360,7 +360,7 @@ class EmbedBuilderFactory {
     }
 
     /**
-     * @param {import('../config')} config
+     * @param {import('../config.mjs')} config
      * @param {number} userCount
      * @param {number} serverCount
      * @returns

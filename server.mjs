@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import config from './config.js';
+import config from './config.mjs';
 import container from './dependency-injection-container.js';
 import Scraper from './process/scraper.mjs';
 import Cluster from './process/sharding/cluster.js';

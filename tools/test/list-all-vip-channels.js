@@ -2,7 +2,7 @@
 
 // Allow switching between dev and prod
 process.env.npm_config_live = process.argv[2] == 'prod' || false;
-const config = require('../../config.js');
+const config = require('../../config.mjs');
 if (process.env.npm_config_live) {
     config.set('googleCloudIdentityKeyFile', './.gcp-key.json');
 }
