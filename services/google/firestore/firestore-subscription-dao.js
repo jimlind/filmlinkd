@@ -9,7 +9,7 @@ class FirestoreSubscriptionDao {
     /**
      * @param {import('./firestore-connection')} firestoreConnection
      * @param {import('./firestore-vip-dao')} firestoreVipDao
-     * @param {import('../../logger')} logger
+     * @param {import('../../logger.mjs')} logger
      */
     constructor(firestoreConnection, firestoreVipDao, logger) {
         this.firestoreCollection = firestoreConnection.getCollection();

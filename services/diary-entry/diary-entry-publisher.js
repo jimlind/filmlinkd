@@ -8,7 +8,7 @@ const DiaryEntry = require('../../models/diary-entry');
 class DiaryEntryPublisher {
     /**
      * @param {import('../letterboxd/letterboxd-lid-comparison')} letterboxdLidWeb
-     * @param {import('../logger')} logger
+     * @param {import('../logger.mjs')} logger
      * @param {import('../google/pubsub/pub-sub-connection')} pubSubConnection
      */
     constructor(letterboxdLidWeb, logger, pubSubConnection) {

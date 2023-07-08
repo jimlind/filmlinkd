@@ -11,7 +11,7 @@ class DiaryEntryProcessor {
      * @param {import('../diary-entry/diary-entry-publisher')} diaryEntryPublisher
      * @param {import('../letterboxd/letterboxd-lid-comparison')} letterboxdLidComparison
      * @param {import('../letterboxd/api/letterboxd-log-entry-api')} letterboxdLogEntryApi
-     * @param {import('../logger')} logger
+     * @param {import('../logger.mjs')} logger
      * @param {import('../subscribed-user-list')} subscribedUserList
      */
     constructor(

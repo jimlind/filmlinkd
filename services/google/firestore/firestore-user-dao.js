@@ -5,7 +5,7 @@ class FirestoreUserDao {
 
     /**
      * @param {import('./firestore-connection')} firestoreConnection
-     * @param {import('../../logger')} logger
+     * @param {import('../../logger.mjs')} logger
      */
     constructor(firestoreConnection, logger) {
         this.firestoreCollection = firestoreConnection.getCollection();

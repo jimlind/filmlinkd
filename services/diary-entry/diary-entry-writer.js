@@ -19,7 +19,7 @@ class DiaryEntryWriter {
      * @param {import('../../factories/embed-builder-factory')} embedBuilderFactory
      * @param {import('../google/firestore/firestore-user-dao')} firestoreUserDao
      * @param {import('../letterboxd/letterboxd-viewing-id-web')} letterboxdViewingIdWeb
-     * @param {import('../logger')} logger
+     * @param {import('../logger.mjs')} logger
      * @param {import('../google/pubsub/pub-sub-connection')} pubSubConnection
      */
     constructor(
