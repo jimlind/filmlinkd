@@ -15,6 +15,8 @@ export default class Scraper {
     pageSize = 30;
     /** @type {number} */
     index = 0;
+    /** @type {boolean} */
+    queueUserListReset = false;
 
     /**
      * @param {import('../dependency-injection-container')} container
@@ -46,6 +48,11 @@ export default class Scraper {
         if (this.fetchThreadRunning) return;
         this.fetchThreadRunning = true;
 
+        if (this.queueUserListReset) {
+            this.container.resolve('subscribedUserList').cachedData = null;
+            this.queueUserListReset = false;
+        }
+
         this.container
             .resolve('diaryEntryProcessor')
             .processPageOfEntries(this.index, this.pageSize)
@@ -56,7 +63,7 @@ export default class Scraper {
     }
 
     recurringResetTask() {
-        this.container.resolve('subscribedUserList').cachedData = [];
+        this.queueUserListReset = true;
     }
 
     cleanUp(signal, error) {
