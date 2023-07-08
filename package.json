@@ -13,7 +13,7 @@
         "node": "20.x.x"
     },
     "scripts": {
-        "start": "node server.js",
+        "start": "node server.mjs",
         "test": "mocha ./test --recursive"
     },
     "dependencies": {
@@ -36,6 +36,7 @@
     "devDependencies": {
         "chai": "^4.3.7",
         "mocha": "^10.2.0",
+        "prettier-plugin-organize-imports": "^3.2.2",
         "sinon": "^15.2.0"
     }
 }

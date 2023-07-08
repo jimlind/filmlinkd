@@ -1,16 +1,18 @@
-class Vip {
+import death from 'death';
+
+export class Scraper {
     /** @type {number} */
-    fetchRestingTime = 10000; // 10 seconds
+    fetchRestingTime = 20000; // 20 seconds
     /** @type {boolean} */
     fetchThreadRunning = false;
     /** @type {number} */
     fetchInterval = 0;
     /** @type {number} */
-    resetRestingTime = 43200000; // 12 hours
+    resetRestingTime = 86400000; // 24 hours
     /** @type {number} */
     resetInterval = 0;
     /** @type {number} */
-    pageSize = 30;
+    pageSize = 45;
     /** @type {number} */
     index = 0;
 
@@ -21,12 +23,22 @@ class Vip {
         this.container = container;
 
         // Trigger clean up on task ending
-        require('death')(this.cleanUp.bind(this));
+        death(this.cleanUp.bind(this));
     }
 
     run() {
-        this.fetchInterval = setInterval(this.recurringFetchTask.bind(this), this.fetchRestingTime);
-        this.resetInterval = setInterval(this.recurringResetTask.bind(this), this.resetRestingTime);
+        // Get a random index from the user list
+        const getRandomIndex = this.container.resolve('subscribedUserList').getRandomIndex();
+        getRandomIndex.then((randomIndex) => {
+            // The recurringFetchTask uses and udates this
+            this.index = randomIndex;
+
+            const fetchTask = this.recurringFetchTask.bind(this);
+            this.fetchInterval = setInterval(fetchTask, this.fetchRestingTime);
+
+            const resetTAsk = this.recurringResetTask.bind(this);
+            this.resetInterval = setInterval(resetTAsk, this.resetRestingTime);
+        });
     }
 
     recurringFetchTask() {
@@ -36,7 +48,7 @@ class Vip {
 
         this.container
             .resolve('diaryEntryProcessor')
-            .processPageOfVipEntries(this.index, this.pageSize)
+            .processPageOfEntries(this.index, this.pageSize)
             .then((pageCount) => {
                 this.fetchThreadRunning = false;
                 this.index = pageCount === 0 ? 0 : this.index + pageCount;
@@ -44,7 +56,7 @@ class Vip {
     }
 
     recurringResetTask() {
-        this.container.resolve('subscribedUserList').cachedVipData = null;
+        this.container.resolve('subscribedUserList').cachedData = [];
     }
 
     cleanUp() {
@@ -56,4 +68,4 @@ class Vip {
     }
 }
 
-module.exports = Vip;
+module.exports = Scraper;

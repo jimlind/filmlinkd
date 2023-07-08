@@ -1,16 +1,18 @@
-class Scraper {
+import death from 'death';
+
+export class Vip {
     /** @type {number} */
-    fetchRestingTime = 20000; // 20 seconds
+    fetchRestingTime = 10000; // 10 seconds
     /** @type {boolean} */
     fetchThreadRunning = false;
     /** @type {number} */
     fetchInterval = 0;
     /** @type {number} */
-    resetRestingTime = 86400000; // 24 hours
+    resetRestingTime = 43200000; // 12 hours
     /** @type {number} */
     resetInterval = 0;
     /** @type {number} */
-    pageSize = 60;
+    pageSize = 30;
     /** @type {number} */
     index = 0;
 
@@ -21,22 +23,12 @@ class Scraper {
         this.container = container;
 
         // Trigger clean up on task ending
-        require('death')(this.cleanUp.bind(this));
+        death(this.cleanUp.bind(this));
     }
 
     run() {
-        // Get a random index from the user list
-        const getRandomIndex = this.container.resolve('subscribedUserList').getRandomIndex();
-        getRandomIndex.then((randomIndex) => {
-            // The recurringFetchTask uses and udates this
-            this.index = randomIndex;
-
-            const fetchTask = this.recurringFetchTask.bind(this);
-            this.fetchInterval = setInterval(fetchTask, this.fetchRestingTime);
-
-            const resetTAsk = this.recurringResetTask.bind(this);
-            this.resetInterval = setInterval(resetTAsk, this.resetRestingTime);
-        });
+        this.fetchInterval = setInterval(this.recurringFetchTask.bind(this), this.fetchRestingTime);
+        this.resetInterval = setInterval(this.recurringResetTask.bind(this), this.resetRestingTime);
     }
 
     recurringFetchTask() {
@@ -46,7 +38,7 @@ class Scraper {
 
         this.container
             .resolve('diaryEntryProcessor')
-            .processPageOfEntries(this.index, this.pageSize)
+            .processPageOfVipEntries(this.index, this.pageSize)
             .then((pageCount) => {
                 this.fetchThreadRunning = false;
                 this.index = pageCount === 0 ? 0 : this.index + pageCount;
@@ -54,10 +46,12 @@ class Scraper {
     }
 
     recurringResetTask() {
-        this.container.resolve('subscribedUserList').cachedData = [];
+        this.container.resolve('subscribedUserList').cachedVipData = null;
     }
 
-    cleanUp() {
+    cleanUp(signal, error) {
+        // Log process closure
+        this.container.resolve('logger').info('Program Terminated', { signal, error });
         // Stop the recurring tasks
         clearInterval(this.fetchInterval);
         clearInterval(this.resetInterval);
@@ -65,5 +59,3 @@ class Scraper {
         this.container.resolve('pubSubConnection').closeAllSubscriptions();
     }
 }
-
-module.exports = Scraper;
