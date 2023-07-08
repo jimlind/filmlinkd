@@ -1,6 +1,4 @@
-'use strict';
-
-class InteractionTranslator {
+export default class InteractionTranslator {
     /**
      * @param {import('../commands/contributor-command')} contributorCommand
      * @param {import('../commands/diary-command')} diaryCommand
@@ -170,5 +168,3 @@ class InteractionTranslator {
         }, '');
     }
 }
-
-module.exports = InteractionTranslator;
