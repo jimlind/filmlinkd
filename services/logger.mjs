@@ -1,6 +1,4 @@
-'use strict';
-
-class Logger {
+export default class Logger {
     constructor(config, winston, googleCloudWinstonTransport, consoleTransport) {
         // Create a Winston logger that logs debug and above
         this.winstonLogger = winston.createLogger({
@@ -31,5 +29,3 @@ class Logger {
         this.winstonLogger.error(...args);
     }
 }
-
-module.exports = Logger;
