@@ -3,6 +3,7 @@ export default class InteractionTranslator {
      * @param {import('../commands/contributor-command.mjs')} contributorCommand
      * @param {import('../commands/diary-command.mjs')} diaryCommand
      * @param {import('./discord/discord-connection.mjs')} discordConnection
+     * @param {import('discord.js')} discordLibrary
      * @param {any} embedBuilderFactory
      * @param {import('../commands/film-command.mjs')} filmCommand
      * @param {import('./google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
@@ -22,6 +23,7 @@ export default class InteractionTranslator {
         contributorCommand,
         diaryCommand,
         discordConnection,
+        discordLibrary,
         embedBuilderFactory,
         filmCommand,
         firestoreSubscriptionDao,
@@ -40,6 +42,7 @@ export default class InteractionTranslator {
         this.contributorCommand = contributorCommand;
         this.diaryCommand = diaryCommand;
         this.discordConnection = discordConnection;
+        this.discordLibrary = discordLibrary;
         this.embedBuilderFactory = embedBuilderFactory;
         this.filmCommand = filmCommand;
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
@@ -61,7 +64,7 @@ export default class InteractionTranslator {
      */
     translate(commandInteraction) {
         this.getEmbedBuilderPromiseAfterNeccesaryAction(commandInteraction).then((embedBuilder) => {
-            if (embedBuilder instanceof require('discord.js').EmbedBuilder) {
+            if (embedBuilder instanceof this.discordLibrary.EmbedBuilder) {
                 //There is a 4096 character limit on descriptions so cut things off to keep the bot happy
                 const description = embedBuilder?.data?.description || '';
                 embedBuilder.setDescription(description.substring(0, 4096));
