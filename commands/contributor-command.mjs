@@ -3,7 +3,7 @@
 export default class ContributorCommand {
     /**
      * @param {import('../services/letterboxd/api/letterboxd-contributor-api')} letterboxdContributorApi
-     * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
+     * @param {import('../factories/embed-builder-factory.mjs')} embedBuilderFactory
      */
     constructor(letterboxdContributorApi, embedBuilderFactory) {
         this.letterboxdContributorApi = letterboxdContributorApi;

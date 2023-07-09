@@ -15,8 +15,8 @@ class DiaryEntryWriter {
     cachedPreviousData = {};
 
     /**
-     * @param {import('../discord/discord-message-sender')} discordMessageSender
-     * @param {import('../../factories/embed-builder-factory')} embedBuilderFactory
+     * @param {import('../discord/discord-message-sender.mjs')} discordMessageSender
+     * @param {import('../../factories/embed-builder-factory.mjs')} embedBuilderFactory
      * @param {import('../google/firestore/firestore-user-dao')} firestoreUserDao
      * @param {import('../letterboxd/letterboxd-viewing-id-web')} letterboxdViewingIdWeb
      * @param {import('../logger.mjs')} logger

@@ -1,8 +1,8 @@
-const LetterboxdEntry = require('../models/letterboxd/letterboxd-entry');
+import LetterboxdEntry from '../models/letterboxd/letterboxd-entry.js';
 
-class LetterboxdEntryFactory {
+export default class LetterboxdEntryFactory {
     /**
-     * @param {import('./letterboxd/letterboxd-member-factory')} letterboxdMemberFactory
+     * @param {import('./letterboxd/letterboxd-member-factory.mjs')} letterboxdMemberFactory
      */
     constructor(letterboxdMemberFactory) {
         this.letterboxdMemberFactory = letterboxdMemberFactory;
@@ -39,5 +39,3 @@ class LetterboxdEntryFactory {
         return letterboxdEntry;
     }
 }
-
-module.exports = LetterboxdEntryFactory;

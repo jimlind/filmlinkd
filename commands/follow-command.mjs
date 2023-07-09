@@ -7,7 +7,7 @@ export default class FollowCommand {
      * @param {import('../services/google/firestore/firestore-user-dao')} firestoreUserDao
      * @param {import('../services/letterboxd/letterboxd-lid-web')} letterboxdLidWeb
      * @param {import('../services/letterboxd/api/letterboxd-member-api')} letterboxdMemberApi
-     * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
+     * @param {import('../factories/embed-builder-factory.mjs')} embedBuilderFactory
      */
     constructor(
         diaryEntryProcessor,

@@ -3,7 +3,7 @@ export default class RouletteCommand {
      * @param {import('../http-client')} httpClient
      * @param {import('../services/letterboxd/api/letterboxd-film-api')} letterboxdFilmApi
      * @param {import('../services/letterboxd/letterboxd-lid-web')} letterboxdLidWeb
-     * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
+     * @param {import('../factories/embed-builder-factory.mjs')} embedBuilderFactory
      */
     constructor(httpClient, letterboxdFilmApi, letterboxdLidWeb, embedBuilderFactory) {
         this.httpClient = httpClient;

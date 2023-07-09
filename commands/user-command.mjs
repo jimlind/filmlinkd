@@ -2,7 +2,7 @@ export default class UserCommand {
     /**
      * @param {import('../services/letterboxd/letterboxd-lid-web')} letterboxdLidWeb
      * @param {import('../services/letterboxd/api/letterboxd-member-api')} letterboxdMemberApi
-     * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
+     * @param {import('../factories/embed-builder-factory.mjs')} embedBuilderFactory
      */
     constructor(letterboxdLidWeb, letterboxdMemberApi, embedBuilderFactory) {
         this.letterboxdLidWeb = letterboxdLidWeb;

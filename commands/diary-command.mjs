@@ -5,7 +5,7 @@ export default class DiaryCommand {
      * @param {import('../services/letterboxd/letterboxd-lid-web')} letterboxdLidWeb
      * @param {import('../services/letterboxd/api/letterboxd-member-api')} letterboxdMemberApi
      * @param {import('../services/letterboxd/api/letterboxd-entry-api')} letterboxdEntryApi
-     * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
+     * @param {import('../factories/embed-builder-factory.mjs')} embedBuilderFactory
      */
     constructor(letterboxdLidWeb, letterboxdMemberApi, letterboxdEntryApi, embedBuilderFactory) {
         this.letterboxdLidWeb = letterboxdLidWeb;

@@ -1,13 +1,11 @@
-'use strict';
-
-const { EmbedBuilder } = require('discord.js');
-
-class EmbedBuilderFactory {
+export default class EmbedBuilderFactory {
     /**
+     * @param {import('discord.js')} discordLibrary
      * @param {import('markdown-truncate')} truncateMarkdown
      * @param {import('turndown')} turndownService
      */
-    constructor(truncateMarkdown, turndownService) {
+    constructor(discordLibrary, truncateMarkdown, turndownService) {
+        this.discordLibrary = discordLibrary;
         this.truncateMarkdown = truncateMarkdown;
         this.turndownService = turndownService;
     }
@@ -440,7 +438,7 @@ class EmbedBuilderFactory {
     }
 
     createEmbedBuilder() {
-        return new EmbedBuilder().setColor(0xa700bd);
+        return new this.discordLibrary.EmbedBuilder().setColor(0xa700bd);
     }
 
     formatStars(rating) {
@@ -528,5 +526,3 @@ class EmbedBuilderFactory {
         return largestImage?.url || '';
     }
 }
-
-module.exports = EmbedBuilderFactory;

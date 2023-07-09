@@ -3,7 +3,7 @@ export default class HelpCommand {
      * @param {import('../config.mjs')} config
      * @param {import('../services/discord/discord-connection.mjs')} discordConnection
      * @param {import('../services/google/firestore/firestore-user-dao')} firestoreUserDao
-     * @param {import('../factories/embed-builder-factory')} embedBuilderFactory
+     * @param {import('../factories/embed-builder-factory.mjs')} embedBuilderFactory
      */
     constructor(config, discordConnection, firestoreUserDao, embedBuilderFactory) {
         this.config = config;
