@@ -5,7 +5,7 @@ const { PubSub } = require('@google-cloud/pubsub');
 const { SecretManagerServiceClient } = require('@google-cloud/secret-manager').v1;
 const awilix = require('awilix');
 const axios = require('axios').default;
-const { Client: DiscordClient, ActivityType, GatewayIntentBits } = require('discord.js');
+const discord = require('discord.js');
 const domSerializer = require('dom-serializer').default;
 const htmlparser2 = require('htmlparser2');
 const truncateMarkdown = require('markdown-truncate');
@@ -27,14 +27,14 @@ class DependencyInjectionContainer {
         this.container = awilix.createContainer();
 
         // Create Discord Client
-        const discordClient = new DiscordClient({
-            intents: [GatewayIntentBits.Guilds],
+        const discordClient = new discord.Client({
+            intents: [discord.GatewayIntentBits.Guilds],
             presence: {
                 status: 'online',
                 activities: [
                     {
                         name: 'Slash Commands',
-                        type: ActivityType.Listening,
+                        type: discord.ActivityType.Listening,
                         url: 'https://jimlind.github.io/filmlinkd/',
                     },
                 ],
@@ -86,6 +86,7 @@ class DependencyInjectionContainer {
         this.container.register({
             config: awilix.asValue(this.config),
             discordClient: awilix.asValue(discordClient),
+            discordLibrary: awilix.asValue(discord),
             axios: awilix.asValue(axios),
             domSerializer: awilix.asValue(domSerializer),
             htmlParser2: awilix.asValue(htmlparser2),
