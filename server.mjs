@@ -4,7 +4,7 @@ import config from './config.mjs';
 import container from './dependency-injection-container.js';
 import Scraper from './process/scraper.mjs';
 import Cluster from './process/sharding/cluster.js';
-import StandAlone from './process/standalone.js';
+import StandAlone from './process/standalone.mjs';
 import Vip from './process/vip.mjs';
 
 switch (config.get('mode')) {
