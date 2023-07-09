@@ -2,7 +2,7 @@
 
 class LetterboxdLidWeb {
     /**
-     * @param {import('../http-client')} httpClient
+     * @param {import('../http-client.mjs')} httpClient
      */
     constructor(httpClient) {
         this.httpClient = httpClient;

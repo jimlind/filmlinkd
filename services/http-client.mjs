@@ -1,6 +1,4 @@
-'use strict';
-
-class HttpClient {
+export default class HttpClient {
     headers = { 'User-Agent': 'Filmlinkd - A Letterboxd Discord Bot' };
 
     /**
@@ -46,5 +44,3 @@ class HttpClient {
             });
     }
 }
-
-module.exports = HttpClient;
