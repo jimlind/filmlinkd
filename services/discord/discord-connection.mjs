@@ -1,6 +1,4 @@
-'use strict';
-
-class DiscordConnection {
+export default class DiscordConnection {
     connected = false;
     locked = false;
 
@@ -78,5 +76,3 @@ class DiscordConnection {
         });
     }
 }
-
-module.exports = DiscordConnection;

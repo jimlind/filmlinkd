@@ -1,8 +1,7 @@
-const { ChannelType } = require('discord.js');
-
-class DiscordMessageSender {
-    constructor(discordConnection, logger) {
+export default class DiscordMessageSender {
+    constructor(discordConnection, discordLibrary, logger) {
         this.discordConnection = discordConnection;
+        this.discordLibrary = discordLibrary;
         this.logger = logger;
     }
 
@@ -21,7 +20,10 @@ class DiscordMessageSender {
                     }
 
                     // Text and News channels can get posts
-                    const textChannelTypes = [ChannelType.GuildAnnouncement, ChannelType.GuildText];
+                    const textChannelTypes = [
+                        this.discordLibrary.ChannelType.GuildAnnouncement,
+                        this.discordLibrary.ChannelType.GuildText,
+                    ];
                     if (!textChannelTypes.includes(channel.type)) {
                         const metadata = {
                             channelId,
@@ -72,5 +74,3 @@ class DiscordMessageSender {
         });
     }
 }
-
-module.exports = DiscordMessageSender;

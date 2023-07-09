@@ -1,12 +1,12 @@
-'use strict';
-
-class DiscordInteractionListener {
+export default class DiscordInteractionListener {
     /**
      * @param {import('../discord/discord-connection')} discordConnection
-     * @param {import('../../services/logger')} logger
+     * @param {import('discord.js')} discordLibrary
+     * @param {import('../../services/logger.mjs')} logger
      */
-    constructor(discordConnection, logger) {
+    constructor(discordConnection, discordLibrary, logger) {
         this.discordConnection = discordConnection;
+        this.discordLibrary = discordLibrary;
         this.logger = logger;
     }
 
@@ -18,7 +18,7 @@ class DiscordInteractionListener {
                 (/** @type {import('discord.js').Interaction} */ interaction) => {
                     // Ignore if not a command and not from a guild member
                     if (!interaction.isCommand()) return;
-                    if (!(interaction.member instanceof require('discord.js').GuildMember)) return;
+                    if (!(interaction.member instanceof this.discordLibrary.GuildMember)) return;
 
                     return interaction
                         .deferReply()
@@ -34,5 +34,3 @@ class DiscordInteractionListener {
         });
     }
 }
-
-module.exports = DiscordInteractionListener;
