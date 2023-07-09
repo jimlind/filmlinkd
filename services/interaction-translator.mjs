@@ -1,22 +1,22 @@
 export default class InteractionTranslator {
     /**
-     * @param {import('../commands/contributor-command')} contributorCommand
-     * @param {import('../commands/diary-command')} diaryCommand
-     * @param {import('./discord/discord-connection')} discordConnection
+     * @param {import('../commands/contributor-command.mjs')} contributorCommand
+     * @param {import('../commands/diary-command.mjs')} diaryCommand
+     * @param {import('./discord/discord-connection.mjs')} discordConnection
      * @param {any} embedBuilderFactory
-     * @param {import('../commands/film-command')} filmCommand
+     * @param {import('../commands/film-command.mjs')} filmCommand
      * @param {import('./google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
      * @param {import('./google/firestore/firestore-user-dao')} firestoreUserDao
-     * @param {import('../commands/follow-command')} followCommand
-     * @param {import('../commands/following-command')} followingCommand
-     * @param {import('../commands/help-command')} helpCommand
+     * @param {import('../commands/follow-command.mjs')} followCommand
+     * @param {import('../commands/following-command.mjs')} followingCommand
+     * @param {import('../commands/help-command.mjs')} helpCommand
      * @param {any} letterboxdProfileWeb
-     * @param {import('../commands/list-command')} listCommand
-     * @param {import('../commands/logged-command')} loggedCommand
-     * @param {import('../commands/roulette-command')} rouletteCommand
+     * @param {import('../commands/list-command.mjs')} listCommand
+     * @param {import('../commands/logged-command.mjs')} loggedCommand
+     * @param {import('../commands/roulette-command.mjs')} rouletteCommand
      * @param {any} subscribedUserList
-     * @param {import('../commands/unfollow-command')} unfollowCommand
-     * @param {import('../commands/user-command')} userCommand
+     * @param {import('../commands/unfollow-command.mjs')} unfollowCommand
+     * @param {import('../commands/user-command.mjs')} userCommand
      */
     constructor(
         contributorCommand,
