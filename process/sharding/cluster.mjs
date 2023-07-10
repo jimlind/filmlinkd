@@ -1,17 +1,18 @@
-const { ClusterManager } = require('discord-hybrid-sharding');
-const { SecretManagerServiceClient } = require('@google-cloud/secret-manager').v1;
-const SecretManager = require('../../services/google/secret-manager');
+import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
+import death from 'death';
+import { ClusterManager } from 'discord-hybrid-sharding';
+import SecretManager from '../../services/google/secret-manager.js';
 
-class Cluster {
+export default class Cluster {
     /**
      * @param {import('convict').Config} config
      */
     constructor(config) {
         this.config = config;
-        this.manager = new ClusterManager(`${__dirname}/single.js`);
+        this.manager = new ClusterManager('./process/sharding/single.mjs');
 
         // Trigger clean up on task ending
-        require('death')(this.cleanUp.bind(this));
+        death(this.cleanUp.bind(this));
     }
 
     run() {
@@ -38,5 +39,3 @@ class Cluster {
         process.exit();
     }
 }
-
-module.exports = Cluster;

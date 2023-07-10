@@ -1,5 +1,4 @@
-const { ClusterClient, getInfo } = require('discord-hybrid-sharding');
-const DiaryEntry = require('../../models/diary-entry.mjs');
+import { ClusterClient, getInfo } from 'discord-hybrid-sharding';
 
 class Single {
     constructor(container) {
@@ -10,7 +9,7 @@ class Single {
         this.client.options.shardCount = getInfo().TOTAL_SHARDS;
 
         // Trigger clean up on task ending
-        require('death')(this.cleanUp.bind(this));
+        this.container.resolve('death')(this.cleanUp.bind(this));
     }
 
     run() {
@@ -42,8 +41,9 @@ class Single {
             // Acknowledge the message immediatly to remove it from the queue
             // They systems will continue to seamlessly retry if the system fails at this point
             message.ack();
+            const diaryEntryFactory = this.container.resolve('diaryEntryFactory');
             const returnData = JSON.parse(message.data.toString());
-            const diaryEntry = Object.assign(new DiaryEntry(), returnData?.entry);
+            const diaryEntry = Object.assign(diaryEntryFactory.create(), returnData?.entry);
             this.container
                 .resolve('diaryEntryWriter')
                 .validateAndWrite(diaryEntry, returnData?.channelId)
@@ -90,7 +90,10 @@ class Single {
     }
 }
 
-const config = require('../../config.mjs');
-const container = require('../../dependency-injection-container')(config);
-const single = new Single(container);
-single.run();
+import config from '../../config.mjs';
+import container from '../../dependency-injection-container.js';
+container(config)
+    .initialize()
+    .then((awilixContainer) => {
+        new Single(awilixContainer).run();
+    });
