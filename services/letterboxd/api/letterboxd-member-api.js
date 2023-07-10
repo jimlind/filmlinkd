@@ -3,7 +3,7 @@
 class LetterboxdMemberApi {
     /**
      * @param {import('./letterboxd-api')} letterboxdApi
-     * @param {import('../../../factories/letterboxd/letterboxd-member-factory')} letterboxdMemberFactory
+     * @param {import('../../../factories/letterboxd/letterboxd-member-factory.mjs')} letterboxdMemberFactory
      */
     constructor(letterboxdApi, letterboxdMemberFactory) {
         this.letterboxdApi = letterboxdApi;
