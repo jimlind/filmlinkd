@@ -3,7 +3,7 @@
  * https://api-docs.letterboxd.com/#/definitions/MemberStatisticsCounts
  */
 
-class LetterboxdMemberStatisticsCounts {
+export default class LetterboxdMemberStatisticsCounts {
     /** @property {number} filmLikes The number of films the member has liked. */
     filmLikes = 0;
     /** @property {number} listLikes The number of lists the member has liked. */
@@ -37,5 +37,3 @@ class LetterboxdMemberStatisticsCounts {
     /** @property {number} filmTags The number of tags the member has used for diary entries and reviews. */
     filmTags = 0;
 }
-
-module.exports = LetterboxdMemberStatisticsCounts;

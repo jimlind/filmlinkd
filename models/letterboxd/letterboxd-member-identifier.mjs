@@ -3,9 +3,7 @@
  * https://api-docs.letterboxd.com/#/definitions/MemberIdentifier
  */
 
-class LetterboxdMemberIdentifier {
+export default class LetterboxdMemberIdentifier {
     /** @property {string} id The LID of the member. */
     id = '';
 }
-
-module.exports = LetterboxdMemberIdentifier;

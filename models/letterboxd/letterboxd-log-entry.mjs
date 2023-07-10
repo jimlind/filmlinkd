@@ -3,7 +3,7 @@
  * https://api-docs.letterboxd.com/#/definitions/LogEntry
  */
 
-class LetterboxdLogEntry {
+export default class LetterboxdLogEntry {
     /** @property {string} id The LID of the log entry. */
     id = '';
     /** @property {string} name A descriptive title for the log entry.  */
@@ -40,5 +40,3 @@ class LetterboxdLogEntry {
     /** @property {number} backdropFocalPoint The vertical focal point of the log entry’s backdrop image, if available. Expressed as a proportion of the image’s height, using values between 0.0 and 1.0. Use when cropping the image into a shorter space, such as in the page for a film on the Letterboxd site. */
     backdropFocalPoint = 0;
 }
-
-module.exports = LetterboxdLogEntry;

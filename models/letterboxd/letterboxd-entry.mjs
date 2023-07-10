@@ -1,8 +1,11 @@
 /**
  * This does not match a standard Letterboxd Data Object
+ * It was created to fill the gap between the RSS and API
+ *
+ * Should plan to stop using it eventually
  */
 
-class LetterboxdEntry {
+export default class LetterboxdEntry {
     /** @property {string} id Letterboxd id */
     id = '';
     /** @property {string} url Letterboxd entry link */
@@ -24,5 +27,3 @@ class LetterboxdEntry {
     /** @property {boolean} like liked status  */
     like = false;
 }
-
-module.exports = LetterboxdEntry;

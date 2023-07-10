@@ -3,7 +3,7 @@
  * https://api-docs.letterboxd.com/#/definitions/MemberSummary
  */
 
-class LetterboxdMemberSummary {
+export default class LetterboxdMemberSummary {
     /** @property {string} id The LID of the member. */
     id = '';
     /** @property {string} userName The member’s Letterboxd username. Usernames must be between 2 and 15 characters long and may only contain upper or lowercase letters, numbers or the underscore (_) character. */
@@ -34,5 +34,3 @@ class LetterboxdMemberSummary {
     /** @property {boolean} hideAds true if member should not be shown ads. */
     hideAds = false;
 }
-
-module.exports = LetterboxdMemberSummary;

@@ -3,7 +3,7 @@
  * https://api-docs.letterboxd.com/#/definitions/Film
  */
 
-class LetterboxdFilm {
+export default class LetterboxdFilm {
     /** @property {string} id The LID of the film. */
     id = '';
     /** @property {string} name The title of the film. */
@@ -59,5 +59,3 @@ class LetterboxdFilm {
     /** @property {*[]} recentStories The related recent stories for a film. */
     recentStories = [];
 }
-
-module.exports = LetterboxdFilm;

@@ -3,7 +3,7 @@
  * https://api-docs.letterboxd.com/#/definitions/FilmSummary
  */
 
-class LetterboxdFilmSummary {
+export default class LetterboxdFilmSummary {
     /** @property {string} id The LID of the film. */
     id = '';
     /** @property {string} name The title of the film. */
@@ -32,5 +32,3 @@ class LetterboxdFilmSummary {
     /** @property {*} relationships Relationships to the film for the authenticated member (if any) and other members where relevant. */
     relationships = [];
 }
-
-module.exports = LetterboxdFilmSummary;

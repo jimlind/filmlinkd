@@ -1,4 +1,9 @@
-class LetterboxdFilmStatistics {
+/**
+ * Letterboxd API FilmStatistics Object
+ * https://api-docs.letterboxd.com/#/definitions/FilmStatistics
+ */
+
+export default class LetterboxdFilmStatistics {
     /** @property {string} id Letterboxd id */
     id = '';
     /** @property {numer} rating */
@@ -10,5 +15,3 @@ class LetterboxdFilmStatistics {
     /** @property {numer} watchCount */
     watchCount = 0;
 }
-
-module.exports = LetterboxdFilmStatistics;

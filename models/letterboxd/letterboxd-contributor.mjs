@@ -3,7 +3,7 @@
  * https://api-docs.letterboxd.com/#/definitions/Contributor
  */
 
-class LetterboxdContributor {
+export default class LetterboxdContributor {
     /** @property {string} id The LID of the contributor. */
     id = '';
     /** @property {string} name The name of the contributor. */
@@ -15,5 +15,3 @@ class LetterboxdContributor {
     /** @property {import('./letterboxd-link')[]} links A list of relevant URLs for this entity, on Letterboxd and external sites. */
     links = [];
 }
-
-module.exports = LetterboxdContributor;

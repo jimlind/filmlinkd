@@ -3,7 +3,7 @@
  * https://api-docs.letterboxd.com/#/definitions/ContributorSummary
  */
 
-class LetterboxdContributorSummary {
+export default class LetterboxdContributorSummary {
     /** @property {string} id The LID of the contributor. */
     id = '';
     /** @property {string} name The name of the contributor. */
@@ -13,5 +13,3 @@ class LetterboxdContributorSummary {
     /** @property {string} tmdbid The ID of the contributor on TMDB, if known */
     tmdbid = '';
 }
-
-module.exports = LetterboxdContributorSummary;

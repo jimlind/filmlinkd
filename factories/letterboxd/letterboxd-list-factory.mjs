@@ -1,6 +1,6 @@
-import LetterboxdListEntrySummary from '../../models/letterboxd/letterboxd-list-entry-summary.js';
-import LetterboxdListIdentifier from '../../models/letterboxd/letterboxd-list-identifier.js';
-import LetterboxdListSummary from '../../models/letterboxd/letterboxd-list-summary.js';
+import LetterboxdListEntrySummary from '../../models/letterboxd/letterboxd-list-entry-summary.mjs';
+import LetterboxdListIdentifier from '../../models/letterboxd/letterboxd-list-identifier.mjs';
+import LetterboxdListSummary from '../../models/letterboxd/letterboxd-list-summary.mjs';
 
 export default class LetterboxdListFactory {
     /**

@@ -3,7 +3,7 @@
  * https://api-docs.letterboxd.com/#/definitions/Review
  */
 
-class LetterboxdReview {
+export default class LetterboxdReview {
     /** @property {string} id The LID of the list. */
     id = '';
     /** @property {string} lbml The review text in LBML. May contain the following HTML tags: <br> <strong> <em> <b> <i> <a href=""> <blockquote>. */
@@ -25,5 +25,3 @@ class LetterboxdReview {
     /** @property {string} text The review text formatted as HTML. */
     text = '';
 }
-
-module.exports = LetterboxdReview;

@@ -137,8 +137,8 @@ export default class EmbedBuilderFactory {
     }
 
     /**
-     * @param {import('../models/letterboxd/letterboxd-member')} member
-     * @param {import('../models/letterboxd/letterboxd-entry')[]} entryList
+     * @param {import('../models/letterboxd/letterboxd-member.mjs')} member
+     * @param {import('../models/letterboxd/letterboxd-entry.mjs')[]} entryList
      * @returns {EmbedBuilder}
      */
     createDiaryListEmbed(member, entryList) {
@@ -165,8 +165,8 @@ export default class EmbedBuilderFactory {
     }
 
     /**
-     * @param {import('../models/letterboxd/letterboxd-film')} film
-     * @param {import('../models/letterboxd/letterboxd-film-statistics')} filmStatistics
+     * @param {import('../models/letterboxd/letterboxd-film.mjs')} film
+     * @param {import('../models/letterboxd/letterboxd-film-statistics.mjs')} filmStatistics
      * @returns {EmbedBuilder}
      */
     createFilmEmbed(film, filmStatistics) {
@@ -225,8 +225,8 @@ export default class EmbedBuilderFactory {
     }
 
     /**
-     * @param {import('../models/letterboxd/letterboxd-member')} member
-     * @param {import('../models/letterboxd/letterboxd-member-statistics')} memberStatistics
+     * @param {import('../models/letterboxd/letterboxd-member.mjs')} member
+     * @param {import('../models/letterboxd/letterboxd-member-statistics.mjs')} memberStatistics
      * @returns {EmbedBuilder}
      */
     createUserEmbed(member, memberStatistics) {
@@ -270,7 +270,7 @@ export default class EmbedBuilderFactory {
     }
 
     /**
-     * @param {import('../models/letterboxd/letterboxd-list-summary')} listSummary
+     * @param {import('../models/letterboxd/letterboxd-list-summary.mjs')} listSummary
      * @returns {EmbedBuilder}
      */
     createListEmbed(listSummary) {
@@ -299,7 +299,7 @@ export default class EmbedBuilderFactory {
     }
 
     /**
-     * @param {import('../models/letterboxd/letterboxd-log-entry')[]} logEntryList
+     * @param {import('../models/letterboxd/letterboxd-log-entry.mjs')[]} logEntryList
      * @returns {EmbedBuilder}
      */
     createLoggedEmbed(logEntryList) {
@@ -333,7 +333,7 @@ export default class EmbedBuilderFactory {
     }
 
     /**
-     * @param {import('../models/letterboxd/letterboxd-contributor')} contributor
+     * @param {import('../models/letterboxd/letterboxd-contributor.mjs')} contributor
      * @returns {EmbedBuilder}
      */
     createContributorEmbed(contributor) {
@@ -516,7 +516,7 @@ export default class EmbedBuilderFactory {
     }
 
     /**
-     * @param {import('../models/letterboxd/letterboxd-image-size')[]} sizes
+     * @param {import('../models/letterboxd/letterboxd-image-size.mjs')[]} sizes
      * return string
      */
     parseImage(sizes) {

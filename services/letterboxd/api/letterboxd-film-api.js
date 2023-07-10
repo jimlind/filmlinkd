@@ -33,7 +33,7 @@ class LetterboxdFilmApi {
 
     /**
      * @param {string} letterboxdId
-     * @returns {Promise<import('../../../models/letterboxd/letterboxd-film')>}
+     * @returns {Promise<import('../../../models/letterboxd/letterboxd-film.mjs')>}
      */
     getFilm(letterboxdId) {
         return this.letterboxdApi.get(`film/${letterboxdId}`, {}).then((responseData) => {
@@ -43,7 +43,7 @@ class LetterboxdFilmApi {
 
     /**
      * @param {string} letterboxdId
-     * @returns {Promise<import('../../../models/letterboxd/letterboxd-film-statistics')>}
+     * @returns {Promise<import('../../../models/letterboxd/letterboxd-film-statistics.mjs')>}
      */
     getFilmStatistics(letterboxdId) {
         return this.letterboxdApi

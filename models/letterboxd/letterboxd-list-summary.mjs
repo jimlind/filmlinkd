@@ -3,7 +3,7 @@
  * https://api-docs.letterboxd.com/#/definitions/ListSummary
  */
 
-class LetterboxdListSummary {
+export default class LetterboxdListSummary {
     /** @property {string} id The LID of the list. */
     id = '';
     /** @property {string} name The name of the list. */
@@ -30,5 +30,3 @@ class LetterboxdListSummary {
     /** @property {string} description The list description formatted as HTML. The text is a preview extract, and may be truncated if it’s too long. */
     description = '';
 }
-
-module.exports = LetterboxdListSummary;

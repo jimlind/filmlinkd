@@ -73,7 +73,7 @@ export default class FollowCommand {
     }
 
     /**
-     * @param {import('../models/letterboxd/letterboxd-image-size')[]} sizes
+     * @param {import('../models/letterboxd/letterboxd-image-size.mjs')[]} sizes
      * return string
      */
     parseImage(sizes) {

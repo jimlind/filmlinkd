@@ -1,4 +1,4 @@
-import LetterboxdLogEntry from '../../models/letterboxd/letterboxd-log-entry.js';
+import LetterboxdLogEntry from '../../models/letterboxd/letterboxd-log-entry.mjs';
 
 export default class LetterboxdLogEntryFactory {
     /**

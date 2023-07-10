@@ -12,7 +12,7 @@ class DiaryEntryProcessor {
      * @param {import('../letterboxd/letterboxd-lid-comparison')} letterboxdLidComparison
      * @param {import('../letterboxd/api/letterboxd-log-entry-api')} letterboxdLogEntryApi
      * @param {import('../logger.mjs')} logger
-     * @param {import('../subscribed-user-list')} subscribedUserList
+     * @param {import('../subscribed-user-list.mjs')} subscribedUserList
      */
     constructor(
         diaryEntryPublisher,
@@ -174,7 +174,7 @@ class DiaryEntryProcessor {
      * @param {string} userLid
      * @param {string} entryLid
      * @param {number} maxDiaryEntries
-     * @returns {Promise<import('../../models/letterboxd/letterboxd-log-entry')[]>}
+     * @returns {Promise<import('../../models/letterboxd/letterboxd-log-entry.mjs')[]>}
      */
     getNewLogEntriesForUser(userLid, entryLid, maxDiaryEntries) {
         return this.letterboxdLogEntryApi

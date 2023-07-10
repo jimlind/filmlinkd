@@ -12,7 +12,7 @@ class LetterboxdContributorApi {
 
     /**
      * @param {string} contributorName
-     * @returns {Promise<import('../../../models/letterboxd/letterboxd-contributor')>}
+     * @returns {Promise<import('../../../models/letterboxd/letterboxd-contributor.mjs')>}
      */
     getContributor(contributorName) {
         return this.letterboxdApi

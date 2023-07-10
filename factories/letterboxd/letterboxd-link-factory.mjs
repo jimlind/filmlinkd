@@ -1,4 +1,4 @@
-import LetterboxdLink from '../../models/letterboxd/letterboxd-link.js';
+import LetterboxdLink from '../../models/letterboxd/letterboxd-link.mjs';
 
 export default class LetterboxdLinkFactory {
     /**

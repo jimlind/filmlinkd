@@ -1,4 +1,4 @@
-import LetterboxdCountry from '../../models/letterboxd/letterboxd-country.js';
+import LetterboxdCountry from '../../models/letterboxd/letterboxd-country.mjs';
 
 export default class LetterboxdCountryFactory {
     /**

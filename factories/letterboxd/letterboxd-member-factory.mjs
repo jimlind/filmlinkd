@@ -1,8 +1,8 @@
-import LetterboxdMemberIdentifier from '../../models/letterboxd/letterboxd-member-identifier.js';
-import LetterboxdMemberStatisticsCounts from '../../models/letterboxd/letterboxd-member-statistics-counts.js';
-import LetterboxdMemberStatistics from '../../models/letterboxd/letterboxd-member-statistics.js';
-import LetterboxdMemberSummary from '../../models/letterboxd/letterboxd-member-summary.js';
-import LetterboxdMember from '../../models/letterboxd/letterboxd-member.js';
+import LetterboxdMemberIdentifier from '../../models/letterboxd/letterboxd-member-identifier.mjs';
+import LetterboxdMemberStatisticsCounts from '../../models/letterboxd/letterboxd-member-statistics-counts.mjs';
+import LetterboxdMemberStatistics from '../../models/letterboxd/letterboxd-member-statistics.mjs';
+import LetterboxdMemberSummary from '../../models/letterboxd/letterboxd-member-summary.mjs';
+import LetterboxdMember from '../../models/letterboxd/letterboxd-member.mjs';
 
 export default class LetterboxdMemberFactory {
     /**

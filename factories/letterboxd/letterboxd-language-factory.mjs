@@ -1,4 +1,4 @@
-import LetterboxdLanguage from '../../models/letterboxd/letterboxd-language.js';
+import LetterboxdLanguage from '../../models/letterboxd/letterboxd-language.mjs';
 
 export default class LetterboxdLanguageFactory {
     /**

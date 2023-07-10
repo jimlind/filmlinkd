@@ -3,7 +3,7 @@
  * https://api-docs.letterboxd.com/#/definitions/MemberStatistics
  */
 
-class LetterboxdMemberStatistics {
+export default class LetterboxdMemberStatistics {
     /** @property {import('./letterboxd-member-identifier')} member The member for which statistics were requested. */
     member = null;
     /** @property {import('./letterboxd-member-statistics-counts')} counts The number of watches, ratings, likes, etc. for the member. */
@@ -14,5 +14,3 @@ class LetterboxdMemberStatistics {
     /** @property {number[]} yearsInReview A list of years the member has year-in-review pages for. Only supported for paying members. */
     yearsInReview = [];
 }
-
-module.exports = LetterboxdMemberStatistics;

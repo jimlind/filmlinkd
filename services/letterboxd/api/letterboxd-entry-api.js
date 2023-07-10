@@ -1,7 +1,7 @@
 class LetterboxdEntryApi {
     /**
      * @param {import('./letterboxd-api')} letterboxdApi
-     * @param {import('../../../factories/letterboxd-entry-factory')} letterboxdEntryFactory
+     * @param {import('../../../factories/letterboxd-entry-factory.mjs')} letterboxdEntryFactory
      */
     constructor(letterboxdApi, letterboxdEntryFactory) {
         this.letterboxdApi = letterboxdApi;
@@ -11,7 +11,7 @@ class LetterboxdEntryApi {
     /**
      * @param {string} memberLetterboxdId
      * @param {number} quantity
-     * @returns {Promise<import('../../../models/letterboxd/letterboxd-entry')[]>}
+     * @returns {Promise<import('../../../models/letterboxd/letterboxd-entry.mjs')[]>}
      */
     get(memberLetterboxdId, quantity) {
         return this.letterboxdApi

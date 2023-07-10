@@ -43,7 +43,7 @@ class DiaryEntryPublisher {
     }
 
     /**
-     * @param {import('../../models/letterboxd/letterboxd-log-entry')[]} logEntry[]
+     * @param {import('../../models/letterboxd/letterboxd-log-entry.mjs')[]} logEntry[]
      * @param {string} channelIdOverride
      * @return {Promise<{user:string, id: string}[]>}
      */

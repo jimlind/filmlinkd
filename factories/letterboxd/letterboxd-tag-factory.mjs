@@ -1,4 +1,4 @@
-import LetterboxdTag from '../../models/letterboxd/letterboxd-tag.js';
+import LetterboxdTag from '../../models/letterboxd/letterboxd-tag.mjs';
 
 export default class LetterboxdTagFactory {
     /**

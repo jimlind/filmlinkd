@@ -1,4 +1,4 @@
-import LetterboxdEntry from '../models/letterboxd/letterboxd-entry.js';
+import LetterboxdEntry from '../models/letterboxd/letterboxd-entry.mjs';
 
 export default class LetterboxdEntryFactory {
     /**

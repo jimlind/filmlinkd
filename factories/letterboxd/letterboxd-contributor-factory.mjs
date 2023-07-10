@@ -1,6 +1,6 @@
-import LetterboxdContributionStatistics from '../../models/letterboxd/letterboxd-contribution-statistics.js';
-import LetterboxdContributorSummary from '../../models/letterboxd/letterboxd-contributor-summary.js';
-import LetterboxdContributor from '../../models/letterboxd/letterboxd-contributor.js';
+import LetterboxdContributionStatistics from '../../models/letterboxd/letterboxd-contribution-statistics.mjs';
+import LetterboxdContributorSummary from '../../models/letterboxd/letterboxd-contributor-summary.mjs';
+import LetterboxdContributor from '../../models/letterboxd/letterboxd-contributor.mjs';
 
 export default class LetterboxdContributorFactory {
     /**

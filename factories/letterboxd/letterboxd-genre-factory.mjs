@@ -1,4 +1,4 @@
-import LetterboxdGenre from '../../models/letterboxd/letterboxd-genre.js';
+import LetterboxdGenre from '../../models/letterboxd/letterboxd-genre.mjs';
 
 export default class LetterboxdGenreFactory {
     /**

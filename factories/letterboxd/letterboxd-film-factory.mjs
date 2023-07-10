@@ -1,7 +1,7 @@
-import LetterboxdFilmContributions from '../../models/letterboxd/letterboxd-film-contributions.js';
-import LetterboxdFilmStatistics from '../../models/letterboxd/letterboxd-film-statistics.js';
-import LetterboxdFilmSummary from '../../models/letterboxd/letterboxd-film-summary.js';
-import LetterboxdFilm from '../../models/letterboxd/letterboxd-film.js';
+import LetterboxdFilmContributions from '../../models/letterboxd/letterboxd-film-contributions.mjs';
+import LetterboxdFilmStatistics from '../../models/letterboxd/letterboxd-film-statistics.mjs';
+import LetterboxdFilmSummary from '../../models/letterboxd/letterboxd-film-summary.mjs';
+import LetterboxdFilm from '../../models/letterboxd/letterboxd-film.mjs';
 
 export default class LetterboxdFilmFactory {
     /**

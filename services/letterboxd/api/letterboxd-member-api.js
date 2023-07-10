@@ -39,7 +39,7 @@ class LetterboxdMemberApi {
 
     /**
      * @param {string} letterboxdId
-     * @returns {Promise<import('../../../models/letterboxd/letterboxd-member')>}
+     * @returns {Promise<import('../../../models/letterboxd/letterboxd-member.mjs')>}
      */
     getMember(letterboxdId) {
         return this.letterboxdApi
@@ -51,7 +51,7 @@ class LetterboxdMemberApi {
 
     /**
      * @param {string} letterboxdId
-     * @returns {Promise<import('../../../models/letterboxd/letterboxd-member-statistics')>}
+     * @returns {Promise<import('../../../models/letterboxd/letterboxd-member-statistics.mjs')>}
      */
     getMemberStatistics(letterboxdId) {
         return this.letterboxdApi

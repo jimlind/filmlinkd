@@ -1,5 +1,5 @@
-import LetterboxdImageSize from '../../models/letterboxd/letterboxd-image-size.js';
-import LetterboxdImage from '../../models/letterboxd/letterboxd-image.js';
+import LetterboxdImageSize from '../../models/letterboxd/letterboxd-image-size.mjs';
+import LetterboxdImage from '../../models/letterboxd/letterboxd-image.mjs';
 
 export default class LetterboxdImageFactory {
     /**

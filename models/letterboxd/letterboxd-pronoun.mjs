@@ -1,9 +1,9 @@
 /**
- * Letterboxd API Link Object
+ * Letterboxd API Pronoun Object
  * https://api-docs.letterboxd.com/#/definitions/Pronoun
  */
 
-class LetterboxdPronoun {
+export default class LetterboxdPronoun {
     /** @property {string} id The LID for this pronoun. */
     id = '';
     /** @property {string} label A label to describe this pronoun. */
@@ -19,5 +19,3 @@ class LetterboxdPronoun {
     /** @property {string} reflexive The pronoun to use to refer back to the member. */
     reflexive = '';
 }
-
-module.exports = LetterboxdPronoun;

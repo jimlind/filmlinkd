@@ -1,4 +1,4 @@
-import LetterboxdPronoun from '../../models/letterboxd/letterboxd-pronoun.js';
+import LetterboxdPronoun from '../../models/letterboxd/letterboxd-pronoun.mjs';
 
 export default class LetterboxdPronounFactory {
     /**
