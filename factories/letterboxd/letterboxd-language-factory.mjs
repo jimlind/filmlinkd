@@ -1,6 +1,6 @@
-const LetterboxdLanguage = require('../../models/letterboxd/letterboxd-language');
+import LetterboxdLanguage from '../../models/letterboxd/letterboxd-language.js';
 
-class LetterboxdLanguageFactory {
+export default class LetterboxdLanguageFactory {
     /**
      * @param {Object} languageData
      * @returns LetterboxdLanguage
@@ -14,5 +14,3 @@ class LetterboxdLanguageFactory {
         return letterboxdLanguage;
     }
 }
-
-module.exports = LetterboxdLanguageFactory;

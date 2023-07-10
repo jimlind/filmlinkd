@@ -1,6 +1,6 @@
-const LetterboxdPronoun = require('../../models/letterboxd/letterboxd-pronoun');
+import LetterboxdPronoun from '../../models/letterboxd/letterboxd-pronoun.js';
 
-class LetterboxdPronounFactory {
+export default class LetterboxdPronounFactory {
     /**
      * @param {Object} pronounData
      * @returns LetterboxdPronoun
@@ -19,5 +19,3 @@ class LetterboxdPronounFactory {
         return letterboxdPronoun;
     }
 }
-
-module.exports = LetterboxdPronounFactory;

@@ -1,6 +1,6 @@
-const LetterboxdGenre = require('../../models/letterboxd/letterboxd-genre');
+import LetterboxdGenre from '../../models/letterboxd/letterboxd-genre.js';
 
-class LetterboxdGenreFactory {
+export default class LetterboxdGenreFactory {
     /**
      * @param {Object} genreData
      * @returns LetterboxdGenre
@@ -14,5 +14,3 @@ class LetterboxdGenreFactory {
         return letterboxdGenre;
     }
 }
-
-module.exports = LetterboxdGenreFactory;

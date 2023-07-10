@@ -1,10 +1,10 @@
-const LetterboxdContributionStatistics = require('../../models/letterboxd/letterboxd-contribution-statistics');
-const LetterboxdContributor = require('../../models/letterboxd/letterboxd-contributor');
-const LetterboxdContributorSummary = require('../../models/letterboxd/letterboxd-contributor-summary');
+import LetterboxdContributionStatistics from '../../models/letterboxd/letterboxd-contribution-statistics.js';
+import LetterboxdContributorSummary from '../../models/letterboxd/letterboxd-contributor-summary.js';
+import LetterboxdContributor from '../../models/letterboxd/letterboxd-contributor.js';
 
-class LetterboxdContributorFactory {
+export default class LetterboxdContributorFactory {
     /**
-     * @param {import('./letterboxd-link-factory')} letterboxdLinkFactory
+     * @param {import('./letterboxd-link-factory.mjs')} letterboxdLinkFactory
      */
     constructor(letterboxdLinkFactory) {
         this.letterboxdLinkFactory = letterboxdLinkFactory;
@@ -56,5 +56,3 @@ class LetterboxdContributorFactory {
         return letterboxdContributionStatistics;
     }
 }
-
-module.exports = LetterboxdContributorFactory;

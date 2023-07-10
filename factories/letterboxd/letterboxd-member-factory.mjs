@@ -1,15 +1,15 @@
-const LetterboxdMember = require('../../models/letterboxd/letterboxd-member');
-const LetterboxdMemberIdentifier = require('../../models/letterboxd/letterboxd-member-identifier');
-const LetterboxdMemberStatistics = require('../../models/letterboxd/letterboxd-member-statistics');
-const LetterboxdMemberStatisticsCounts = require('../../models/letterboxd/letterboxd-member-statistics-counts');
-const LetterboxdMemberSummary = require('../../models/letterboxd/letterboxd-member-summary');
+import LetterboxdMemberIdentifier from '../../models/letterboxd/letterboxd-member-identifier.js';
+import LetterboxdMemberStatisticsCounts from '../../models/letterboxd/letterboxd-member-statistics-counts.js';
+import LetterboxdMemberStatistics from '../../models/letterboxd/letterboxd-member-statistics.js';
+import LetterboxdMemberSummary from '../../models/letterboxd/letterboxd-member-summary.js';
+import LetterboxdMember from '../../models/letterboxd/letterboxd-member.js';
 
-class LetterboxdMemberFactory {
+export default class LetterboxdMemberFactory {
     /**
-     * @param {import('./letterboxd-film-factory')} letterboxdFilmFactory
-     * @param {import('./letterboxd-image-factory')} letterboxdImageFactory
-     * @param {import('./letterboxd-link-factory')} letterboxdLinkFactory
-     * @param {import('./letterboxd-pronoun-factory')} letterboxdPronounFactory
+     * @param {import('./letterboxd-film-factory.mjs')} letterboxdFilmFactory
+     * @param {import('./letterboxd-image-factory.mjs')} letterboxdImageFactory
+     * @param {import('./letterboxd-link-factory.mjs')} letterboxdLinkFactory
+     * @param {import('./letterboxd-pronoun-factory.mjs')} letterboxdPronounFactory
      */
     constructor(
         letterboxdFilmFactory,
@@ -160,5 +160,3 @@ class LetterboxdMemberFactory {
         return letterboxdMemberSummary;
     }
 }
-
-module.exports = LetterboxdMemberFactory;

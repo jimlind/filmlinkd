@@ -1,11 +1,11 @@
-const LetterboxdListEntrySummary = require('../../models/letterboxd/letterboxd-list-entry-summary');
-const LetterboxdListIdentifier = require('../../models/letterboxd/letterboxd-list-identifier');
-const LetterboxdListSummary = require('../../models/letterboxd/letterboxd-list-summary');
+import LetterboxdListEntrySummary from '../../models/letterboxd/letterboxd-list-entry-summary.js';
+import LetterboxdListIdentifier from '../../models/letterboxd/letterboxd-list-identifier.js';
+import LetterboxdListSummary from '../../models/letterboxd/letterboxd-list-summary.js';
 
-class LetterboxdListFactory {
+export default class LetterboxdListFactory {
     /**
-     * @param {import('./letterboxd-film-factory')} letterboxdFilmFactory
-     * @param {import('./letterboxd-member-factory')} letterboxdMemberFactory
+     * @param {import('./letterboxd-film-factory.mjs')} letterboxdFilmFactory
+     * @param {import('./letterboxd-member-factory.mjs')} letterboxdMemberFactory
      */
     constructor(letterboxdFilmFactory, letterboxdMemberFactory) {
         this.letterboxdFilmFactory = letterboxdFilmFactory;
@@ -72,5 +72,3 @@ class LetterboxdListFactory {
         return letterboxdListSummary;
     }
 }
-
-module.exports = LetterboxdListFactory;

@@ -1,6 +1,6 @@
-const LetterboxdTag = require('../../models/letterboxd/letterboxd-tag');
+import LetterboxdTag from '../../models/letterboxd/letterboxd-tag.js';
 
-class LetterboxdTagFactory {
+export default class LetterboxdTagFactory {
     /**
      * @param {Object} tagData
      * @returns LetterboxdTag
@@ -15,5 +15,3 @@ class LetterboxdTagFactory {
         return letterboxdTag;
     }
 }
-
-module.exports = LetterboxdTagFactory;

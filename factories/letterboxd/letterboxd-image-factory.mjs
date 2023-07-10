@@ -1,7 +1,7 @@
-const LetterboxdImage = require('../../models/letterboxd/letterboxd-image');
-const LetterboxdImageSize = require('../../models/letterboxd/letterboxd-image-size');
+import LetterboxdImageSize from '../../models/letterboxd/letterboxd-image-size.js';
+import LetterboxdImage from '../../models/letterboxd/letterboxd-image.js';
 
-class LetterboxdImageFactory {
+export default class LetterboxdImageFactory {
     /**
      * @param {Object} imageData
      * @returns LetterboxdImage | null
@@ -31,5 +31,3 @@ class LetterboxdImageFactory {
         return letterboxdImagesSize;
     }
 }
-
-module.exports = LetterboxdImageFactory;

@@ -1,6 +1,6 @@
-const LetterboxdCountry = require('../../models/letterboxd/letterboxd-country');
+import LetterboxdCountry from '../../models/letterboxd/letterboxd-country.js';
 
-class LetterboxdCountryFactory {
+export default class LetterboxdCountryFactory {
     /**
      * @param {Object} countryData
      * @returns LetterboxdCountry
@@ -14,5 +14,3 @@ class LetterboxdCountryFactory {
         return letterboxdCountry;
     }
 }
-
-module.exports = LetterboxdCountryFactory;

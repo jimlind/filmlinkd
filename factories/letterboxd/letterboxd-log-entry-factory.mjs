@@ -1,6 +1,6 @@
-const LetterboxdLogEntry = require('../../models/letterboxd/letterboxd-log-entry');
+import LetterboxdLogEntry from '../../models/letterboxd/letterboxd-log-entry.js';
 
-class LetterboxdLogEntryFactory {
+export default class LetterboxdLogEntryFactory {
     /**
      * @param {import('./letterboxd-film-factory')} letterboxdFilmFactory
      * @param {import('./letterboxd-image-factory')} letterboxdImageFactory
@@ -62,5 +62,3 @@ class LetterboxdLogEntryFactory {
         return letterboxdLogEntry;
     }
 }
-
-module.exports = LetterboxdLogEntryFactory;

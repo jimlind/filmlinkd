@@ -1,6 +1,6 @@
-const LetterboxdLink = require('../../models/letterboxd/letterboxd-link');
+import LetterboxdLink from '../../models/letterboxd/letterboxd-link.js';
 
-class LetterboxdLinkFactory {
+export default class LetterboxdLinkFactory {
     /**
      * @param {Object} linkData
      * @returns LetterboxdLink
@@ -15,5 +15,3 @@ class LetterboxdLinkFactory {
         return letterboxdLink;
     }
 }
-
-module.exports = LetterboxdLinkFactory;

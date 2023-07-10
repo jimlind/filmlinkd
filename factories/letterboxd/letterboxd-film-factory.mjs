@@ -1,16 +1,16 @@
-const LetterboxdFilm = require('../../models/letterboxd/letterboxd-film');
-const LetterboxdFilmContributions = require('../../models/letterboxd/letterboxd-film-contributions');
-const LetterboxdFilmStatistics = require('../../models/letterboxd/letterboxd-film-statistics');
-const LetterboxdFilmSummary = require('../../models/letterboxd/letterboxd-film-summary');
+import LetterboxdFilmContributions from '../../models/letterboxd/letterboxd-film-contributions.js';
+import LetterboxdFilmStatistics from '../../models/letterboxd/letterboxd-film-statistics.js';
+import LetterboxdFilmSummary from '../../models/letterboxd/letterboxd-film-summary.js';
+import LetterboxdFilm from '../../models/letterboxd/letterboxd-film.js';
 
-class LetterboxdFilmFactory {
+export default class LetterboxdFilmFactory {
     /**
-     * @param {import('./letterboxd-contributor-factory')} letterboxdContributorFactory
-     * @param {import('./letterboxd-country-factory')} letterboxdCountryFactory
-     * @param {import('./letterboxd-genre-factory')} letterboxdGenreFactory
-     * @param {import('./letterboxd-image-factory')} letterboxdImageFactory
-     * @param {import('./letterboxd-language-factory')} letterboxdLanguageFactory
-     * @param {import('./letterboxd-link-factory')} letterboxdLinkFactory
+     * @param {import('./letterboxd-contributor-factory.mjs')} letterboxdContributorFactory
+     * @param {import('./letterboxd-country-factory.mjs')} letterboxdCountryFactory
+     * @param {import('./letterboxd-genre-factory.mjs')} letterboxdGenreFactory
+     * @param {import('./letterboxd-image-factory.mjs')} letterboxdImageFactory
+     * @param {import('./letterboxd-language-factory.mjs')} letterboxdLanguageFactory
+     * @param {import('./letterboxd-link-factory.mjs')} letterboxdLinkFactory
      */
     constructor(
         letterboxdContributorFactory,
@@ -142,5 +142,3 @@ class LetterboxdFilmFactory {
         return letterboxdFilmContributions;
     }
 }
-
-module.exports = LetterboxdFilmFactory;
