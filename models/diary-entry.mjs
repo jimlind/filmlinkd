@@ -1,4 +1,4 @@
-class DiaryEntry {
+export default class DiaryEntry {
     /** @property {number} id - Letterboxd id (integer) for diary entry */
     id = 0;
     /** @property {string} lid - Letterboxd id (string) for diary entry */
@@ -34,5 +34,3 @@ class DiaryEntry {
     /** @property {string} review - Full raw text of the review including any HTML */
     review = '';
 }
-
-module.exports = DiaryEntry;

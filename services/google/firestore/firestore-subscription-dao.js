@@ -1,7 +1,3 @@
-'use strict';
-
-const User = require('../../../models/user');
-
 class FirestoreSubscriptionDao {
     /** @type FirebaseFirestore.CollectionReference */
     firestoreCollection;
@@ -10,11 +6,13 @@ class FirestoreSubscriptionDao {
      * @param {import('./firestore-connection')} firestoreConnection
      * @param {import('./firestore-vip-dao')} firestoreVipDao
      * @param {import('../../logger.mjs')} logger
+     * @param {import('../../../factories/user-factory.mjs')} userFactory
      */
-    constructor(firestoreConnection, firestoreVipDao, logger) {
+    constructor(firestoreConnection, firestoreVipDao, logger, userFactory) {
         this.firestoreCollection = firestoreConnection.getCollection();
         this.firestoreVipDao = firestoreVipDao;
         this.logger = logger;
+        this.userFactory = userFactory;
     }
 
     /**
@@ -170,7 +168,7 @@ class FirestoreSubscriptionDao {
                             id: documentSnapshot.ref.id,
                             ...documentSnapshot.data(),
                         };
-                        const user = Object.assign(new User(), documentData);
+                        const user = Object.assign(this.userFactory.create(), documentData);
                         userList.push(user); // TODO: Do we need the complete data blob or can we trim it?
                     });
                     resolve(userList);

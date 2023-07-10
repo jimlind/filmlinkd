@@ -1,7 +1,3 @@
-'use strict';
-
-const DiaryEntry = require('../../models/diary-entry');
-
 class LegacyLetterboxdLikesWeb {
     root = 'https://letterboxd.com';
 

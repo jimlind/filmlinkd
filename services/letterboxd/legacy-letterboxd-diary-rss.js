@@ -1,14 +1,12 @@
-'use strict';
-
-const DiaryEntry = require('../../models/diary-entry');
-
 class LegacyLetterboxdDiaryRss {
     /**
+     * @param {import('../../factories/diary-entry-factory.mjs')} diaryEntryFactory
      * @param {import('dom-serializer').default} domSerializer
      * @param {import('../http-client')} httpClient
      * @param {import('htmlparser2')} htmlParser2 - Library for parsing HTML
      */
-    constructor(domSerializer, httpClient, htmlParser2) {
+    constructor(diaryEntryFactory, domSerializer, httpClient, htmlParser2) {
+        this.diaryEntryFactory = diaryEntryFactory;
         this.domSerializer = domSerializer;
         this.httpClient = httpClient;
         this.htmlParser2 = htmlParser2;
@@ -63,7 +61,7 @@ class LegacyLetterboxdDiaryRss {
         const description = this.getDescriptionDom(item);
         const image = this.getImage(description);
 
-        const diaryEntry = new DiaryEntry();
+        const diaryEntry = this.diaryEntryFactory.create();
         diaryEntry.id = this.getId(item);
         diaryEntry.userName = userName;
         diaryEntry.type = this.getType(item);

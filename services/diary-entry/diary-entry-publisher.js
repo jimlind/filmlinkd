@@ -1,17 +1,15 @@
-'use strict';
-
-const DiaryEntry = require('../../models/diary-entry');
-
 /**
  * Class dealing with publishing diary entry events to Google's Pub/Sub messaging service
  */
 class DiaryEntryPublisher {
     /**
+     * @param {import('../../factories/diary-entry-factory.mjs')} diaryEntryFactory
      * @param {import('../letterboxd/letterboxd-lid-comparison')} letterboxdLidWeb
      * @param {import('../logger.mjs')} logger
      * @param {import('../google/pubsub/pub-sub-connection')} pubSubConnection
      */
-    constructor(letterboxdLidWeb, logger, pubSubConnection) {
+    constructor(diaryEntryFactory, letterboxdLidWeb, logger, pubSubConnection) {
+        this.diaryEntryFactory = diaryEntryFactory;
         this.letterboxdLidWeb = letterboxdLidWeb;
         this.logger = logger;
         this.pubSubConnection = pubSubConnection;
@@ -21,7 +19,7 @@ class DiaryEntryPublisher {
      * Publish a list of Diary Entries (Log Entries) in the appropriate Pub/Sub
      * Attaches a LID to the Entry for forward compatibility
      *
-     * @param {import('../../models/diary-entry')[]} diaryEntryList
+     * @param {import('../../models/diary-entry.mjs')[]} diaryEntryList
      * @param {string} channelIdOverride
      * @return {Promise}
      */
@@ -62,7 +60,7 @@ class DiaryEntryPublisher {
                         const publishedTimeMs = new Date(logEntry.whenCreated).getTime();
                         const watchedTimeMs = new Date(logEntry.diaryDetails?.diaryDate).getTime();
 
-                        const diaryEntry = new DiaryEntry();
+                        const diaryEntry = this.diaryEntryFactory.create();
                         diaryEntry.adult = logEntry.film.adult;
                         diaryEntry.containsSpoilers = logEntry.review?.containsSpoilers || '';
                         diaryEntry.filmTitle = logEntry.film.name;

@@ -1,9 +1,16 @@
-import DiaryEntry from '../models/diary-entry.js';
+import DiaryEntry from '../models/diary-entry.mjs';
 
 export default class DiaryEntryFactory {
     /**
+     * @return {import('../models/diary-entry.mjs')}
+     */
+    create() {
+        return new DiaryEntry();
+    }
+
+    /**
      * @param {string} inputString
-     * @return {import('../models/diary-entry')}
+     * @return {import('../models/diary-entry.mjs')}
      */
     createFromMessage(message) {
         const messageString = message?.data?.toString() || '';

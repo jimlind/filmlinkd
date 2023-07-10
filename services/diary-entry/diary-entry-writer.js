@@ -39,7 +39,7 @@ class DiaryEntryWriter {
     }
 
     /**
-     * @param {import('../../models/diary-entry')} diaryEntry
+     * @param {import('../../models/diary-entry.mjs')} diaryEntry
      * @param {string} channelIdOverride
      * @returns {Promise}
      */
@@ -149,8 +149,8 @@ class DiaryEntryWriter {
     }
 
     /**
-     * @param {import("../../models/diary-entry")} diaryEntry
-     * @param {import("../../models/user")} userModel
+     * @param {import("../../models/diary-entry.mjs")} diaryEntry
+     * @param {import("../../models/user.mjs")} userModel
      * @returns {Promise<boolean[]>}
      */
     createSenderPromise(diaryEntry, userModel) {

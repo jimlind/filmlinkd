@@ -1,4 +1,4 @@
-class User {
+export default class User {
     /** @property {string} id Firestore document id */
     id = '';
     /** @property {string} letterboxdId Letterboxd id */
@@ -22,5 +22,3 @@ class User {
     /** @property {icon: string; text: string} footer Patron supporter footer */
     footer = {};
 }
-
-module.exports = User;

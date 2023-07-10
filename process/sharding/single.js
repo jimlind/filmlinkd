@@ -1,5 +1,5 @@
 const { ClusterClient, getInfo } = require('discord-hybrid-sharding');
-const DiaryEntry = require('../../models/diary-entry');
+const DiaryEntry = require('../../models/diary-entry.mjs');
 
 class Single {
     constructor(container) {

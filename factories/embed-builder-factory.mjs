@@ -81,8 +81,8 @@ export default class EmbedBuilderFactory {
     }
 
     /**
-     * @param {import("../models/diary-entry")} entry
-     * @param {import("../models/user")} data
+     * @param {import("../models/diary-entry.mjs")} entry
+     * @param {import("../models/user.mjs")} data
      */
     createDiaryEntryEmbed(entry, data) {
         const profileName = data.displayName;

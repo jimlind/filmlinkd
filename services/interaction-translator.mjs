@@ -144,7 +144,7 @@ export default class InteractionTranslator {
 
     /**
      * @param {string} accountName
-     * @returns {Promise<import('../models/user')>}
+     * @returns {Promise<import('../models/user.mjs')>}
      */
     refreshAccount(accountName) {
         return this.letterboxdProfileWeb.get(accountName).then((profile) => {
