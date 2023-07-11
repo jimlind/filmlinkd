@@ -1,5 +1,6 @@
 'use strict';
 
+const { Firestore } = require('@google-cloud/firestore');
 const { LoggingWinston } = require('@google-cloud/logging-winston');
 const { PubSub } = require('@google-cloud/pubsub');
 const { SecretManagerServiceClient } = require('@google-cloud/secret-manager').v1;
@@ -90,6 +91,7 @@ class DependencyInjectionContainer {
             death: awilix.asValue(death),
             discordClient: awilix.asValue(discordClient),
             discordLibrary: awilix.asValue(discord),
+            firestoreLibrary: awilix.asValue(Firestore),
             axios: awilix.asValue(axios),
             domSerializer: awilix.asValue(domSerializer),
             htmlParser2: awilix.asValue(htmlparser2),

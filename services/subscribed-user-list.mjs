@@ -10,7 +10,7 @@ export default class SubscribedUserList {
     cachedVipData = null;
 
     /**
-     * @param {import('./google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
+     * @param {import('./google/firestore/firestore-subscription-dao.mjs')} firestoreSubscriptionDao
      * @param {import('./letterboxd/letterboxd-lid-comparison')} letterboxdLidComparison
      * @param {import('./logger.mjs')} logger
      */

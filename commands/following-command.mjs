@@ -2,7 +2,7 @@
 
 export default class FollowingCommand {
     /**
-     * @param {import('../services/google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
+     * @param {import('../services/google/firestore/firestore-subscription-dao.mjs')} firestoreSubscriptionDao
      * @param {import('../factories/embed-builder-factory.mjs')} embedBuilderFactory
      */
     constructor(firestoreSubscriptionDao, embedBuilderFactory) {

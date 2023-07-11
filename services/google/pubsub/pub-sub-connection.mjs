@@ -1,4 +1,4 @@
-class PubSubConnection {
+export default class PubSubConnection {
     /** @type {import('@google-cloud/pubsub').Topic[]} */
     topicList = [];
     /** @type {import('@google-cloud/pubsub').Subscription[]} */
@@ -224,5 +224,3 @@ class PubSubConnection {
         return `${name}-shard-${shardString}`;
     }
 }
-
-module.exports = PubSubConnection;

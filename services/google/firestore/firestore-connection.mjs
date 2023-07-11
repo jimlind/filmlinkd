@@ -1,17 +1,14 @@
-'use strict';
-
-const { Firestore } = require('@google-cloud/firestore');
-
-class FirestoreConnection {
+export default class FirestoreConnection {
     collection;
 
     /**
      * @param {import('convict').Config} config
+     * @param {import('@google-cloud/firestore')} firestoreLibrary
      */
-    constructor(config) {
+    constructor(config, firestoreLibrary) {
         this.config = config;
 
-        const database = new Firestore({
+        const database = new firestoreLibrary.Firestore({
             projectId: this.config.get('googleCloudProjectId'),
             keyFilename: this.config.get('googleCloudIdentityKeyFile'),
         });
@@ -22,5 +19,3 @@ class FirestoreConnection {
         return this.collection;
     }
 }
-
-module.exports = FirestoreConnection;

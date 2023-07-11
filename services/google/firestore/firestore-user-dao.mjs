@@ -1,10 +1,8 @@
-'use strict';
-
-class FirestoreUserDao {
+export default class FirestoreUserDao {
     firestoreCollection;
 
     /**
-     * @param {import('./firestore-connection')} firestoreConnection
+     * @param {import('./firestore-connection.mjs')} firestoreConnection
      * @param {import('../../logger.mjs')} logger
      */
     constructor(firestoreConnection, logger) {
@@ -119,5 +117,3 @@ class FirestoreUserDao {
             });
     }
 }
-
-module.exports = FirestoreUserDao;

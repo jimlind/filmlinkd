@@ -14,7 +14,7 @@ class LetterboxdApi {
     /**
      * @param {import('convict').Config} config
      * @param {import('../../http-client.mjs')} httpClient
-     * @param {import('../../google/secret-manager')} secretManager
+     * @param {import('../../google/secret-manager.mjs')} secretManager
      */
     constructor(config, httpClient, secretManager) {
         this.config = config;

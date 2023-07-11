@@ -1,8 +1,4 @@
-'use strict';
-
-const { Firestore } = require('@google-cloud/firestore');
-
-class FirestoreVipDao {
+export default class FirestoreVipDao {
     /** @type {import("convict").Config} */
     config;
     /** @type {FirebaseFirestore.CollectionReference} */
@@ -10,10 +6,11 @@ class FirestoreVipDao {
 
     /**
      * @param {import("convict").Config} config
+     * @param {import('@google-cloud/firestore')} firestoreLibrary
      */
-    constructor(config) {
+    constructor(config, firestoreLibrary) {
         this.config = config;
-        const database = new Firestore({
+        const database = new firestoreLibrary.Firestore({
             projectId: this.config.get('googleCloudProjectId'),
             keyFilename: this.config.get('googleCloudIdentityKeyFile'),
         });
@@ -44,5 +41,3 @@ class FirestoreVipDao {
         return Object.values(documentSnapshot.data());
     }
 }
-
-module.exports = FirestoreVipDao;

@@ -1,6 +1,4 @@
-'use strict';
-
-class SecretManager {
+export default class SecretManager {
     /**
      * @type {{}}
      */
@@ -37,5 +35,3 @@ class SecretManager {
         });
     }
 }
-
-module.exports = SecretManager;

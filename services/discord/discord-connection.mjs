@@ -6,7 +6,7 @@ export default class DiscordConnection {
      * @param {import('../../models/config')} config
      * @param {import('discord.js').Client} discordClient
      * @param {import('../logger.mjs')} logger
-     * @param {import('../google/secret-manager')} secretManager
+     * @param {import('../google/secret-manager.mjs')} secretManager
      */
     constructor(config, discordClient, logger, secretManager) {
         this.config = config;

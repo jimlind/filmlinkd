@@ -15,10 +15,10 @@ export default class DiaryEntryWriter {
     /**
      * @param {import('../discord/discord-message-sender.mjs')} discordMessageSender
      * @param {import('../../factories/embed-builder-factory.mjs')} embedBuilderFactory
-     * @param {import('../google/firestore/firestore-user-dao')} firestoreUserDao
+     * @param {import('../google/firestore/firestore-user-dao.mjs')} firestoreUserDao
      * @param {import('../letterboxd/letterboxd-viewing-id-web')} letterboxdViewingIdWeb
      * @param {import('../logger.mjs')} logger
-     * @param {import('../google/pubsub/pub-sub-connection')} pubSubConnection
+     * @param {import('../google/pubsub/pub-sub-connection.mjs')} pubSubConnection
      */
     constructor(
         discordMessageSender,

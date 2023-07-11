@@ -1,7 +1,7 @@
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 import death from 'death';
 import { ClusterManager } from 'discord-hybrid-sharding';
-import SecretManager from '../../services/google/secret-manager.js';
+import SecretManager from '../../services/google/secret-manager.mjs';
 
 export default class Cluster {
     /**

@@ -1,11 +1,13 @@
-const { Firestore } = require('@google-cloud/firestore');
-
-class FirestoreConfigDao {
+export default class FirestoreConfigDao {
     configCollection;
 
-    constructor(config) {
+    /**
+     * @param {import('convict').Config} config
+     * @param {import('@google-cloud/firestore')} firestoreLibrary
+     */
+    constructor(config, firestoreLibrary) {
         this.config = config;
-        const database = new Firestore({
+        const database = new firestoreLibrary.Firestore({
             projectId: this.config.get('googleCloudProjectId'),
             keyFilename: this.config.get('googleCloudIdentityKeyFile'),
         });
@@ -26,5 +28,3 @@ class FirestoreConfigDao {
         });
     }
 }
-
-module.exports = FirestoreConfigDao;

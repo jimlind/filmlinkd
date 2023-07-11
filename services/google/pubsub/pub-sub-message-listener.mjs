@@ -1,6 +1,4 @@
-'use strict';
-
-class PubSubMessageListener {
+export default class PubSubMessageListener {
     constructor(pubSubConnection) {
         this.pubSubConnection = pubSubConnection;
     }
@@ -23,5 +21,3 @@ class PubSubMessageListener {
         });
     }
 }
-
-module.exports = PubSubMessageListener;

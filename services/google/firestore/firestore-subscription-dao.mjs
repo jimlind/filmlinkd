@@ -1,10 +1,10 @@
-class FirestoreSubscriptionDao {
+export default class FirestoreSubscriptionDao {
     /** @type FirebaseFirestore.CollectionReference */
     firestoreCollection;
 
     /**
-     * @param {import('./firestore-connection')} firestoreConnection
-     * @param {import('./firestore-vip-dao')} firestoreVipDao
+     * @param {import('./firestore-connection.mjs')} firestoreConnection
+     * @param {import('./firestore-vip-dao.mjs')} firestoreVipDao
      * @param {import('../../logger.mjs')} logger
      * @param {import('../../../factories/user-factory.mjs')} userFactory
      */
@@ -180,5 +180,3 @@ class FirestoreSubscriptionDao {
         });
     }
 }
-
-module.exports = FirestoreSubscriptionDao;

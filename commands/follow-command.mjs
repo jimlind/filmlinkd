@@ -3,8 +3,8 @@
 export default class FollowCommand {
     /**
      * @param {import('../services/diary-entry/diary-entry-processor.mjs')} diaryEntryProcessor
-     * @param {import('../services/google/firestore/firestore-subscription-dao')} firestoreSubscriptionDao
-     * @param {import('../services/google/firestore/firestore-user-dao')} firestoreUserDao
+     * @param {import('../services/google/firestore/firestore-subscription-dao.mjs')} firestoreSubscriptionDao
+     * @param {import('../services/google/firestore/firestore-user-dao.mjs')} firestoreUserDao
      * @param {import('../services/letterboxd/letterboxd-lid-web')} letterboxdLidWeb
      * @param {import('../services/letterboxd/api/letterboxd-member-api')} letterboxdMemberApi
      * @param {import('../factories/embed-builder-factory.mjs')} embedBuilderFactory

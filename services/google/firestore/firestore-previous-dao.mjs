@@ -1,6 +1,4 @@
-'use strict';
-
-class FirestorePreviousDao {
+export default class FirestorePreviousDao {
     /**
      * @param {import('../../../models/config')} config
      * @param {import('../firestore/firestore-connection')} firestoreConnection
@@ -60,5 +58,3 @@ class FirestorePreviousDao {
         return newList.slice(-10);
     }
 }
-
-module.exports = FirestorePreviousDao;
