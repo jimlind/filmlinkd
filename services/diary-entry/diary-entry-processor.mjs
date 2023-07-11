@@ -1,17 +1,14 @@
-'use strict';
-
-const pLimit = require('p-limit');
-
 /**
  * Entry point for all diary entry logging work.
  * The API feed processor is used for all feed processors.
  */
-class DiaryEntryProcessor {
+export default class DiaryEntryProcessor {
     /**
-     * @param {import('../diary-entry/diary-entry-publisher')} diaryEntryPublisher
+     * @param {import('./diary-entry-publisher.mjs')} diaryEntryPublisher
      * @param {import('../letterboxd/letterboxd-lid-comparison')} letterboxdLidComparison
      * @param {import('../letterboxd/api/letterboxd-log-entry-api')} letterboxdLogEntryApi
      * @param {import('../logger.mjs')} logger
+     * @param {import('p-limit')} pLimit
      * @param {import('../subscribed-user-list.mjs')} subscribedUserList
      */
     constructor(
@@ -19,12 +16,14 @@ class DiaryEntryProcessor {
         letterboxdLidComparison,
         letterboxdLogEntryApi,
         logger,
+        pLimit,
         subscribedUserList,
     ) {
         this.diaryEntryPublisher = diaryEntryPublisher;
         this.letterboxdLidComparison = letterboxdLidComparison;
         this.letterboxdLogEntryApi = letterboxdLogEntryApi;
         this.logger = logger;
+        this.pLimit = pLimit;
         this.subscribedUserList = subscribedUserList;
     }
 
@@ -65,7 +64,7 @@ class DiaryEntryProcessor {
                     return [];
                 }
 
-                const limit = pLimit(4);
+                const limit = this.pLimit(4);
                 const promiseList = userList.map((user) =>
                     limit(() => this.getNewLogEntriesForUser(user.userLid, user.entryLid, 10)),
                 );
@@ -73,7 +72,7 @@ class DiaryEntryProcessor {
                 return Promise.all(promiseList);
             })
             .then((logEntryCollection) => {
-                const limit = pLimit(1);
+                const limit = this.pLimit(1);
                 const promiseList = logEntryCollection.map((userLogEntryList) => {
                     return limit(() => {
                         if (userLogEntryList.length === 0) {
@@ -91,7 +90,7 @@ class DiaryEntryProcessor {
                 return Promise.all(promiseList);
             })
             .then((successList) => {
-                const limit = pLimit(1);
+                const limit = this.pLimit(1);
                 const promiseList = successList.flat().map((success) => {
                     return limit(() => {
                         return new Promise((resolve) => {
@@ -123,7 +122,7 @@ class DiaryEntryProcessor {
                     return [];
                 }
 
-                const limit = pLimit(4);
+                const limit = this.pLimit(4);
                 const promiseList = userList.map((user) =>
                     limit(() => this.getNewLogEntriesForUser(user.userLid, user.entryLid, 10)),
                 );
@@ -131,7 +130,7 @@ class DiaryEntryProcessor {
                 return Promise.all(promiseList);
             })
             .then((logEntryCollection) => {
-                const limit = pLimit(1);
+                const limit = this.pLimit(1);
                 const promiseList = logEntryCollection.map((userLogEntryList) => {
                     return limit(() => {
                         if (userLogEntryList.length === 0) {
@@ -149,7 +148,7 @@ class DiaryEntryProcessor {
                 return Promise.all(promiseList);
             })
             .then((successList) => {
-                const limit = pLimit(1);
+                const limit = this.pLimit(1);
                 const promiseList = successList.flat().map((success) => {
                     return limit(() => {
                         return new Promise((resolve) => {
@@ -198,5 +197,3 @@ class DiaryEntryProcessor {
             });
     }
 }
-
-module.exports = DiaryEntryProcessor;

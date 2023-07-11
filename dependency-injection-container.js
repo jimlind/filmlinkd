@@ -10,6 +10,7 @@ const discord = require('discord.js');
 const domSerializer = require('dom-serializer').default;
 const htmlparser2 = require('htmlparser2');
 const truncateMarkdown = require('markdown-truncate');
+const pLimit = require('p-limit');
 const turndown = require('turndown');
 const winston = require('winston');
 
@@ -94,6 +95,7 @@ class DependencyInjectionContainer {
             htmlParser2: awilix.asValue(htmlparser2),
             googleCloudWinstonTransport: awilix.asValue(googleCloudWinstonTransport),
             consoleTransport: awilix.asValue(consoleTransport),
+            pLimit: awilix.asValue(pLimit),
             turndownService: awilix.asValue(turndownService),
             truncateMarkdown: awilix.asValue(truncateMarkdown),
             winston: awilix.asValue(winston),

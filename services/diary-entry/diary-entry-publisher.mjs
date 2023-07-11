@@ -1,7 +1,7 @@
 /**
  * Class dealing with publishing diary entry events to Google's Pub/Sub messaging service
  */
-class DiaryEntryPublisher {
+export default class DiaryEntryPublisher {
     /**
      * @param {import('../../factories/diary-entry-factory.mjs')} diaryEntryFactory
      * @param {import('../letterboxd/letterboxd-lid-comparison')} letterboxdLidWeb
@@ -97,5 +97,3 @@ class DiaryEntryPublisher {
         });
     }
 }
-
-module.exports = DiaryEntryPublisher;

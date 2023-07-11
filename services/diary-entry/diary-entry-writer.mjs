@@ -1,9 +1,7 @@
-'use strict';
-
 /**
  * Class dealing with writing diary entry events to Discord servers
  */
-class DiaryEntryWriter {
+export default class DiaryEntryWriter {
     skipUserNotFound = 'SKIP_USER_NOT_FOUND';
     skipOldDiaryEntry = 'SKIP_OLD_DIARY_ENTRY';
     skipEmptyChannelList = 'SKIP_EMPTY_CHANNEL_LIST';
@@ -171,5 +169,3 @@ class DiaryEntryWriter {
         return Promise.all(sendPromiseList);
     }
 }
-
-module.exports = DiaryEntryWriter;
