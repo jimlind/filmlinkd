@@ -9,7 +9,6 @@ const axios = require('axios').default;
 const crypto = require('crypto');
 const death = require('death');
 const discord = require('discord.js');
-const domSerializer = require('dom-serializer').default;
 const htmlparser2 = require('htmlparser2');
 const truncateMarkdown = require('markdown-truncate');
 const pLimit = require('p-limit');
@@ -96,7 +95,6 @@ class DependencyInjectionContainer {
             discordLibrary: awilix.asValue(discord),
             firestoreLibrary: awilix.asValue(Firestore),
             axios: awilix.asValue(axios),
-            domSerializer: awilix.asValue(domSerializer),
             htmlParser2: awilix.asValue(htmlparser2),
             googleCloudWinstonTransport: awilix.asValue(googleCloudWinstonTransport),
             consoleTransport: awilix.asValue(consoleTransport),
