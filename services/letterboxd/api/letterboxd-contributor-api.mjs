@@ -1,8 +1,6 @@
-'use strict';
-
-class LetterboxdContributorApi {
+export default class LetterboxdContributorApi {
     /**
-     * @param {import('./letterboxd-api')} letterboxdApi
+     * @param {import('./letterboxd-api.mjs')} letterboxdApi
      * @param {import('../../../factories/letterboxd/letterboxd-contributor-factory.mjs')} letterboxdContributorFactory
      */
     constructor(letterboxdApi, letterboxdContributorFactory) {
@@ -32,5 +30,3 @@ class LetterboxdContributorApi {
             });
     }
 }
-
-module.exports = LetterboxdContributorApi;

@@ -1,7 +1,4 @@
-const crypto = require('crypto');
-const uuid = require('uuid');
-
-class LetterboxdApi {
+export default class LetterboxdApi {
     /** @type {string} */
     root = 'https://api.letterboxd.com/api/v0/';
     /** @type {boolean} */
@@ -13,13 +10,17 @@ class LetterboxdApi {
 
     /**
      * @param {import('convict').Config} config
+     * @param {*} crypto
      * @param {import('../../http-client.mjs')} httpClient
      * @param {import('../../google/secret-manager.mjs')} secretManager
+     * @param {*} uuid
      */
-    constructor(config, httpClient, secretManager) {
+    constructor(config, crypto, httpClient, secretManager, uuid) {
         this.config = config;
+        this.crypto = crypto;
         this.httpClient = httpClient;
         this.secretManager = secretManager;
+        this.uuid = uuid;
     }
 
     get(path, paramList) {
@@ -64,7 +65,7 @@ class LetterboxdApi {
 
         // Add values to URL params for signature verification
         paramList.apikey = key;
-        paramList.nonce = uuid.v4();
+        paramList.nonce = this.uuid.v4();
         paramList.timestamp = this.now();
         for (const key in paramList) {
             url.searchParams.set(key, paramList[key]);
@@ -74,7 +75,7 @@ class LetterboxdApi {
     }
 
     buildSignature(method, url, sharedSecret) {
-        return crypto
+        return this.crypto
             .createHmac('sha256', sharedSecret)
             .update([method.toUpperCase(), url, ''].join('\u0000'))
             .digest('hex')
@@ -85,5 +86,3 @@ class LetterboxdApi {
         return Math.floor(Date.now() / 1000);
     }
 }
-
-module.exports = LetterboxdApi;

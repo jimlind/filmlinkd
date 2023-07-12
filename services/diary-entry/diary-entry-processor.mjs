@@ -5,8 +5,8 @@
 export default class DiaryEntryProcessor {
     /**
      * @param {import('./diary-entry-publisher.mjs')} diaryEntryPublisher
-     * @param {import('../letterboxd/letterboxd-lid-comparison')} letterboxdLidComparison
-     * @param {import('../letterboxd/api/letterboxd-log-entry-api')} letterboxdLogEntryApi
+     * @param {import('../letterboxd/letterboxd-lid-comparison.mjs')} letterboxdLidComparison
+     * @param {import('../letterboxd/api/letterboxd-log-entry-api.mjs')} letterboxdLogEntryApi
      * @param {import('../logger.mjs')} logger
      * @param {import('p-limit')} pLimit
      * @param {import('../subscribed-user-list.mjs')} subscribedUserList

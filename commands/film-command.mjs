@@ -2,7 +2,7 @@
 
 export default class FilmCommand {
     /**
-     * @param {import('../services/letterboxd/api/letterboxd-film-api')} letterboxdFilmApi
+     * @param {import('../services/letterboxd/api/letterboxd-film-api.mjs')} letterboxdFilmApi
      * @param {import('../factories/embed-builder-factory.mjs')} embedBuilderFactory
      */
     constructor(letterboxdFilmApi, embedBuilderFactory) {

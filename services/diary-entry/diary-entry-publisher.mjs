@@ -4,7 +4,7 @@
 export default class DiaryEntryPublisher {
     /**
      * @param {import('../../factories/diary-entry-factory.mjs')} diaryEntryFactory
-     * @param {import('../letterboxd/letterboxd-lid-comparison')} letterboxdLidWeb
+     * @param {import('../letterboxd/letterboxd-lid-comparison.mjs')} letterboxdLidWeb
      * @param {import('../logger.mjs')} logger
      * @param {import('../google/pubsub/pub-sub-connection.mjs')} pubSubConnection
      */

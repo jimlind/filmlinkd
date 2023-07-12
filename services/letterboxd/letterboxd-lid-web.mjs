@@ -1,6 +1,4 @@
-'use strict';
-
-class LetterboxdLidWeb {
+export default class LetterboxdLidWeb {
     /**
      * @param {import('../http-client.mjs')} httpClient
      */
@@ -42,5 +40,3 @@ class LetterboxdLidWeb {
         });
     }
 }
-
-module.exports = LetterboxdLidWeb;

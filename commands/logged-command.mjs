@@ -1,8 +1,8 @@
 export default class EntryCommand {
     /**
-     * @param {import('../services/letterboxd/api/letterboxd-log-entry-api')} letterboxdLogEntryApi
-     * @param {import('../services/letterboxd/api/letterboxd-film-api')} letterboxdFilmApi
-     * @param {import('../services/letterboxd/letterboxd-lid-web')} letterboxdLidWeb
+     * @param {import('../services/letterboxd/api/letterboxd-log-entry-api.mjs')} letterboxdLogEntryApi
+     * @param {import('../services/letterboxd/api/letterboxd-film-api.mjs')} letterboxdFilmApi
+     * @param {import('../services/letterboxd/letterboxd-lid-web.mjs')} letterboxdLidWeb
      * @param {import('../factories/embed-builder-factory.mjs')} embedBuilderFactory
      */
     constructor(letterboxdFilmApi, letterboxdLidWeb, letterboxdLogEntryApi, embedBuilderFactory) {

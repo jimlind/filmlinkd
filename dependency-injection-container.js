@@ -6,6 +6,7 @@ const { PubSub } = require('@google-cloud/pubsub');
 const { SecretManagerServiceClient } = require('@google-cloud/secret-manager').v1;
 const awilix = require('awilix');
 const axios = require('axios').default;
+const crypto = require('crypto');
 const death = require('death');
 const discord = require('discord.js');
 const domSerializer = require('dom-serializer').default;
@@ -13,6 +14,7 @@ const htmlparser2 = require('htmlparser2');
 const truncateMarkdown = require('markdown-truncate');
 const pLimit = require('p-limit');
 const turndown = require('turndown');
+const uuid = require('uuid');
 const winston = require('winston');
 
 class DependencyInjectionContainer {
@@ -88,6 +90,7 @@ class DependencyInjectionContainer {
 
         this.container.register({
             config: awilix.asValue(this.config),
+            crypto: awilix.asValue(crypto),
             death: awilix.asValue(death),
             discordClient: awilix.asValue(discordClient),
             discordLibrary: awilix.asValue(discord),
@@ -100,6 +103,7 @@ class DependencyInjectionContainer {
             pLimit: awilix.asValue(pLimit),
             turndownService: awilix.asValue(turndownService),
             truncateMarkdown: awilix.asValue(truncateMarkdown),
+            uuid: awilix.asValue(uuid),
             winston: awilix.asValue(winston),
             pubSub: awilix.asValue(pubsub),
             secretManagerClient: awilix.asValue(secretManagerClient),

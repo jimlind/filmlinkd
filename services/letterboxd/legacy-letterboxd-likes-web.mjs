@@ -1,4 +1,4 @@
-class LegacyLetterboxdLikesWeb {
+export default class LegacyLetterboxdLikesWeb {
     root = 'https://letterboxd.com';
 
     /**
@@ -119,5 +119,3 @@ class LegacyLetterboxdLikesWeb {
         return likedList;
     }
 }
-
-module.exports = LegacyLetterboxdLikesWeb;

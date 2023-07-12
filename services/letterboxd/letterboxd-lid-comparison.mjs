@@ -1,6 +1,4 @@
-'use strict';
-
-class LetterboxdLidComparison {
+export default class LetterboxdLidComparison {
     /**
      * Compare Letterboxd IDs
      * 1: A is before B
@@ -31,5 +29,3 @@ class LetterboxdLidComparison {
         }
     }
 }
-
-module.exports = LetterboxdLidComparison;

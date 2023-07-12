@@ -7,7 +7,7 @@ export default class InteractionTranslator {
      * @param {any} embedBuilderFactory
      * @param {import('../commands/film-command.mjs')} filmCommand
      * @param {import('./google/firestore/firestore-subscription-dao.mjs')} firestoreSubscriptionDao
-     * @param {import('./google/firestore/firestore-user-dao.mjs')} firestoreUserDao
+     * @param {import('./google/firestore/firestore-user-dao')} firestoreUserDao
      * @param {import('../commands/follow-command.mjs')} followCommand
      * @param {import('../commands/following-command.mjs')} followingCommand
      * @param {import('../commands/help-command.mjs')} helpCommand

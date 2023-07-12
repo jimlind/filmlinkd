@@ -11,7 +11,7 @@ export default class SubscribedUserList {
 
     /**
      * @param {import('./google/firestore/firestore-subscription-dao.mjs')} firestoreSubscriptionDao
-     * @param {import('./letterboxd/letterboxd-lid-comparison')} letterboxdLidComparison
+     * @param {import('./letterboxd/letterboxd-lid-comparison.mjs')} letterboxdLidComparison
      * @param {import('./logger.mjs')} logger
      */
     constructor(firestoreSubscriptionDao, letterboxdLidComparison, logger) {

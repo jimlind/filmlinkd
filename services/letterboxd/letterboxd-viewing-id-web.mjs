@@ -1,6 +1,4 @@
-'use strict';
-
-class LetterboxdViewingIdWeb {
+export default class LetterboxdViewingIdWeb {
     /**
      * @param {import('../http-client.mjs')} httpClient
      */
@@ -20,5 +18,3 @@ class LetterboxdViewingIdWeb {
         });
     }
 }
-
-module.exports = LetterboxdViewingIdWeb;

@@ -1,6 +1,6 @@
-class LetterboxdListApi {
+export default class LetterboxdListApi {
     /**
-     * @param {import('./letterboxd-api')} letterboxdApi
+     * @param {import('./letterboxd-api.mjs')} letterboxdApi
      * @param {import('../../../factories/letterboxd/letterboxd-list-factory.mjs')} letterboxdListFactory
      */
     constructor(letterboxdApi, letterboxdListFactory) {
@@ -28,5 +28,3 @@ class LetterboxdListApi {
             });
     }
 }
-
-module.exports = LetterboxdListApi;

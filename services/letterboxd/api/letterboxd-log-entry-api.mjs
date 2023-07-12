@@ -1,6 +1,6 @@
-class LetterboxdLogEntryApi {
+export default class LetterboxdLogEntryApi {
     /**
-     * @param {import('./letterboxd-api')} letterboxdApi
+     * @param {import('./letterboxd-api.mjs')} letterboxdApi
      * @param {import('../../../factories/letterboxd-log-entry-factory')} letterboxdLogEntryFactory
      */
     constructor(letterboxdApi, letterboxdLogEntryFactory) {
@@ -55,5 +55,3 @@ class LetterboxdLogEntryApi {
             });
     }
 }
-
-module.exports = LetterboxdLogEntryApi;

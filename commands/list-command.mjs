@@ -1,6 +1,6 @@
 export default class ListCommand {
     /**
-     * @param {import('../services/letterboxd/letterboxd-lid-web')} letterboxdLidWeb
+     * @param {import('../services/letterboxd/letterboxd-lid-web.mjs')} letterboxdLidWeb
      * @param {import('../services/letterboxd/api/letterboxd-list-api')} letterboxdListApi
      * @param {import('../factories/embed-builder-factory.mjs')} embedBuilderFactory
      */

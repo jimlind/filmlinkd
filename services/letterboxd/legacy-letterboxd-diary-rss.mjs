@@ -1,4 +1,4 @@
-class LegacyLetterboxdDiaryRss {
+export default class LegacyLetterboxdDiaryRss {
     /**
      * @param {import('../../factories/diary-entry-factory.mjs')} diaryEntryFactory
      * @param {import('dom-serializer').default} domSerializer
@@ -288,5 +288,3 @@ class LegacyLetterboxdDiaryRss {
         return this.htmlParser2.DomUtils.getText(elements[0]);
     }
 }
-
-module.exports = LegacyLetterboxdDiaryRss;
