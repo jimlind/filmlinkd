@@ -17,7 +17,7 @@ export default class Vip {
     index = 0;
 
     /**
-     * @param {import('../dependency-injection-container')} container
+     * @param {import('../dependency-injection-container.mjs')} container
      */
     constructor(container) {
         this.container = container;

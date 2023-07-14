@@ -91,7 +91,7 @@ class Single {
 }
 
 import config from '../../config.mjs';
-import container from '../../dependency-injection-container.js';
+import container from '../../dependency-injection-container.mjs';
 container(config)
     .initialize()
     .then((awilixContainer) => {

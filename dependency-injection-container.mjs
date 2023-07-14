@@ -1,20 +1,18 @@
-'use strict';
-
-const { Firestore } = require('@google-cloud/firestore');
-const { LoggingWinston } = require('@google-cloud/logging-winston');
-const { PubSub } = require('@google-cloud/pubsub');
-const { SecretManagerServiceClient } = require('@google-cloud/secret-manager').v1;
-const awilix = require('awilix');
-const axios = require('axios').default;
-const crypto = require('crypto');
-const death = require('death');
-const discord = require('discord.js');
-const htmlparser2 = require('htmlparser2');
-const truncateMarkdown = require('markdown-truncate');
-const pLimit = require('p-limit');
-const turndown = require('turndown');
-const uuid = require('uuid');
-const winston = require('winston');
+import { Firestore } from '@google-cloud/firestore';
+import { LoggingWinston } from '@google-cloud/logging-winston';
+import { PubSub } from '@google-cloud/pubsub';
+import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
+import { asValue, createContainer, InjectionMode, Lifetime } from 'awilix';
+import axios from 'axios';
+import crypto from 'crypto';
+import death from 'death';
+import * as discord from 'discord.js';
+import * as htmlparser2 from 'htmlparser2';
+import truncateMarkdown from 'markdown-truncate';
+import pLimit from 'p-limit';
+import turndown from 'turndown';
+import * as uuid from 'uuid';
+import winston from 'winston';
 
 class DependencyInjectionContainer {
     /**
@@ -28,7 +26,7 @@ class DependencyInjectionContainer {
      * @returns {Promise<import('awilix').AwilixContainer>}
      */
     initialize() {
-        this.container = awilix.createContainer();
+        this.container = createContainer();
 
         // Create Discord Client
         const discordClient = new discord.Client({
@@ -88,31 +86,31 @@ class DependencyInjectionContainer {
         });
 
         this.container.register({
-            config: awilix.asValue(this.config),
-            crypto: awilix.asValue(crypto),
-            death: awilix.asValue(death),
-            discordClient: awilix.asValue(discordClient),
-            discordLibrary: awilix.asValue(discord),
-            firestoreLibrary: awilix.asValue(Firestore),
-            axios: awilix.asValue(axios),
-            htmlParser2: awilix.asValue(htmlparser2),
-            googleCloudWinstonTransport: awilix.asValue(googleCloudWinstonTransport),
-            consoleTransport: awilix.asValue(consoleTransport),
-            pLimit: awilix.asValue(pLimit),
-            turndownService: awilix.asValue(turndownService),
-            truncateMarkdown: awilix.asValue(truncateMarkdown),
-            uuid: awilix.asValue(uuid),
-            winston: awilix.asValue(winston),
-            pubSub: awilix.asValue(pubsub),
-            secretManagerClient: awilix.asValue(secretManagerClient),
+            config: asValue(this.config),
+            crypto: asValue(crypto),
+            death: asValue(death),
+            discordClient: asValue(discordClient),
+            discordLibrary: asValue(discord),
+            firestoreLibrary: asValue(Firestore),
+            axios: asValue(axios),
+            htmlParser2: asValue(htmlparser2),
+            googleCloudWinstonTransport: asValue(googleCloudWinstonTransport),
+            consoleTransport: asValue(consoleTransport),
+            pLimit: asValue(pLimit),
+            turndownService: asValue(turndownService),
+            truncateMarkdown: asValue(truncateMarkdown),
+            uuid: asValue(uuid),
+            winston: asValue(winston),
+            pubSub: asValue(pubsub),
+            secretManagerClient: asValue(secretManagerClient),
         });
 
         return this.container.loadModules(['(commands|factories|services)/**/*.(m)?js'], {
             esModules: true,
             formatName: 'camelCase',
             resolverOptions: {
-                lifetime: awilix.Lifetime.SINGLETON,
-                injectionMode: awilix.InjectionMode.CLASSIC,
+                lifetime: Lifetime.SINGLETON,
+                injectionMode: InjectionMode.CLASSIC,
             },
         });
     }
@@ -122,4 +120,4 @@ class DependencyInjectionContainer {
     }
 }
 
-module.exports = (config) => new DependencyInjectionContainer(config);
+export default (config) => new DependencyInjectionContainer(config);

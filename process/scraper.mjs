@@ -19,7 +19,7 @@ export default class Scraper {
     queueUserListReset = false;
 
     /**
-     * @param {import('../dependency-injection-container')} container
+     * @param {import('../dependency-injection-container.mjs')} container
      */
     constructor(container) {
         this.container = container;
