@@ -85,7 +85,7 @@ export default class FirestoreUserDao {
      * @param {string} userName
      * @param {string} displayName
      * @param {string} image
-     * @returns {Promise<any>}
+     * @returns {Promise<{ userName: string; displayName: string, image: string}>}}
      */
     update(userName, displayName, image) {
         const getDocumentSnapshot = this.firestoreCollection
@@ -109,11 +109,6 @@ export default class FirestoreUserDao {
                 userData.updated = Date.now();
                 return documentSnapshot.ref.update(userData);
             })
-            .then(() => {
-                return getDocumentSnapshot;
-            })
-            .then((documentSnapshot) => {
-                return documentSnapshot.data();
-            });
+            .then(() => ({ userName, displayName, image }));
     }
 }

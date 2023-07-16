@@ -88,6 +88,7 @@ export default class InteractionTranslator {
         const accountName = (commandInteraction.options.getString('account') || '').toLowerCase();
         const filmName = commandInteraction.options.getString('film-name') || '';
 
+        // This is one of the few places in this code that I use an await.
         const channelId = await this.getChannelId(commandInteraction);
         if (!channelId) {
             return this.embedBuilderFactory.createChannelNotFoundEmbed();
