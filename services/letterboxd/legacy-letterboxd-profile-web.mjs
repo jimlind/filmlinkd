@@ -1,4 +1,4 @@
-export default class LetterboxdProfileWeb {
+export default class LegacyLetterboxdProfileWeb {
     /**
      * @param {import('../http-client')} httpClient
      * @param {import('htmlparser2')} htmlParser2 - Library for parsing HTML
