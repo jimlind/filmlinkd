@@ -40,6 +40,16 @@ export default class Scraper {
 
             const resetTAsk = this.recurringResetTask.bind(this);
             this.resetInterval = setInterval(resetTAsk, this.resetRestingTime);
+
+            // Listen for Command PubSub messages posted and upsert appropriate follow outcome data
+            this.container.resolve('pubSubMessageListener').onCommandMessage((message) => {
+                const returnData = JSON.parse(message.data.toString());
+                if (returnData.command == 'FOLLOW') {
+                    message.ack();
+                    const subscribedUserList = this.container.resolve('subscribedUserList');
+                    subscribedUserList.upsert(returnData.user, returnData.entry);
+                }
+            });
         });
     }
 

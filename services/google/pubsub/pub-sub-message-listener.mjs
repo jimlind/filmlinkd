@@ -15,8 +15,8 @@ export default class PubSubMessageListener {
     /**
      * @param {function} callback
      */
-    onLogEntryResultMessage(callback) {
-        this.pubSubConnection.getLogEntryResultSubscription().then((subsciption) => {
+    onCommandMessage(callback) {
+        this.pubSubConnection.getCommandSubscription().then((subsciption) => {
             subsciption.on('message', callback);
         });
     }

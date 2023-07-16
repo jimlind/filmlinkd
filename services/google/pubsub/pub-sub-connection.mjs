@@ -50,24 +50,24 @@ export default class PubSubConnection {
     }
 
     /**
-     * Pub/Sub topic for announcing Log Entry writing results
+     * Pub/Sub topic for announcing commands
      *
      * @returns {Promise<import('@google-cloud/pubsub').Topic>}
      */
-    getLogEntryResultTopic() {
-        return this.getTopic(this.config.get('pubSub.logEntryResult.topicName'));
+    getCommandTopic() {
+        return this.getTopic(this.config.get('pubSub.command.topicName'));
     }
 
     /**
-     * Pub/Sub subscription for announcing Log Entry writing results
-     * Configured for single listener
+     * Pub/Sub subscription for announcing commands
+     * Currently configured for single listener because scraper is only instance that will be listening
      *
      * @returns {Promise<import('@google-cloud/pubsub').Subscription>}
      */
-    getLogEntryResultSubscription() {
+    getCommandSubscription() {
         return this.getSubscription(
-            this.config.get('pubSub.logEntryResult.topicName'),
-            this.config.get('pubSub.logEntryResult.subscriptionName'),
+            this.config.get('pubSub.command.topicName'),
+            this.config.get('pubSub.command.subscriptionName'),
             false,
         );
     }
@@ -75,8 +75,8 @@ export default class PubSubConnection {
     /**
      * Close Pub/Sub subscription for announcing Log Entry writing results
      */
-    closeLogEntryResultSubscription() {
-        this.closeSubscription(this.config.get('pubSub.logEntryResult.subscriptionName'), false);
+    closeCommandSubscription() {
+        this.closeSubscription(this.config.get('pubSub.command.subscriptionName'), false);
     }
 
     /**
@@ -84,7 +84,7 @@ export default class PubSubConnection {
      */
     closeAllSubscriptions() {
         this.closeLogEntrySubscription();
-        this.closeLogEntryResultSubscription();
+        this.closeCommandSubscription();
     }
 
     /**

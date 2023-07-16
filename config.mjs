@@ -67,7 +67,7 @@ const config = convict({
                 default: '',
             },
         },
-        logEntryResult: {
+        command: {
             topicName: {
                 format: String,
                 default: '',

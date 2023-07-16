@@ -83,8 +83,7 @@ class Single {
 
     cleanUp() {
         // Ensure all the PubSub connections are closed
-        this.container.resolve('pubSubConnection').closeLogEntrySubscription();
-        this.container.resolve('pubSubConnection').closeLogEntryResultSubscription();
+        this.container.resolve('pubSubConnection').closeAllSubscriptions();
 
         // Close the Discord connection and exit the process
         this.container

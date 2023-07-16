@@ -3,26 +3,29 @@
 export default class FollowCommand {
     /**
      * @param {import('../services/diary-entry/diary-entry-processor.mjs')} diaryEntryProcessor
+     * @param {import('../factories/embed-builder-factory.mjs')} embedBuilderFactory
      * @param {import('../services/google/firestore/firestore-subscription-dao.mjs')} firestoreSubscriptionDao
      * @param {import('../services/google/firestore/firestore-user-dao.mjs')} firestoreUserDao
      * @param {import('../services/letterboxd/letterboxd-lid-web.mjs')} letterboxdLidWeb
      * @param {import('../services/letterboxd/api/letterboxd-member-api.mjs')} letterboxdMemberApi
-     * @param {import('../factories/embed-builder-factory.mjs')} embedBuilderFactory
+     * @param {import('../services/google/pubsub/pub-sub-connection.mjs')} pubSubConnection
      */
     constructor(
         diaryEntryProcessor,
+        embedBuilderFactory,
         firestoreSubscriptionDao,
         firestoreUserDao,
         letterboxdLidWeb,
         letterboxdMemberApi,
-        embedBuilderFactory,
+        pubSubConnection,
     ) {
         this.diaryEntryProcessor = diaryEntryProcessor;
+        this.embedBuilderFactory = embedBuilderFactory;
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
         this.firestoreUserDao = firestoreUserDao;
         this.letterboxdLidWeb = letterboxdLidWeb;
         this.letterboxdMemberApi = letterboxdMemberApi;
-        this.embedBuilderFactory = embedBuilderFactory;
+        this.pubSubConnection = pubSubConnection;
     }
 
     /**
@@ -38,10 +41,20 @@ export default class FollowCommand {
             userPromise.then((data) =>
                 this.diaryEntryProcessor.processMostRecentForUser(data, channelId),
             ),
+            this.pubSubConnection.getCommandTopic(),
         ];
 
         return Promise.all(promiseList)
-            .then(([subscribeResult, messageResult, mostRecentResult]) => messageResult)
+            .then(([subscribeResult, messageResult, mostRecentResult, pubSubTopic]) => {
+                // Publish needed information about the command for pickup by other systems
+                const result = mostRecentResult[0];
+                const data = { command: 'FOLLOW', user: result.userLid, entry: result.entryLid };
+                const buffer = Buffer.from(JSON.stringify(data));
+                pubSubTopic.publishMessage({ data: buffer });
+
+                // Return embed for writing to Discord
+                return messageResult;
+            })
             .catch(() => this.embedBuilderFactory.createNoAccountFoundEmbed(accountName));
     }
 
