@@ -61,6 +61,14 @@ class Single {
                         return Promise.all([]);
                     }
 
+                    // If the returning diary entry has available publishing data log it
+                    if (returnData?.entry?.updatedDate && returnData?.entry?.publishSource) {
+                        this.container.resolve('logger').info('Entry Publish Delay', {
+                            delay: Date.now() - returnData.entry.updatedDate,
+                            source: returnData.entry.publishSource,
+                        });
+                    }
+
                     // Write to the database
                     return this.container
                         .resolve('firestorePreviousDao')
@@ -68,7 +76,7 @@ class Single {
                 })
                 .catch(() => {
                     const message = `Error on diaryEntryWriter::validateAndWrite for '${diaryEntry?.filmTitle}' by '${diaryEntry?.userName}'`;
-                    container.resolve('logger').error(message);
+                    this.container.resolve('logger').error(message);
                 });
         });
     }

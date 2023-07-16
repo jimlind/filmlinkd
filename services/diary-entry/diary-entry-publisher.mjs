@@ -43,9 +43,10 @@ export default class DiaryEntryPublisher {
     /**
      * @param {import('../../models/letterboxd/letterboxd-log-entry.mjs')[]} logEntry[]
      * @param {string} channelIdOverride
+     * @param {string} source
      * @return {Promise<{user:string, id: string}[]>}
      */
-    publishLogEntryList(logEntryList, channelIdOverride = '') {
+    publishLogEntryList(logEntryList, channelIdOverride = '', source = 'Normal') {
         return new Promise((resolve) => {
             const promiseList = logEntryList
                 .map((logEntry) => {
@@ -58,6 +59,7 @@ export default class DiaryEntryPublisher {
                             current.type == 'letterboxd' ? current.url : prev,
                         );
                         const publishedTimeMs = new Date(logEntry.whenCreated).getTime();
+                        const updatedTimeMs = new Date(logEntry.whenUpdated).getTime();
                         const watchedTimeMs = new Date(logEntry.diaryDetails?.diaryDate).getTime();
 
                         const diaryEntry = this.diaryEntryFactory.create();
@@ -77,6 +79,10 @@ export default class DiaryEntryPublisher {
                         diaryEntry.watchedDate = watchedTimeMs;
                         diaryEntry.lid = logEntry.id;
                         diaryEntry.type = diaryEntry.review ? 'review' : 'watch';
+
+                        // Used to create logging metrics for publish delay
+                        diaryEntry.updatedDate = updatedTimeMs;
+                        diaryEntry.publishSource = source;
 
                         const data = { entry: diaryEntry, channelId: channelIdOverride };
                         const buffer = Buffer.from(JSON.stringify(data));

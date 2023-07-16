@@ -141,7 +141,11 @@ export default class DiaryEntryProcessor {
                         const message = `Publishing ${userLogEntryList.length}x films from VIP "${logEntry.owner.userName}"`;
                         this.logger.info(message);
 
-                        return this.diaryEntryPublisher.publishLogEntryList(userLogEntryList);
+                        return this.diaryEntryPublisher.publishLogEntryList(
+                            userLogEntryList,
+                            '',
+                            'VIP',
+                        );
                     });
                 });
 
