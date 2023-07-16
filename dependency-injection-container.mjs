@@ -7,7 +7,6 @@ import axios from 'axios';
 import crypto from 'crypto';
 import death from 'death';
 import * as discord from 'discord.js';
-import * as htmlparser2 from 'htmlparser2';
 import truncateMarkdown from 'markdown-truncate';
 import pLimit from 'p-limit';
 import turndown from 'turndown';
@@ -93,7 +92,6 @@ class DependencyInjectionContainer {
             discordLibrary: asValue(discord),
             firestoreLibrary: asValue(Firestore),
             axios: asValue(axios),
-            htmlParser2: asValue(htmlparser2),
             googleCloudWinstonTransport: asValue(googleCloudWinstonTransport),
             consoleTransport: asValue(consoleTransport),
             pLimit: asValue(pLimit),
