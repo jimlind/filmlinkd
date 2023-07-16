@@ -30,9 +30,10 @@ export default class DiaryEntryProcessor {
     /**
      * @param {Object} userModel
      * @param {string} channelId
+     * @return {Promise<{userLid:string, entryLid: string}[]>}
      */
     processMostRecentForUser(userModel, channelId) {
-        this.getNewLogEntriesForUser(userModel.letterboxdId, '', 1).then(([logEntry]) => {
+        return this.getNewLogEntriesForUser(userModel.letterboxdId, '', 1).then(([logEntry]) => {
             // There is some slightly convoluted logic here.
             // We want to process the most recent entry for a user and post it BUT if that same most recent
             // entry isn't already posted on all the channels where the account is followed it could cause
