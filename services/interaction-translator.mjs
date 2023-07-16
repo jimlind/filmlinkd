@@ -11,9 +11,9 @@ export default class InteractionTranslator {
      * @param {import('../commands/follow-command.mjs')} followCommand
      * @param {import('../commands/following-command.mjs')} followingCommand
      * @param {import('../commands/help-command.mjs')} helpCommand
-     * @param {any} letterboxdProfileWeb
      * @param {import('../commands/list-command.mjs')} listCommand
      * @param {import('../commands/logged-command.mjs')} loggedCommand
+     * @param {import('../commands/refresh-command.mjs')} refreshCommand
      * @param {import('../commands/roulette-command.mjs')} rouletteCommand
      * @param {any} subscribedUserList
      * @param {import('../commands/unfollow-command.mjs')} unfollowCommand
@@ -31,9 +31,9 @@ export default class InteractionTranslator {
         followCommand,
         followingCommand,
         helpCommand,
-        letterboxdProfileWeb,
         listCommand,
         loggedCommand,
+        refreshCommand,
         rouletteCommand,
         subscribedUserList,
         unfollowCommand,
@@ -50,9 +50,9 @@ export default class InteractionTranslator {
         this.followCommand = followCommand;
         this.followingCommand = followingCommand;
         this.helpCommand = helpCommand;
-        this.letterboxdProfileWeb = letterboxdProfileWeb;
         this.listCommand = listCommand;
         this.loggedCommand = loggedCommand;
+        this.refreshCommand = refreshCommand;
         this.rouletteCommand = rouletteCommand;
         this.subscribedUserList = subscribedUserList;
         this.unfollowCommand = unfollowCommand;
@@ -89,6 +89,8 @@ export default class InteractionTranslator {
         const filmName = commandInteraction.options.getString('film-name') || '';
 
         // This is one of the few places in this code that I use an await.
+        // It was mostly because I didn't want to wrap everything here in the `then` and it was
+        // a fast way to get things done.
         const channelId = await this.getChannelId(commandInteraction);
         if (!channelId) {
             return this.embedBuilderFactory.createChannelNotFoundEmbed();
@@ -102,13 +104,7 @@ export default class InteractionTranslator {
                 return this.followingCommand.process(channelId);
                 break;
             case 'refresh':
-                return this.refreshAccount(accountName)
-                    .then((userData) => {
-                        return this.embedBuilderFactory.createRefreshSuccessEmbed(userData);
-                    })
-                    .catch(() => {
-                        return this.embedBuilderFactory.createRefreshErrorEmbed(accountName);
-                    });
+                return this.refreshCommand.process(accountName);
                 break;
             case 'unfollow':
                 return this.unfollowCommand.process(accountName, channelId);
@@ -141,16 +137,6 @@ export default class InteractionTranslator {
                 return this.helpCommand.getEmbed();
                 break;
         }
-    }
-
-    /**
-     * @param {string} accountName
-     * @returns {Promise<import('../models/user.mjs')>}
-     */
-    refreshAccount(accountName) {
-        return this.letterboxdProfileWeb.get(accountName).then((profile) => {
-            return this.firestoreUserDao.update(accountName, profile.name, profile.image);
-        });
     }
 
     /**
