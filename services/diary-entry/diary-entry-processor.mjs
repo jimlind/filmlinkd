@@ -42,7 +42,7 @@ export default class DiaryEntryProcessor {
             // To attempt to compensate for this check if the entry that we find here from a fresh scrape is
             // the most recent diary entry. If it is same continue as usual. If it is new then unset the
             // channel value so that the entry will be sent to all channels.
-            const previousLid = userModel.previous.lid;
+            const previousLid = userModel?.previous?.lid || '';
             const isNew = this.letterboxdLidComparison.compare(logEntry.id, previousLid) == 1;
             channelId = isNew ? '' : channelId;
 
