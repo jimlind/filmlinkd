@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 
-const { REST, Routes } = require('discord.js');
+import config from '../config.mjs';
+import container from '../dependency-injection-container.mjs';
 
-process.env.npm_config_live = process.argv[2] == 'prod' || false;
-const config = require('../config.js');
-if (process.env.npm_config_live) {
-    config.set('googleCloudIdentityKeyFile', './.gcp-key.json');
+// Allow production override
+if (process.argv[2] == 'prod') {
+    config.loadFile('./config/production.json');
+    config.set('googleCloudIdentityKeyFile', '.gcp-key.json');
 }
 
-const container = require('../dependency-injection-container')(config);
+// Object containing all Application Commands
 const commands = [
     {
         name: 'help',
@@ -166,27 +167,25 @@ const commands = [
     },
 ];
 
-// Update global commands
-processCommands(commands);
+// Initialize container
+const initializedContainer = await container(config).initialize();
 
-async function processCommands(commands) {
-    const config = container.resolve('config');
-    const discordApplicationId = config.get('discordApplicationId');
-    const discordTokenName = config.get('discordBotTokenName');
-    const discordToken = await container.resolve('secretManager').getValue(discordTokenName);
-    const rest = new REST({ version: '10' }).setToken(discordToken);
+// Get application keys
+const discordApplicationId = config.get('discordApplicationId');
+const discordTokenName = config.get('discordBotTokenName');
+const discordToken = await initializedContainer.resolve('secretManager').getValue(discordTokenName);
 
-    let commandRoute = Routes.applicationCommands(discordApplicationId);
-    if (process.env.npm_config_live === false) {
-        const guildId = 's795053930283139073';
-        commandRoute = Routes.applicationGuildCommands(discordApplicationId, guildId);
-    }
+// Setup API call
+const discordLibrary = initializedContainer.resolve('discordLibrary');
+const rest = new discordLibrary.REST().setToken(discordToken);
+const commandRoute = discordLibrary.Routes.applicationCommands(discordApplicationId);
 
-    rest.put(commandRoute, { body: commands })
-        .then((commandList) => {
-            console.log(`✅  Set ${commandList.length} Application Commands`);
-        })
-        .catch(() => {
-            console.log('❌ Unable to set Application Commands');
-        });
-}
+// ...and go!
+rest.put(commandRoute, { body: commands })
+    .then((commandList) => {
+        console.log(`✅  Set ${commandList.length} Application Commands`);
+    })
+    .catch((e) => {
+        console.log('❌ Unable to remove Application Commands');
+        console.log(e);
+    });
