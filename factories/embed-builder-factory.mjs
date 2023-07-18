@@ -125,7 +125,7 @@ export default class EmbedBuilderFactory {
             .setAuthor({ name: authorTitle, iconURL: profileImage, url: profileURL })
             .setTitle(adult + entry.filmTitle + ' ' + releaseYear)
             .setURL(entry.link)
-            .setThumbnail(entry.image)
+            .setThumbnail(entry.image || null)
             .setDescription(reviewTitle + rule + reviewText);
 
         // If there is footer data with actual data then include it.
