@@ -2,15 +2,19 @@
  * Class dealing with writing diary entry events to Discord servers
  */
 export default class DiaryEntryWriter {
+    /**
+     * @type {number}
+     */
+    cacheSize = 10000;
+    /**
+     * @type {string[]}
+     */
+    cachedPreviousData = [];
     skipUserNotFound = 'SKIP_USER_NOT_FOUND';
     skipOldDiaryEntry = 'SKIP_OLD_DIARY_ENTRY';
     skipEmptyChannelList = 'SKIP_EMPTY_CHANNEL_LIST';
     skipAdultFilm = 'SKIP_ADULT_FILM';
     skipNoMessagesSent = 'SKIP_NO_MESSAGES_SENT';
-    /**
-     * @type {{}}
-     */
-    cachedPreviousData = {};
 
     /**
      * @param {import('../discord/discord-message-sender.mjs')} discordMessageSender
@@ -69,22 +73,15 @@ export default class DiaryEntryWriter {
                 });
         });
 
-        return getViewingId
-            .then((viewingId) => {
-                // We are expecting multiple requests to post a diary entry so we maintain
-                // the one source of truth on the server that sends messages. We keep a local cache current.
-                const cleanViewingId = parseInt(viewingId);
-                const previousList = this.cachedPreviousData[diaryEntry.userName] || [];
+        // We are expecting multiple requests to post a diary entry so we maintain the one source of
+        // truth on the server that sends messages. We keep an in memory cache.
+        if (this.previousCacheGet(diaryEntry.lid)) {
+            // Duplicate found so don't write
+            return new Promise((resolve) => resolve([false, false]));
+        }
+        this.previousCacheSet(diaryEntry.lid);
 
-                // Ignore this check if there is a channel override because we want it to trigger multiple times.
-                if (!channelIdOverride && previousList.includes(cleanViewingId)) {
-                    throw this.skipOldDiaryEntry;
-                }
-                previousList.push(cleanViewingId);
-                this.cachedPreviousData[diaryEntry.userName] = previousList.sort().slice(-10);
-
-                return Promise.all([getUserModel, getViewingId]);
-            })
+        return Promise.all([getUserModel, getViewingId])
             .then(([userModel, viewingId]) => {
                 // Exit early if user not found
                 if (!userModel) {
@@ -167,5 +164,14 @@ export default class DiaryEntryWriter {
                 .catch(() => false);
         });
         return Promise.all(sendPromiseList);
+    }
+
+    previousCacheSet(input) {
+        this.cachedPreviousData.push(input);
+        this.cachedPreviousData.slice(this.cacheSize * -1);
+    }
+
+    previousCacheGet(input) {
+        return this.cachedPreviousData.find((value) => value == input);
     }
 }
