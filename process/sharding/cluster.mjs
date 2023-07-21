@@ -1,6 +1,6 @@
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
-import death from 'death';
 import { ClusterManager } from 'discord-hybrid-sharding';
+import exitHook from 'exit-hook';
 import SecretManager from '../../services/google/secret-manager.mjs';
 
 export default class Cluster {
@@ -12,7 +12,7 @@ export default class Cluster {
         this.manager = new ClusterManager('./process/sharding/single.mjs');
 
         // Trigger clean up on task ending
-        death(this.cleanUp.bind(this));
+        exitHook(this.cleanUp.bind(this));
     }
 
     run() {

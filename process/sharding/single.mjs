@@ -9,7 +9,7 @@ class Single {
         this.client.options.shardCount = getInfo().TOTAL_SHARDS;
 
         // Trigger clean up on task ending
-        this.container.resolve('death')(this.cleanUp.bind(this));
+        this.container.resolve('exitHook')(this.cleanUp.bind(this));
     }
 
     run() {

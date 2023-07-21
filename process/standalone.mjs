@@ -6,7 +6,7 @@ export default class Standalone {
         this.container = container;
 
         // Trigger clean up on task ending
-        this.container.resolve('death')(this.cleanUp.bind(this));
+        this.container.resolve('exitHook')(this.cleanUp.bind(this));
     }
 
     run() {
@@ -44,9 +44,9 @@ export default class Standalone {
         });
     }
 
-    cleanUp(signal, error) {
+    cleanUp(signal) {
         // Log process closure
-        this.container.resolve('logger').info('Standalone Process Terminated', { signal, error });
+        this.container.resolve('logger').info('Standalone Process Terminated', { signal });
         // Close the Discord connection
         const clientPromise = this.container.resolve('discordConnection').getConnectedClient();
         clientPromise.then((client) => client.destroy());

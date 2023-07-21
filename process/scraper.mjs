@@ -1,5 +1,3 @@
-import death from 'death';
-
 export default class Scraper {
     /** @type {number} */
     fetchRestingTime = 15000; // 15 seconds
@@ -25,7 +23,7 @@ export default class Scraper {
         this.container = container;
 
         // Trigger clean up on task ending
-        death(this.cleanUp.bind(this));
+        this.container.resolve('exitHook')(this.cleanUp.bind(this));
     }
 
     run() {
@@ -76,9 +74,9 @@ export default class Scraper {
         this.queueUserListReset = true;
     }
 
-    cleanUp(signal, error) {
+    cleanUp(signal) {
         // Log process closure
-        this.container.resolve('logger').info('Scraper Process Terminated', { signal, error });
+        this.container.resolve('logger').info('Scraper Process Terminated', { signal });
         // Stop the recurring tasks
         clearInterval(this.fetchInterval);
         clearInterval(this.resetInterval);

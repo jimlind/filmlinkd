@@ -5,8 +5,8 @@ import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 import { asValue, createContainer, InjectionMode, Lifetime } from 'awilix';
 import axios from 'axios';
 import crypto from 'crypto';
-import death from 'death';
 import * as discord from 'discord.js';
+import exitHook from 'exit-hook';
 import truncateMarkdown from 'markdown-truncate';
 import pLimit from 'p-limit';
 import turndown from 'turndown';
@@ -87,9 +87,9 @@ class DependencyInjectionContainer {
         this.container.register({
             config: asValue(this.config),
             crypto: asValue(crypto),
-            death: asValue(death),
             discordClient: asValue(discordClient),
             discordLibrary: asValue(discord),
+            exitHook: asValue(exitHook),
             firestoreLibrary: asValue(Firestore),
             axios: asValue(axios),
             googleCloudWinstonTransport: asValue(googleCloudWinstonTransport),

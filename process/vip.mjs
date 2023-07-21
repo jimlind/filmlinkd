@@ -1,5 +1,3 @@
-import death from 'death';
-
 export default class Vip {
     /** @type {number} */
     fetchRestingTime = 10000; // 10 seconds
@@ -23,7 +21,7 @@ export default class Vip {
         this.container = container;
 
         // Trigger clean up on task ending
-        death(this.cleanUp.bind(this));
+        this.container.resolve('exitHook')(this.cleanUp.bind(this));
     }
 
     run() {
@@ -49,9 +47,9 @@ export default class Vip {
         this.container.resolve('subscribedUserList').cachedVipData = null;
     }
 
-    cleanUp(signal, error) {
+    cleanUp(signal) {
         // Log process closure
-        this.container.resolve('logger').info('VIP Process Terminated', { signal, error });
+        this.container.resolve('logger').info('VIP Process Terminated', { signal });
         // Stop the recurring tasks
         clearInterval(this.fetchInterval);
         clearInterval(this.resetInterval);
