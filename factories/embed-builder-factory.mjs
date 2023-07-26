@@ -11,47 +11,46 @@ export default class EmbedBuilderFactory {
     }
 
     createFollowSuccessEmbed(data) {
-        return this.createEmbedBuilder()
-            .setDescription(
-                `I am now following ${data.displayName} (${data.userName}).\nI'll try to post their most recent entry in the appropriate channel.`,
-            )
-            .setThumbnail(data.image);
+        const description = this.formatDescription(
+            `I am now following ${data.displayName} (${data.userName}).\nI'll try to post their most recent entry in the appropriate channel.`,
+        );
+        return this.createEmbedBuilder().setDescription(description).setThumbnail(data.image);
     }
 
     createDuplicateFollowEmbed(data) {
-        return this.createEmbedBuilder()
-            .setDescription(
-                `I was previously following ${data.displayName} (${data.userName}).\nWe are already BFFs.`,
-            )
-            .setThumbnail(data.image);
+        const description = this.formatDescription(
+            `I was previously following ${data.displayName} (${data.userName}).\nWe are already BFFs.`,
+        );
+        return this.createEmbedBuilder().setDescription(description).setThumbnail(data.image);
     }
 
     createNoAccountFoundEmbed(userName) {
-        return this.createEmbedBuilder().setDescription(
-            `I can't find **${userName}** on Letterboxd.`,
-        );
+        const description = this.formatDescription(`I can't find **${userName}** on Letterboxd.`);
+        return this.createEmbedBuilder().setDescription(description);
     }
 
     createUnfollowedSuccessEmbed(data) {
-        return this.createEmbedBuilder()
-            .setDescription(
-                `I unfollowed ${data.displayName} (${data.userName}).\nNo hard feelings I hope.`,
-            )
-            .setThumbnail(data.image);
+        const description = this.formatDescription(
+            `I unfollowed ${data.displayName} (${data.userName}).\nNo hard feelings I hope.`,
+        );
+        return this.createEmbedBuilder().setDescription(description).setThumbnail(data.image);
     }
 
     createUnfollowedErrorEmbed(userName) {
-        return this.createEmbedBuilder().setDescription(`Unable to unfollow ${userName}.`);
+        const description = this.formatDescription(`Unable to unfollow ${userName}.`);
+        return this.createEmbedBuilder().setDescription(description);
     }
 
     createRefreshSuccessEmbed(data) {
-        return this.createEmbedBuilder()
-            .setDescription(`I updated my display data for ${data.displayName} (${data.userName}).`)
-            .setThumbnail(data.image);
+        const description = this.formatDescription(
+            `I updated my display data for ${data.displayName} (${data.userName}).`,
+        );
+        return this.createEmbedBuilder().setDescription(description).setThumbnail(data.image);
     }
 
     createRefreshErrorEmbed(userName) {
-        return this.createEmbedBuilder().setDescription(`Unable to refresh ${userName}.`);
+        const description = this.formatDescription(`Unable to refresh ${userName}.`);
+        return this.createEmbedBuilder().setDescription(description);
     }
 
     createFollowingEmbed(resultList) {
@@ -71,13 +70,15 @@ export default class EmbedBuilderFactory {
             return previous + string;
         }, '');
 
-        return this.createEmbedBuilder().setDescription(
+        const description = this.formatDescription(
             "Here are the accounts I'm following:" + '\n' + resultTextList,
         );
+        return this.createEmbedBuilder().setDescription(description);
     }
 
     createEmptyFollowingEmbed() {
-        return this.createEmbedBuilder().setDescription('Not following any accounts.');
+        const description = this.formatDescription('Not following any accounts.');
+        return this.createEmbedBuilder().setDescription(description);
     }
 
     /**
@@ -121,12 +122,14 @@ export default class EmbedBuilderFactory {
         reviewText = entry.containsSpoilers ? '||' + reviewText + '||' : reviewText;
 
         const rule = reviewTitle && reviewText ? '┈'.repeat(12) + '\n' : '';
+        const description = this.formatDescription(reviewTitle + rule + reviewText);
+
         const embed = this.createEmbedBuilder()
             .setAuthor({ name: authorTitle, iconURL: profileImage, url: profileURL })
             .setTitle(adult + entry.filmTitle + ' ' + releaseYear)
             .setURL(entry.link)
             .setThumbnail(entry.image || null)
-            .setDescription(reviewTitle + rule + reviewText);
+            .setDescription(description);
 
         // If there is footer data with actual data then include it.
         if (data.footer?.text || data.footer?.icon) {
@@ -156,12 +159,13 @@ export default class EmbedBuilderFactory {
         const largestImage = member.avatar.sizes.reduce((previous, current) =>
             current.height > previous.height ? current : previous,
         );
+        const description = this.formatDescription(entryTextList.join('\n'));
 
         return this.createEmbedBuilder()
             .setTitle(`Recent Diary Activity from ${member.displayName}`)
             .setURL(`https://boxd.it/${member.id}`)
             .setThumbnail(largestImage.url)
-            .setDescription(entryTextList.join('\n'));
+            .setDescription(description);
     }
 
     /**
@@ -211,6 +215,7 @@ export default class EmbedBuilderFactory {
             `:eyes: ${this.formatCount(filmStatistics.watchCount)}, ` +
             `<:r:851138401557676073> ${this.formatCount(filmStatistics.likeCount)}, ` +
             `:speech_balloon: ${this.formatCount(filmStatistics.reviewCount)}\n`;
+        description = this.formatDescription(description);
 
         const largestImage = (film?.poster?.sizes || []).reduce(
             (previous, current) => (current.height || 0 > previous.height ? current : previous),
@@ -255,6 +260,7 @@ export default class EmbedBuilderFactory {
         // Add member film counts to description
         const counts = memberStatistics.counts;
         description += `Logged films: ${counts.watches} total | ${counts.filmsInDiaryThisYear} this year`;
+        description = this.formatDescription(description);
 
         const pronounList = [
             member.pronoun.subjectPronoun,
@@ -290,6 +296,7 @@ export default class EmbedBuilderFactory {
         if (listSummary.filmCount > 6) {
             description += ' ...';
         }
+        description = this.formatDescription(description);
 
         return this.createEmbedBuilder()
             .setTitle(listSummary.name)
@@ -325,11 +332,12 @@ export default class EmbedBuilderFactory {
 
         const firstEntry = logEntryList[0];
         const title = `${firstEntry?.owner?.displayName}'s Recent Entries for ${firstEntry?.film?.name} (${firstEntry?.film?.releaseYear})`;
+        const description = this.formatDescription(logEntryTextList.join('\n'));
 
         return this.createEmbedBuilder()
             .setTitle(title)
             .setThumbnail(this.parseImage(logEntryList[0]?.film?.poster?.sizes))
-            .setDescription(logEntryTextList.join('\n'));
+            .setDescription(description);
     }
 
     /**
@@ -351,10 +359,11 @@ export default class EmbedBuilderFactory {
             }, [])
             .join(' | ');
 
+        const description = this.formatDescription(filmographyString + '\n' + linkString);
         return this.createEmbedBuilder()
             .setTitle(contributor.name)
             .setURL(`https://boxd.it/${contributor.id}`)
-            .setDescription(filmographyString + '\n' + linkString);
+            .setDescription(description);
     }
 
     /**
@@ -366,7 +375,9 @@ export default class EmbedBuilderFactory {
     createHelpEmbed(config, userCount, serverCount) {
         const name = config.get('packageName');
         const version = config.get('packageVersion');
-        const description = `${name} v${version}\nTracking ${userCount} users on ${serverCount} servers`;
+        const description = this.formatDescription(
+            `${name} v${version}\nTracking ${userCount} users on ${serverCount} servers`,
+        );
 
         return this.createEmbedBuilder()
             .setTitle('(Help!) I Need Somebody')
@@ -412,33 +423,46 @@ export default class EmbedBuilderFactory {
     }
 
     createChannelNotFoundEmbed() {
-        return this.createEmbedBuilder().setDescription('Unable to find the specified channel.');
+        const description = this.formatDescription('Unable to find the specified channel.');
+        return this.createEmbedBuilder().setDescription(description);
     }
 
     createFilmNotFoundEmbed() {
-        return this.createEmbedBuilder().setDescription(
-            'Unable to match a film to those search terms.',
-        );
+        const description = this.formatDescription('Unable to match a film to those search terms.');
+        return this.createEmbedBuilder().setDescription(description);
     }
 
     createContributorNotFoundEmbed() {
-        return this.createEmbedBuilder().setDescription(
+        const description = this.formatDescription(
             'Unable to match a contributor to those search terms.',
         );
+        return this.createEmbedBuilder().setDescription(description);
     }
 
     createNoListFoundEmbed() {
-        const message = 'Unable to match an account list to those search terms.';
-        return this.createEmbedBuilder().setDescription(message);
+        const description = this.formatDescription(
+            'Unable to match an account list to those search terms.',
+        );
+        return this.createEmbedBuilder().setDescription(description);
     }
 
     createNoLoggedEntriesFoundEmbed() {
-        const message = 'Unable to find that film logged for that user.';
-        return this.createEmbedBuilder().setDescription(message);
+        const description = this.formatDescription(
+            'Unable to find that film logged for that user.',
+        );
+        return this.createEmbedBuilder().setDescription(description);
     }
 
     createEmbedBuilder() {
         return new this.discordLibrary.EmbedBuilder().setColor(0xa700bd);
+    }
+
+    /**
+     * @param {string} description
+     * @returns string
+     */
+    formatDescription(description) {
+        return description.substring(0, 4096);
     }
 
     formatStars(rating) {

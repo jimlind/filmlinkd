@@ -65,10 +65,6 @@ export default class InteractionTranslator {
     translate(commandInteraction) {
         this.getEmbedBuilderPromiseAfterNeccesaryAction(commandInteraction).then((embedBuilder) => {
             if (embedBuilder instanceof this.discordLibrary.EmbedBuilder) {
-                //There is a 4096 character limit on descriptions so cut things off to keep the bot happy
-                const description = embedBuilder?.data?.description || '';
-                embedBuilder.setDescription(description.substring(0, 4096));
-
                 return commandInteraction.editReply({ embeds: [embedBuilder] });
             } else {
                 return commandInteraction.editReply(
