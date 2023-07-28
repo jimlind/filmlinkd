@@ -17,7 +17,7 @@ export default class FollowingCommand {
     process(channelId) {
         return this.firestoreSubscriptionDao.list(channelId).then((userList) => {
             if (userList.length) {
-                return this.embedBuilderFactory.createFollowingEmbed(userList);
+                return this.embedBuilderFactory.createFollowingEmbedList(userList);
             } else {
                 return this.embedBuilderFactory.createEmptyFollowingEmbed();
             }

@@ -1,11 +1,13 @@
 export default class EmbedBuilderFactory {
     /**
      * @param {import('discord.js')} discordLibrary
+     * @param {import('../services/letterboxd/letterboxd-lid-comparison.mjs')} letterboxdLidComparison
      * @param {import('markdown-truncate')} truncateMarkdown
      * @param {import('turndown')} turndownService
      */
-    constructor(discordLibrary, truncateMarkdown, turndownService) {
+    constructor(discordLibrary, letterboxdLidComparison, truncateMarkdown, turndownService) {
         this.discordLibrary = discordLibrary;
+        this.letterboxdLidComparison = letterboxdLidComparison;
         this.truncateMarkdown = truncateMarkdown;
         this.turndownService = turndownService;
     }
@@ -53,27 +55,43 @@ export default class EmbedBuilderFactory {
         return this.createEmbedBuilder().setDescription(description);
     }
 
-    createFollowingEmbed(resultList) {
-        const resultListSorted = resultList.sort((a, b) => {
-            let lidA = a.lid;
-            let lidB = b.lid;
-            if (lidA.length != lidB.length) {
-                const newLength = Math.max(lidA.length, lidB.length);
-                lidA = lidA.padStart(newLength, '#');
-                lidB = lidB.padStart(newLength, '#');
+    /**
+     * @param {*[]} userList
+     * @returns {EmbedBuilder[]}
+     */
+    createFollowingEmbedList(userList) {
+        const result = [];
+
+        // Create initial message
+        const description = this.formatDescription("Here are the accounts I'm following...");
+        result.push(this.createEmbedBuilder().setDescription(description));
+
+        // Sort list of followers by User LID
+        const lidSorter = (a, b) => -1 * this.letterboxdLidComparison.compare(a.lid, b.lid);
+        const sortedUserList = userList.sort(lidSorter);
+
+        let resultString = '';
+        for (let x = 0; x < sortedUserList.length; x++) {
+            const user = sortedUserList[x];
+            const nextString =
+                resultString + `• [${user.userName} (${user.lid})](https://boxd.it/${user.lid})\n`;
+            try {
+                // Attempt to set description, and catch any errors
+                this.createEmbedBuilder().setDescription(nextString);
+                resultString = nextString;
+            } catch (e) {
+                // If set desciption throws errors add the previous result to the output
+                result.push(this.createEmbedBuilder().setDescription(resultString));
+                resultString = '';
             }
-            return lidA > lidB ? 1 : -1;
-        });
+        }
 
-        const resultTextList = resultListSorted.reduce((previous, current) => {
-            const string = `• [${current.userName} (${current.lid})](https://boxd.it/${current.lid})\n`;
-            return previous + string;
-        }, '');
+        // If there is anything left over add that as a message as well.
+        if (resultString) {
+            result.push(this.createEmbedBuilder().setDescription(resultString));
+        }
 
-        const description = this.formatDescription(
-            "Here are the accounts I'm following:" + '\n' + resultTextList,
-        );
-        return this.createEmbedBuilder().setDescription(description);
+        return result;
     }
 
     createEmptyFollowingEmbed() {

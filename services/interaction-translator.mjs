@@ -4,6 +4,7 @@ export default class InteractionTranslator {
      * @param {import('../commands/diary-command.mjs')} diaryCommand
      * @param {import('./discord/discord-connection.mjs')} discordConnection
      * @param {import('discord.js')} discordLibrary
+     * @param {import('./discord/discord-message-sender.mjs')} discordMessageSender
      * @param {any} embedBuilderFactory
      * @param {import('../commands/film-command.mjs')} filmCommand
      * @param {import('./google/firestore/firestore-subscription-dao.mjs')} firestoreSubscriptionDao
@@ -24,6 +25,7 @@ export default class InteractionTranslator {
         diaryCommand,
         discordConnection,
         discordLibrary,
+        discordMessageSender,
         embedBuilderFactory,
         filmCommand,
         firestoreSubscriptionDao,
@@ -43,6 +45,7 @@ export default class InteractionTranslator {
         this.diaryCommand = diaryCommand;
         this.discordConnection = discordConnection;
         this.discordLibrary = discordLibrary;
+        this.discordMessageSender = discordMessageSender;
         this.embedBuilderFactory = embedBuilderFactory;
         this.filmCommand = filmCommand;
         this.firestoreSubscriptionDao = firestoreSubscriptionDao;
@@ -63,9 +66,18 @@ export default class InteractionTranslator {
      * @param {import('discord.js').CommandInteraction} commandInteraction
      */
     translate(commandInteraction) {
-        this.getEmbedBuilderPromiseAfterNeccesaryAction(commandInteraction).then((embedBuilder) => {
-            if (embedBuilder instanceof this.discordLibrary.EmbedBuilder) {
-                return commandInteraction.editReply({ embeds: [embedBuilder] });
+        this.getEmbedBuilderPromiseAfterNeccesaryAction(commandInteraction).then((result) => {
+            if (result instanceof this.discordLibrary.EmbedBuilder) {
+                return commandInteraction.editReply({ embeds: [result] });
+            } else if (
+                Array.isArray(result) &&
+                result.every((r) => r instanceof this.discordLibrary.EmbedBuilder)
+            ) {
+                commandInteraction.editReply({ embeds: [result.shift()] });
+                result.forEach((embed) =>
+                    this.discordMessageSender.send(commandInteraction.channelId, embed),
+                );
+                return;
             } else {
                 return commandInteraction.editReply(
                     'Something has gone terribly wrong. Please enter a bug report',
