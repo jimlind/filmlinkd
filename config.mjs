@@ -1,4 +1,5 @@
 import convict from 'convict';
+import { URL } from 'url';
 
 const config = convict({
     live: {
@@ -80,10 +81,11 @@ const config = convict({
     },
 });
 
-var environment = config.get('live') ? 'production' : 'development';
-config.loadFile('./config/' + environment + '.json');
+const dir = new URL('.', import.meta.url).pathname;
+const environment = config.get('live') ? 'production' : 'development';
+config.loadFile(dir + 'config/' + environment + '.json');
 
-const packageJson = convict({}).loadFile('package.json');
+const packageJson = convict({}).loadFile(dir + 'package.json');
 const packageJsonProperties = packageJson.getProperties();
 
 config.set('packageName', packageJsonProperties.name);
