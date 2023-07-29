@@ -1,13 +1,19 @@
 #!/usr/bin/env node
 
-// Use production data but use the key so it can be accessed remotely
-process.env.npm_config_live = true;
-const config = require('../../config.js');
-config.set('googleCloudIdentityKeyFile', './.gcp-key.json');
+import { URL } from 'url';
+import config from '../../config.mjs';
+import container from '../../dependency-injection-container.mjs';
+
+// Configure as production
+const dir = new URL('.', import.meta.url).pathname;
+config.loadFile(dir + '../../config/production.json');
+config.set('googleCloudIdentityKeyFile', dir + '../../.gcp-key.json');
+
+// Initialize container
+const initializedContainer = await container(config).initialize();
 
 // ...and go!
-const container = require('../../dependency-injection-container')(config);
-const collection = container.resolve('firestoreConnection').getCollection();
+const collection = initializedContainer.resolve('firestoreConnection').getCollection();
 processData(collection);
 
 async function processData(collection) {
