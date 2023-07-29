@@ -10,6 +10,7 @@ import exitHook from 'exit-hook';
 import truncateMarkdown from 'markdown-truncate';
 import pLimit from 'p-limit';
 import turndown from 'turndown';
+import { URL } from 'url';
 import * as uuid from 'uuid';
 import winston from 'winston';
 
@@ -103,7 +104,8 @@ class DependencyInjectionContainer {
             secretManagerClient: asValue(secretManagerClient),
         });
 
-        return this.container.loadModules(['(commands|factories|services)/**/*.(m)?js'], {
+        const dir = new URL('.', import.meta.url).pathname;
+        return this.container.loadModules([dir + '(commands|factories|services)/**/*.(m)?js'], {
             esModules: true,
             formatName: 'camelCase',
             resolverOptions: {
