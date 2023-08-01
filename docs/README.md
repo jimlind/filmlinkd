@@ -38,6 +38,8 @@ on pushes to the Filmlinkd [Release Branch](https://github.com/jimlind/filmlinkd
 [Buildpacks](https://cloud.google.com/docs/buildpacks/builders) to create a container that can easily be
 run on a Compute Engine.
 
+There are 2 issues in GitHub ([issue](https://github.com/buildpacks/pack/issues/1579) and [issue](https://github.com/GoogleContainerTools/skaffold/issues/7146)) that can potentially be a big change for the Buildpack that is used by the build process. Until these are resolved the `gcr.io/k8s-skaffold/pack` continues to be the best container for buildpack actions.
+
 The containers are written to the [Container Registry](https://console.cloud.google.com/gcr/) (that is
 getting replaced with Artifact Registry eventually). The URLs for for the generated containers can be
 used in [Compute Engine](https://console.cloud.google.com/compute/) with no additional effort.
@@ -55,6 +57,9 @@ disable that static IP address and have a single network
 Internet.
 
 ## Deploying Changes to Production
+
+The final steps to getting the application in production are completely manual. Copy the URL for the
+container from the Container Registry and edit the Compute Engine instance and paste the URL into the Container Image box. When you save it looks like it automatically resets the instance but it doesn't actually. Hit the button to reset the instance.
 
 ## Pub/Sub Message Systems
 

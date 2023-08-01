@@ -1,0 +1,48 @@
+steps:
+    - name: gcr.io/k8s-skaffold/pack
+      args:
+          - build
+          - >-
+              $_AR_HOSTNAME/$PROJECT_ID/github.com/jimlind/$REPO_NAME-release:$SHORT_SHA
+          - '--builder=gcr.io/buildpacks/builder:google-22'
+      id: Build
+    - name: gcr.io/cloud-builders/docker
+      args:
+          - push
+          - >-
+              $_AR_HOSTNAME/$PROJECT_ID/github.com/jimlind/$REPO_NAME-release:$SHORT_SHA
+      id: Push
+    - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:alpine'
+      args:
+          - compute
+          - instances
+          - update-container
+          - vip
+          - '--zone=$_DEPLOY_ZONE'
+          - >-
+              --container-image=$_AR_HOSTNAME/$PROJECT_ID/github.com/jimlind/$REPO_NAME-release:$SHORT_SHA
+      id: UpdateVip
+      entrypoint: gcloud
+    - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:alpine'
+      args:
+          - compute
+          - instances
+          - update-container
+          - scraper
+          - '--zone=$_DEPLOY_ZONE'
+          - >-
+              --container-image=$_AR_HOSTNAME/$PROJECT_ID/github.com/jimlind/$REPO_NAME-release:$SHORT_SHA
+      id: UpdateScraper
+    - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:alpine'
+      args:
+          - compute
+          - instances
+          - update-container
+          - sharded
+          - '--zone=$_DEPLOY_ZONE'
+          - >-
+              --container-image=$_AR_HOSTNAME/$PROJECT_ID/github.com/jimlind/$REPO_NAME-release:$SHORT_SHA
+      id: UpdateSharded
+substitutions:
+    _DEPLOY_ZONE: us-central1-a
+    _AR_HOSTNAME: gcr.io
