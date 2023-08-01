@@ -33,6 +33,7 @@ steps:
           - >-
               --container-image=$_AR_HOSTNAME/$PROJECT_ID/github.com/jimlind/$REPO_NAME-release:$SHORT_SHA
       id: UpdateScraper
+      entrypoint: gcloud
     - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:alpine'
       args:
           - compute
@@ -43,6 +44,7 @@ steps:
           - >-
               --container-image=$_AR_HOSTNAME/$PROJECT_ID/github.com/jimlind/$REPO_NAME-release:$SHORT_SHA
       id: UpdateSharded
+      entrypoint: gcloud
 substitutions:
     _DEPLOY_ZONE: us-central1-a
     _AR_HOSTNAME: gcr.io
