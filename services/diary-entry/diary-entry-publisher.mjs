@@ -51,10 +51,6 @@ export default class DiaryEntryPublisher {
             const promiseList = logEntryList
                 .map((logEntry) => {
                     return this.pubSubConnection.getLogEntryTopic().then((topic) => {
-                        const largestImage = (logEntry.film.poster?.sizes || []).reduce(
-                            (prev, current) => (current.height || 0 > prev.height ? current : prev),
-                            {},
-                        );
                         const letterboxdLink = (logEntry.links || []).reduce((prev, current) =>
                             current.type == 'letterboxd' ? current.url : prev,
                         );
@@ -68,7 +64,7 @@ export default class DiaryEntryPublisher {
                         diaryEntry.filmTitle = logEntry.film.name;
                         diaryEntry.filmYear = logEntry.film.releaseYear;
                         diaryEntry.id = logEntry.viewingId || 0;
-                        diaryEntry.image = largestImage?.url || '';
+                        diaryEntry.image = logEntry.film?.poster?.getLargestImage() || '';
                         diaryEntry.liked = logEntry.like;
                         diaryEntry.link = letterboxdLink?.url || '';
                         diaryEntry.publishedDate = publishedTimeMs;
