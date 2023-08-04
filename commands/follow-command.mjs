@@ -36,19 +36,26 @@ export default class FollowCommand {
     process(accountName, channelId) {
         const userPromise = this.getUserDataObjectFromAccountName(accountName);
         const promiseList = [
+            // Update database
             userPromise.then((data) => this.firestoreSubscriptionDao.subscribe(data, channelId)),
+            // Build follow success discord message
             userPromise.then((data) => this.embedBuilderFactory.createFollowSuccessEmbed(data)),
+            // Post diary entry for user
             userPromise.then((data) =>
                 this.diaryEntryProcessor.processMostRecentForUser(data, channelId),
             ),
+            // Get topic for pubsub
             this.pubSubConnection.getCommandTopic(),
         ];
 
         return Promise.all(promiseList)
             .then(([subscribeResult, messageResult, mostRecentResult, pubSubTopic]) => {
+                const userLid = subscribeResult?.userData?.letterboxdId || '';
+                const entryLid = mostRecentResult?.[0]?.entryLid || '';
+
                 // Publish needed information about the command for pickup by other systems
                 const result = mostRecentResult[0];
-                const data = { command: 'FOLLOW', user: result.userLid, entry: result.entryLid };
+                const data = { command: 'FOLLOW', user: userLid, entry: entryLid };
                 const buffer = Buffer.from(JSON.stringify(data));
                 pubSubTopic.publishMessage({ data: buffer });
 

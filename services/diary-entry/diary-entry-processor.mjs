@@ -34,6 +34,9 @@ export default class DiaryEntryProcessor {
      */
     processMostRecentForUser(userModel, channelId) {
         return this.getNewLogEntriesForUser(userModel.letterboxdId, '', 1).then(([logEntry]) => {
+            // Make an empty array if logEntry is falsey
+            const logEntryList = [logEntry].filter(Boolean);
+
             // There is some slightly convoluted logic here.
             // We want to process the most recent entry for a user and post it BUT if that same most recent
             // entry isn't already posted on all the channels where the account is followed it could cause
@@ -42,11 +45,12 @@ export default class DiaryEntryProcessor {
             // To attempt to compensate for this check if the entry that we find here from a fresh scrape is
             // the most recent diary entry. If it is same continue as usual. If it is new then unset the
             // channel value so that the entry will be sent to all channels.
+            const newLid = logEntry?.id || '';
             const previousLid = userModel?.previous?.lid || '';
-            const isNew = this.letterboxdLidComparison.compare(logEntry.id, previousLid) == 1;
+            const isNew = this.letterboxdLidComparison.compare(newLid, previousLid) == 1;
             channelId = isNew ? '' : channelId;
 
-            return this.diaryEntryPublisher.publishLogEntryList([logEntry], channelId);
+            return this.diaryEntryPublisher.publishLogEntryList(logEntryList, channelId);
         });
     }
 
