@@ -24,7 +24,7 @@ export default class LetterboxdImage {
      */
     getLargestImage() {
         const findLargest = (previous, current) =>
-            (current.height || 0) > previous.height ? current : previous;
+            current.height > (previous.height || 0) ? current : previous;
         const largestImage = this.sizes.reduce(findLargest, {});
         return largestImage?.url || '';
     }
