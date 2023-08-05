@@ -75,7 +75,10 @@ export default class InteractionTranslator {
             ) {
                 commandInteraction.editReply({ embeds: [result.shift()] });
                 result.forEach((embed) =>
-                    this.discordMessageSender.send(commandInteraction.channelId, embed),
+                    this.discordMessageSender
+                        .send(commandInteraction.channelId, embed)
+                        .then(() => true)
+                        .catch(() => false),
                 );
                 return;
             } else {
