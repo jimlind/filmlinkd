@@ -82,4 +82,9 @@ Sometimes we want other parts of the system to know that a command was issued. R
 They are published on the "filmlinkd-command-topic" topic.
 They are recieved on the "filmlinkd-command-subscription" subscription.
 
-## Running in Production
+# TODO List
+
+## Stop using gcr.io/k8s-skaffold/pack
+
+[Buildpack Issue](https://github.com/buildpacks/pack/issues/1579)
+[Skaffold Issue](https://github.com/GoogleContainerTools/skaffold/issues/7146)
