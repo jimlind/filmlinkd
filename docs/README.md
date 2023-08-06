@@ -33,10 +33,7 @@ I mostly use this for local development so that's generally okay.
 
 ## Running in Production
 
-I have a Trigger configured in [Cloud Build](https://console.cloud.google.com/cloud-build/) that builds
-on pushes to the Filmlinkd [Release Branch](https://github.com/jimlind/filmlinkd/tree/release) using
-[Buildpacks](https://cloud.google.com/docs/buildpacks/builders) to create a container that can easily be
-run on a Compute Engine.
+I have a Trigger configured in [Cloud Build](https://console.cloud.google.com/cloud-build/) that runs the [cloudbuild.yaml](https://github.com/jimlind/filmlinkd/blob/main/cloudbuild.yaml) action. The intent is for it to be run manually. It builds containers that it writes to [Artifacts Registry](https://console.cloud.google.com/artifacts) and automatically updates (and subsequently restarts) the neccessary [Compute Engines](https://console.cloud.google.com/compute/) used by the service.
 
 There are 2 issues in GitHub ([issue](https://github.com/buildpacks/pack/issues/1579) and [issue](https://github.com/GoogleContainerTools/skaffold/issues/7146)) that can potentially be a big change for the Buildpack that is used by the build process. Until these are resolved the `gcr.io/k8s-skaffold/pack` continues to be the best container for buildpack actions.
 
@@ -81,10 +78,3 @@ Sometimes we want other parts of the system to know that a command was issued. R
 
 They are published on the "filmlinkd-command-topic" topic.
 They are recieved on the "filmlinkd-command-subscription" subscription.
-
-# TODO List
-
-## Stop using gcr.io/k8s-skaffold/pack
-
-[Buildpack Issue](https://github.com/buildpacks/pack/issues/1579)
-[Skaffold Issue](https://github.com/GoogleContainerTools/skaffold/issues/7146)
