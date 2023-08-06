@@ -19,10 +19,13 @@ export default class DiscordMessageSender {
                         return reject();
                     }
 
-                    // Text and News channels can get posts
+                    // Text, Threads, and News channels can get posts
                     const textChannelTypes = [
                         this.discordLibrary.ChannelType.GuildAnnouncement,
                         this.discordLibrary.ChannelType.GuildText,
+                        this.discordLibrary.ChannelType.AnnouncementThread,
+                        this.discordLibrary.ChannelType.PrivateThread,
+                        this.discordLibrary.ChannelType.PublicThread,
                     ];
                     if (!textChannelTypes.includes(channel.type)) {
                         const metadata = {
