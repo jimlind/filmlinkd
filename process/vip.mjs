@@ -25,6 +25,12 @@ export default class Vip {
     }
 
     run() {
+        const config = this.container.resolve('config');
+        this.container.resolve('logger').info('VIP Process Started', {
+            name: config.get('packageName'),
+            version: config.get('packageVersion'),
+        });
+
         this.fetchInterval = setInterval(this.recurringFetchTask.bind(this), this.fetchRestingTime);
         this.resetInterval = setInterval(this.recurringResetTask.bind(this), this.resetRestingTime);
     }
