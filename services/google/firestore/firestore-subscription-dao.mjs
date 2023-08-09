@@ -139,7 +139,7 @@ export default class FirestoreSubscriptionDao {
                     const query = this.firestoreCollection.where(
                         'channelList',
                         'array-contains-any',
-                        channelData,
+                        channelData.map((i) => ({ channelId: i.channelId })),
                     );
                     return this.getUserListFromQuery(query);
                 })
