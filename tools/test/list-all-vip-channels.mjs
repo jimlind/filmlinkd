@@ -14,9 +14,9 @@ const initializedContainer = await container(config).initialize();
 
 // ...and go!
 const dao = initializedContainer.resolve('firestoreVipDao');
-processData(dao);
+run(dao);
 
-async function processData(dao) {
+async function run(dao) {
     const data = await dao.read();
     console.log(data);
 }
