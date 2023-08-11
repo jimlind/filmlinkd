@@ -49,11 +49,9 @@ class Single {
                 .validateAndWrite(diaryEntry, returnData?.channelId)
                 .then(([userModel, viewingId]) => {
                     // Exit early if no values from validate and write.
+                    // This shard may not have access to the channel needed for the user so this is
+                    // a normal and expected behavior and no logs are neccessary here.
                     if (!userModel || !viewingId) {
-                        const state = { diaryEntry, userModel, viewingId };
-                        this.container
-                            .resolve('logger')
-                            .info('ISS3: No value returned from validateAndWrite', state);
                         return Promise.all([]);
                     }
 
