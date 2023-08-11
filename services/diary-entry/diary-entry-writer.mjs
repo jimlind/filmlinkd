@@ -77,6 +77,7 @@ export default class DiaryEntryWriter {
         // truth on the server that sends messages. We keep an in memory cache.
         if (this.previousCacheGet(diaryEntry.lid)) {
             // Duplicate found so don't write
+            this.logger.info('ISS3: Previous entry found in cache', { diaryEntry });
             return new Promise((resolve) => resolve([false, false]));
         }
         this.previousCacheSet(diaryEntry.lid);
@@ -101,6 +102,8 @@ export default class DiaryEntryWriter {
                 // Double check that the entry is newer than what was stored in the database
                 // Ignore this check if there is a channel override because we want it to trigger multiple times.
                 if (!channelIdOverride && (userModel?.previous?.id || 0) >= viewingId) {
+                    const state = { userModel, viewingId, channelIdOverride };
+                    this.logger.info('ISS3: Skip an old diary entry', state);
                     throw this.skipOldDiaryEntry;
                 }
 
@@ -114,6 +117,7 @@ export default class DiaryEntryWriter {
             .then((senderResultList) => {
                 // If we weren't able to post any messages just move on.
                 if (senderResultList.filter(Boolean).length == 0) {
+                    this.logger.info('ISS3: Skip if no messages are sent', { diaryEntry });
                     throw this.skipNoMessagesSent;
                 }
                 // Pass some worthwhile data to the promise reciever.

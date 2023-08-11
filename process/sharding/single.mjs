@@ -50,6 +50,10 @@ class Single {
                 .then(([userModel, viewingId]) => {
                     // Exit early if no values from validate and write.
                     if (!userModel || !viewingId) {
+                        const state = { diaryEntry, userModel, viewingId };
+                        this.container
+                            .resolve('logger')
+                            .info('ISS3: No value returned from validateAndWrite', state);
                         return Promise.all([]);
                     }
 
@@ -58,6 +62,10 @@ class Single {
 
                     // Exit early if the existing diary entry id is older than the incoming diary entry id
                     if ((userModel?.previous?.id || 0) >= viewingId) {
+                        const state = { diaryEntry, userModel, viewingId };
+                        this.container
+                            .resolve('logger')
+                            .info('ISS3: Previous entry is newer than current', state);
                         return Promise.all([]);
                     }
 
