@@ -64,7 +64,7 @@ export default class DiaryEntryWriter {
         // getUserModel is a Promise so duplicate calls to the Dao aren't made
         const getUserModel = new Promise((resolve) => {
             this.firestoreUserDao
-                .getByUserName(diaryEntry.userName)
+                .getByLetterboxdId(diaryEntry.userLid)
                 .then((model) => {
                     resolve(model);
                 })

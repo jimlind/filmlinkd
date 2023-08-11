@@ -72,6 +72,7 @@ export default class DiaryEntryPublisher {
                         diaryEntry.rewatch = logEntry.diaryDetails?.rewatch;
                         diaryEntry.starCount = logEntry.rating;
                         diaryEntry.userName = logEntry.owner.userName;
+                        diaryEntry.userLid = logEntry.owner.id;
                         diaryEntry.watchedDate = watchedTimeMs;
                         diaryEntry.lid = logEntry.id;
                         diaryEntry.type = diaryEntry.review ? 'review' : 'watch';

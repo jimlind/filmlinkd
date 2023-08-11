@@ -3,8 +3,10 @@ export default class DiaryEntry {
     id = 0;
     /** @property {string} lid - Letterboxd id (string) for diary entry */
     lid = '';
-    /** @property {string} userName - Letterboxd username for diary entry */
+    /** @property {string} userName - Letterboxd username user that created diary entry */
     userName = '';
+    /** @property {string} userLid - Letterboxd LID for user that created diary entry */
+    userLid = '';
     /** @property {string} type - Mushy string for watched or reviewed status */
     type = '';
     /** @property {string} link - Letterboxd link to diary entry */

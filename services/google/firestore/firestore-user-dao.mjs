@@ -65,6 +65,9 @@ export default class FirestoreUserDao {
     }
 
     /**
+     * While not deprecated you shouldn't rely on this method as a unique identifier
+     * as users can and will change thier user name regularly on Letterboxd
+     *
      * @param {string} userName
      * @returns {Promise<Object>}
      */
@@ -79,6 +82,18 @@ export default class FirestoreUserDao {
 
             return documentSnapshotList[0]?.data() || null;
         });
+    }
+
+    /**
+     * @param {string} letterboxdId
+     * @returns {Promise<Object>}
+     */
+    getByLetterboxdId(letterboxdId) {
+        const query = this.firestoreCollection.where('letterboxdId', '==', letterboxdId).limit(1);
+        return query
+            .get()
+            .then((querySnapshot) => querySnapshot?.docs?.[0]?.data() || null)
+            .catch(() => null);
     }
 
     /**
