@@ -34,72 +34,75 @@ export default class FollowCommand {
      * @returns {import('discord.js').EmbedBuilder}
      */
     process(accountName, channelId) {
+        // Store this promise as a variable for reuse
         const userPromise = this.getUserDataObjectFromAccountName(accountName);
-        const promiseList = [
-            // Update database
-            userPromise.then((data) => this.firestoreSubscriptionDao.subscribe(data, channelId)),
-            // Build follow success discord message
-            userPromise.then((data) => this.embedBuilderFactory.createFollowSuccessEmbed(data)),
-            // Post diary entry for user
-            userPromise.then((data) =>
-                this.diaryEntryProcessor.processMostRecentForUser(data, channelId),
-            ),
-            // Get topic for pubsub
-            this.pubSubConnection.getCommandTopic(),
-        ];
 
-        return Promise.all(promiseList)
-            .then(([subscribeResult, messageResult, mostRecentResult, pubSubTopic]) => {
-                const userLid = subscribeResult?.userData?.letterboxdId || '';
-                const entryLid = mostRecentResult?.[0]?.entryLid || '';
-
-                // Publish needed information about the command for pickup by other systems
-                const result = mostRecentResult[0];
+        return userPromise
+            .then((userModel) => {
+                // Update the channel subscriptions
+                this.firestoreSubscriptionDao.subscribe(userModel, channelId);
+                return userPromise;
+            })
+            .then((userModel) => {
+                // Publish to Discord channel most recent entry for user
+                const mostRecentPromise = this.diaryEntryProcessor.processMostRecentForUser(
+                    userModel,
+                    channelId,
+                );
+                return Promise.all([mostRecentPromise, this.pubSubConnection.getCommandTopic()]);
+            })
+            .then(([mostRecent, pubSubTopic]) => {
+                // Publish to PubSub a message with details about follow command and results
+                const userLid = mostRecent?.[0]?.userLid || '';
+                const entryLid = mostRecent?.[0]?.entryLid || '';
                 const data = { command: 'FOLLOW', user: userLid, entry: entryLid };
                 const buffer = Buffer.from(JSON.stringify(data));
                 pubSubTopic.publishMessage({ data: buffer });
 
-                // Return embed for writing to Discord
-                return messageResult;
+                return userPromise;
             })
-            .catch(() => this.embedBuilderFactory.createNoAccountFoundEmbed(accountName));
+            .then((userModel) => {
+                // Return the follow success message
+                return this.embedBuilderFactory.createFollowSuccessEmbed(userModel);
+            });
     }
 
     /**
-     * Gets the user from the datastorage. Creates a record if getByUserName fails.
+     * Gets the LID from the web. Gets the user from the datastorage.
+     * Creates a record if getByLetterboxdId returns something falsey.
      *
      * @param {string} accountName
      * @returns {Promise<Object>}
      */
     getUserDataObjectFromAccountName(accountName) {
-        return this.firestoreUserDao
-            .getByUserName(accountName)
-            .then((userData) => userData)
-            .catch(() => {
-                return this.letterboxdLidWeb
-                    .get(accountName)
-                    .then((lid) => {
-                        return this.letterboxdMemberApi.getMember(lid);
-                    })
-                    .then((letterboxdMember) => {
-                        return this.firestoreUserDao.create(
-                            letterboxdMember.id,
-                            letterboxdMember.userName,
-                            letterboxdMember.displayName,
-                            this.parseImage(letterboxdMember?.avatar?.sizes),
-                        );
+        // Get the LID based on account name from the web because search is too vauge
+        return this.letterboxdLidWeb
+            .get(accountName)
+            .then((lid) => this.letterboxdMemberApi.getMember(lid))
+            .then((letterboxdMember) => {
+                // If an existing database model exists update it or create something new
+                return this.firestoreUserDao
+                    .getByLetterboxdId(letterboxdMember.id)
+                    .then((userModel) => {
+                        if (userModel) {
+                            // Update existing user model
+                            return this.firestoreUserDao.updateByLetterboxdId(
+                                letterboxdMember.id,
+                                letterboxdMember.userName,
+                                letterboxdMember.displayName,
+                                letterboxdMember?.avatar?.getLargestImage(),
+                            );
+                        } else {
+                            // Create new user model
+                            return this.firestoreUserDao.create(
+                                letterboxdMember.id,
+                                letterboxdMember.userName,
+                                letterboxdMember.displayName,
+                                letterboxdMember?.avatar?.getLargestImage(),
+                            );
+                        }
                     });
-            });
-    }
-
-    /**
-     * @param {import('../models/letterboxd/letterboxd-image-size.mjs')[]} sizes
-     * return string
-     */
-    parseImage(sizes) {
-        const findLargest = (previous, current) =>
-            current.height || 0 > previous.height ? current : previous;
-        const largestImage = (sizes || []).reduce(findLargest, {});
-        return largestImage?.url || '';
+            })
+            .catch(() => null);
     }
 }

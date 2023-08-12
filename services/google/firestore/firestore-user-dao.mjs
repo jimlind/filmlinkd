@@ -126,4 +126,28 @@ export default class FirestoreUserDao {
             })
             .then(() => ({ userName, displayName, image }));
     }
+
+    /**
+     * Updates database record and returns updated record
+     *
+     * @param {string} letterboxdId
+     * @param {string} userName
+     * @param {string} displayName
+     * @param {string} image
+     * @returns {Promise<Object>}
+     */
+    updateByLetterboxdId(letterboxdId, userName, displayName, image) {
+        const getDocumentSnapshot = this.firestoreCollection
+            .where('letterboxdId', '==', letterboxdId)
+            .limit(1)
+            .get()
+            .then((querySnapshot) => querySnapshot?.docs?.[0]);
+
+        return getDocumentSnapshot
+            .then((documentSnapshot) => {
+                const data = { userName, displayName, image, updated: Date.now() };
+                return documentSnapshot.ref.update(data);
+            })
+            .then(() => this.getByLetterboxdId(letterboxdId));
+    }
 }
