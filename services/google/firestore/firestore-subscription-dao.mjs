@@ -31,9 +31,12 @@ export default class FirestoreSubscriptionDao {
             .where('letterboxdId', '==', userData.letterboxdId)
             .get()
             .then((querySnapshot) => querySnapshot?.docs?.[0])
-            .then((documentSnapshot) => {
-                return documentSnapshot.ref.update({ channelList, updated: Date.now() });
-            })
+            .then((documentSnapshot) =>
+                documentSnapshot.ref.update({
+                    channelList: channelList.concat([{ channelId }]),
+                    updated: Date.now(),
+                }),
+            )
             .catch(() => {
                 // If subscription failed for the user log the warning but largely ignore it
                 const metadata = { userData, channelId };
