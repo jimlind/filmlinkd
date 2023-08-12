@@ -28,7 +28,7 @@ export default class FirestoreSubscriptionDao {
         }
 
         return this.firestoreCollection
-            .where('letterboxdId', '==', letterboxdId)
+            .where('letterboxdId', '==', userData.letterboxdId)
             .get()
             .then((querySnapshot) => querySnapshot?.docs?.[0])
             .then((documentSnapshot) => {
