@@ -46,41 +46,37 @@ export default class FirestoreSubscriptionDao {
     }
 
     /**
-     * @param {string} userName
+     * @param {object} userData
      * @param {string} channelId
+     * @returns {Promise<FirebaseFirestore.WriteResult>}>}
      */
-    unsubscribe(userName, channelId) {
-        return new Promise((resolve, reject) => {
-            const documentReference = this.firestoreCollection.doc(userName);
-            documentReference.get().then((documentSnapshot) => {
-                if (!documentSnapshot.exists) {
-                    reject();
-                    return;
-                }
-
-                const documentData = documentSnapshot.data();
-                if (!documentData.channelList.some((channel) => channel.channelId === channelId)) {
-                    reject();
-                    return;
-                }
-
-                documentData.channelList = documentData.channelList.filter((channel) => {
-                    return channel.channelId !== channelId;
-                });
-                documentReference
-                    .update(documentData)
-                    .then(() => {
-                        resolve(documentData);
-                    })
-                    .catch(() => {
-                        const metadata = {
-                            channelId,
-                            documentData,
-                        };
-                        this.logger.warn('Unable to Unsubscribe', metadata);
-                    });
-            });
+    unsubscribe(userData, channelId) {
+        const channelList = userData.channelList || [];
+        const newChannelList = channelList.filter((channel) => {
+            return channel.channelId !== channelId;
         });
+
+        // If the channel is not subscribed (nothing was filtered) exit early
+        if (channelList.length === newChannelList.length) {
+            return Promise.all([]);
+        }
+
+        return this.firestoreCollection
+            .where('letterboxdId', '==', userData.letterboxdId)
+            .get()
+            .then((querySnapshot) => querySnapshot?.docs?.[0])
+            .then((documentSnapshot) =>
+                documentSnapshot.ref.update({
+                    channelList: newChannelList,
+                    updated: Date.now(),
+                }),
+            )
+            .catch(() => {
+                // If unsubscribe failed for the user log the warning but largely ignore it
+                const metadata = { userData, channelId };
+                this.logger.warn('Unable to Unsubscribe', metadata);
+                return Promise.all([]);
+            });
     }
 
     /**
