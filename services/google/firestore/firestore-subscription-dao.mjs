@@ -18,40 +18,28 @@ export default class FirestoreSubscriptionDao {
     /**
      * @param {object} userData
      * @param {string} channelId
-     * @returns {Promise<{userData: object, success: boolean}>}
+     * @returns {Promise<FirebaseFirestore.WriteResult>}>}
      */
     subscribe(userData, channelId) {
-        return new Promise((resolve, reject) => {
-            const channelList = userData.channelList || [];
+        // If the channel is already subscribed exit early
+        const channelList = userData.channelList || [];
+        if (channelList.some((channel) => channel.channelId === channelId)) {
+            return Promise.all([]);
+        }
 
-            // If the channel is already subscribed reject
-            if (channelList.some((channel) => channel.channelId === channelId)) {
-                resolve({ userData, success: false });
-                return;
-            }
-
-            // Create new data object with new channels and timestamp
-            const updatedUserData = {
-                ...userData,
-                channelList: channelList.concat([{ channelId }]),
-                updated: Date.now(),
-            };
-
-            const documentReference = this.firestoreCollection.doc(updatedUserData.userName);
-            documentReference
-                .update(updatedUserData)
-                .then(() => {
-                    resolve({ userData: updatedUserData, success: true });
-                })
-                .catch(() => {
-                    const metadata = {
-                        channelId,
-                        updatedUserData,
-                    };
-                    this.logger.warn('Unable to Subscribe', metadata);
-                    reject();
-                });
-        });
+        return this.firestoreCollection
+            .where('letterboxdId', '==', letterboxdId)
+            .get()
+            .then((querySnapshot) => querySnapshot?.docs?.[0])
+            .then((documentSnapshot) => {
+                return documentSnapshot.ref.update({ channelList, updated: Date.now() });
+            })
+            .catch(() => {
+                // If subscription failed for the user log the warning but largely ignore it
+                const metadata = { userData, channelId };
+                this.logger.warn('Unable to Subscribe', metadata);
+                return Promise.all([]);
+            });
     }
 
     /**
