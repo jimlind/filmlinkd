@@ -75,7 +75,7 @@ export default class DiaryEntryWriter {
 
         // We are expecting multiple requests to post a diary entry so we maintain the one source of
         // truth on the server that sends messages. We keep an in memory cache.
-        if (this.previousCacheGet(diaryEntry.lid)) {
+        if (!channelIdOverride && this.previousCacheGet(diaryEntry.lid)) {
             // Duplicate found so don't write
             this.logger.info('ISS3: Previous entry found in cache', { diaryEntry });
             return new Promise((resolve) => resolve([false, false]));
