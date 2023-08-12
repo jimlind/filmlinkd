@@ -1,32 +1,36 @@
 #!/usr/bin/env node
 
-const ConfigFactory = require('../../factories/config-factory');
-const DependencyInjectionContainer = require('../../dependency-injection-container');
-const dotenv = require('dotenv');
-const fs = require('fs');
+import * as fs from 'fs';
+import { URL } from 'url';
+import config from '../../config.mjs';
+import container from '../../dependency-injection-container.mjs';
 
-// Load .env into process.env, create config, create container
-dotenv.config();
-const configModel = new ConfigFactory('prod', process.env, {}, fs.existsSync).build();
-const container = new DependencyInjectionContainer(configModel);
-const collection = container.resolve('firestoreConnection').getCollection();
-const lidWebService = container.resolve('letterboxdLidWeb');
-const memberAPI = container.resolve('letterboxdMemberApi');
+// Configure as production
+const dir = new URL('.', import.meta.url).pathname;
+config.loadFile(dir + '../../config/production.json');
+config.set('googleCloudIdentityKeyFile', dir + '../../.gcp-key.json');
 
+// Initialize container
+const initializedContainer = await container(config).initialize();
+
+const lidWebService = initializedContainer.resolve('letterboxdLidWeb');
 const deletesFileName = 'Duplicate LID Deletes ' + new Date().toString() + '.txt';
 const editsFileName = 'Duplicate LID Edits ' + new Date().toString() + '.txt';
-processData(collection);
 
-async function processData(data) {
+// ...and go!
+const collection = initializedContainer.resolve('firestoreConnection').getCollection();
+run(collection);
+
+async function run(collection) {
     const list = [];
 
-    const querySnapshot = await data.get();
+    const querySnapshot = await collection.get();
     for (const key in querySnapshot.docs) {
         const documentSnapshot = querySnapshot.docs[key];
         const data = documentSnapshot.data();
-
         list.push(data.letterboxdId);
     }
+
     list.sort();
     const duplicates = returnOnlyDuplicates(list);
     const uniqueDuplicates = [...new Set(duplicates)];
@@ -43,9 +47,14 @@ async function processData(data) {
             const data = documentSnapshotList.docs[key].data();
             sameUsers.push(data);
         }
+
         await consolidateUsers(sameUsers);
     }
 }
+
+const returnOnlyDuplicates = (list) => {
+    return list.filter((value, index) => list.indexOf(value) !== index);
+};
 
 async function consolidateUsers(users) {
     const newUserList = [];
@@ -70,6 +79,7 @@ async function consolidateUsers(users) {
     }
 
     if (newUserList.length !== 1) {
+        console.log({ newUserList });
         console.log(`🟡 Failure on ${users[0].letterboxdId}. No clean new user.`);
         return;
     }
@@ -114,5 +124,3 @@ function consolidateChannels(channelList) {
     }
     return rebuiltChannelList;
 }
-
-const returnOnlyDuplicates = (list) => list.filter((value, index) => list.indexOf(value) !== index);
