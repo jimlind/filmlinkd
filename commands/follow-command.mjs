@@ -39,6 +39,11 @@ export default class FollowCommand {
 
         return userPromise
             .then((userModel) => {
+                // If the user isn't found, throw an error to short circuit the catch
+                if (!userModel) {
+                    throw null;
+                }
+
                 // Update the channel subscriptions
                 this.firestoreSubscriptionDao.subscribe(userModel, channelId);
                 return userPromise;
@@ -64,7 +69,8 @@ export default class FollowCommand {
             .then((userModel) => {
                 // Return the follow success message
                 return this.embedBuilderFactory.createFollowSuccessEmbed(userModel);
-            });
+            })
+            .catch(() => this.embedBuilderFactory.createNoAccountFoundEmbed(accountName));
     }
 
     /**
