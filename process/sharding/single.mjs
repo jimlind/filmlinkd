@@ -59,6 +59,8 @@ class Single {
                     diaryEntry.id = viewingId;
 
                     // Exit early if the existing diary entry id is older than the incoming diary entry id
+                    // This should not lead to any edge cases because of syncronous processes for calling
+                    // the validate and write method
                     if ((userModel?.previous?.id || 0) >= viewingId) {
                         const state = { diaryEntry, userModel, viewingId };
                         this.container
