@@ -17,6 +17,7 @@ export default class InteractionTranslator {
      * @param {import('../commands/refresh-command.mjs')} refreshCommand
      * @param {import('../commands/roulette-command.mjs')} rouletteCommand
      * @param {any} subscribedUserList
+     * @param {import('../commands/test-command.mjs')} testCommand
      * @param {import('../commands/unfollow-command.mjs')} unfollowCommand
      * @param {import('../commands/user-command.mjs')} userCommand
      */
@@ -38,6 +39,7 @@ export default class InteractionTranslator {
         refreshCommand,
         rouletteCommand,
         subscribedUserList,
+        testCommand,
         unfollowCommand,
         userCommand,
     ) {
@@ -58,6 +60,7 @@ export default class InteractionTranslator {
         this.refreshCommand = refreshCommand;
         this.rouletteCommand = rouletteCommand;
         this.subscribedUserList = subscribedUserList;
+        this.testCommand = testCommand;
         this.unfollowCommand = unfollowCommand;
         this.userCommand = userCommand;
     }
@@ -145,6 +148,11 @@ export default class InteractionTranslator {
                 return this.userCommand.getEmbed(accountName);
                 break;
             default:
+                // Respond with the "test" help responses
+                if (commandInteraction.options.getBoolean('test') || false) {
+                    return this.testCommand.process();
+                }
+
                 return this.helpCommand.getEmbed();
                 break;
         }

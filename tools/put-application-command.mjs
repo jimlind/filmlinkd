@@ -14,6 +14,14 @@ const commands = [
     {
         name: 'help',
         description: 'Replies with a some helpful information and links.',
+        options: [
+            {
+                name: 'test',
+                description: 'Sends a series of test messages to validate permissions',
+                type: 5,
+                required: false,
+            },
+        ],
     },
     {
         name: 'follow',
