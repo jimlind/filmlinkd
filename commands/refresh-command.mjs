@@ -21,9 +21,12 @@ export default class RefreshCommand {
             .get(accountName)
             .then((userLid) => this.letterboxdMemberApi.getMember(userLid))
             .then((member) => {
-                const name = member?.displayName;
-                const image = member?.avatar.getSmallestImage();
-                return this.firestoreUserDao.update(accountName, name, image);
+                return this.firestoreUserDao.updateByLetterboxdId(
+                    member.id,
+                    member.userName,
+                    member.displayName,
+                    member.avatar.getSmallestImage(),
+                );
             })
             .then((result) => this.embedBuilderFactory.createRefreshSuccessEmbed(result))
             .catch(() => this.embedBuilderFactory.createRefreshErrorEmbed(accountName));
