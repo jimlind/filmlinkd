@@ -13,45 +13,46 @@ export default class EmbedBuilderFactory {
     }
 
     createFollowSuccessEmbed(data) {
+        const userName = this.formatUserName(data.userName);
         const description = this.formatDescription(
-            `I am now following ${data.displayName} (${data.userName}).\nI'll try to post their most recent entry in the appropriate channel.`,
-        );
-        return this.createEmbedBuilder().setDescription(description).setThumbnail(data.image);
-    }
-
-    createDuplicateFollowEmbed(data) {
-        const description = this.formatDescription(
-            `I was previously following ${data.displayName} (${data.userName}).\nWe are already BFFs.`,
+            `I am now following ${data.displayName} (${userName}).\nI'll try to post their most recent entry in the appropriate channel.`,
         );
         return this.createEmbedBuilder().setDescription(description).setThumbnail(data.image);
     }
 
     createNoAccountFoundEmbed(userName) {
-        const description = this.formatDescription(`I can't find **${userName}** on Letterboxd.`);
+        const formattedUserName = this.formatUserName(userName);
+        const description = this.formatDescription(
+            `I can't find **${formattedUserName}** on Letterboxd.`,
+        );
         return this.createEmbedBuilder().setDescription(description);
     }
 
     createUnfollowedSuccessEmbed(data) {
+        const userName = this.formatUserName(data.userName);
         const description = this.formatDescription(
-            `I unfollowed ${data.displayName} (${data.userName}).\nNo hard feelings I hope.`,
+            `I unfollowed ${data.displayName} (${userName}).\nNo hard feelings I hope.`,
         );
         return this.createEmbedBuilder().setDescription(description).setThumbnail(data.image);
     }
 
     createUnfollowedErrorEmbed(userName) {
-        const description = this.formatDescription(`Unable to unfollow ${userName}.`);
+        const formattedUserName = this.formatUserName(userName);
+        const description = this.formatDescription(`Unable to unfollow ${formattedUserName}.`);
         return this.createEmbedBuilder().setDescription(description);
     }
 
     createRefreshSuccessEmbed(data) {
+        const userName = this.formatUserName(data.userName);
         const description = this.formatDescription(
-            `I updated my display data for ${data.displayName} (${data.userName}).`,
+            `I updated my display data for ${data.displayName} (${userName}).`,
         );
         return this.createEmbedBuilder().setDescription(description).setThumbnail(data.image);
     }
 
     createRefreshErrorEmbed(userName) {
-        const description = this.formatDescription(`Unable to refresh ${userName}.`);
+        const formattedUserName = this.formatUserName(userName);
+        const description = this.formatDescription(`Unable to refresh ${formattedUserName}.`);
         return this.createEmbedBuilder().setDescription(description);
     }
 
@@ -73,8 +74,9 @@ export default class EmbedBuilderFactory {
         let resultString = '';
         for (let x = 0; x < sortedUserList.length; x++) {
             const user = sortedUserList[x];
+            const userName = this.formatUserName(user.userName);
             const nextString =
-                resultString + `• [${user.userName} (${user.lid})](https://boxd.it/${user.lid})\n`;
+                resultString + `• ${userName} [${user.lid}](https://boxd.it/${user.lid})\n`;
             try {
                 // Attempt to set description, and catch any errors
                 this.createEmbedBuilder().setDescription(nextString);
@@ -483,6 +485,23 @@ export default class EmbedBuilderFactory {
         return description.substring(0, 4096);
     }
 
+    /**
+     * @param {string} userName
+     * @returns string
+     */
+    formatUserName(userName) {
+        // If a userName starts and ends with underscore reformat it
+        if (userName.at(0) === '_' && userName.at(-1) === '_') {
+            userName = `\\_${userName.slice(1, -1)}\\_`;
+        }
+
+        return userName;
+    }
+
+    /**
+     * @param {*} rating
+     * @returns string
+     */
     formatStars(rating) {
         if (!rating) {
             return '';
