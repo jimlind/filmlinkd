@@ -117,7 +117,6 @@ export default class DiaryEntryWriter {
             .then((senderResultList) => {
                 // If we weren't able to post any messages just move on.
                 if (senderResultList.filter(Boolean).length == 0) {
-                    this.logger.info('ISS3: Skip if no messages are sent', { diaryEntry });
                     throw this.skipNoMessagesSent;
                 }
                 // Pass some worthwhile data to the promise reciever.
