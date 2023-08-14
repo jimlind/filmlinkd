@@ -336,7 +336,8 @@ export default class EmbedBuilderFactory {
 
         const logEntryTextList = logEntryList.map((logEntry) => {
             const actionString = logEntry.review ? 'Reviewed' : 'Watched';
-            const dateString = this.formatDate(new Date(logEntry?.diaryDetails?.diaryDate));
+            const entryDate = new Date(logEntry?.diaryDetails?.diaryDate || logEntry?.whenUpdated);
+            const dateString = this.formatDate(entryDate);
             const activityLine = `[**${actionString} on ${dateString}**](https://boxd.it/${logEntry.id})`;
 
             let emojiLine = this.formatStars(Number(logEntry?.rating));
