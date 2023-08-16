@@ -56,7 +56,8 @@ export default class DiaryEntryWriter {
                 .then((id) => {
                     resolve(id);
                 })
-                .catch(() => {
+                .catch((error) => {
+                    this.logger.info('ISS3: Getting Viewing Id Failed', { error });
                     resolve('0');
                 });
         });
@@ -101,6 +102,7 @@ export default class DiaryEntryWriter {
 
                 // Double check that the entry is newer than what was stored in the database
                 // Ignore this check if there is a channel override because we want it to trigger multiple times.
+                // TODO: Can we ignore this because viewing ID is no longer needed?
                 if (!channelIdOverride && (userModel?.previous?.id || 0) >= viewingId) {
                     const state = { userModel, viewingId, channelIdOverride };
                     this.logger.info('ISS3: Skip an old diary entry', state);
@@ -122,6 +124,7 @@ export default class DiaryEntryWriter {
                 // Pass some worthwhile data to the promise reciever.
                 // Probably too much data if I can be honest, but for now
                 // this is better than it used to be.
+                // TODO: Do we need to return this?
                 return Promise.all([getUserModel, getViewingId]);
             })
             .catch((error) => {
