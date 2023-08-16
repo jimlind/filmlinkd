@@ -11,7 +11,7 @@ export default class LetterboxdViewingIdWeb {
      * @returns {Promise<string>}
      */
     get(url) {
-        return this.httpClient.head(url, 10000).then((response) => {
+        return this.httpClient.head(url, 100000).then((response) => {
             const xkey = response?.headers['xkey'] || '';
 
             return xkey.match(/viewing:(\d+)\//)?.[1] || '';
