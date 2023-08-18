@@ -47,25 +47,11 @@ class Single {
             this.container
                 .resolve('diaryEntryWriter')
                 .validateAndWrite(diaryEntry, returnData?.channelId)
-                .then(([userModel, viewingId]) => {
-                    // Exit early if no values from validate and write.
+                .then((userModel) => {
+                    // Exit early if nothing returned from validate and write.
                     // This shard may not have access to the channel needed for the user so this is
                     // a normal and expected behavior and no logs are neccessary here.
-                    if (!userModel || !viewingId) {
-                        return Promise.all([]);
-                    }
-
-                    // Override id because not always set
-                    diaryEntry.id = viewingId;
-
-                    // Exit early if the existing diary entry id is older than the incoming diary entry id
-                    // This should not lead to any edge cases because of syncronous processes for calling
-                    // the validate and write method
-                    if ((userModel?.previous?.id || 0) >= viewingId) {
-                        const state = { diaryEntry, userModel, viewingId };
-                        this.container
-                            .resolve('logger')
-                            .info('ISS3: Previous entry is newer than current', state);
+                    if (!userModel) {
                         return Promise.all([]);
                     }
 

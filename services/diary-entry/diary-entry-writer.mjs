@@ -20,24 +20,21 @@ export default class DiaryEntryWriter {
      * @param {import('../discord/discord-message-sender.mjs')} discordMessageSender
      * @param {import('../../factories/embed-builder-factory.mjs')} embedBuilderFactory
      * @param {import('../google/firestore/firestore-user-dao.mjs')} firestoreUserDao
-     * @param {import('../letterboxd/letterboxd-viewing-id-web.mjs')} letterboxdViewingIdWeb
+     * @param {import('../letterboxd/letterboxd-lid-comparison.mjs')} letterboxdLidComparison
      * @param {import('../logger.mjs')} logger
-     * @param {import('../google/pubsub/pub-sub-connection.mjs')} pubSubConnection
      */
     constructor(
         discordMessageSender,
         embedBuilderFactory,
         firestoreUserDao,
-        letterboxdViewingIdWeb,
+        letterboxdLidComparison,
         logger,
-        pubSubConnection,
     ) {
         this.discordMessageSender = discordMessageSender;
         this.embedBuilderFactory = embedBuilderFactory;
         this.firestoreUserDao = firestoreUserDao;
-        this.letterboxdViewingIdWeb = letterboxdViewingIdWeb;
+        this.letterboxdLidComparison = letterboxdLidComparison;
         this.logger = logger;
-        this.pubSubConnection = pubSubConnection;
     }
 
     /**
@@ -46,22 +43,6 @@ export default class DiaryEntryWriter {
      * @returns {Promise}
      */
     validateAndWrite(diaryEntry, channelIdOverride) {
-        // getViewingId is a Promise so we can access data or call another promise
-        const getViewingId = new Promise((resolve) => {
-            if (diaryEntry.id) {
-                resolve(diaryEntry.id);
-            }
-            this.letterboxdViewingIdWeb
-                .get(diaryEntry.link)
-                .then((id) => {
-                    resolve(id);
-                })
-                .catch((error) => {
-                    this.logger.info('ISS3: Getting Viewing Id Failed', { error });
-                    resolve('0');
-                });
-        });
-
         // getUserModel is a Promise so duplicate calls to the Dao aren't made
         const getUserModel = new Promise((resolve) => {
             this.firestoreUserDao
@@ -83,8 +64,8 @@ export default class DiaryEntryWriter {
         }
         this.previousCacheSet(diaryEntry.lid);
 
-        return Promise.all([getUserModel, getViewingId])
-            .then(([userModel, viewingId]) => {
+        return getUserModel
+            .then((userModel) => {
                 // Exit early if user not found
                 if (!userModel) {
                     throw this.skipUserNotFound;
@@ -102,9 +83,12 @@ export default class DiaryEntryWriter {
 
                 // Double check that the entry is newer than what was stored in the database
                 // Ignore this check if there is a channel override because we want it to trigger multiple times.
-                // TODO: Can we ignore this because viewing ID is no longer needed?
-                if (!channelIdOverride && (userModel?.previous?.id || 0) >= viewingId) {
-                    const state = { userModel, viewingId, channelIdOverride };
+                const entryComparison = this.letterboxdLidComparison.compare(
+                    userModel.previous.lid,
+                    diaryEntry.lid,
+                );
+                if (!channelIdOverride && entryComparison !== 1) {
+                    const state = { diaryEntry, userModel, channelIdOverride };
                     this.logger.info('ISS3: Skip an old diary entry', state);
                     throw this.skipOldDiaryEntry;
                 }
@@ -121,11 +105,8 @@ export default class DiaryEntryWriter {
                 if (senderResultList.filter(Boolean).length == 0) {
                     throw this.skipNoMessagesSent;
                 }
-                // Pass some worthwhile data to the promise reciever.
-                // Probably too much data if I can be honest, but for now
-                // this is better than it used to be.
-                // TODO: Do we need to return this?
-                return Promise.all([getUserModel, getViewingId]);
+                // Pass the user model back up to the promise reciever.
+                return getUserModel;
             })
             .catch((error) => {
                 // Don't log any of the normal rejection reasons, these are already logged.
@@ -137,7 +118,7 @@ export default class DiaryEntryWriter {
                     this.skipNoMessagesSent,
                 ];
                 if (allowedErrorList.includes(error)) {
-                    return [false, false];
+                    return null;
                 }
 
                 const logData = { error, diaryEntry, channelIdOverride };
@@ -145,7 +126,7 @@ export default class DiaryEntryWriter {
                     `Entry for '${diaryEntry?.filmTitle}' by '${diaryEntry?.userName}' did not validate and write.`,
                     logData,
                 );
-                return [false, false];
+                return null;
             });
     }
 
