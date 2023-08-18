@@ -18,8 +18,6 @@ export default class FirestorePreviousDao {
      * @returns void
      */
     update(userData, diaryEntry) {
-        // Potentially update multiple records here because the system is still based
-        // on usernames being unique not UserLIDs. Another TODO.
         this.firestoreCollection
             .where('letterboxdId', '==', userData.letterboxdId)
             .get()
@@ -31,18 +29,23 @@ export default class FirestorePreviousDao {
 
                 querySnapshot.docs.forEach((documentSnapshot) => {
                     const userData = documentSnapshot.data();
-                    const previousList = userData?.previous?.list || [];
-
                     userData.updated = Date.now();
                     userData.previous = userData?.previous || {};
-                    userData.previous.list = this.preparePreviousList(previousList, diaryEntry.lid);
 
                     // Update all other previous assets if the diary entry is the newest
-                    if ((userData?.previous?.id || '0') < diaryEntry.id) {
+                    const entryComparison = this.letterboxdLidComparison.compare(
+                        userData?.previous?.lid || '0',
+                        diaryEntry.lid,
+                    );
+                    if (entryComparison === 1) {
                         userData.previous.id = diaryEntry.id;
                         userData.previous.lid = diaryEntry.lid;
                         userData.previous.published = diaryEntry.publishedDate;
                         userData.previous.uri = diaryEntry.link;
+                        userData.previous.list = this.preparePreviousList(
+                            userData?.previous?.list || [],
+                            diaryEntry.lid,
+                        );
                     }
 
                     documentSnapshot.ref.update(userData).catch(() => {
