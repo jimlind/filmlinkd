@@ -84,7 +84,7 @@ export default class DiaryEntryWriter {
                 // Double check that the entry is newer than what was stored in the database
                 // Ignore this check if there is a channel override because we want it to trigger multiple times.
                 const entryComparison = this.letterboxdLidComparison.compare(
-                    userModel.previous.lid,
+                    userModel?.previous?.lid || '',
                     diaryEntry.lid,
                 );
                 if (!channelIdOverride && entryComparison !== 1) {
