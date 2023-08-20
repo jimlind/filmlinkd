@@ -68,9 +68,9 @@ class Single {
                         .resolve('firestorePreviousDao')
                         .update(userModel, diaryEntry);
                 })
-                .catch(() => {
+                .catch((e) => {
                     const message = `Error on diaryEntryWriter::validateAndWrite for '${diaryEntry?.filmTitle}' by '${diaryEntry?.userName}'`;
-                    this.container.resolve('logger').error(message);
+                    this.container.resolve('logger').error(message, { error: e });
                 });
         });
     }
