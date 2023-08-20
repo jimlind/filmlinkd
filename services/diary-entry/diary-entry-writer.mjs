@@ -60,7 +60,7 @@ export default class DiaryEntryWriter {
         if (!channelIdOverride && this.previousCacheGet(diaryEntry.lid)) {
             // Duplicate found so don't write
             this.logger.info('ISS3: Previous entry found in cache', { diaryEntry });
-            return new Promise((resolve) => resolve([false, false]));
+            return new Promise((resolve) => resolve(null));
         }
         this.previousCacheSet(diaryEntry.lid);
 
