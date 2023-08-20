@@ -38,7 +38,7 @@ export default class FirestorePreviousDao {
                         diaryEntry.lid,
                     );
                     if (entryComparison === 1) {
-                        userData.previous.id = diaryEntry.id;
+                        userData.previous.id = 'field is deprecated';
                         userData.previous.lid = diaryEntry.lid;
                         userData.previous.published = diaryEntry.publishedDate;
                         userData.previous.uri = diaryEntry.link;
