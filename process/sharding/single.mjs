@@ -63,6 +63,15 @@ class Single {
                         });
                     }
 
+                    // Trial and error logging. Not sure what's going on yet.
+                    userModel.letterboxdId = undefined;
+                    if (!userModel.letterboxdId) {
+                        const state = { userModel, diaryEntry };
+                        this.container
+                            .resolve('logger')
+                            .warn('ISS3.1: User model letterboxdId is falsey', state);
+                    }
+
                     // Write to the database
                     return this.container
                         .resolve('firestorePreviousDao')
