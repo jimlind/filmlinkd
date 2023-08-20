@@ -237,15 +237,10 @@ export default class EmbedBuilderFactory {
             `:speech_balloon: ${this.formatCount(filmStatistics.reviewCount)}\n`;
         description = this.formatDescription(description);
 
-        const largestImage = (film?.poster?.sizes || []).reduce(
-            (previous, current) => (current.height || 0 > previous.height ? current : previous),
-            {},
-        );
-
         return this.createEmbedBuilder()
             .setTitle(`${film.name} (${film.releaseYear})`)
             .setURL(`https://boxd.it/${film.id}`)
-            .setThumbnail(largestImage?.url || '')
+            .setThumbnail(film?.poster?.getLargestImage())
             .setDescription(description);
     }
 

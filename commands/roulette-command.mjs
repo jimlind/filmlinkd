@@ -50,11 +50,11 @@ export default class RouletteCommand {
                         return response.request.path;
                     case 'LogEntry':
                         const result = /data-film-link="(.+?)"/.exec(response.data)[1];
-                        return result;
+                        return '/film/' + result;
                     default:
                         const resultList = /data-film-slug="(.+?)"/.exec(response.data);
                         if (resultList) {
-                            return resultList[1];
+                            return '/film/' + resultList[1];
                         }
                 }
                 throw null;
