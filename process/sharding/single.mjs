@@ -64,7 +64,6 @@ class Single {
                     }
 
                     // Trial and error logging. Not sure what's going on yet.
-                    userModel.letterboxdId = undefined;
                     if (!userModel.letterboxdId) {
                         const state = { userModel, diaryEntry };
                         this.container
