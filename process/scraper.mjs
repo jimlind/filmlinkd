@@ -27,6 +27,12 @@ export default class Scraper {
     }
 
     run() {
+        const config = this.container.resolve('config');
+        this.container.resolve('logger').info('Scraper Process Started', {
+            name: config.get('packageName'),
+            version: config.get('packageVersion'),
+        });
+
         // Get a random index from the user list
         const getRandomIndex = this.container.resolve('subscribedUserList').getRandomIndex();
         getRandomIndex.then((randomIndex) => {
