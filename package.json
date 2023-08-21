@@ -1,7 +1,7 @@
 {
     "name": "filmlinkd",
     "description": "Filmlinkd - A Letterboxd Discord Bot",
-    "version": "4.0.0-beta.30",
+    "version": "4.0.0-beta.31",
     "private": true,
     "license": "AGPL-3.0",
     "author": "Jim Lind",
