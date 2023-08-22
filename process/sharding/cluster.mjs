@@ -17,7 +17,7 @@ export default class Cluster {
 
     run() {
         this.manager.totalShards = 'auto';
-        this.manager.shardsPerClusters = 2;
+        this.manager.shardsPerClusters = 4;
         this.manager.mode = 'process';
 
         // Setup the secret manager manually because we are avoiding the overhead of the
