@@ -2,14 +2,6 @@
  * Class dealing with writing diary entry events to Discord servers
  */
 export default class DiaryEntryWriter {
-    /**
-     * @type {number}
-     */
-    cacheSize = 10000;
-    /**
-     * @type {string[]}
-     */
-    cachedPreviousData = [];
     skipUserNotFound = 'SKIP_USER_NOT_FOUND';
     skipOldDiaryEntry = 'SKIP_OLD_DIARY_ENTRY';
     skipEmptyChannelList = 'SKIP_EMPTY_CHANNEL_LIST';
@@ -17,6 +9,7 @@ export default class DiaryEntryWriter {
     skipNoMessagesSent = 'SKIP_NO_MESSAGES_SENT';
 
     /**
+     * @param {import('lru-cache').LRUCache} cache
      * @param {import('../discord/discord-message-sender.mjs')} discordMessageSender
      * @param {import('../../factories/embed-builder-factory.mjs')} embedBuilderFactory
      * @param {import('../google/firestore/firestore-user-dao.mjs')} firestoreUserDao
@@ -24,12 +17,14 @@ export default class DiaryEntryWriter {
      * @param {import('../logger.mjs')} logger
      */
     constructor(
+        cache,
         discordMessageSender,
         embedBuilderFactory,
         firestoreUserDao,
         letterboxdLidComparison,
         logger,
     ) {
+        this.cache = cache;
         this.discordMessageSender = discordMessageSender;
         this.embedBuilderFactory = embedBuilderFactory;
         this.firestoreUserDao = firestoreUserDao;
@@ -57,12 +52,12 @@ export default class DiaryEntryWriter {
 
         // We are expecting multiple requests to post a diary entry so we maintain the one source of
         // truth on the server that sends messages. We keep an in memory cache.
-        if (!channelIdOverride && this.previousCacheGet(diaryEntry.lid)) {
+        if (!channelIdOverride && this.cache.get(diaryEntry.lid)) {
             // Duplicate found so don't write
             this.logger.info('ISS3: Previous entry found in cache', { diaryEntry });
             return new Promise((resolve) => resolve(null));
         }
-        this.previousCacheSet(diaryEntry.lid);
+        this.cache.set(diaryEntry.lid, true);
 
         return getUserModel
             .then((userModel) => {
@@ -151,14 +146,5 @@ export default class DiaryEntryWriter {
                 .catch(() => false);
         });
         return Promise.all(sendPromiseList);
-    }
-
-    previousCacheSet(input) {
-        this.cachedPreviousData.push(input);
-        this.cachedPreviousData.slice(this.cacheSize * -1);
-    }
-
-    previousCacheGet(input) {
-        return this.cachedPreviousData.find((value) => value == input);
     }
 }

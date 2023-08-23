@@ -7,6 +7,7 @@ import axios from 'axios';
 import crypto from 'crypto';
 import * as discord from 'discord.js';
 import exitHook from 'exit-hook';
+import { LRUCache } from 'lru-cache';
 import truncateMarkdown from 'markdown-truncate';
 import pLimit from 'p-limit';
 import turndown from 'turndown';
@@ -85,7 +86,11 @@ class DependencyInjectionContainer {
             keyFilename: this.config.get('googleCloudIdentityKeyFile'),
         });
 
+        // Setup 10,000 item cache object
+        const cache = new LRUCache({ max: 10000 });
+
         this.container.register({
+            cache: asValue(cache),
             config: asValue(this.config),
             crypto: asValue(crypto),
             discordClient: asValue(discordClient),
