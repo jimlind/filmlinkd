@@ -16,8 +16,15 @@ export default class Cluster {
     }
 
     run() {
+        // A cluster is a collection of shards. Clusters are actual divisions. Shards are virtual
+        // divisions.
+        // A cluster of shards acts like one sever. Multiple clusters require additional engineering to
+        // resolve any need to share events or data between them.
+        // Setting shards to 'auto' means the sharding attempts to create shards with 1,000 servers.
+        // totalShards:'auto' and shardsPerClusters:4 and 3,999 servers means 1 cluster with 4 shards
+        // totalShards:'auto' and shardsPerClusters:2 and 3,999 servers means 2 clusters each with 2 shards
         this.manager.totalShards = 'auto';
-        this.manager.shardsPerClusters = 4;
+        this.manager.shardsPerClusters = 2;
         this.manager.mode = 'process';
 
         // Setup the secret manager manually because we are avoiding the overhead of the
