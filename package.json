@@ -30,6 +30,7 @@
         "lru-cache": "^10.0.1",
         "markdown-truncate": "^1.1.0",
         "p-limit": "^4.0.0",
+        "set-interval-async": "^3.0.3",
         "turndown": "^7.1.2",
         "winston": "^3.10.0"
     },

@@ -14,6 +14,7 @@ import turndown from 'turndown';
 import { URL } from 'url';
 import * as uuid from 'uuid';
 import winston from 'winston';
+import { setIntervalAsync } from 'set-interval-async/fixed';
 
 class DependencyInjectionContainer {
     /**
@@ -107,6 +108,7 @@ class DependencyInjectionContainer {
             winston: asValue(winston),
             pubSub: asValue(pubsub),
             secretManagerClient: asValue(secretManagerClient),
+            setIntervalAsync: asValue(setIntervalAsync),
         });
 
         const dir = new URL('.', import.meta.url).pathname;
