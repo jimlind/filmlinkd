@@ -2,7 +2,7 @@ export default class LetterboxdApi {
     /** @type {string} */
     root = 'https://api.letterboxd.com/api/v0/';
     /** @type {boolean} */
-    secretLock = false;
+    secretValueGetterLock = false;
     /** @type {string} */
     apiKey = '';
     /** @type {string} */
@@ -24,16 +24,26 @@ export default class LetterboxdApi {
     }
 
     get(path, paramList) {
-        const getLetterboxdApiSharedSecret = new Promise((resolve) => {
-            if (this.secretLock) {
-                const interval = setInterval(() => {
-                    if (!this.secretLock) {
-                        clearInterval(interval);
+        const getLetterboxdApiSecrets = new Promise((resolve) => {
+            // If the secrets are set locally use them
+            if (this.apiKey && this.apiSharedSecret) {
+                return resolve({ key: this.apiKey, sharedSecret: this.apiSharedSecret });
+            }
+
+            // If the getter is locked start some recursive timeouts to resolve it
+            if (this.secretValueGetterLock) {
+                // Mostly arbitrary timing of how long it takes on my dev environment
+                const delay = 250;
+                const getSecretValues = () => {
+                    if (this.apiKey && this.apiSharedSecret) {
                         resolve({ key: this.apiKey, sharedSecret: this.apiSharedSecret });
+                    } else {
+                        setTimeout(getSecretValues, delay);
                     }
-                }, 250); // Mostly arbitrary timing of how long it takes on my dev environment
+                }
+                setTimeout(getSecretValues, delay);             
             } else {
-                this.secretLock = true;
+                this.secretValueGetterLock = true;
 
                 Promise.all([
                     this.secretManager.getValue(this.config.get('letterboxdApiKeyName')),
@@ -41,14 +51,13 @@ export default class LetterboxdApi {
                 ]).then(([key, sharedSecret]) => {
                     this.apiKey = key;
                     this.apiSharedSecret = sharedSecret;
-                    this.secretLock = false;
 
                     resolve({ key, sharedSecret });
                 });
             }
         });
 
-        return getLetterboxdApiSharedSecret.then(({ key, sharedSecret }) => {
+        return getLetterboxdApiSecrets.then(({ key, sharedSecret }) => {
             const url = this.buildUrl(path, paramList, key);
             const signature = this.buildSignature('GET', url, sharedSecret);
             const auth = { Authorization: `Signature ${signature}` };
