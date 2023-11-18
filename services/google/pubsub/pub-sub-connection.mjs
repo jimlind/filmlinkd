@@ -99,43 +99,46 @@ export default class PubSubConnection {
                 return resolve(this.topicList[topicName]);
             }
 
-            // If this method is locked wait until the topic is set
+            // If this topic is locked wait until the topic is set
             if (this.getTopicLockedList[topicName]) {
-                const interval = setInterval(() => {
-                    if (!this.getTopicLockedList[topicName]) {
-                        clearInterval(interval);
+                // Mostly arbitrary timing of how long it takes on my dev environment
+                const delay = 140;
+                const getTopic = () => {
+                    if (this.topicList[topicName]) {
                         resolve(this.topicList[topicName]);
-                    }
-                }, 140); // Mostly arbitrary timing of how long it takes on my dev environment
-            }
-            // Lock this method if not available and not already locked
-            this.getTopicLockedList[topicName] = true;
-
-            // Get or create topic
-            const topic = this.pubSub.topic(topicName);
-            topic
-                .exists()
-                .then(([exists]) => {
-                    if (exists) {
-                        this.topicList[topicName] = topic;
-                        this.getTopicLockedList[topicName] = false;
-                        return resolve(topic);
                     } else {
-                        topic
-                            .create()
-                            .then(([result]) => {
-                                this.topicList[topicName] = result;
-                                this.getTopicLockedList[topicName] = false;
-                                return resolve(result);
-                            })
-                            .catch(() => {
-                                return reject('Unable to create topic');
-                            });
+                        setTimeout(getTopic, delay);
                     }
-                })
-                .catch(() => {
-                    return reject('Unable to check topic exists');
-                });
+                }
+                setTimeout(getTopic, delay);
+            } else {
+                // Lock this method if not available and not already locked
+                this.getTopicLockedList[topicName] = true;
+
+                // Get or create topic
+                const topic = this.pubSub.topic(topicName);
+                topic
+                    .exists()
+                    .then(([exists]) => {
+                        if (exists) {
+                            this.topicList[topicName] = topic;
+                            return resolve(topic);
+                        } else {
+                            topic
+                                .create()
+                                .then(([result]) => {
+                                    this.topicList[topicName] = result;
+                                    return resolve(result);
+                                })
+                                .catch(() => {
+                                    return reject('Unable to create topic');
+                                });
+                        }
+                    })
+                    .catch(() => {
+                        return reject('Unable to check topic exists');
+                    });
+            }
         });
     }
 
