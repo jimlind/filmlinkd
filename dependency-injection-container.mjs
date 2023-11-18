@@ -14,7 +14,7 @@ import turndown from 'turndown';
 import { URL } from 'url';
 import * as uuid from 'uuid';
 import winston from 'winston';
-import { setIntervalAsync } from 'set-interval-async/fixed';
+import { setIntervalAsync, clearIntervalAsync } from 'set-interval-async/fixed';
 
 class DependencyInjectionContainer {
     /**
@@ -109,6 +109,7 @@ class DependencyInjectionContainer {
             pubSub: asValue(pubsub),
             secretManagerClient: asValue(secretManagerClient),
             setIntervalAsync: asValue(setIntervalAsync),
+            clearIntervalAsync: asValue(clearIntervalAsync),
         });
 
         const dir = new URL('.', import.meta.url).pathname;

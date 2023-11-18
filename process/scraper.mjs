@@ -1,6 +1,6 @@
 export default class Scraper {
     /** @type {number} */
-    fetchRestingTime = 15000; // 15 seconds
+    fetchRestingTime = 5000; // 5 seconds
     /** @type {boolean} */
     fetchThreadRunning = false;
     /** @type {number} */
@@ -39,12 +39,13 @@ export default class Scraper {
             // The recurringFetchTask uses and udates this
             this.index = randomIndex;
 
+            const setIntervalAsync = this.container.resolve('setIntervalAsync');
             const fetchTask = this.recurringFetchTask.bind(this);
-            this.fetchInterval = setInterval(fetchTask, this.fetchRestingTime);
+            this.fetchInterval = setIntervalAsync(fetchTask, this.fetchRestingTime);
 
-            const resetTAsk = this.recurringResetTask.bind(this);
-            this.resetInterval = setInterval(resetTAsk, this.resetRestingTime);
-
+            const resetTask = this.recurringResetTask.bind(this);
+            this.resetInterval = setIntervalAsync(resetTask, this.resetRestingTime);
+            
             // Listen for Command PubSub messages posted and upsert appropriate follow outcome data
             this.container.resolve('pubSubMessageListener').onCommandMessage((message) => {
                 const returnData = JSON.parse(message.data.toString());
@@ -58,10 +59,6 @@ export default class Scraper {
     }
 
     recurringFetchTask() {
-        // This variable is reset after a page of entries processing has completed
-        if (this.fetchThreadRunning) return;
-        this.fetchThreadRunning = true;
-
         if (this.queueUserListReset) {
             this.container.resolve('subscribedUserList').cachedData = null;
             this.queueUserListReset = false;
@@ -71,7 +68,6 @@ export default class Scraper {
             .resolve('diaryEntryProcessor')
             .processPageOfEntries(this.index, this.pageSize)
             .then((pageCount) => {
-                this.fetchThreadRunning = false;
                 this.index = pageCount === 0 ? 0 : this.index + pageCount;
             });
     }
@@ -84,8 +80,9 @@ export default class Scraper {
         // Log process closure
         this.container.resolve('logger').info('Scraper Process Terminated', { signal });
         // Stop the recurring tasks
-        clearInterval(this.fetchInterval);
-        clearInterval(this.resetInterval);
+        const clearIntervalAsync = this.container.resolve('clearIntervalAsync');
+        clearIntervalAsync(this.fetchInterval);
+        clearIntervalAsync(this.resetInterval);
         // Close all possible PubSub connections
         this.container.resolve('pubSubConnection').closeAllSubscriptions();
     }
