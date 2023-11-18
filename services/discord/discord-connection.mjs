@@ -1,5 +1,7 @@
 export default class DiscordConnection {
+    /** @type {boolean} */
     connected = false;
+    /** @type {boolean} */
     locked = false;
 
     /**
@@ -16,43 +18,43 @@ export default class DiscordConnection {
     }
 
     getConnectedClient() {
-        // TODO: The secret manager is only used the first time.
-        // I should fix that eventually.
-        return this.secretManager.getValue(this.config.get('discordBotTokenName')).then((token) => {
-            // If no token set reject the request
+        // If connected return the connected discord client
+        if (this.connected) {
+            return new Promise((resolve) => {
+                resolve(this.discordClient);
+            });
+        }
+
+        const tokenName = this.config.get('discordBotTokenName');
+        return this.secretManager.getValue(tokenName).then((token) => {
             if (!token) {
                 throw new Error('No Discord Bot Token Set');
             }
 
-            // If the client is connected return it
-            if (this.connected) {
-                return this.discordClient;
-            }
-
-            // If this method is locked wait until the topic is set
             if (this.locked) {
-                const interval = setInterval(() => {
-                    if (this.connected) {
-                        clearInterval(interval);
-                        return this.discordClient;
-                    }
-                }, 200); // Completely arbitrary timing choice
-            }
-
-            // Indicate the connecting process is active
-            this.locked = true;
-
-            // On ready needs to be setup before login is called or ready events may be missed
-            return new Promise((resolve) => {
-                this.discordClient.on('ready', () => {
-                    this.connected = true;
-                    this.locked = false;
-
-                    this.logger.info('Discord Client is Ready');
-                    resolve(this.discordClient);
+                // Connecting process is active so recursively wait
+                return new Promise((resolve) => {
+                    const delay = 200; // Completely arbitrary timing choice
+                    const getClient = () => {
+                        if (this.connected) {
+                            resolve(this.discordClient);
+                        } else {
+                            setTimeout(getClient, delay);
+                        }
+                    };
+                    setTimeout(getClient, delay);
                 });
-                this.discordClient.login(token);
-            });
+            } else {
+                // Indicate the connecting process is active with a lock
+                this.locked = true;
+                return new Promise((resolve) => {
+                    this.discordClient.on('ready', () => {
+                        this.connected = true;
+                        resolve(this.discordClient);
+                    });
+                    this.discordClient.login(token);
+                });
+            }
         });
     }
 
