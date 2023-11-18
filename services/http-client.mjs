@@ -36,6 +36,7 @@ export default class HttpClient {
         const abort = this.axios.CancelToken.source();
         const timeoutId = setTimeout(() => abort.cancel(), timeout);
 
+        // Don't make a full get request when a head request will do
         return this.axios
             .head(url, { cancelToken: abort.token, headers: this.headers })
             .then((response) => {
