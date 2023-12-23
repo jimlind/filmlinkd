@@ -7,17 +7,17 @@ export default class PubSubMessageListener {
      * @param {function} callback
      */
     onLogEntryMessage(callback) {
-        this.pubSubConnection.getLogEntrySubscription().then((subsciption) => {
-            subsciption.on('message', callback);
-        });
+        return this.pubSubConnection
+            .getLogEntrySubscription()
+            .then((subsciption) => subsciption.on('message', callback));
     }
 
     /**
      * @param {function} callback
      */
     onCommandMessage(callback) {
-        this.pubSubConnection.getCommandSubscription().then((subsciption) => {
-            subsciption.on('message', callback);
-        });
+        return this.pubSubConnection
+            .getCommandSubscription()
+            .then((subsciption) => subsciption.on('message', callback));
     }
 }
