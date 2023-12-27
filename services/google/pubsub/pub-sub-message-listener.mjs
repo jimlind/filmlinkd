@@ -20,11 +20,4 @@ export default class PubSubMessageListener {
             .getCommandSubscription()
             .then((subsciption) => subsciption.on('message', callback));
     }
-
-    /** Function that Truncates A String to 2 characters */
-    static truncate(str, length) {
-        if (length === 0) return str;
-
-        return str.length > length ? str.substr(0, length - 3) + '...' : str;
-    }
 }
