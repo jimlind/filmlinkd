@@ -17,3 +17,7 @@ https://github.com/jimlind/filmlinkd
 ## Invite the Bot
 
 https://discord.com/oauth2/authorize?client_id=794271558570213409&permissions=2147764224&scope=applications.commands%20bot
+
+Seeing a memory leak in the scraper
+* Having the pubSubMessageListener on has a very slow increase in memory usage
+* 
