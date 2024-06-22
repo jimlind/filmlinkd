@@ -1,6 +1,6 @@
 export default class Scraper {
     /** @type {number} */
-    fetchRestingTime = 5000; // 5 seconds
+    fetchRestingTime = 10000; // 10 seconds
     /** @type {boolean} */
     fetchThreadRunning = false;
     /** @type {number} */
@@ -45,7 +45,7 @@ export default class Scraper {
 
             const resetTask = this.recurringResetTask.bind(this);
             this.resetInterval = setIntervalAsync(resetTask, this.resetRestingTime);
-            
+
             // Listen for Command PubSub messages posted and upsert appropriate follow outcome data
             this.container.resolve('pubSubMessageListener').onCommandMessage((message) => {
                 const returnData = JSON.parse(message.data.toString());

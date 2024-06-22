@@ -1,6 +1,6 @@
 export default class Vip {
     /** @type {number} */
-    fetchRestingTime = 10000; // 10 seconds
+    fetchRestingTime = 30000; // 30 seconds
     /** @type {boolean} */
     fetchThreadRunning = false;
     /** @type {number} */
