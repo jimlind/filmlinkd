@@ -1,5 +1,5 @@
 steps:
-    - name: gcr.io/k8s-skaffold/pack
+    - name: buildpacksio/pack:latest
       args:
           - build
           - >-
