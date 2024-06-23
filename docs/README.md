@@ -35,8 +35,6 @@ I mostly use this for local development so that's generally okay.
 
 I have a Trigger configured in [Cloud Build](https://console.cloud.google.com/cloud-build/) that runs the [cloudbuild.yaml](https://github.com/jimlind/filmlinkd/blob/main/cloudbuild.yaml) action. The intent is for it to be run manually. It builds containers that it writes to [Artifacts Registry](https://console.cloud.google.com/artifacts) and automatically updates (and subsequently restarts) the neccessary [Compute Engines](https://console.cloud.google.com/compute/) used by the service.
 
-There are 2 issues in GitHub ([issue](https://github.com/buildpacks/pack/issues/1579) and [issue](https://github.com/GoogleContainerTools/skaffold/issues/7146)) that can potentially be a big change for the Buildpack that is used by the build process. Until these are resolved the `gcr.io/k8s-skaffold/pack` continues to be the best container for buildpack actions.
-
 The containers are written to the [Container Registry](https://console.cloud.google.com/gcr/) (that is
 getting replaced with Artifact Registry eventually). The URLs for for the generated containers can be
 used in [Compute Engine](https://console.cloud.google.com/compute/) with no additional effort.
@@ -52,11 +50,6 @@ disable that static IP address and have a single network
 [VPC Network](https://console.cloud.google.com/networking/) that has a
 [Cloud Nat](https://console.cloud.google.com/net-services/nat/) attached as the interface to the public
 Internet.
-
-## Deploying Changes to Production
-
-The final steps to getting the application in production are completely manual. Copy the URL for the
-container from the Container Registry and edit the Compute Engine instance and paste the URL into the Container Image box. When you save it looks like it automatically resets the instance but it doesn't actually. Hit the button to reset the instance.
 
 ## Pub/Sub Message Systems
 
