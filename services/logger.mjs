@@ -2,7 +2,7 @@ export default class Logger {
     constructor(config, winston, googleCloudWinstonTransport, consoleTransport) {
         // Create a Winston logger that logs debug and above
         this.winstonLogger = winston.createLogger({
-            level: 'warn',
+            level: 'debug',
             format: winston.format.combine(
                 winston.format.timestamp(),
                 winston.format.prettyPrint(),
