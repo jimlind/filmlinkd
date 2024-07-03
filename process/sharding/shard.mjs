@@ -1,29 +1,23 @@
-import { ClusterClient, getInfo } from 'discord-hybrid-sharding';
-
-class Single {
+class Shard {
     constructor(container) {
         this.container = container;
-        this.client = this.container.resolve('discordClient');
-        this.client.cluster = new ClusterClient(this.client);
-        this.client.options.shards = getInfo().SHARD_LIST;
-        this.client.options.shardCount = getInfo().TOTAL_SHARDS;
 
-        // Trigger clean up on task ending
+        // Trigger clean up on process exit
         this.container.resolve('exitHook')(this.cleanUp.bind(this));
     }
 
-    run() {
-        // Setup the connected client and listen for interactions
-        this.container
-            .resolve('discordConnection')
-            .getConnectedClient()
-            .then((discordClient) => {
-                const message = `Discord Client Logged In on ${discordClient.guilds.cache.size} Servers`;
-                this.container.resolve('logger').info(message);
+    async run() {
+        // Setup the connected client, may take a bit for the client to connect.
+        const connection = this.container.resolve('discordConnection');
+        const client = await connection.getConnectedClient();
 
-                this.startInteractionListener();
-                this.startPubSubMessageListener();
-            });
+        // Log a message that client has connected
+        const message = `Discord Client Logged In on ${client.guilds.cache.size} Servers`;
+        this.container.resolve('logger').info(message);
+
+        // Start listening for internal and external events
+        this.startInteractionListener();
+        this.startPubSubMessageListener();
     }
 
     startInteractionListener() {
@@ -84,25 +78,17 @@ class Single {
     }
 
     cleanUp() {
+        // Close the Discord client's connection
+        this.container.resolve('discordClient').destroy();
+
         // Ensure all the PubSub connections are closed
         this.container.resolve('pubSubConnection').closeAllSubscriptions();
-
-        // Close the Discord connection and exit the process
-        this.container
-            .resolve('discordConnection')
-            .getConnectedClient()
-            .then((client) => {
-                client.destroy();
-                // Force a process exit due to how the discord-hybrid-sharding library works
-                process.exit();
-            });
     }
 }
 
+// This creates a nwe instance of the dependency injection container for every shard.
+// That feels a bit excessive, but allows each shard to exist independently which is how shards work.
 import config from '../../config.mjs';
 import container from '../../dependency-injection-container.mjs';
-container(config)
-    .initialize()
-    .then((awilixContainer) => {
-        new Single(awilixContainer).run();
-    });
+const initializedContainer = await container(config).initialize();
+new Shard(initializedContainer).run();
