@@ -10,11 +10,11 @@ import exitHook from 'exit-hook';
 import { LRUCache } from 'lru-cache';
 import truncateMarkdown from 'markdown-truncate';
 import pLimit from 'p-limit';
+import { clearIntervalAsync, setIntervalAsync } from 'set-interval-async/fixed';
 import turndown from 'turndown';
 import { URL } from 'url';
 import * as uuid from 'uuid';
 import winston from 'winston';
-import { setIntervalAsync, clearIntervalAsync } from 'set-interval-async/fixed';
 
 class DependencyInjectionContainer {
     /**
