@@ -22,7 +22,7 @@ export default class Manager {
         const token = await secretManager.getValue(this.config.get('discordBotTokenName'));
         const manager = new ShardingManager('./process/sharding/shard.mjs', {
             token,
-            respawn: true,
+            respawn: false,
             mode: 'process',
         });
 
