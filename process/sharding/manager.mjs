@@ -23,7 +23,7 @@ export default class Manager {
         const manager = new ShardingManager('./process/sharding/shard.mjs', {
             token,
             respawn: false,
-            mode: 'process',
+            mode: 'child',
         });
 
         const initializedContainer = await container(this.config).initialize();
