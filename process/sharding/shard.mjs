@@ -70,7 +70,7 @@ class Shard {
 
             // Write to the database
             return this.container.resolve('firestorePreviousDao').update(userModel, diaryEntry);
-        }, 50);
+        }, 1000);
 
         // Listen for LogEntry PubSub messages posted and respond
         this.container.resolve('pubSubMessageListener').onLogEntryMessage((message) => {
