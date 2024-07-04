@@ -3,13 +3,13 @@
 import config from './config.mjs';
 import container from './dependency-injection-container.mjs';
 import Scraper from './process/scraper.mjs';
-import Manager from './process/sharding/manager.mjs';
+import Cluster from './process/sharding/cluster.mjs';
 import StandAlone from './process/standalone.mjs';
 import Vip from './process/vip.mjs';
 
 switch (config.get('mode')) {
     case 'sharded':
-        new Manager(config).run();
+        new Cluster(config).run();
         break;
 
     case 'scraper':

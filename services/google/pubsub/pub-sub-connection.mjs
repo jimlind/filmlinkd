@@ -109,7 +109,7 @@ export default class PubSubConnection {
                     } else {
                         setTimeout(getTopic, delay);
                     }
-                };
+                }
                 setTimeout(getTopic, delay);
             } else {
                 // Lock this method if not available and not already locked
@@ -149,12 +149,12 @@ export default class PubSubConnection {
      *
      * @param {string} topicName
      * @param {string} subscriptionName
-     * @param {boolean} isShard
+     * @param {boolean} shard
      *
      * @returns {Promise<import('@google-cloud/pubsub').Subscription>}
      */
-    getSubscription(topicName, subscriptionName, isShard = false) {
-        subscriptionName = this.getFullSubscriptionName(subscriptionName, isShard);
+    getSubscription(topicName, subscriptionName, shard = false) {
+        subscriptionName = this.getFullSubscriptionName(subscriptionName, shard);
         return new Promise((resolve, reject) => {
             if (this.subscriptionList[subscriptionName]) {
                 return resolve(this.subscriptionList[subscriptionName]);
@@ -198,11 +198,11 @@ export default class PubSubConnection {
     /**
      *
      * @param {string} subscriptionName
-     * @param {boolean} isShard
+     * @param {boolean} shard
      * @returns
      */
-    closeSubscription(subscriptionName, isShard) {
-        subscriptionName = this.getFullSubscriptionName(subscriptionName, isShard);
+    closeSubscription(subscriptionName, shard) {
+        subscriptionName = this.getFullSubscriptionName(subscriptionName, shard);
         const subscription = this.subscriptionList[subscriptionName];
 
         if (!subscription) {
@@ -215,14 +215,14 @@ export default class PubSubConnection {
     /**
      *
      * @param {string} name
-     * @param {boolean} isShard
+     * @param {boolean} shard
      */
-    getFullSubscriptionName(name, isShard) {
-        if (!isShard) {
+    getFullSubscriptionName(name, shard) {
+        if (!shard) {
             return name;
         }
 
-        const shardList = this.discordClient?.shard?.ids || ['xxx'];
+        const shardList = this.discordClient?.options?.shards;
         const shardString = shardList.map((id) => String(id).padStart(3, '0')).join('-');
         return `${name}-shard-${shardString}`;
     }
