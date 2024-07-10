@@ -16,7 +16,8 @@
     "scripts": {
         "clean": "rm -rf dist",
         "build": "npm run clean && tsc",
-        "start": "npm run build && NODE_ENV=development node dist/server.js",
+        "start": "node dist/server.js",
+        "dev": "npm run build && node dist/server.js",
         "test": "mocha ./test --recursive"
     },
     "dependencies": {
