@@ -1,7 +1,7 @@
 {
     "name": "filmlinkd",
     "description": "Filmlinkd - A Letterboxd Discord Bot",
-    "version": "4.0.0-beta.41",
+    "version": "4.0.0-beta.42",
     "private": true,
     "license": "AGPL-3.0",
     "author": "Jim Lind",
@@ -12,12 +12,15 @@
     "engines": {
         "node": "20.x.x"
     },
+    "type": "module",
     "scripts": {
-        "start": "node server.mjs",
+        "clean": "rm -rf dist",
+        "build": "npm run clean && tsc",
+        "start": "npm run build && NODE_ENV=development node dist/server.js",
         "test": "mocha ./test --recursive"
     },
     "dependencies": {
-        "@google-cloud/firestore": "^7.8.0",
+        "@google-cloud/firestore": "^7.9.0",
         "@google-cloud/logging-winston": "^6.0.0",
         "@google-cloud/pubsub": "^4.5.0",
         "@google-cloud/secret-manager": "^5.6.0",
@@ -27,17 +30,22 @@
         "discord-hybrid-sharding": "^2.2.0",
         "discord.js": "^14.15.3",
         "exit-hook": "^4.0.0",
-        "lru-cache": "^10.2.2",
-        "markdown-truncate": "^1.1.0",
+        "lru-cache": "^11.0.0",
+        "markdown-truncate": "^1.1.1",
         "p-limit": "^5.0.0",
         "set-interval-async": "^3.0.3",
         "turndown": "^7.2.0",
         "winston": "^3.13.0"
     },
     "devDependencies": {
+        "@types/convict": "^6.1.6",
+        "@types/turndown": "^5.0.4",
+        "@types/uuid": "^10.0.0",
         "chai": "^5.1.1",
         "mocha": "^10.4.0",
         "prettier-plugin-organize-imports": "^3.2.4",
-        "sinon": "^18.0.0"
+        "sinon": "^18.0.0",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.5.2"
     }
 }
