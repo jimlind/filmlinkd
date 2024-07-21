@@ -1,20 +1,17 @@
-export default class DiscordConnection {
-    /** @type {boolean} */
-    connected = false;
-    /** @type {boolean} */
-    locked = false;
+import { Client } from 'discord.js';
+import Config from '../../config.js';
+import SecretManager from '../google/secret-manager.js';
+import Logger from '../logger.js';
 
-    /**
-     * @param {import('../../models/config')} config
-     * @param {import('discord.js').Client} discordClient
-     * @param {import('../logger.mjs')} logger
-     * @param {import('../google/secret-manager.mjs')} secretManager
-     */
+export default class DiscordConnection {
+    connected: boolean = false;
+    locked: boolean = false;
+
     constructor(
-        readonly config: any,
-        readonly discordClient: any,
-        readonly logger: any,
-        readonly secretManager: any,
+        readonly config: typeof Config,
+        readonly discordClient: Client,
+        readonly logger: Logger,
+        readonly secretManager: SecretManager,
     ) {}
 
     getConnectedClient() {
@@ -26,7 +23,7 @@ export default class DiscordConnection {
         }
 
         const tokenName = this.config.get('discordBotTokenName');
-        return this.secretManager.getValue(tokenName).then((token: any) => {
+        return this.secretManager.getValue(tokenName).then((token: string) => {
             if (!token) {
                 throw new Error('No Discord Bot Token Set');
             }
@@ -61,13 +58,11 @@ export default class DiscordConnection {
     /**
      * This is a strictly utilitarian class that will get a specially setup client without any
      * of the niceties of getConnectedClient (avoiding multiple connectsion, etc).
-     *
-     * @returns Promise<any>
      */
-    getConnectedAutoShardedClient() {
+    getConnectedAutoShardedClient(): Promise<Client<true>> {
         return this.secretManager
             .getValue(this.config.get('discordBotTokenName'))
-            .then((token: any) => {
+            .then((token: string) => {
                 return new Promise((resolve) => {
                     this.discordClient.on('ready', () => {
                         this.logger.info('Auto Sharded Discord Client is Ready');
