@@ -33,20 +33,20 @@
         "exit-hook": "^4.0.0",
         "lru-cache": "^11.0.0",
         "markdown-truncate": "^1.1.1",
-        "p-limit": "^5.0.0",
+        "p-limit": "^6.1.0",
         "set-interval-async": "^3.0.3",
         "turndown": "^7.2.0",
-        "winston": "^3.13.0"
+        "winston": "^3.13.1"
     },
     "devDependencies": {
         "@types/convict": "^6.1.6",
         "@types/turndown": "^5.0.4",
         "@types/uuid": "^10.0.0",
         "chai": "^5.1.1",
-        "mocha": "^10.4.0",
-        "prettier-plugin-organize-imports": "^3.2.4",
+        "mocha": "^10.7.0",
+        "prettier-plugin-organize-imports": "^4.0.0",
         "sinon": "^18.0.0",
         "ts-node": "^10.9.2",
-        "typescript": "^5.5.2"
+        "typescript": "^5.5.3"
     }
 }

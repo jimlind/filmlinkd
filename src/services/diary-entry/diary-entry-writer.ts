@@ -1,3 +1,5 @@
+import { LRUCache } from 'lru-cache';
+
 /**
  * Class dealing with writing diary entry events to Discord servers
  */
@@ -17,7 +19,7 @@ export default class DiaryEntryWriter {
      * @param {import('../logger.mjs')} logger
      */
     constructor(
-        readonly cache: any,
+        readonly cache: typeof LRUCache.prototype,
         readonly discordMessageSender: any,
         readonly embedBuilderFactory: any,
         readonly firestoreUserDao: any,
@@ -50,7 +52,9 @@ export default class DiaryEntryWriter {
             this.logger.info('ISS3: Previous entry found in cache', { diaryEntry });
             return new Promise((resolve) => resolve(null));
         }
+
         this.cache.set(diaryEntry.lid, true);
+        this.logger.info('LRU Cache Size', { calculatedSize: this.cache.size });
 
         return getUserModel
             .then((userModel: any) => {
