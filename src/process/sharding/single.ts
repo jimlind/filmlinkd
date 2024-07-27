@@ -1,4 +1,3 @@
-import { AwilixContainer } from 'awilix';
 import { ClusterClient, getInfo } from 'discord-hybrid-sharding';
 
 class Single {
@@ -40,26 +39,24 @@ class Single {
     startPubSubMessageListener() {
         // Create an array to store messages coming from the pubsub
         const logEntryMessageList: any[] = [];
-
         // Take messages off the array and process them.
-        // Create the function and use it. Normally I'd use arrow functions but trying to track down a memory issue.
-        async function processOneMessageListEntry(container: AwilixContainer) {
+        setInterval(async () => {
             const message = logEntryMessageList.shift();
             if (!message) {
                 return;
             }
 
             // Build the diary entry model and attempt to write it.
-            const diaryEntryFactory = container.resolve('diaryEntryFactory');
+            const diaryEntryFactory = this.container.resolve('diaryEntryFactory');
             const diaryEntry = Object.assign(diaryEntryFactory.create(), message?.entry);
-            const diaryEntryWriter = container.resolve('diaryEntryWriter');
+            const diaryEntryWriter = this.container.resolve('diaryEntryWriter');
 
             let userModel = null;
             try {
                 userModel = await diaryEntryWriter.validateAndWrite(diaryEntry, message?.channelId);
             } catch (error) {
                 const message = `Error on diaryEntryWriter::validateAndWrite for '${diaryEntry?.filmTitle}' by '${diaryEntry?.userName}'`;
-                container.resolve('logger').error(message, { error });
+                this.container.resolve('logger').error(message, { error });
             }
 
             // Exit early if nothing returned from validate and write.
@@ -71,28 +68,24 @@ class Single {
 
             // If the returning diary entry has available publishing data log it
             if (message?.entry?.updatedDate && message?.entry?.publishSource) {
-                container.resolve('logger').info('Entry Publish Delay', {
+                this.container.resolve('logger').info('Entry Publish Delay', {
                     delay: Date.now() - message.entry.updatedDate,
                     source: message.entry.publishSource,
                 });
             }
 
             // Write to the database
-            return container.resolve('firestorePreviousDao').update(userModel, diaryEntry);
-        }
-        setInterval(processOneMessageListEntry, 100, this.container);
+            return this.container.resolve('firestorePreviousDao').update(userModel, diaryEntry);
+        }, 100);
 
         // Listen for LogEntry PubSub messages posted and respond
-        // Create the function and use it. Normally I'd use arrow functions but trying to track down a memory issue.
-        function messageProcessor(message: any): void {
+        this.container.resolve('pubSubMessageListener').onLogEntryMessage((message: any) => {
             // Acknowledge the message immediatly to remove it from the queue
             // They systems will continue to seamlessly retry if the system fails at this point
             message.ack();
             // Push the JSON object to the message list
             logEntryMessageList.push(JSON.parse(message.data.toString()));
-            return;
-        }
-        this.container.resolve('pubSubMessageListener').onLogEntryMessage(messageProcessor);
+        });
     }
 
     cleanUp() {
