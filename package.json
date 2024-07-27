@@ -1,7 +1,7 @@
 {
     "name": "filmlinkd",
     "description": "Filmlinkd - A Letterboxd Discord Bot",
-    "version": "4.0.0-beta.43",
+    "version": "4.0.0-beta.44",
     "private": true,
     "license": "AGPL-3.0",
     "author": "Jim Lind",
@@ -40,13 +40,13 @@
     },
     "devDependencies": {
         "@types/convict": "^6.1.6",
-        "@types/turndown": "^5.0.4",
+        "@types/turndown": "^5.0.5",
         "@types/uuid": "^10.0.0",
         "chai": "^5.1.1",
         "mocha": "^10.7.0",
         "prettier-plugin-organize-imports": "^4.0.0",
         "sinon": "^18.0.0",
         "ts-node": "^10.9.2",
-        "typescript": "^5.5.3"
+        "typescript": "^5.5.4"
     }
 }
