@@ -1,13 +1,15 @@
+import { Message, Subscription } from '@google-cloud/pubsub';
+
 export default class PubSubMessageListener {
     constructor(readonly pubSubConnection: any) {}
 
     /**
      * @param {function} callback
      */
-    onLogEntryMessage(callback: any) {
-        return this.pubSubConnection
-            .getLogEntrySubscription()
-            .then((subsciption: any) => subsciption.on('message', callback));
+    async onLogEntryMessage(callback: (message: Message) => void) {
+        const subsciption: Subscription = await this.pubSubConnection.getLogEntrySubscription();
+        subsciption.on('message', callback);
+        return;
     }
 
     /**
