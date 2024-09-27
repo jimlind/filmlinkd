@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import { URL } from 'url';
-import config from '../../config.mjs';
-import container from '../../dependency-injection-container.mjs';
+import config from '../../dist/config.js';
+import container from '../../dist/dependency-injection-container.js';
 
 // Configure as production
 const dir = new URL('.', import.meta.url).pathname;

@@ -3,8 +3,8 @@
 import { stdin as input, stdout as output } from 'node:process';
 import * as readline from 'node:readline/promises';
 import { URL } from 'url';
-import config from '../../config.mjs';
-import container from '../../dependency-injection-container.mjs';
+import config from '../../dist/config.js';
+import container from '../../dist/dependency-injection-container.js';
 
 // Setup input
 const rl = readline.createInterface({ input, output });
