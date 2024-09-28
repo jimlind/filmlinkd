@@ -24,7 +24,7 @@ class Single {
                 this.container.resolve('logger').info(message);
 
                 this.startInteractionListener();
-                // this.startPubSubMessageListener();
+                this.startPubSubMessageListener();
             });
     }
 
