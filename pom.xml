@@ -141,5 +141,12 @@
                 <mainClass>jimlind.filmlinkd.Bot</mainClass>
             </properties>
         </profile>
+        <profile>
+            <id>scraper</id>
+            <properties>
+                <finalName>scraper</finalName>
+                <mainClass>jimlind.filmlinkd.Scraper</mainClass>
+            </properties>
+        </profile>
     </profiles>
 </project>
