@@ -5,12 +5,12 @@ import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
 import com.google.inject.Singleton;
 
 @Singleton
-public enum SecretConfig {
+public enum SecretGetter {
   INSTANCE;
 
   private final SecretManagerServiceClient client;
 
-  SecretConfig() {
+  SecretGetter() {
     try {
       this.client = SecretManagerServiceClient.create();
     } catch (Exception e) {
