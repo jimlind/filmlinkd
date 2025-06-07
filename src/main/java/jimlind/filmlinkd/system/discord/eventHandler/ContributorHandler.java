@@ -1,4 +1,16 @@
 package jimlind.filmlinkd.system.discord.eventHandler;
+
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+
+public class ContributorHandler implements Handler {
+
+  @Override
+  public void handleEvent(SlashCommandInteractionEvent event) {
+    event.deferReply().queue();
+    event.getHook().sendMessage("Contributor command is currently disabled.").queue();
+  }
+}
+
 /*
 import java.util.ArrayList;
 import jimlind.filmlinkd.factory.messageEmbed.ContributorEmbedFactory;
