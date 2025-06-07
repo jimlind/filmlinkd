@@ -1,13 +1,18 @@
 package jimlind.filmlinkd;
 
-import jimlind.filmlinkd.config.SecretGetter;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import jimlind.filmlinkd.config.GuiceModule;
+import jimlind.filmlinkd.system.google.SecretManager;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Admin {
   public static void main(String[] args) {
     log.info("Java Admin");
-    String apiKey = SecretGetter.INSTANCE.getSecret("DISCORD_DEV_CLIENT_ID", "latest");
+
+    Injector injector = Guice.createInjector(new GuiceModule());
+    String apiKey = injector.getInstance(SecretManager.class).getSecret("DISCORD_DEV_CLIENT_ID");
     System.out.println("Client Id: " + apiKey);
   }
 }
