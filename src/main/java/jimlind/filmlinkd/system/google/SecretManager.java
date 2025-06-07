@@ -1,16 +1,16 @@
-package jimlind.filmlinkd.config;
+package jimlind.filmlinkd.system.google;
 
 import com.google.cloud.secretmanager.v1.AccessSecretVersionRequest;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public enum SecretGetter {
-  INSTANCE;
-
+public class SecretManager {
   private final SecretManagerServiceClient client;
 
-  SecretGetter() {
+  @Inject
+  SecretManager() {
     try {
       this.client = SecretManagerServiceClient.create();
     } catch (Exception e) {
@@ -18,10 +18,10 @@ public enum SecretGetter {
     }
   }
 
-  public String getSecret(String secretName, String version) {
+  public String getSecret(String secretName) {
     String projectId = "letterboxd-bot";
     String secretPath =
-        String.format("projects/%s/secrets/%s/versions/%s", projectId, secretName, version);
+        String.format("projects/%s/secrets/%s/versions/latest", projectId, secretName);
     AccessSecretVersionRequest request =
         AccessSecretVersionRequest.newBuilder().setName(secretPath).build();
     return client.accessSecretVersion(request).getPayload().getData().toStringUtf8();
