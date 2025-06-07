@@ -18,8 +18,7 @@ public class SecretManager {
     }
   }
 
-  public String getSecret(String secretName) {
-    String projectId = "letterboxd-bot";
+  public String getSecret(String projectId, String secretName) {
     String secretPath =
         String.format("projects/%s/secrets/%s/versions/latest", projectId, secretName);
     AccessSecretVersionRequest request =
