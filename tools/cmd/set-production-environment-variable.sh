@@ -1,0 +1,2 @@
+#! /bin/bash
+export FILMLINKD_ENVIRONMENT="PRODUCTION"
