@@ -32,8 +32,6 @@ public class EventListener extends ListenerAdapter {
 
   @Override
   public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-    // showPermissions(event);
-
     boolean processSuccess = this.slashCommandManager.process(event);
     if (processSuccess) {
       log.atInfo()

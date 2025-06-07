@@ -7,6 +7,7 @@ import jimlind.filmlinkd.system.ShutdownThread;
 import jimlind.filmlinkd.system.discord.ConnectionManager;
 import jimlind.filmlinkd.system.discord.EventListener;
 import jimlind.filmlinkd.system.discord.SlashCommandManager;
+import jimlind.filmlinkd.system.discord.eventHandler.HelpHandler;
 import jimlind.filmlinkd.system.google.SecretManager;
 
 public class GuiceModule extends AbstractModule {
@@ -21,6 +22,9 @@ public class GuiceModule extends AbstractModule {
     bind(ConnectionManager.class).in(Scopes.SINGLETON);
     bind(EventListener.class).in(Scopes.SINGLETON);
     bind(SlashCommandManager.class).in(Scopes.SINGLETON);
+
+    // Discord Event Handlers
+    bind(HelpHandler.class).in(Scopes.SINGLETON);
 
     // Google System Modules
     bind(SecretManager.class).in(Scopes.SINGLETON);
