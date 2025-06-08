@@ -1,37 +1,28 @@
 package jimlind.filmlinkd.system.discord.eventHandler;
 
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-
-public class ContributorHandler implements Handler {
-
-  @Override
-  public void handleEvent(SlashCommandInteractionEvent event) {
-    event.deferReply().queue();
-    event.getHook().sendMessage("Contributor command is currently disabled.").queue();
-  }
-}
-
-/*
+import com.google.inject.Inject;
 import java.util.ArrayList;
-import jimlind.filmlinkd.factory.messageEmbed.ContributorEmbedFactory;
+import jimlind.filmlinkd.system.discord.embedBuilder.ContributorEmbedBuilder;
 import jimlind.filmlinkd.system.letterboxd.api.ContributorAPI;
 import jimlind.filmlinkd.system.letterboxd.model.LBContributor;
 import jimlind.filmlinkd.system.letterboxd.model.LBSearchResponse;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class ContributorHandler implements Handler {
-  @Autowired private ContributorAPI contributorAPI;
-  @Autowired private ContributorEmbedFactory contributorEmbedFactory;
 
-  public String getEventName() {
-    return "contributor";
+  private final ContributorAPI contributorAPI;
+  private final ContributorEmbedBuilder contributorEmbedBuilder;
+
+  @Inject
+  ContributorHandler(
+      ContributorAPI contributorAPI, ContributorEmbedBuilder contributorEmbedBuilder) {
+    this.contributorAPI = contributorAPI;
+    this.contributorEmbedBuilder = contributorEmbedBuilder;
   }
 
+  @Override
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
 
@@ -45,8 +36,7 @@ public class ContributorHandler implements Handler {
     }
 
     LBContributor contributor = searchResponse.items.get(0).contributor;
-    ArrayList<MessageEmbed> messageEmbedList = this.contributorEmbedFactory.create(contributor);
+    ArrayList<MessageEmbed> messageEmbedList = this.contributorEmbedBuilder.build(contributor);
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }
-*/
