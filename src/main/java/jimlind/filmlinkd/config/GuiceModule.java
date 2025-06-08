@@ -10,6 +10,8 @@ import jimlind.filmlinkd.system.discord.SlashCommandManager;
 import jimlind.filmlinkd.system.discord.eventHandler.ContributorHandler;
 import jimlind.filmlinkd.system.discord.eventHandler.HelpHandler;
 import jimlind.filmlinkd.system.google.SecretManager;
+import jimlind.filmlinkd.system.letterboxd.api.Client;
+import jimlind.filmlinkd.system.letterboxd.api.ContributorAPI;
 
 public class GuiceModule extends AbstractModule {
   @Override
@@ -30,5 +32,9 @@ public class GuiceModule extends AbstractModule {
 
     // Google System Modules
     bind(SecretManager.class).in(Scopes.SINGLETON);
+
+    // Letterboxd System Modules
+    bind(Client.class).in(Scopes.SINGLETON);
+    bind(ContributorAPI.class).in(Scopes.SINGLETON);
   }
 }
