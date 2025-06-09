@@ -11,6 +11,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.time.Instant;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import jimlind.filmlinkd.config.AppConfig;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +29,22 @@ public class Client {
 
   public <T> T get(String path, Class<T> inputClass) {
     return this.request(path, "", inputClass);
+  }
+
+  public <T> T getAuthorized(String path, Class<T> inputClass) {
+    String key = appConfig.getLetterboxdApiKey();
+    String nonce = String.valueOf(java.util.UUID.randomUUID());
+    String now = String.valueOf(Instant.now().getEpochSecond());
+
+    // TODO: This feels like a terrible way to build a URL string
+    // The actual JAVA URI Classes probably can do it better
+
+    String symbol = path.contains("?") ? "&" : "?";
+    String uri = path + symbol + String.format("apikey=%s&nonce=%s&timestamp=%s", key, nonce, now);
+    String url = BASE_URL + uri;
+    String authorization = "Signature " + this.buildSignature("GET", url);
+
+    return this.request(uri, authorization, inputClass);
   }
 
   private <T> T request(String uri, String authorization, Class<T> inputClass) {
@@ -78,26 +97,9 @@ public class Client {
     return builder.toString();
   }
 
-  /*
-  public <T> T getAuthorized(String path, Class<T> inputClass) {
-    String key = this.config.getLetterboxdApiKey();
-    String nonce = String.valueOf(java.util.UUID.randomUUID());
-    String now = String.valueOf(Instant.now().getEpochSecond());
-    // TODO: This feels like a terrible way to build a URL string
-    // The actual JAVA URI Classes probably can do it better
-    String symbol = path.contains("?") ? "&" : "?";
-    String uri = path + symbol + String.format("apikey=%s&nonce=%s&timestamp=%s", key, nonce, now);
-    String url = BASE_URL + uri;
-    String authorization = "Signature " + this.buildSignature("GET", url);
-
-    return this.request(uri, authorization, inputClass);
-  }
-  */
-
-  /*
   private String buildSignature(String method, String url) {
     method = method.toUpperCase();
-    String shared = this.config.getLetterboxdApiShared();
+    String shared = appConfig.getLetterboxdApiShared();
     SecretKeySpec secretKeySpec = new SecretKeySpec(shared.getBytes(), "HmacSHA256");
 
     try {
@@ -109,5 +111,4 @@ public class Client {
       return "";
     }
   }
-  */
 }
