@@ -1,24 +1,28 @@
 package jimlind.filmlinkd.system.discord.eventHandler;
-/*
+
+import com.google.inject.Inject;
 import java.util.ArrayList;
-import jimlind.filmlinkd.factory.messageEmbed.UserEmbedFactory;
 import jimlind.filmlinkd.system.discord.AccountHelper;
+import jimlind.filmlinkd.system.discord.embedBuilder.UserEmbedBuilder;
 import jimlind.filmlinkd.system.letterboxd.api.MemberStatisticsAPI;
 import jimlind.filmlinkd.system.letterboxd.model.LBMember;
 import jimlind.filmlinkd.system.letterboxd.model.LBMemberStatistics;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class UserHandler implements Handler {
-  @Autowired private AccountHelper accountHelper;
-  @Autowired private MemberStatisticsAPI memberStatisticsAPI;
-  @Autowired private UserEmbedFactory userEmbedFactory;
+  private final AccountHelper accountHelper;
+  private final MemberStatisticsAPI memberStatisticsAPI;
+  private final UserEmbedBuilder userEmbedBuilder;
 
-  public String getEventName() {
-    return "user";
+  @Inject
+  UserHandler(
+      AccountHelper accountHelper,
+      MemberStatisticsAPI memberStatisticsAPI,
+      UserEmbedBuilder userEmbedBuilder) {
+    this.accountHelper = accountHelper;
+    this.memberStatisticsAPI = memberStatisticsAPI;
+    this.userEmbedBuilder = userEmbedBuilder;
   }
 
   public void handleEvent(SlashCommandInteractionEvent event) {
@@ -37,8 +41,7 @@ public class UserHandler implements Handler {
     }
 
     ArrayList<MessageEmbed> messageEmbedList =
-        this.userEmbedFactory.create(member, memberStatistics);
+        this.userEmbedBuilder.create(member, memberStatistics);
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }
-*/
