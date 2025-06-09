@@ -14,6 +14,8 @@ public class AppConfig {
   private static final Properties properties = new Properties();
   @Getter private final String discordBotToken;
   @Getter private final String googleProjectId;
+  @Getter private final String letterboxdApiKey;
+  @Getter private final String letterboxdApiShared;
 
   @Inject
   AppConfig(SecretManager secretManager) {
@@ -36,5 +38,15 @@ public class AppConfig {
         secretManager.getSecret(
             googleProjectId,
             properties.getProperty(AppConstants.PROP_KEY_DISCORD_BOT_TOKEN_SECRET_NAME));
+
+    letterboxdApiKey =
+        secretManager.getSecret(
+            googleProjectId,
+            properties.getProperty(AppConstants.PROP_KEY_LETTERBOXD_API_KEY_SECRET_NAME));
+
+    letterboxdApiShared =
+        secretManager.getSecret(
+            googleProjectId,
+            properties.getProperty(AppConstants.PROP_KEY_LETTERBOXD_API_SHARED_SECRET_NAME));
   }
 }
