@@ -12,7 +12,7 @@ import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class UserEmbedBuilder {
-  public ArrayList<MessageEmbed> create(LBMember member, LBMemberStatistics memberStatistics) {
+  public ArrayList<MessageEmbed> build(LBMember member, LBMemberStatistics memberStatistics) {
     EmbedBuilder embedBuilder = new EmbedBuilder();
 
     String displayName = new EmbedUserBuilder(member.displayName).build();
