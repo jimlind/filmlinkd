@@ -2,7 +2,7 @@
 
 A Letterboxd Discord Bot
 
-[![NPM Tests Workflow Status](https://github.com/jimlind/filmlinkd/actions/workflows/run-npm-tests.yml/badge.svg)](https://github.com/jimlind/filmlinkd/actions/workflows/run-npm-tests.yml)
+[![JUnit Tests Workflow Status](https://github.com/jimlind/filmlinkd/actions/workflows/run-junit-tests.yml/badge.svg)](https://github.com/jimlind/filmlinkd/actions/workflows/run-junit-tests.yml)
 ![GitHub License](https://img.shields.io/github/license/jimlind/filmlinkd)
 
 ## Links

@@ -86,6 +86,13 @@
             <artifactId>jsoup</artifactId>
             <version>1.20.1</version>
         </dependency>
+        <!-- Test Dependencies -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.13.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
