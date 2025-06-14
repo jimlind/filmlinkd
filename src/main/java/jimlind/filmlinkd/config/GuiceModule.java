@@ -8,6 +8,7 @@ import jimlind.filmlinkd.system.discord.ConnectionManager;
 import jimlind.filmlinkd.system.discord.EventListener;
 import jimlind.filmlinkd.system.discord.SlashCommandManager;
 import jimlind.filmlinkd.system.discord.eventHandler.ContributorHandler;
+import jimlind.filmlinkd.system.discord.eventHandler.FilmHandler;
 import jimlind.filmlinkd.system.discord.eventHandler.HelpHandler;
 import jimlind.filmlinkd.system.discord.eventHandler.ListHandler;
 import jimlind.filmlinkd.system.google.SecretManager;
@@ -28,6 +29,7 @@ public class GuiceModule extends AbstractModule {
 
     // Discord Event Handlers
     bind(ContributorHandler.class).in(Scopes.SINGLETON);
+    bind(FilmHandler.class).in(Scopes.SINGLETON);
     bind(HelpHandler.class).in(Scopes.SINGLETON);
     bind(ListHandler.class).in(Scopes.SINGLETON);
 
@@ -37,6 +39,7 @@ public class GuiceModule extends AbstractModule {
     // Letterboxd System Modules
     bind(Client.class).in(Scopes.SINGLETON);
     bind(ContributorAPI.class).in(Scopes.SINGLETON);
+    bind(FilmAPI.class).in(Scopes.SINGLETON);
     bind(ListAPI.class).in(Scopes.SINGLETON);
     bind(MemberAPI.class).in(Scopes.SINGLETON);
     bind(MemberStatisticsAPI.class).in(Scopes.SINGLETON);
