@@ -5,7 +5,7 @@ import jimlind.filmlinkd.system.letterboxd.model.LBImageSize;
 
 public class ImageUtils {
   public static String getTallest(LBImage image) {
-    if (image == null) {
+    if (image == null || image.sizes == null) {
       return "";
     }
 
