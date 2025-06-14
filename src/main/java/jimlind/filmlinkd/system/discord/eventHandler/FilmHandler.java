@@ -1,22 +1,23 @@
 package jimlind.filmlinkd.system.discord.eventHandler;
-/*
+
+import com.google.inject.Inject;
 import java.util.ArrayList;
-import jimlind.filmlinkd.factory.messageEmbed.FilmEmbedFactory;
 import jimlind.filmlinkd.model.CombinedLBFilmModel;
+import jimlind.filmlinkd.system.discord.embedBuilder.FilmEmbedBuilder;
 import jimlind.filmlinkd.system.letterboxd.api.FilmAPI;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class FilmHandler implements Handler {
-  @Autowired private FilmAPI filmAPI;
-  @Autowired private FilmEmbedFactory filmEmbedFactory;
 
-  public String getEventName() {
-    return "film";
+  private final FilmAPI filmAPI;
+  private final FilmEmbedBuilder filmEmbedBuilder;
+
+  @Inject
+  FilmHandler(FilmAPI filmAPI, FilmEmbedBuilder filmEmbedBuilder) {
+    this.filmAPI = filmAPI;
+    this.filmEmbedBuilder = filmEmbedBuilder;
   }
 
   public void handleEvent(SlashCommandInteractionEvent event) {
@@ -24,15 +25,14 @@ public class FilmHandler implements Handler {
 
     OptionMapping optionMapping = event.getInteraction().getOption("film-name");
     String filmName = optionMapping != null ? optionMapping.getAsString() : "";
-    CombinedLBFilmModel combinedLBFilmModel = this.filmAPI.fetch(filmName);
+    CombinedLBFilmModel combinedLBFilmModel = filmAPI.fetch(filmName);
 
     if (combinedLBFilmModel == null) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;
     }
 
-    ArrayList<MessageEmbed> messageEmbedList = this.filmEmbedFactory.create(combinedLBFilmModel);
+    ArrayList<MessageEmbed> messageEmbedList = filmEmbedBuilder.build(combinedLBFilmModel);
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }
-*/
