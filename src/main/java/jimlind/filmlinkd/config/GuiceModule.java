@@ -10,6 +10,8 @@ import jimlind.filmlinkd.system.discord.SlashCommandManager;
 import jimlind.filmlinkd.system.discord.eventHandler.*;
 import jimlind.filmlinkd.system.google.SecretManager;
 import jimlind.filmlinkd.system.letterboxd.api.*;
+import jimlind.filmlinkd.system.letterboxd.web.LetterboxdIdWeb;
+import jimlind.filmlinkd.system.letterboxd.web.MemberWeb;
 
 public class GuiceModule extends AbstractModule {
   @Override
@@ -30,11 +32,14 @@ public class GuiceModule extends AbstractModule {
     bind(FilmHandler.class).in(Scopes.SINGLETON);
     bind(HelpHandler.class).in(Scopes.SINGLETON);
     bind(ListHandler.class).in(Scopes.SINGLETON);
+    bind(LoggedHandler.class).in(Scopes.SINGLETON);
+    bind(RouletteHandler.class).in(Scopes.SINGLETON);
+    bind(UserHandler.class).in(Scopes.SINGLETON);
 
     // Google System Modules
     bind(SecretManager.class).in(Scopes.SINGLETON);
 
-    // Letterboxd System Modules
+    // Letterboxd API Modules
     bind(Client.class).in(Scopes.SINGLETON);
     bind(ContributorAPI.class).in(Scopes.SINGLETON);
     bind(FilmAPI.class).in(Scopes.SINGLETON);
@@ -42,5 +47,8 @@ public class GuiceModule extends AbstractModule {
     bind(LogEntriesAPI.class).in(Scopes.SINGLETON);
     bind(MemberAPI.class).in(Scopes.SINGLETON);
     bind(MemberStatisticsAPI.class).in(Scopes.SINGLETON);
+    // Letterboxd Web Scraper Modules
+    bind(LetterboxdIdWeb.class).in(Scopes.SINGLETON);
+    bind(MemberWeb.class).in(Scopes.SINGLETON);
   }
 }
