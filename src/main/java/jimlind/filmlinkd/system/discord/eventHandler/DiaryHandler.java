@@ -26,6 +26,7 @@ public class DiaryHandler implements Handler {
     this.logEntriesAPI = logEntriesAPI;
   }
 
+  @Override
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
 

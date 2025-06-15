@@ -20,6 +20,7 @@ public class FilmHandler implements Handler {
     this.filmEmbedBuilder = filmEmbedBuilder;
   }
 
+  @Override
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
 

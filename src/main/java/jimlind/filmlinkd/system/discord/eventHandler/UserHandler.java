@@ -25,6 +25,7 @@ public class UserHandler implements Handler {
     this.userEmbedBuilder = userEmbedBuilder;
   }
 
+  @Override
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
 
