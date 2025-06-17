@@ -1,10 +1,11 @@
-package jimlind.filmlinkd.system.discord.utils;
+package jimlind.filmlinkd.system.discord.stringBuilder;
 
-public class EmbedRunTimeBuilder {
-  private final int runTime;
+public class RunTimeStringBuilder {
+  private int runTime = 0;
 
-  public EmbedRunTimeBuilder(int runTime) {
+  public RunTimeStringBuilder setRunTime(int runTime) {
     this.runTime = runTime;
+    return this;
   }
 
   public String build() {

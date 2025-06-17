@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import jimlind.filmlinkd.model.CombinedLBFilmModel;
-import jimlind.filmlinkd.system.discord.utils.*;
+import jimlind.filmlinkd.system.discord.stringBuilder.*;
 import jimlind.filmlinkd.system.letterboxd.model.LBFilm;
 import jimlind.filmlinkd.system.letterboxd.model.LBFilmStatistics;
 import jimlind.filmlinkd.system.letterboxd.model.LBFilmStatisticsCounts;
@@ -34,13 +34,13 @@ public class FilmEmbedBuilder {
 
     // Add rating to description
     if (summary.rating > 0) {
-      String stars = new EmbedStarsBuilder(summary.rating).build();
+      String stars = new StarsStringBuilder().setStarCount(summary.rating).build();
       String rating = String.format("%.2f", summary.rating);
       description += stars + " " + rating + "\n";
     }
 
     // Add directors to description
-    String directors = new EmbedDirectorsBuilder(film.contributions).build();
+    String directors = new DirectorsStringBuilder().setContributionList(film.contributions).build();
     if (!directors.isBlank()) {
       description += directors + "\n";
     }
@@ -51,7 +51,7 @@ public class FilmEmbedBuilder {
       metadata.add(film.primaryLanguage.name);
     }
     if (film.runTime > 0) {
-      metadata.add(new EmbedRunTimeBuilder(film.runTime).build());
+      metadata.add(new RunTimeStringBuilder().setRunTime(film.runTime).build());
     }
     if (!metadata.isEmpty()) {
       description += String.join(", ", metadata) + "\n";
@@ -65,12 +65,15 @@ public class FilmEmbedBuilder {
 
     // Add statistics counts
     LBFilmStatisticsCounts counts = statistics.counts;
-    description += ":eyes: " + new EmbedCountBuilder(counts.watches).build() + ", ";
-    description += "<:r:851138401557676073> " + new EmbedCountBuilder(counts.likes).build() + ", ";
-    description += ":speech_balloon: " + new EmbedCountBuilder(counts.reviews).build() + "\n";
+    description += ":eyes: " + new CountStringBuilder().setCount(counts.watches).build() + ", ";
+    description +=
+        "<:r:851138401557676073> " + new CountStringBuilder().setCount(counts.likes).build() + ", ";
+    description +=
+        ":speech_balloon: " + new CountStringBuilder().setCount(counts.reviews).build() + "\n";
 
     // Build it
-    embedBuilder.setDescription(new EmbedDescriptionBuilder(description).build());
+    embedBuilder.setDescription(
+        new DescriptionStringBuilder().setDescriptionText(description).build());
     ArrayList<MessageEmbed> embedList = new ArrayList<>();
     embedList.add(embedBuilder.build());
 

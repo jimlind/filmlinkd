@@ -1,30 +1,32 @@
-package jimlind.filmlinkd.system.discord.utils;
+package jimlind.filmlinkd.system.discord.stringBuilder;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import jimlind.filmlinkd.system.letterboxd.model.LBContributionType;
 import jimlind.filmlinkd.system.letterboxd.model.LBFilmContributions;
 
-public class EmbedDirectorsBuilder {
-  public LBFilmContributions contributions;
+public class DirectorsStringBuilder {
+  public LBFilmContributions directors = null;
 
-  public EmbedDirectorsBuilder(List<LBFilmContributions> contributionList) {
+  public DirectorsStringBuilder setContributionList(List<LBFilmContributions> contributionList) {
     List<LBFilmContributions> filteredContributions =
         contributionList.stream()
             .filter(contributions -> contributions.type.equals(LBContributionType.Director))
             .toList();
     if (!filteredContributions.isEmpty()) {
-      this.contributions = filteredContributions.getFirst();
+      directors = filteredContributions.getFirst();
     }
+
+    return this;
   }
 
   public String build() {
-    if (this.contributions == null) {
+    if (directors == null) {
       return "";
     }
 
     String directorLinks =
-        contributions.contributors.stream()
+        directors.contributors.stream()
             .map(c -> String.format("[%s](https://boxd.it/%s)", c.name, c.id))
             .collect(Collectors.joining(", "));
 

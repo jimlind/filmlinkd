@@ -1,10 +1,11 @@
-package jimlind.filmlinkd.system.discord.utils;
+package jimlind.filmlinkd.system.discord.stringBuilder;
 
-public class EmbedCountBuilder {
-  private final long count;
+public class CountStringBuilder {
+  private long count = 0L;
 
-  public EmbedCountBuilder(long count) {
+  public CountStringBuilder setCount(long count) {
     this.count = count;
+    return this;
   }
 
   public String build() {

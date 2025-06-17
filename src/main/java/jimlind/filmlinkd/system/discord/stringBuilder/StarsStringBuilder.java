@@ -1,10 +1,11 @@
-package jimlind.filmlinkd.system.discord.utils;
+package jimlind.filmlinkd.system.discord.stringBuilder;
 
-public class EmbedStarsBuilder {
-  private final float starCount;
+public class StarsStringBuilder {
+  private float starCount = 0;
 
-  public EmbedStarsBuilder(float starCount) {
+  public StarsStringBuilder setStarCount(float starCount) {
     this.starCount = starCount;
+    return this;
   }
 
   public String build() {

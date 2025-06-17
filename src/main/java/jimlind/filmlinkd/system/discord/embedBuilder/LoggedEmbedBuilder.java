@@ -5,8 +5,8 @@ import io.github.furstenheim.Options;
 import io.github.furstenheim.OptionsBuilder;
 import java.util.ArrayList;
 import java.util.List;
-import jimlind.filmlinkd.system.discord.utils.EmbedDescriptionBuilder;
-import jimlind.filmlinkd.system.discord.utils.EmbedStarsBuilder;
+import jimlind.filmlinkd.system.discord.stringBuilder.DescriptionStringBuilder;
+import jimlind.filmlinkd.system.discord.stringBuilder.StarsStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LBReview;
 import jimlind.filmlinkd.system.letterboxd.utils.DateUtils;
@@ -37,7 +37,7 @@ public class LoggedEmbedBuilder {
       description.append(
           String.format("[**%s on %s**](https://boxd.it/%s)\n", action, date, logEntry.id));
 
-      String stars = new EmbedStarsBuilder(logEntry.rating).build();
+      String stars = new StarsStringBuilder().setStarCount(logEntry.rating).build();
       String rewatch =
           logEntry.diaryDetails != null && logEntry.diaryDetails.rewatch
               ? " <:r:851135667546488903>"
@@ -59,7 +59,8 @@ public class LoggedEmbedBuilder {
             firstLogEntry.film.releaseYear);
     embedBuilder.setTitle(title);
     embedBuilder.setThumbnail(ImageUtils.getTallest(firstLogEntry.film.poster));
-    embedBuilder.setDescription(new EmbedDescriptionBuilder(description.toString()).build());
+    embedBuilder.setDescription(
+        new DescriptionStringBuilder().setDescriptionText(description.toString()).build());
 
     ArrayList<MessageEmbed> embedList = new ArrayList<>();
     embedList.add(embedBuilder.build());

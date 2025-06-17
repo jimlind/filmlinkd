@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 import jimlind.filmlinkd.model.User;
-import jimlind.filmlinkd.system.discord.utils.EmbedDescriptionBuilder;
-import jimlind.filmlinkd.system.discord.utils.EmbedUserBuilder;
+import jimlind.filmlinkd.system.discord.stringBuilder.DescriptionStringBuilder;
+import jimlind.filmlinkd.system.discord.stringBuilder.UserStringBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class FollowingEmbedBuilder {
@@ -13,7 +13,9 @@ public class FollowingEmbedBuilder {
     ArrayList<MessageEmbed> embedList = new ArrayList<>();
 
     String description =
-        new EmbedDescriptionBuilder("Here are the accounts I'm following...").build();
+        new DescriptionStringBuilder()
+            .setDescriptionText("Here are the accounts I'm following...")
+            .build();
     embedList.add(new EmbedBuilder().setDescription(description).build());
 
     String resultString = "";
@@ -22,7 +24,9 @@ public class FollowingEmbedBuilder {
       String userDisplay =
           String.format(
               "• %s [%s](https://boxd.it/%s)\n",
-              new EmbedUserBuilder(user.userName).build(), user.letterboxdId, user.letterboxdId);
+              new UserStringBuilder().setUserName(user.userName).build(),
+              user.letterboxdId,
+              user.letterboxdId);
 
       // Instead of checking the string length against what's known in the EmbedDescription it is
       // slightly more accurate to try setting EmbedDescription and reacting when the length

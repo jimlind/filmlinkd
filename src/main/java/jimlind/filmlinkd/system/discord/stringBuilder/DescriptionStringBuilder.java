@@ -1,10 +1,11 @@
-package jimlind.filmlinkd.system.discord.utils;
+package jimlind.filmlinkd.system.discord.stringBuilder;
 
-public class EmbedDescriptionBuilder {
+public class DescriptionStringBuilder {
   private String descriptionText = "";
 
-  public EmbedDescriptionBuilder(String descriptionText) {
+  public DescriptionStringBuilder setDescriptionText(String descriptionText) {
     this.descriptionText = descriptionText;
+    return this;
   }
 
   public String build() {

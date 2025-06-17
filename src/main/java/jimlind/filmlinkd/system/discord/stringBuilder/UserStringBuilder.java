@@ -1,10 +1,11 @@
-package jimlind.filmlinkd.system.discord.utils;
+package jimlind.filmlinkd.system.discord.stringBuilder;
 
-public class EmbedUserBuilder {
+public class UserStringBuilder {
   private String userName = "";
 
-  public EmbedUserBuilder(String userName) {
+  public UserStringBuilder setUserName(String userName) {
     this.userName = userName;
+    return this;
   }
 
   public String build() {

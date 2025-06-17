@@ -2,8 +2,8 @@ package jimlind.filmlinkd.system.discord.embedBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import jimlind.filmlinkd.system.discord.utils.EmbedStarsBuilder;
-import jimlind.filmlinkd.system.discord.utils.EmbedUserBuilder;
+import jimlind.filmlinkd.system.discord.stringBuilder.StarsStringBuilder;
+import jimlind.filmlinkd.system.discord.stringBuilder.UserStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LBMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
@@ -21,7 +21,7 @@ public class DiaryListEmbedBuilder {
               logEntry.film.name, logEntry.film.releaseYear, logEntry.id);
 
       String secondLine = logEntry.diaryDetails != null ? logEntry.diaryDetails.diaryDate : "";
-      secondLine += " " + new EmbedStarsBuilder(logEntry.rating).build();
+      secondLine += " " + new StarsStringBuilder().setStarCount(logEntry.rating).build();
       secondLine +=
           logEntry.diaryDetails != null && logEntry.diaryDetails.rewatch
               ? " <:r:851135667546488903>"
@@ -37,7 +37,8 @@ public class DiaryListEmbedBuilder {
 
     embedBuilder.setTitle(
         String.format(
-            "Recent Diary Activity from %s", new EmbedUserBuilder(member.displayName).build()));
+            "Recent Diary Activity from %s",
+            new UserStringBuilder().setUserName(member.displayName).build()));
     embedBuilder.setUrl(String.format("https://boxd.it/%s", member.id));
     embedBuilder.setThumbnail(ImageUtils.getTallest(member.avatar));
 

@@ -4,7 +4,7 @@ import io.github.furstenheim.CopyDown;
 import io.github.furstenheim.Options;
 import io.github.furstenheim.OptionsBuilder;
 import java.util.ArrayList;
-import jimlind.filmlinkd.system.discord.utils.EmbedDescriptionBuilder;
+import jimlind.filmlinkd.system.discord.stringBuilder.DescriptionStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LBListEntrySummary;
 import jimlind.filmlinkd.system.letterboxd.model.LBListSummary;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
@@ -36,7 +36,8 @@ public class ListEmbedBuilder {
               prefix, summary.film.name, summary.film.releaseYear, summary.film.id));
     }
 
-    String description = new EmbedDescriptionBuilder(descriptionText.toString()).build();
+    String description =
+        new DescriptionStringBuilder().setDescriptionText(descriptionText.toString()).build();
     embedBuilder.setDescription(description);
 
     ArrayList<MessageEmbed> embedList = new ArrayList<>();

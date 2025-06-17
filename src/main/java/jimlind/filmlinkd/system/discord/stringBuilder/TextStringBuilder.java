@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.discord.utils;
+package jimlind.filmlinkd.system.discord.stringBuilder;
 
 import io.github.furstenheim.CopyDown;
 import io.github.furstenheim.Options;
@@ -6,11 +6,12 @@ import io.github.furstenheim.OptionsBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-public class EmbedTextBuilder {
-  private String htmlText;
+public class TextStringBuilder {
+  private String htmlText = "";
 
-  public EmbedTextBuilder(String htmlText) {
+  public TextStringBuilder setHtmlText(String htmlText) {
     this.htmlText = htmlText;
+    return this;
   }
 
   public String build(int length) {
