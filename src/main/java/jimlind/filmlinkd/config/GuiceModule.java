@@ -8,6 +8,7 @@ import jimlind.filmlinkd.system.discord.ConnectionManager;
 import jimlind.filmlinkd.system.discord.EventListener;
 import jimlind.filmlinkd.system.discord.SlashCommandManager;
 import jimlind.filmlinkd.system.discord.eventHandler.*;
+import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.google.SecretManager;
 import jimlind.filmlinkd.system.letterboxd.api.*;
 import jimlind.filmlinkd.system.letterboxd.web.LetterboxdIdWeb;
@@ -30,6 +31,7 @@ public class GuiceModule extends AbstractModule {
     bind(ContributorHandler.class).in(Scopes.SINGLETON);
     bind(DiaryHandler.class).in(Scopes.SINGLETON);
     bind(FilmHandler.class).in(Scopes.SINGLETON);
+    bind(FollowingHandler.class).in(Scopes.SINGLETON);
     bind(HelpHandler.class).in(Scopes.SINGLETON);
     bind(ListHandler.class).in(Scopes.SINGLETON);
     bind(LoggedHandler.class).in(Scopes.SINGLETON);
@@ -38,6 +40,7 @@ public class GuiceModule extends AbstractModule {
 
     // Google System Modules
     bind(SecretManager.class).in(Scopes.SINGLETON);
+    bind(FirestoreManager.class).in(Scopes.SINGLETON);
 
     // Letterboxd API Modules
     bind(Client.class).in(Scopes.SINGLETON);

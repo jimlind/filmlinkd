@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 public class AppConfig {
   private static final Properties properties = new Properties();
   @Getter private final String discordBotToken;
+  @Getter private final String firestoreCollectionId;
   @Getter private final String googleProjectId;
   @Getter private final String letterboxdApiKey;
   @Getter private final String letterboxdApiShared;
@@ -32,6 +33,7 @@ public class AppConfig {
       throw new RuntimeException("Error while loading properties file", e);
     }
 
+    firestoreCollectionId = properties.getProperty(AppConstants.PROP_KEY_FIRESTORE_COLLECTION_ID);
     googleProjectId = properties.getProperty(AppConstants.PROP_KEY_GOOGLE_PROJECT_ID);
 
     discordBotToken =
