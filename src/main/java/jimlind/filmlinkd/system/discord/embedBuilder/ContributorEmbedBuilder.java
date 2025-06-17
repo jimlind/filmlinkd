@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import jimlind.filmlinkd.system.discord.utils.EmbedBuilder;
 import jimlind.filmlinkd.system.discord.utils.EmbedDescriptionBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LBContributionStatistics;
 import jimlind.filmlinkd.system.letterboxd.model.LBContributor;
@@ -13,7 +12,7 @@ import jimlind.filmlinkd.system.letterboxd.model.LBLink;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class ContributorEmbedBuilder {
-  public ArrayList<MessageEmbed> build(LBContributor contributor) {
+  public ArrayList<MessageEmbed> buildEmbedList(LBContributor contributor) {
     EmbedBuilder embedBuilder = new EmbedBuilder();
     embedBuilder.setTitle(contributor.name, String.format("https://boxd.it/%s", contributor.id));
 

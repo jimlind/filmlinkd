@@ -50,7 +50,7 @@ public class FollowingHandler implements Handler {
       }
     }
 
-    ArrayList<MessageEmbed> messageEmbedList = followingEmbedBuilder.build(userMap);
+    ArrayList<MessageEmbed> messageEmbedList = followingEmbedBuilder.buildEmbedList(userMap);
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

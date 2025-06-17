@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 import jimlind.filmlinkd.model.User;
-import jimlind.filmlinkd.system.discord.utils.EmbedBuilder;
 import jimlind.filmlinkd.system.discord.utils.EmbedDescriptionBuilder;
 import jimlind.filmlinkd.system.discord.utils.EmbedUserBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class FollowingEmbedBuilder {
-  public ArrayList<MessageEmbed> build(TreeMap<String, User> userMap) {
+  public ArrayList<MessageEmbed> buildEmbedList(TreeMap<String, User> userMap) {
     ArrayList<MessageEmbed> embedList = new ArrayList<>();
 
     String description =

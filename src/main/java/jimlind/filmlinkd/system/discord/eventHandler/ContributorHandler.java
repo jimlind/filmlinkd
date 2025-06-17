@@ -36,7 +36,8 @@ public class ContributorHandler implements Handler {
     }
 
     LBContributor contributor = searchResponse.items.get(0).contributor;
-    ArrayList<MessageEmbed> messageEmbedList = this.contributorEmbedBuilder.build(contributor);
+    ArrayList<MessageEmbed> messageEmbedList =
+        this.contributorEmbedBuilder.buildEmbedList(contributor);
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

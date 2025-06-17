@@ -42,7 +42,8 @@ public class DiaryHandler implements Handler {
       return;
     }
 
-    ArrayList<MessageEmbed> messageEmbedList = diaryListEmbedBuilder.build(member, logEntryList);
+    ArrayList<MessageEmbed> messageEmbedList =
+        diaryListEmbedBuilder.buildEmbedList(member, logEntryList);
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

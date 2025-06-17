@@ -2,7 +2,6 @@ package jimlind.filmlinkd.system.discord.embedBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import jimlind.filmlinkd.system.discord.utils.EmbedBuilder;
 import jimlind.filmlinkd.system.discord.utils.EmbedStarsBuilder;
 import jimlind.filmlinkd.system.discord.utils.EmbedUserBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
@@ -11,7 +10,7 @@ import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class DiaryListEmbedBuilder {
-  public ArrayList<MessageEmbed> build(LBMember member, List<LBLogEntry> logEntryList) {
+  public ArrayList<MessageEmbed> buildEmbedList(LBMember member, List<LBLogEntry> logEntryList) {
     EmbedBuilder embedBuilder = new EmbedBuilder();
 
     ArrayList<String> entryList = new ArrayList<>();
@@ -42,9 +41,9 @@ public class DiaryListEmbedBuilder {
     embedBuilder.setUrl(String.format("https://boxd.it/%s", member.id));
     embedBuilder.setThumbnail(ImageUtils.getTallest(member.avatar));
 
-    ArrayList<MessageEmbed> collection = new ArrayList<>();
-    collection.add(embedBuilder.build());
+    ArrayList<MessageEmbed> embedList = new ArrayList<>();
+    embedList.add(embedBuilder.build());
 
-    return collection;
+    return embedList;
   }
 }

@@ -13,7 +13,7 @@ import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class FilmEmbedBuilder {
-  public ArrayList<MessageEmbed> build(CombinedLBFilmModel filmCombination) {
+  public ArrayList<MessageEmbed> buildEmbedList(CombinedLBFilmModel filmCombination) {
     LBFilm film = filmCombination.film;
     LBFilmStatistics statistics = filmCombination.filmStatistics;
     LBFilmSummary summary = filmCombination.filmSummary;

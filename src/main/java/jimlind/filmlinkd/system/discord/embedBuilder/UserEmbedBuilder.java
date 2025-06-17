@@ -3,7 +3,6 @@ package jimlind.filmlinkd.system.discord.embedBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import jimlind.filmlinkd.system.discord.utils.EmbedBuilder;
 import jimlind.filmlinkd.system.discord.utils.EmbedDescriptionBuilder;
 import jimlind.filmlinkd.system.discord.utils.EmbedTextBuilder;
 import jimlind.filmlinkd.system.discord.utils.EmbedUserBuilder;
@@ -12,7 +11,8 @@ import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class UserEmbedBuilder {
-  public ArrayList<MessageEmbed> build(LBMember member, LBMemberStatistics memberStatistics) {
+  public ArrayList<MessageEmbed> buildEmbedList(
+      LBMember member, LBMemberStatistics memberStatistics) {
     EmbedBuilder embedBuilder = new EmbedBuilder();
 
     String displayName = new EmbedUserBuilder(member.displayName).build();
@@ -46,9 +46,9 @@ public class UserEmbedBuilder {
     embedBuilder.setThumbnail(ImageUtils.getTallest(member.avatar));
     embedBuilder.setDescription(new EmbedDescriptionBuilder(description).build());
 
-    ArrayList<MessageEmbed> collection = new ArrayList<>();
-    collection.add(embedBuilder.build());
+    ArrayList<MessageEmbed> embedList = new ArrayList<>();
+    embedList.add(embedBuilder.build());
 
-    return collection;
+    return embedList;
   }
 }

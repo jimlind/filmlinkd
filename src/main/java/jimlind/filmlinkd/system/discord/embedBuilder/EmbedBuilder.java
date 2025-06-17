@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.discord.utils;
+package jimlind.filmlinkd.system.discord.embedBuilder;
 
 import java.awt.Color;
 import net.dv8tion.jda.api.entities.MessageEmbed;

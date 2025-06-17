@@ -5,7 +5,6 @@ import io.github.furstenheim.Options;
 import io.github.furstenheim.OptionsBuilder;
 import java.util.ArrayList;
 import java.util.List;
-import jimlind.filmlinkd.system.discord.utils.EmbedBuilder;
 import jimlind.filmlinkd.system.discord.utils.EmbedDescriptionBuilder;
 import jimlind.filmlinkd.system.discord.utils.EmbedStarsBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
@@ -18,7 +17,7 @@ import org.jsoup.nodes.Document;
 
 public class LoggedEmbedBuilder {
 
-  public ArrayList<MessageEmbed> build(List<LBLogEntry> logEntryList) {
+  public ArrayList<MessageEmbed> buildEmbedList(List<LBLogEntry> logEntryList) {
     EmbedBuilder embedBuilder = new EmbedBuilder();
 
     StringBuilder description = new StringBuilder();
@@ -62,10 +61,10 @@ public class LoggedEmbedBuilder {
     embedBuilder.setThumbnail(ImageUtils.getTallest(firstLogEntry.film.poster));
     embedBuilder.setDescription(new EmbedDescriptionBuilder(description.toString()).build());
 
-    ArrayList<MessageEmbed> collection = new ArrayList<>();
-    collection.add(embedBuilder.build());
+    ArrayList<MessageEmbed> embedList = new ArrayList<>();
+    embedList.add(embedBuilder.build());
 
-    return collection;
+    return embedList;
   }
 
   private String formatReview(LBReview review) {

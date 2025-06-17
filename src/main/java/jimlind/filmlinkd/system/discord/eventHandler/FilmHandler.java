@@ -33,7 +33,7 @@ public class FilmHandler implements Handler {
       return;
     }
 
-    ArrayList<MessageEmbed> messageEmbedList = filmEmbedBuilder.build(combinedLBFilmModel);
+    ArrayList<MessageEmbed> messageEmbedList = filmEmbedBuilder.buildEmbedList(combinedLBFilmModel);
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }
