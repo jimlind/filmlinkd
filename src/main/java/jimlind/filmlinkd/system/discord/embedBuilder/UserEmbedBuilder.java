@@ -1,19 +1,42 @@
 package jimlind.filmlinkd.system.discord.embedBuilder;
 
+import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringBuilder.DescriptionStringBuilder;
 import jimlind.filmlinkd.system.discord.stringBuilder.TextStringBuilder;
 import jimlind.filmlinkd.system.discord.stringBuilder.UserStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.*;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class UserEmbedBuilder {
-  public ArrayList<MessageEmbed> buildEmbedList(
-      LBMember member, LBMemberStatistics memberStatistics) {
-    EmbedBuilder embedBuilder = new EmbedBuilder();
+  private final EmbedBuilder embedBuilder;
+  private LBMember member = null;
+  private LBMemberStatistics memberStatistics = null;
+
+  @Inject
+  public UserEmbedBuilder(EmbedBuilderFactory embedBuilderFactory) {
+    embedBuilder = embedBuilderFactory.create();
+  }
+
+  public UserEmbedBuilder setMember(LBMember member) {
+    this.member = member;
+    return this;
+  }
+
+  public UserEmbedBuilder setMemberStatistics(LBMemberStatistics memberStatistics) {
+    this.memberStatistics = memberStatistics;
+    return this;
+  }
+
+  public ArrayList<MessageEmbed> build() {
+    if (member == null || memberStatistics == null) {
+      return new ArrayList<>();
+    }
 
     String displayName = new UserStringBuilder().setUserName(member.displayName).build();
     LBPronoun pronoun = member.pronoun;

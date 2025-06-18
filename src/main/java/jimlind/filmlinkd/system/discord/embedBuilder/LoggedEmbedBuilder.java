@@ -1,25 +1,38 @@
 package jimlind.filmlinkd.system.discord.embedBuilder;
 
+import com.google.inject.Inject;
 import io.github.furstenheim.CopyDown;
 import io.github.furstenheim.Options;
 import io.github.furstenheim.OptionsBuilder;
 import java.util.ArrayList;
 import java.util.List;
+import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringBuilder.DescriptionStringBuilder;
 import jimlind.filmlinkd.system.discord.stringBuilder.StarsStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LBReview;
 import jimlind.filmlinkd.system.letterboxd.utils.DateUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 public class LoggedEmbedBuilder {
+  private final EmbedBuilder embedBuilder;
+  private List<LBLogEntry> logEntryList = new ArrayList<>();
 
-  public ArrayList<MessageEmbed> buildEmbedList(List<LBLogEntry> logEntryList) {
-    EmbedBuilder embedBuilder = new EmbedBuilder();
+  @Inject
+  public LoggedEmbedBuilder(EmbedBuilderFactory embedBuilderFactory) {
+    embedBuilder = embedBuilderFactory.create();
+  }
 
+  public LoggedEmbedBuilder setLogEntryList(List<LBLogEntry> logEntryList) {
+    this.logEntryList = logEntryList;
+    return this;
+  }
+
+  public ArrayList<MessageEmbed> build() {
     StringBuilder description = new StringBuilder();
     for (LBLogEntry logEntry : logEntryList) {
       String action = "Logged";

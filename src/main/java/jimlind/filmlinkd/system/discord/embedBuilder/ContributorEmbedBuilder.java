@@ -1,19 +1,38 @@
 package jimlind.filmlinkd.system.discord.embedBuilder;
 
 import com.google.common.collect.Lists;
+import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringBuilder.DescriptionStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LBContributionStatistics;
 import jimlind.filmlinkd.system.letterboxd.model.LBContributor;
 import jimlind.filmlinkd.system.letterboxd.model.LBLink;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class ContributorEmbedBuilder {
-  public ArrayList<MessageEmbed> buildEmbedList(LBContributor contributor) {
-    EmbedBuilder embedBuilder = new EmbedBuilder();
+  private final EmbedBuilder embedBuilder;
+  private LBContributor contributor = null;
+
+  @Inject
+  public ContributorEmbedBuilder(EmbedBuilderFactory embedBuilderFactory) {
+    embedBuilder = embedBuilderFactory.create();
+  }
+
+  public ContributorEmbedBuilder setContributor(LBContributor contributor) {
+    this.contributor = contributor;
+    return this;
+  }
+
+  public ArrayList<MessageEmbed> build() {
+    if (contributor == null) {
+      return new ArrayList<>();
+    }
+
     embedBuilder.setTitle(contributor.name, String.format("https://boxd.it/%s", contributor.id));
 
     List<String> linkStrings = new LinkedList<>();

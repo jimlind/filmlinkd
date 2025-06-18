@@ -1,17 +1,41 @@
 package jimlind.filmlinkd.system.discord.embedBuilder;
 
+import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringBuilder.StarsStringBuilder;
 import jimlind.filmlinkd.system.discord.stringBuilder.UserStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LBMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class DiaryListEmbedBuilder {
-  public ArrayList<MessageEmbed> buildEmbedList(LBMember member, List<LBLogEntry> logEntryList) {
-    EmbedBuilder embedBuilder = new EmbedBuilder();
+  private final EmbedBuilder embedBuilder;
+  private LBMember member = null;
+  private List<LBLogEntry> logEntryList = new ArrayList<>();
+
+  @Inject
+  public DiaryListEmbedBuilder(EmbedBuilderFactory embedBuilderFactory) {
+    embedBuilder = embedBuilderFactory.create();
+  }
+
+  public DiaryListEmbedBuilder setMember(LBMember member) {
+    this.member = member;
+    return this;
+  }
+
+  public DiaryListEmbedBuilder setLogEntryList(List<LBLogEntry> logEntryList) {
+    this.logEntryList = logEntryList;
+    return this;
+  }
+
+  public ArrayList<MessageEmbed> build() {
+    if (member == null) {
+      return new ArrayList<>();
+    }
 
     ArrayList<String> entryList = new ArrayList<>();
     for (LBLogEntry logEntry : logEntryList) {

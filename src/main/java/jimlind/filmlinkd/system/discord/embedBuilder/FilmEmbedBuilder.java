@@ -1,8 +1,10 @@
 package jimlind.filmlinkd.system.discord.embedBuilder;
 
+import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.model.CombinedLBFilmModel;
 import jimlind.filmlinkd.system.discord.stringBuilder.*;
 import jimlind.filmlinkd.system.letterboxd.model.LBFilm;
@@ -10,10 +12,28 @@ import jimlind.filmlinkd.system.letterboxd.model.LBFilmStatistics;
 import jimlind.filmlinkd.system.letterboxd.model.LBFilmStatisticsCounts;
 import jimlind.filmlinkd.system.letterboxd.model.LBFilmSummary;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class FilmEmbedBuilder {
-  public ArrayList<MessageEmbed> buildEmbedList(CombinedLBFilmModel filmCombination) {
+  private final EmbedBuilder embedBuilder;
+  private CombinedLBFilmModel filmCombination = null;
+
+  @Inject
+  FilmEmbedBuilder(EmbedBuilderFactory embedBuilderFactory) {
+    embedBuilder = embedBuilderFactory.create();
+  }
+
+  public FilmEmbedBuilder setFilmCombination(CombinedLBFilmModel filmCombination) {
+    this.filmCombination = filmCombination;
+    return this;
+  }
+
+  public ArrayList<MessageEmbed> build() {
+    if (filmCombination == null) {
+      return new ArrayList<>();
+    }
+
     LBFilm film = filmCombination.film;
     LBFilmStatistics statistics = filmCombination.filmStatistics;
     LBFilmSummary summary = filmCombination.filmSummary;
@@ -21,7 +41,6 @@ public class FilmEmbedBuilder {
     String releaseYear = film.releaseYear > 0 ? String.format(" (%s)", film.releaseYear) : "";
     String imageURL = ImageUtils.getTallest(film.poster);
 
-    EmbedBuilder embedBuilder = new EmbedBuilder();
     embedBuilder.setTitle(film.name + releaseYear);
     embedBuilder.setUrl(String.format("https://boxd.it/%s", film.id));
     embedBuilder.setThumbnail(imageURL.isBlank() ? null : imageURL);

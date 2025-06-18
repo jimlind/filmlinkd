@@ -1,22 +1,37 @@
 package jimlind.filmlinkd.system.discord.embedBuilder;
 
+import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
+import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.discord.stringBuilder.DescriptionStringBuilder;
 import jimlind.filmlinkd.system.discord.stringBuilder.UserStringBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class FollowingEmbedBuilder {
-  public ArrayList<MessageEmbed> buildEmbedList(TreeMap<String, User> userMap) {
+  private final EmbedBuilderFactory embedBuilderFactory;
+  private TreeMap<String, User> userMap = new TreeMap<>();
+
+  @Inject
+  FollowingEmbedBuilder(EmbedBuilderFactory embedBuilderFactory) {
+    this.embedBuilderFactory = embedBuilderFactory;
+  }
+
+  public FollowingEmbedBuilder setUserMap(TreeMap<String, User> userMap) {
+    this.userMap = userMap;
+    return this;
+  }
+
+  public ArrayList<MessageEmbed> build() {
     ArrayList<MessageEmbed> embedList = new ArrayList<>();
 
     String description =
         new DescriptionStringBuilder()
             .setDescriptionText("Here are the accounts I'm following...")
             .build();
-    embedList.add(new EmbedBuilder().setDescription(description).build());
+    embedList.add(embedBuilderFactory.create().setDescription(description).build());
 
     String resultString = "";
     for (Map.Entry<String, User> entry : userMap.entrySet()) {
@@ -33,18 +48,18 @@ public class FollowingEmbedBuilder {
       // exceptions are thrown.
       String nextString = resultString + userDisplay;
       try {
-        new EmbedBuilder().setDescription(nextString);
+        embedBuilderFactory.create().setDescription(nextString);
         // Updating resultString now only happens if setDescription doesn't fail. Logic like this is
         // "clever" and should usually be avoided for readability.
         resultString = nextString;
       } catch (IllegalArgumentException e) {
-        embedList.add(new EmbedBuilder().setDescription(resultString).build());
+        embedList.add(embedBuilderFactory.create().setDescription(resultString).build());
         resultString = userDisplay;
       }
     }
     // If there is anything left over add that as a message as well.
     if (!resultString.isBlank()) {
-      embedList.add(new EmbedBuilder().setDescription(resultString).build());
+      embedList.add(embedBuilderFactory.create().setDescription(resultString).build());
     }
 
     return embedList;
