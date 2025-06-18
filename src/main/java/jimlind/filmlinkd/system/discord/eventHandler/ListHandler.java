@@ -2,8 +2,8 @@ package jimlind.filmlinkd.system.discord.eventHandler;
 
 import com.google.inject.Inject;
 import java.util.ArrayList;
-import jimlind.filmlinkd.system.discord.AccountHelper;
 import jimlind.filmlinkd.system.discord.embedBuilder.ListEmbedBuilder;
+import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.letterboxd.api.ListAPI;
 import jimlind.filmlinkd.system.letterboxd.model.LBListSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LBListsResponse;

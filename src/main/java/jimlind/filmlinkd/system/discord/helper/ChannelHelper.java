@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.discord;
+package jimlind.filmlinkd.system.discord.helper;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 public class ChannelHelper {
-  public static String getChannelId(SlashCommandInteractionEvent event) {
+  public String getChannelId(SlashCommandInteractionEvent event) {
     OptionMapping channelMap = event.getInteraction().getOption("channel");
     if (channelMap == null) {
       return event.getChannelId();

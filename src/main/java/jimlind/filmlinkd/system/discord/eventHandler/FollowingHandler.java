@@ -7,23 +7,26 @@ import java.util.List;
 import java.util.TreeMap;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.model.User;
-import jimlind.filmlinkd.system.discord.ChannelHelper;
 import jimlind.filmlinkd.system.discord.embedBuilder.FollowingEmbedBuilder;
+import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class FollowingHandler implements Handler {
+  private final ChannelHelper channelHelper;
   private final FirestoreManager firestoreManager;
   private final FollowingEmbedBuilder followingEmbedBuilder;
   private final UserFactory userFactory;
 
   @Inject
   FollowingHandler(
+      ChannelHelper channelHelper,
       FirestoreManager firestoreManager,
       FollowingEmbedBuilder followingEmbedBuilder,
       UserFactory userFactory) {
+    this.channelHelper = channelHelper;
     this.firestoreManager = firestoreManager;
     this.followingEmbedBuilder = followingEmbedBuilder;
     this.userFactory = userFactory;
@@ -33,7 +36,7 @@ public class FollowingHandler implements Handler {
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
 
-    String channelId = ChannelHelper.getChannelId(event);
+    String channelId = channelHelper.getChannelId(event);
     if (channelId.isBlank()) {
       event.getHook().sendMessage(NO_CHANNEL_FOUND).queue();
       return;

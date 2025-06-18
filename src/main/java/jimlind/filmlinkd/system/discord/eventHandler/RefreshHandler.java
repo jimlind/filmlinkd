@@ -2,7 +2,7 @@ package jimlind.filmlinkd.system.discord.eventHandler;
 /*
 import java.util.ArrayList;
 import jimlind.filmlinkd.factory.messageEmbed.RefreshEmbedFactory;
-import jimlind.filmlinkd.system.discord.AccountHelper;
+import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.letterboxd.model.LBMember;
 import net.dv8tion.jda.api.entities.MessageEmbed;

@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.discord;
+package jimlind.filmlinkd.system.discord.helper;
 
 import com.google.inject.Inject;
 import jimlind.filmlinkd.system.letterboxd.api.MemberAPI;

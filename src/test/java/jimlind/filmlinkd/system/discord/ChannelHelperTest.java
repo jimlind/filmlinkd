@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
+import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -34,7 +35,7 @@ public class ChannelHelperTest {
     when(event.getInteraction().getOption("channel")).thenReturn(null);
     when(event.getChannelId()).thenReturn("1234567890");
 
-    assertEquals("1234567890", ChannelHelper.getChannelId(event));
+    assertEquals("1234567890", new ChannelHelper().getChannelId(event));
   }
 
   @Test
@@ -42,7 +43,7 @@ public class ChannelHelperTest {
     when(event.getInteraction().getOption("channel")).thenReturn(optionMapping);
     when(optionMapping.getAsString()).thenReturn("<#9876543210>");
 
-    assertEquals("9876543210", ChannelHelper.getChannelId(event));
+    assertEquals("9876543210", new ChannelHelper().getChannelId(event));
   }
 
   @Test
@@ -52,7 +53,7 @@ public class ChannelHelperTest {
     when(event.getGuild()).thenReturn(guild);
     when(guild.getTextChannelsByName("invalid-channel", true)).thenReturn(List.of());
 
-    assertEquals("", ChannelHelper.getChannelId(event));
+    assertEquals("", new ChannelHelper().getChannelId(event));
   }
 
   @Test
@@ -63,7 +64,7 @@ public class ChannelHelperTest {
     when(guild.getTextChannelsByName("general", true)).thenReturn(List.of(textChannel));
     when(textChannel.getId()).thenReturn("1357924680");
 
-    assertEquals("1357924680", ChannelHelper.getChannelId(event));
+    assertEquals("1357924680", new ChannelHelper().getChannelId(event));
   }
 
   @Test
@@ -72,6 +73,6 @@ public class ChannelHelperTest {
     when(optionMapping.getAsString()).thenReturn("random");
     when(event.getGuild()).thenReturn(null);
 
-    assertEquals("", ChannelHelper.getChannelId(event));
+    assertEquals("", new ChannelHelper().getChannelId(event));
   }
 }
