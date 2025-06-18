@@ -42,7 +42,7 @@ public class UserHandler implements Handler {
     }
 
     ArrayList<MessageEmbed> messageEmbedList =
-        this.userEmbedBuilder.buildEmbedList(member, memberStatistics);
+        this.userEmbedBuilder.setMember(member).setMemberStatistics(memberStatistics).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

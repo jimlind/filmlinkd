@@ -37,7 +37,8 @@ public class RouletteHandler implements Handler {
       return;
     }
 
-    ArrayList<MessageEmbed> messageEmbedList = filmEmbedBuilder.buildEmbedList(combinedLBFilmModel);
+    ArrayList<MessageEmbed> messageEmbedList =
+        filmEmbedBuilder.setFilmCombination(combinedLBFilmModel).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 

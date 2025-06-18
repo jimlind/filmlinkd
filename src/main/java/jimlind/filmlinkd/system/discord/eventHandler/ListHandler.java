@@ -58,7 +58,7 @@ public class ListHandler implements Handler {
       return;
     }
 
-    ArrayList<MessageEmbed> messageEmbedList = listEmbedBuilder.buildEmbedList(foundList);
+    ArrayList<MessageEmbed> messageEmbedList = listEmbedBuilder.setListSummary(foundList).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }
