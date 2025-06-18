@@ -11,6 +11,7 @@ import jimlind.filmlinkd.system.discord.EventListener;
 import jimlind.filmlinkd.system.discord.SlashCommandManager;
 import jimlind.filmlinkd.system.discord.embedBuilder.*;
 import jimlind.filmlinkd.system.discord.eventHandler.*;
+import jimlind.filmlinkd.system.discord.stringBuilder.*;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.google.SecretManager;
 import jimlind.filmlinkd.system.letterboxd.api.*;
@@ -53,6 +54,15 @@ public class GuiceModule extends AbstractModule {
     bind(LoggedHandler.class).in(Scopes.SINGLETON);
     bind(RouletteHandler.class).in(Scopes.SINGLETON);
     bind(UserHandler.class).in(Scopes.SINGLETON);
+
+    // Discord Embed String Builders
+    bind(CountStringBuilder.class).in(Scopes.NO_SCOPE);
+    bind(DescriptionStringBuilder.class).in(Scopes.NO_SCOPE);
+    bind(DirectorsStringBuilder.class).in(Scopes.NO_SCOPE);
+    bind(RunTimeStringBuilder.class).in(Scopes.NO_SCOPE);
+    bind(StarsStringBuilder.class).in(Scopes.NO_SCOPE);
+    bind(TextStringBuilder.class).in(Scopes.NO_SCOPE);
+    bind(UserStringBuilder.class).in(Scopes.NO_SCOPE);
 
     // Google System Modules
     bind(SecretManager.class).in(Scopes.SINGLETON);
