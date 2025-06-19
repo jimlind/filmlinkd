@@ -51,6 +51,11 @@
         </dependency>
         <dependency>
             <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-pubsub</artifactId>
+            <!-- com.google.cloud:libraries-bom manages version -->
+        </dependency>
+        <dependency>
+            <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-secretmanager</artifactId>
             <!-- com.google.cloud:libraries-bom manages version -->
         </dependency>
