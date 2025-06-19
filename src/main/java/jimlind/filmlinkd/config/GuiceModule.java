@@ -5,7 +5,9 @@ import com.google.inject.Scopes;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.system.DiscordSystem;
+import jimlind.filmlinkd.system.EntryCache;
 import jimlind.filmlinkd.system.ShutdownThread;
+import jimlind.filmlinkd.system.SubscriberListener;
 import jimlind.filmlinkd.system.discord.ConnectionManager;
 import jimlind.filmlinkd.system.discord.EventListener;
 import jimlind.filmlinkd.system.discord.SlashCommandManager;
@@ -33,6 +35,10 @@ public class GuiceModule extends AbstractModule {
     // Factories
     bind(EmbedBuilderFactory.class).in(Scopes.SINGLETON);
     bind(UserFactory.class).in(Scopes.SINGLETON);
+
+    // General System Modules
+    bind(EntryCache.class).in(Scopes.SINGLETON);
+    bind(SubscriberListener.class).in(Scopes.SINGLETON);
 
     // Discord System Modules
     bind(DiscordSystem.class).in(Scopes.SINGLETON);

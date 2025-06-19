@@ -103,6 +103,11 @@
             <artifactId>jsoup</artifactId>
             <version>1.20.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>3.2.1</version>
+        </dependency>
         <!-- Test Dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
