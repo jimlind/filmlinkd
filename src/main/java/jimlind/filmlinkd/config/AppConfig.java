@@ -17,6 +17,10 @@ public class AppConfig {
   @Getter private final String googleProjectId;
   @Getter private final String letterboxdApiKey;
   @Getter private final String letterboxdApiShared;
+  @Getter private final String pubSubCommandSubscriptionName;
+  @Getter private final String pubSubCommandTopicName;
+  @Getter private final String pubSubLogEntrySubscriptionName;
+  @Getter private final String pubSubLogEntryTopicName;
 
   @Inject
   AppConfig(SecretManager secretManager) {
@@ -35,6 +39,12 @@ public class AppConfig {
 
     firestoreCollectionId = properties.getProperty(AppConstants.PROP_KEY_FIRESTORE_COLLECTION_ID);
     googleProjectId = properties.getProperty(AppConstants.PROP_KEY_GOOGLE_PROJECT_ID);
+    pubSubCommandSubscriptionName =
+        properties.getProperty(AppConstants.PROP_KEY_COMMAND_SUBSCRIPTION_NAME);
+    pubSubCommandTopicName = properties.getProperty(AppConstants.PROP_KEY_COMMAND_TOPIC_NAME);
+    pubSubLogEntrySubscriptionName =
+        properties.getProperty(AppConstants.PROP_KEY_LOG_ENTRY_SUBSCRIPTION_NAME);
+    pubSubLogEntryTopicName = properties.getProperty(AppConstants.PROP_KEY_LOG_ENTRY_TOPIC_NAME);
 
     discordBotToken =
         secretManager.getSecret(
