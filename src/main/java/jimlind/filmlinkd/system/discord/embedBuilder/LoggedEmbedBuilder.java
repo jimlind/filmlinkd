@@ -19,11 +19,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 public class LoggedEmbedBuilder {
+  private final DateUtils dateUtils;
   private final EmbedBuilder embedBuilder;
   private List<LBLogEntry> logEntryList = new ArrayList<>();
 
   @Inject
-  public LoggedEmbedBuilder(EmbedBuilderFactory embedBuilderFactory) {
+  public LoggedEmbedBuilder(DateUtils dateUtils, EmbedBuilderFactory embedBuilderFactory) {
+    this.dateUtils = dateUtils;
     embedBuilder = embedBuilderFactory.create();
   }
 
@@ -36,11 +38,11 @@ public class LoggedEmbedBuilder {
     StringBuilder description = new StringBuilder();
     for (LBLogEntry logEntry : logEntryList) {
       String action = "Logged";
-      String date = DateUtils.toPattern(logEntry.whenCreated);
+      String date = dateUtils.toPattern(logEntry.whenCreated);
 
       if (logEntry.diaryDetails != null) {
         action = "Watched";
-        date = DateUtils.toPattern(logEntry.diaryDetails.diaryDate);
+        date = dateUtils.toPattern(logEntry.diaryDetails.diaryDate);
       }
 
       if (logEntry.review != null) {

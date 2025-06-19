@@ -9,7 +9,7 @@ import java.util.Locale;
 
 public class DateUtils {
 
-  public static long toMilliseconds(String dateString) {
+  public long toMilliseconds(String dateString) {
     try {
       LocalDate date = LocalDate.parse(dateString);
       return date.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
@@ -27,7 +27,7 @@ public class DateUtils {
     return 0L;
   }
 
-  public static String toPattern(String dateString) {
+  public String toPattern(String dateString) {
     long timestamp = toMilliseconds(dateString);
     Instant instant = Instant.ofEpochMilli(timestamp);
     ZonedDateTime zonedDateTime = instant.atZone(ZoneOffset.UTC);
