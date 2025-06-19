@@ -17,11 +17,13 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class FilmEmbedBuilder {
   private final EmbedBuilder embedBuilder;
+  private final ImageUtils imageUtils;
   private CombinedLBFilmModel filmCombination = null;
 
   @Inject
-  FilmEmbedBuilder(EmbedBuilderFactory embedBuilderFactory) {
+  FilmEmbedBuilder(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
     embedBuilder = embedBuilderFactory.create();
+    this.imageUtils = imageUtils;
   }
 
   public FilmEmbedBuilder setFilmCombination(CombinedLBFilmModel filmCombination) {
@@ -39,7 +41,7 @@ public class FilmEmbedBuilder {
     LBFilmSummary summary = filmCombination.filmSummary;
 
     String releaseYear = film.releaseYear > 0 ? String.format(" (%s)", film.releaseYear) : "";
-    String imageURL = ImageUtils.getTallest(film.poster);
+    String imageURL = imageUtils.getTallest(film.poster);
 
     embedBuilder.setTitle(film.name + releaseYear);
     embedBuilder.setUrl(String.format("https://boxd.it/%s", film.id));

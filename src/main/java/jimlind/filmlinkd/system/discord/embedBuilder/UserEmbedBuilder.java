@@ -15,11 +15,13 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class UserEmbedBuilder {
   private final EmbedBuilder embedBuilder;
+  private final ImageUtils imageUtils;
   private LBMember member = null;
   private LBMemberStatistics memberStatistics = null;
 
   @Inject
-  public UserEmbedBuilder(EmbedBuilderFactory embedBuilderFactory) {
+  public UserEmbedBuilder(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
+    this.imageUtils = imageUtils;
     embedBuilder = embedBuilderFactory.create();
   }
 
@@ -66,7 +68,7 @@ public class UserEmbedBuilder {
 
     embedBuilder.setTitle(displayName + " " + String.join("/", pronounList));
     embedBuilder.setUrl(String.format("https://boxd.it/%s", member.id));
-    embedBuilder.setThumbnail(ImageUtils.getTallest(member.avatar));
+    embedBuilder.setThumbnail(imageUtils.getTallest(member.avatar));
     embedBuilder.setDescription(
         new DescriptionStringBuilder().setDescriptionText(description).build());
 

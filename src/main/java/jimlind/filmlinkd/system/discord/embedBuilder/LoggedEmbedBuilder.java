@@ -21,11 +21,14 @@ import org.jsoup.nodes.Document;
 public class LoggedEmbedBuilder {
   private final DateUtils dateUtils;
   private final EmbedBuilder embedBuilder;
+  private final ImageUtils imageUtils;
   private List<LBLogEntry> logEntryList = new ArrayList<>();
 
   @Inject
-  public LoggedEmbedBuilder(DateUtils dateUtils, EmbedBuilderFactory embedBuilderFactory) {
+  public LoggedEmbedBuilder(
+      DateUtils dateUtils, EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
     this.dateUtils = dateUtils;
+    this.imageUtils = imageUtils;
     embedBuilder = embedBuilderFactory.create();
   }
 
@@ -73,7 +76,7 @@ public class LoggedEmbedBuilder {
             firstLogEntry.film.name,
             firstLogEntry.film.releaseYear);
     embedBuilder.setTitle(title);
-    embedBuilder.setThumbnail(ImageUtils.getTallest(firstLogEntry.film.poster));
+    embedBuilder.setThumbnail(imageUtils.getTallest(firstLogEntry.film.poster));
     embedBuilder.setDescription(
         new DescriptionStringBuilder().setDescriptionText(description.toString()).build());
 

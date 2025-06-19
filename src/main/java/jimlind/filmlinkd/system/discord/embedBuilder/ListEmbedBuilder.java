@@ -15,11 +15,13 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class ListEmbedBuilder {
   private final EmbedBuilder embedBuilder;
+  private final ImageUtils imageUtils;
   private LBListSummary listSummary = null;
 
   @Inject
-  ListEmbedBuilder(EmbedBuilderFactory embedBuilderFactory) {
+  ListEmbedBuilder(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
     embedBuilder = embedBuilderFactory.create();
+    this.imageUtils = imageUtils;
   }
 
   public ListEmbedBuilder setListSummary(LBListSummary listSummary) {
@@ -34,7 +36,7 @@ public class ListEmbedBuilder {
 
     embedBuilder.setTitle(listSummary.name);
     embedBuilder.setUrl(String.format("https://boxd.it/%s", listSummary.id));
-    embedBuilder.setThumbnail(ImageUtils.getTallest(listSummary.previewEntries.get(0).film.poster));
+    embedBuilder.setThumbnail(imageUtils.getTallest(listSummary.previewEntries.get(0).film.poster));
 
     StringBuilder descriptionText =
         new StringBuilder(

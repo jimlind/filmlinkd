@@ -14,12 +14,15 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class DiaryListEmbedBuilder {
   private final EmbedBuilder embedBuilder;
+  private final ImageUtils imageUtils;
+
   private LBMember member = null;
   private List<LBLogEntry> logEntryList = new ArrayList<>();
 
   @Inject
-  public DiaryListEmbedBuilder(EmbedBuilderFactory embedBuilderFactory) {
+  public DiaryListEmbedBuilder(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
     embedBuilder = embedBuilderFactory.create();
+    this.imageUtils = imageUtils;
   }
 
   public DiaryListEmbedBuilder setMember(LBMember member) {
@@ -64,7 +67,7 @@ public class DiaryListEmbedBuilder {
             "Recent Diary Activity from %s",
             new UserStringBuilder().setUserName(member.displayName).build()));
     embedBuilder.setUrl(String.format("https://boxd.it/%s", member.id));
-    embedBuilder.setThumbnail(ImageUtils.getTallest(member.avatar));
+    embedBuilder.setThumbnail(imageUtils.getTallest(member.avatar));
 
     ArrayList<MessageEmbed> embedList = new ArrayList<>();
     embedList.add(embedBuilder.build());

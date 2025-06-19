@@ -22,11 +22,13 @@ public class FirestoreManager {
 
   private final AppConfig appConfig;
   private final Firestore db;
+  private final ImageUtils imageUtils;
   private final UserFactory userFactory;
 
   @Inject
-  FirestoreManager(AppConfig appConfig, UserFactory userFactory) {
+  FirestoreManager(AppConfig appConfig, ImageUtils imageUtils, UserFactory userFactory) {
     this.appConfig = appConfig;
+    this.imageUtils = imageUtils;
     this.userFactory = userFactory;
 
     FirestoreOptions.Builder builder =
@@ -156,7 +158,7 @@ public class FirestoreManager {
     }
 
     user.displayName = member.displayName;
-    user.image = ImageUtils.getTallest(member.avatar);
+    user.image = imageUtils.getTallest(member.avatar);
     user.userName = member.username;
 
     // Perform the update

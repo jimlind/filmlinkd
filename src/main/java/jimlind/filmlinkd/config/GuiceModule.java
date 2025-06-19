@@ -17,6 +17,9 @@ import jimlind.filmlinkd.system.discord.stringBuilder.*;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.google.SecretManager;
 import jimlind.filmlinkd.system.letterboxd.api.*;
+import jimlind.filmlinkd.system.letterboxd.utils.DateUtils;
+import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
+import jimlind.filmlinkd.system.letterboxd.utils.LinkUtils;
 import jimlind.filmlinkd.system.letterboxd.web.LetterboxdIdWeb;
 import jimlind.filmlinkd.system.letterboxd.web.MemberWeb;
 
@@ -84,5 +87,9 @@ public class GuiceModule extends AbstractModule {
     // Letterboxd Web Scraper Modules
     bind(LetterboxdIdWeb.class).in(Scopes.SINGLETON);
     bind(MemberWeb.class).in(Scopes.SINGLETON);
+    // Letterboxd Utils
+    bind(DateUtils.class).in(Scopes.SINGLETON);
+    bind(ImageUtils.class).in(Scopes.SINGLETON);
+    bind(LinkUtils.class).in(Scopes.SINGLETON);
   }
 }

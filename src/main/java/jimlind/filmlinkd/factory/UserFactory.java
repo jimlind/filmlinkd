@@ -1,12 +1,19 @@
 package jimlind.filmlinkd.factory;
 
 import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.inject.Inject;
 import java.util.ArrayList;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.letterboxd.model.LBMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 
 public class UserFactory {
+  private final ImageUtils imageUtils;
+
+  @Inject
+  public UserFactory(ImageUtils imageUtils) {
+    this.imageUtils = imageUtils;
+  }
 
   public User createFromSnapshot(QueryDocumentSnapshot snapshot) {
     try {
@@ -25,7 +32,7 @@ public class UserFactory {
       user.created = 0L; // TODO: Should this get filled?
       user.checked = 0L; // TODO: Should this get filled?
       user.displayName = member.displayName;
-      user.image = ImageUtils.getTallest(member.avatar);
+      user.image = imageUtils.getTallest(member.avatar);
       user.letterboxdId = member.id;
       user.updated = 0L; // TODO: Should this get filled?
       user.userName = member.username.toLowerCase();
