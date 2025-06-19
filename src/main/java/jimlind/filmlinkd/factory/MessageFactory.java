@@ -1,5 +1,6 @@
 package jimlind.filmlinkd.factory;
 
+import com.google.inject.Inject;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
 import jimlind.filmlinkd.system.letterboxd.utils.DateUtils;
@@ -11,6 +12,7 @@ public class MessageFactory {
   private final LinkUtils linkUtils;
   private final ImageUtils imageUtils;
 
+  @Inject
   MessageFactory(DateUtils dateUtils, LinkUtils linkUtils, ImageUtils imageUtils) {
     this.dateUtils = dateUtils;
     this.linkUtils = linkUtils;
