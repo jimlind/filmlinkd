@@ -14,7 +14,7 @@ public class SecretManager {
     try {
       this.client = SecretManagerServiceClient.create();
     } catch (Exception e) {
-      throw new RuntimeException("Failed to create SecretManagerServiceClient", e);
+      throw new IllegalStateException("Failed to create SecretManagerServiceClient", e);
     }
   }
 

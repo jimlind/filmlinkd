@@ -30,11 +30,12 @@ public class AppConfig {
 
     try (InputStream input = AppConfig.class.getClassLoader().getResourceAsStream(resource)) {
       if (input == null) {
-        throw new RuntimeException("Empty properties file found");
+        throw new IllegalArgumentException("Empty properties file found");
       }
       properties.load(input);
     } catch (IOException e) {
-      throw new RuntimeException("Error while loading properties file", e);
+      // Because this might only happen on initialization throw an argument exception
+      throw new IllegalArgumentException("Error while loading properties file", e);
     }
 
     firestoreCollectionId = properties.getProperty(AppConstants.PROP_KEY_FIRESTORE_COLLECTION_ID);

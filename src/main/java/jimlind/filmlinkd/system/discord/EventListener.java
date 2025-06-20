@@ -24,7 +24,7 @@ public class EventListener extends ListenerAdapter {
 
     ShardManager manager = jda.getShardManager();
     if (manager == null) {
-      throw new RuntimeException("Problem Getting ShardManager");
+      throw new IllegalStateException("Problem Getting ShardManager");
     }
 
     log.info("Discord Client Logged In on {} Servers", jda.getGuildCache().size());
