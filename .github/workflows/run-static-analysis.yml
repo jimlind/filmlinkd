@@ -24,7 +24,7 @@ jobs:
           java-version: '21'
 
       - name: Run PMD via Maven
-        run: mvn pmd:pmd
+        run: mvn pmd:pmd pmd:check
 
       - name: Upload PMD Report
         if: always()
