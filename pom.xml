@@ -218,6 +218,8 @@
                         <ruleset>category/java/errorprone.xml</ruleset>
                         <ruleset>category/java/performance.xml</ruleset>
                     </rulesets>
+                    <failOnViolation>true</failOnViolation>
+                    <failurePriority>2</failurePriority>
                     <linkXref>false</linkXref>
                     <outputDirectory>${project.build.directory}/site</outputDirectory>
                     <reports>
