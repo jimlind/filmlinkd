@@ -1,4 +1,4 @@
-name: Run JUnit Test
+name: JUnit Tests
 permissions:
   contents: read
 
