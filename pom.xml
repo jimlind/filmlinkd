@@ -218,6 +218,11 @@
                         <ruleset>category/java/errorprone.xml</ruleset>
                         <ruleset>category/java/performance.xml</ruleset>
                     </rulesets>
+                    <linkXref>false</linkXref>
+                    <outputDirectory>${project.build.directory}/site</outputDirectory>
+                    <reports>
+                        <report>html</report>
+                    </reports>
                 </configuration>
             </plugin>
         </plugins>
