@@ -1,4 +1,6 @@
 name: Run Maven Release
+permissions:
+  contents: write
 
 on:
   push:
