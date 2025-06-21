@@ -1,8 +1,12 @@
 name: Lint Check with Checkstyle
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 permissions:
   contents: read
