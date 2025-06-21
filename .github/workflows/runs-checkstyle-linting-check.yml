@@ -1,4 +1,4 @@
-name: Lint Check with Checkstyle
+name: Checkstyle Lint Check
 
 on:
   push:
