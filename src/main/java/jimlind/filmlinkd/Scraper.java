@@ -11,8 +11,10 @@ public class Scraper {
   public static void main(String[] args) {
     log.info("Java Scraper");
 
-    Injector injector = Guice.createInjector(new GuiceModule());
-    String apiKey = injector.getInstance(AppConfig.class).getDiscordBotToken();
-    log.info("Client Id: " + apiKey);
+    if (log.isInfoEnabled()) {
+      Injector injector = Guice.createInjector(new GuiceModule());
+      String apiKey = injector.getInstance(AppConfig.class).getDiscordBotToken();
+      log.info("Client Id: " + apiKey);
+    }
   }
 }

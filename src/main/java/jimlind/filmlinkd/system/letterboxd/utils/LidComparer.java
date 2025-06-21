@@ -36,14 +36,15 @@ public class LidComparer {
   public static ArrayList<String> buildMostRecentList(
       ArrayList<String> list, String diaryLid, int count) {
     list.add(diaryLid);
-    list = new ArrayList<String>(new HashSet<String>(list)); // Remove duplicates
-    list.sort(LidComparer::compare);
-    count = max(0, count);
+    ArrayList<String> uniqueList =
+        new ArrayList<String>(new HashSet<String>(list)); // Remove duplicates
+    uniqueList.sort(LidComparer::compare);
+    int positiveCount = max(0, count);
 
-    int fromIndex = max(0, list.size() - count);
-    int toIndex = list.size();
+    int fromIndex = max(0, uniqueList.size() - positiveCount);
+    int toIndex = uniqueList.size();
 
-    return new ArrayList<String>(list.subList(fromIndex, toIndex));
+    return new ArrayList<String>(uniqueList.subList(fromIndex, toIndex));
   }
 
   /**
