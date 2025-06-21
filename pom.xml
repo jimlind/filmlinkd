@@ -127,6 +127,12 @@
             <version>5.18.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>10.25.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -220,12 +226,37 @@
                     </rulesets>
                     <failOnViolation>true</failOnViolation>
                     <failurePriority>2</failurePriority>
-                    <linkXref>false</linkXref>
                     <outputDirectory>${project.build.directory}/site</outputDirectory>
-                    <reports>
-                        <report>html</report>
-                    </reports>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>2.44.5</version>
+                <configuration>
+                    <java>
+                        <googleJavaFormat>
+                            <version>1.27.0</version>
+                        </googleJavaFormat>
+                    </java>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <configLocation>config/checkstyle/google_checks.xml</configLocation>
+                    <failsOnError>true</failsOnError>
+                    <consoleOutput>true</consoleOutput>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>10.25.0</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
