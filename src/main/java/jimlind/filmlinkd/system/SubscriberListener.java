@@ -8,8 +8,10 @@ public class SubscriberListener extends Subscriber.Listener {
 
   @Override
   public void failed(Subscriber.State from, Throwable failure) {
-    log.info("The Pub/Sub subscriber has encountered a fatal error and is shutting down.");
-    log.info(failure.toString());
+    if (log.isInfoEnabled()) {
+      log.info("The Pub/Sub subscriber has encountered a fatal error and is shutting down.");
+      log.info(failure.toString());
+    }
     System.exit(-1);
   }
 

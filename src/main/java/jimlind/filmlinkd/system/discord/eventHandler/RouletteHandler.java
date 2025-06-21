@@ -52,7 +52,7 @@ public class RouletteHandler implements Handler {
     if (location.contains("/film/")) {
       return location.substring(location.lastIndexOf("/film/") + 6, location.lastIndexOf("/"));
     } else {
-      return findAFilm(filmId.substring(0, filmId.length() - 1), ++count);
+      return findAFilm(filmId.substring(0, filmId.length() - 1), count + 1);
     }
   }
 

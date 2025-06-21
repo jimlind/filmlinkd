@@ -27,7 +27,9 @@ public class EventListener extends ListenerAdapter {
       throw new IllegalStateException("Problem Getting ShardManager");
     }
 
-    log.info("Discord Client Logged In on {} Servers", jda.getGuildCache().size());
+    if (log.isInfoEnabled()) {
+      log.info("Discord Client Logged In on {} Servers", jda.getGuildCache().size());
+    }
   }
 
   @Override

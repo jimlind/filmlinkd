@@ -98,14 +98,13 @@ public class Client {
   }
 
   private String buildSignature(String method, String url) {
-    method = method.toUpperCase();
     String shared = appConfig.getLetterboxdApiShared();
     SecretKeySpec secretKeySpec = new SecretKeySpec(shared.getBytes(), "HmacSHA256");
 
     try {
       Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
       sha256_HMAC.init(secretKeySpec);
-      String data = method + "\u0000" + url + "\u0000"; // "�"
+      String data = method.toUpperCase() + "\u0000" + url + "\u0000"; // "�"
       return bytesToHex(sha256_HMAC.doFinal(data.getBytes()));
     } catch (Exception e) {
       return "";

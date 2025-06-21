@@ -13,6 +13,6 @@ public class Admin {
 
     Injector injector = Guice.createInjector(new GuiceModule());
     String apiKey = injector.getInstance(AppConfig.class).getDiscordBotToken();
-    System.out.println("Client Id: " + apiKey);
+    log.info("Client Id: " + apiKey);
   }
 }
