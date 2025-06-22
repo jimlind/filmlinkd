@@ -1,6 +1,10 @@
 package jimlind.filmlinkd.system.discord;
 
 import com.google.inject.Inject;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import jimlind.filmlinkd.factory.ScrapedResultCheckerFactory;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -11,16 +15,20 @@ import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 public class EventListener extends ListenerAdapter {
+  private final ScrapedResultCheckerFactory scrapedResultCheckerFactory;
   private final SlashCommandManager slashCommandManager;
 
   @Inject
-  EventListener(SlashCommandManager slashCommandManager) {
+  EventListener(
+      ScrapedResultCheckerFactory scrapedResultCheckerFactory,
+      SlashCommandManager slashCommandManager) {
+    this.scrapedResultCheckerFactory = scrapedResultCheckerFactory;
     this.slashCommandManager = slashCommandManager;
   }
 
   @Override
-  public void onReady(ReadyEvent e) {
-    JDA jda = e.getJDA();
+  public void onReady(ReadyEvent readyEvent) {
+    JDA jda = readyEvent.getJDA();
 
     ShardManager manager = jda.getShardManager();
     if (manager == null) {
@@ -30,6 +38,14 @@ public class EventListener extends ListenerAdapter {
     if (log.isInfoEnabled()) {
       log.info("Discord Client Logged In on {} Servers", jda.getGuildCache().size());
     }
+
+    int shardId = jda.getShardInfo().getShardId();
+    ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    scheduler.scheduleAtFixedRate(
+        scrapedResultCheckerFactory.create(shardId, manager.getShardsTotal()),
+        0,
+        1,
+        TimeUnit.SECONDS);
   }
 
   @Override
