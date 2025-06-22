@@ -54,6 +54,7 @@ public class GuiceModule extends AbstractModule {
     bind(FollowingEmbedBuilder.class).in(Scopes.NO_SCOPE);
     bind(ListEmbedBuilder.class).in(Scopes.NO_SCOPE);
     bind(LoggedEmbedBuilder.class).in(Scopes.NO_SCOPE);
+    bind(RefreshEmbedBuilder.class).in(Scopes.NO_SCOPE);
     bind(UnfollowEmbedBuilder.class).in(Scopes.NO_SCOPE);
     bind(UserEmbedBuilder.class).in(Scopes.NO_SCOPE);
 
