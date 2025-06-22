@@ -87,7 +87,7 @@ public class FollowHandler implements Handler {
 
     List<LBLogEntry> logEntryList = this.logEntriesAPI.getRecentForUser(member.id, 1);
     if (logEntryList.size() == 1) {
-      LBLogEntry logEntry = logEntryList.get(0);
+      LBLogEntry logEntry = logEntryList.getFirst();
 
       Command command = commandFactory.create(Command.Type.FOLLOW, logEntry.owner.id, logEntry.id);
       this.pubSubManager.publishCommand(command);
@@ -100,9 +100,9 @@ public class FollowHandler implements Handler {
         message.channelId = channelId;
       }
       this.pubSubManager.publishLogEntry(message);
-
-      ArrayList<MessageEmbed> messageEmbedList = followEmbedBuilder.setMember(member).build();
-      event.getHook().sendMessageEmbeds(messageEmbedList).queue();
     }
+
+    ArrayList<MessageEmbed> messageEmbedList = followEmbedBuilder.setMember(member).build();
+    event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }
