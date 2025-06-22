@@ -35,6 +35,10 @@ public class UnfollowEmbedBuilder {
   }
 
   public ArrayList<MessageEmbed> build() {
+    if (member == null) {
+      return new ArrayList<>();
+    }
+
     String userName = userStringBuilder.setUserName(member.username).build();
     String description =
         String.format(
