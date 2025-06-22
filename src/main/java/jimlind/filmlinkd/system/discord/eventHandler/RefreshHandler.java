@@ -1,29 +1,34 @@
 package jimlind.filmlinkd.system.discord.eventHandler;
-/*
+
+import com.google.inject.Inject;
 import java.util.ArrayList;
-import jimlind.filmlinkd.factory.messageEmbed.RefreshEmbedFactory;
+import jimlind.filmlinkd.system.discord.embedBuilder.RefreshEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.letterboxd.model.LBMember;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class RefreshHandler implements Handler {
-  @Autowired private AccountHelper accountHelper;
-  @Autowired private FirestoreManager firestoreManager;
-  @Autowired private RefreshEmbedFactory refreshEmbedFactory;
+  private final AccountHelper accountHelper;
+  private final FirestoreManager firestoreManager;
+  private final RefreshEmbedBuilder refreshEmbedBuilder;
 
-  public String getEventName() {
-    return "refresh";
+  @Inject
+  RefreshHandler(
+      AccountHelper accountHelper,
+      FirestoreManager firestoreManager,
+      RefreshEmbedBuilder refreshEmbedBuilder) {
+    this.accountHelper = accountHelper;
+    this.firestoreManager = firestoreManager;
+    this.refreshEmbedBuilder = refreshEmbedBuilder;
   }
 
+  @Override
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
 
-    LBMember member = this.accountHelper.getMember(event);
+    LBMember member = accountHelper.getMember(event);
     if (member == null) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;
@@ -34,8 +39,7 @@ public class RefreshHandler implements Handler {
       return;
     }
 
-    ArrayList<MessageEmbed> messageEmbedList = this.refreshEmbedFactory.create(member);
+    ArrayList<MessageEmbed> messageEmbedList = refreshEmbedBuilder.setMember(member).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }
-*/
