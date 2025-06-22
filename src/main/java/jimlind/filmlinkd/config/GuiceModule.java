@@ -67,6 +67,7 @@ public class GuiceModule extends AbstractModule {
     bind(HelpHandler.class).in(Scopes.SINGLETON);
     bind(ListHandler.class).in(Scopes.SINGLETON);
     bind(LoggedHandler.class).in(Scopes.SINGLETON);
+    bind(RefreshHandler.class).in(Scopes.SINGLETON);
     bind(RouletteHandler.class).in(Scopes.SINGLETON);
     bind(UnfollowHandler.class).in(Scopes.SINGLETON);
     bind(UserHandler.class).in(Scopes.SINGLETON);
