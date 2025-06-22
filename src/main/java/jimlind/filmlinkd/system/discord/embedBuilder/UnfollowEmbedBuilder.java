@@ -1,7 +1,6 @@
 package jimlind.filmlinkd.system.discord.embedBuilder;
 
 import com.google.inject.Inject;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringBuilder.DescriptionStringBuilder;
@@ -35,7 +34,7 @@ public class UnfollowEmbedBuilder {
     return this;
   }
 
-  public AbstractList<MessageEmbed> build() {
+  public ArrayList<MessageEmbed> build() {
     String userName = userStringBuilder.setUserName(member.username).build();
     String description =
         String.format(
