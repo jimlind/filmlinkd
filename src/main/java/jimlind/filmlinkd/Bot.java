@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import jimlind.filmlinkd.config.GuiceModule;
 import jimlind.filmlinkd.system.DiscordSystem;
 import jimlind.filmlinkd.system.ShutdownThread;
+import jimlind.filmlinkd.system.google.PubSubManager;
 
 public class Bot {
   public static void main(String[] args) {
@@ -12,6 +13,9 @@ public class Bot {
 
     // Start the Discord server
     injector.getInstance(DiscordSystem.class).start();
+
+    // Start the Subscribers and build the Publishers
+    injector.getInstance(PubSubManager.class).activate();
 
     // Register shutdown events
     Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownThread.class));
