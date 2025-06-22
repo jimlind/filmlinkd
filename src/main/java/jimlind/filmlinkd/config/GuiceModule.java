@@ -45,29 +45,34 @@ public class GuiceModule extends AbstractModule {
     bind(ConnectionManager.class).in(Scopes.SINGLETON);
     bind(EventListener.class).in(Scopes.SINGLETON);
     bind(SlashCommandManager.class).in(Scopes.SINGLETON);
-    // Discord Helper Modules
-    bind(AccountHelper.class).in(Scopes.SINGLETON);
-    bind(ChannelHelper.class).in(Scopes.SINGLETON);
 
     // Discord Embed Builders
     bind(ContributorEmbedBuilder.class).in(Scopes.NO_SCOPE);
     bind(DiaryListEmbedBuilder.class).in(Scopes.NO_SCOPE);
     bind(FilmEmbedBuilder.class).in(Scopes.NO_SCOPE);
+    bind(FollowEmbedBuilder.class).in(Scopes.NO_SCOPE);
     bind(FollowingEmbedBuilder.class).in(Scopes.NO_SCOPE);
     bind(ListEmbedBuilder.class).in(Scopes.NO_SCOPE);
     bind(LoggedEmbedBuilder.class).in(Scopes.NO_SCOPE);
+    bind(UnfollowEmbedBuilder.class).in(Scopes.NO_SCOPE);
     bind(UserEmbedBuilder.class).in(Scopes.NO_SCOPE);
 
     // Discord Event Handlers
     bind(ContributorHandler.class).in(Scopes.SINGLETON);
     bind(DiaryHandler.class).in(Scopes.SINGLETON);
     bind(FilmHandler.class).in(Scopes.SINGLETON);
+    bind(FollowHandler.class).in(Scopes.SINGLETON);
     bind(FollowingHandler.class).in(Scopes.SINGLETON);
     bind(HelpHandler.class).in(Scopes.SINGLETON);
     bind(ListHandler.class).in(Scopes.SINGLETON);
     bind(LoggedHandler.class).in(Scopes.SINGLETON);
     bind(RouletteHandler.class).in(Scopes.SINGLETON);
+    bind(UnfollowHandler.class).in(Scopes.SINGLETON);
     bind(UserHandler.class).in(Scopes.SINGLETON);
+
+    // Discord Helper Modules
+    bind(AccountHelper.class).in(Scopes.SINGLETON);
+    bind(ChannelHelper.class).in(Scopes.SINGLETON);
 
     // Discord Embed String Builders
     bind(CountStringBuilder.class).in(Scopes.NO_SCOPE);

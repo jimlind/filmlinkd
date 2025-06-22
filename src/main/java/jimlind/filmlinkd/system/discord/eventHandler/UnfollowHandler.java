@@ -1,48 +1,55 @@
 package jimlind.filmlinkd.system.discord.eventHandler;
-/*
+
+import com.google.inject.Inject;
 import java.util.ArrayList;
-import jimlind.filmlinkd.factory.messageEmbed.UnfollowEmbedFactory;
+import jimlind.filmlinkd.system.discord.embedBuilder.UnfollowEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.letterboxd.model.LBMember;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class UnfollowHandler implements Handler {
-  @Autowired private AccountHelper accountHelper;
-  @Autowired private FirestoreManager firestoreManager;
-  @Autowired private UnfollowEmbedFactory unfollowEmbedFactory;
+  private final AccountHelper accountHelper;
+  private final ChannelHelper channelHelper;
+  private final FirestoreManager firestoreManager;
+  private final UnfollowEmbedBuilder unfollowEmbedBuilder;
 
-  public String getEventName() {
-    return "unfollow";
+  @Inject
+  UnfollowHandler(
+      AccountHelper accountHelper,
+      ChannelHelper channelHelper,
+      FirestoreManager firestoreManager,
+      UnfollowEmbedBuilder unfollowEmbedBuilder) {
+    this.accountHelper = accountHelper;
+    this.channelHelper = channelHelper;
+    this.firestoreManager = firestoreManager;
+    this.unfollowEmbedBuilder = unfollowEmbedBuilder;
   }
 
+  @Override
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
 
-    LBMember member = this.accountHelper.getMember(event);
+    LBMember member = accountHelper.getMember(event);
     if (member == null) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;
     }
 
-    String channelId = ChannelHelper.getChannelId(event);
+    String channelId = channelHelper.getChannelId(event);
     if (channelId.isBlank()) {
       event.getHook().sendMessage(NO_CHANNEL_FOUND).queue();
       return;
     }
 
-    if (!this.firestoreManager.removeUserSubscription(member.id, channelId)) {
+    if (!firestoreManager.removeUserSubscription(member.id, channelId)) {
       event.getHook().sendMessage("Unfollow Failed").queue();
       return;
     }
 
-    ArrayList<MessageEmbed> messageEmbedList = this.unfollowEmbedFactory.create(member);
+    ArrayList<MessageEmbed> messageEmbedList = unfollowEmbedBuilder.setMember(member).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }
-*/
