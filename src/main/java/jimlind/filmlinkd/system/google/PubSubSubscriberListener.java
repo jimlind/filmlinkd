@@ -1,10 +1,10 @@
-package jimlind.filmlinkd.system;
+package jimlind.filmlinkd.system.google;
 
 import com.google.cloud.pubsub.v1.Subscriber;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class SubscriberListener extends Subscriber.Listener {
+public class PubSubSubscriberListener extends Subscriber.Listener {
 
   @Override
   public void failed(Subscriber.State from, Throwable failure) {

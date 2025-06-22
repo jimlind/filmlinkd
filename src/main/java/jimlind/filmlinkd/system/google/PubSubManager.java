@@ -14,7 +14,6 @@ import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.model.Command;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.system.MessageReceiver;
-import jimlind.filmlinkd.system.SubscriberListener;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,7 +26,7 @@ public class PubSubManager {
 
   private final AppConfig appConfig;
   private final MessageReceiver messageReceiver;
-  private final SubscriberListener subscriberListener;
+  private final PubSubSubscriberListener pubSubSubscriberListener;
 
   @Nullable private Publisher logEntryPublisher;
   @Nullable private Publisher commandPublisher;
@@ -36,10 +35,12 @@ public class PubSubManager {
 
   @Inject
   PubSubManager(
-      AppConfig appConfig, MessageReceiver messageReceiver, SubscriberListener subscriberListener) {
+      AppConfig appConfig,
+      MessageReceiver messageReceiver,
+      PubSubSubscriberListener pubSubSubscriberListener) {
     this.appConfig = appConfig;
     this.messageReceiver = messageReceiver;
-    this.subscriberListener = subscriberListener;
+    this.pubSubSubscriberListener = pubSubSubscriberListener;
   }
 
   public void activate() {
@@ -153,7 +154,7 @@ public class PubSubManager {
     // will have to be rebuilt.
     Subscriber subscriber =
         Subscriber.newBuilder(subscriptionName.toString(), messageReceiver).build();
-    subscriber.addListener(subscriberListener, MoreExecutors.directExecutor());
+    subscriber.addListener(pubSubSubscriberListener, MoreExecutors.directExecutor());
 
     subscriber.startAsync().awaitRunning();
     log.info("Starting Listening for Messages on {}", subscriptionName);

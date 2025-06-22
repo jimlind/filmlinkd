@@ -7,7 +7,6 @@ import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.system.DiscordSystem;
 import jimlind.filmlinkd.system.EntryCache;
 import jimlind.filmlinkd.system.ShutdownThread;
-import jimlind.filmlinkd.system.SubscriberListener;
 import jimlind.filmlinkd.system.discord.ConnectionManager;
 import jimlind.filmlinkd.system.discord.EventListener;
 import jimlind.filmlinkd.system.discord.SlashCommandManager;
@@ -17,6 +16,7 @@ import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.discord.stringBuilder.*;
 import jimlind.filmlinkd.system.google.FirestoreManager;
+import jimlind.filmlinkd.system.google.PubSubSubscriberListener;
 import jimlind.filmlinkd.system.google.SecretManager;
 import jimlind.filmlinkd.system.letterboxd.api.*;
 import jimlind.filmlinkd.system.letterboxd.utils.DateUtils;
@@ -38,7 +38,7 @@ public class GuiceModule extends AbstractModule {
 
     // General System Modules
     bind(EntryCache.class).in(Scopes.SINGLETON);
-    bind(SubscriberListener.class).in(Scopes.SINGLETON);
+    bind(PubSubSubscriberListener.class).in(Scopes.SINGLETON);
 
     // Discord System Modules
     bind(DiscordSystem.class).in(Scopes.SINGLETON);
