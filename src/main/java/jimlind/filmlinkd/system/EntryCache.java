@@ -1,7 +1,9 @@
 package jimlind.filmlinkd.system;
 
 import com.github.benmanes.caffeine.cache.*;
+import com.google.inject.Singleton;
 
+@Singleton
 public class EntryCache {
   Cache<String, Boolean> cache;
 

@@ -2,12 +2,14 @@ package jimlind.filmlinkd.system;
 
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.pubsub.v1.PubsubMessage;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import jimlind.filmlinkd.factory.ScrapedResultFactory;
 import jimlind.filmlinkd.model.ScrapedResult;
 
+@Singleton
 public class MessageReceiver implements com.google.cloud.pubsub.v1.MessageReceiver {
   private final EntryCache entryCache;
   private final ScrapedResultFactory scrapedResultFactory;

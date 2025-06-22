@@ -1,10 +1,12 @@
 package jimlind.filmlinkd.system;
 
+import com.google.inject.Singleton;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import jimlind.filmlinkd.model.ScrapedResult;
 import lombok.extern.slf4j.Slf4j;
 
+@Singleton
 @Slf4j
 // Queue exists so that I can rate limit the amount of processing that happens.
 // If we let every PubSub event trigger some logic it can take over the
