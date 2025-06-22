@@ -66,7 +66,6 @@ public class HelpEmbedBuilder {
   }
 
   public ArrayList<MessageEmbed> createTestMessage(int step) {
-    EmbedBuilder embedBuilder = new EmbedBuilder();
     switch (step) {
       case 0:
         String basicMessage =

@@ -2,7 +2,6 @@ package jimlind.filmlinkd.system.discord.eventHandler;
 
 import com.google.inject.Inject;
 import java.util.ArrayList;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -49,24 +48,22 @@ public class HelpHandler implements Handler {
   }
 
   private void queueAdditionalTestMessages(MessageChannel channel) {
-    try (ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1)) {
-      TimerTask task =
-          new TimerTask() {
-            private int count = 1;
+    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-            public void run() {
-              try {
-                channel.sendMessageEmbeds(helpEmbedBuilder.createTestMessage(count)).queue();
-              } catch (Exception e) {
-                // Ignore any issues. Users will determine if things succeed.
-              }
-              if (count >= 4) {
-                scheduler.shutdown();
-              }
-              count++;
-            }
-          };
-      scheduler.scheduleAtFixedRate(task, 1, 1, TimeUnit.SECONDS);
-    }
+    final int[] count = {1};
+    Runnable task =
+        () -> {
+          try {
+            channel.sendMessageEmbeds(helpEmbedBuilder.createTestMessage(count[0])).queue();
+          } catch (Exception e) {
+            // Ignore any issues
+          }
+          if (count[0] >= 4) {
+            scheduler.shutdown();
+          }
+          count[0]++;
+        };
+
+    scheduler.scheduleAtFixedRate(task, 1, 1, TimeUnit.SECONDS);
   }
 }
