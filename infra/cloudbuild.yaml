@@ -7,17 +7,7 @@ steps:
     args:
       - "-c"
       - |
-        cd infra/stacks/disks
-        tofu init
-        tofu destroy -auto-approve
-        tofu apply -auto-approve
-
-  - name: "ghcr.io/opentofu/opentofu:latest"
-    entrypoint: "sh"
-    args:
-      - "-c"
-      - |
-        cd infra/stacks/compute
+        cd infra
         tofu init
         tofu destroy -auto-approve
         tofu apply -auto-approve

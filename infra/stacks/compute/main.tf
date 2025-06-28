@@ -29,7 +29,7 @@ resource "google_compute_instance" "instances" {
   }
 
   attached_disk {
-    source      = module.disks_module.bot_data_disk_self_link
+    source      = var.attached_bot_data_disk_self_link
     device_name = "bot-disk"
     mode        = "READ_WRITE"
   }
