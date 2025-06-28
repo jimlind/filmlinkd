@@ -16,17 +16,13 @@ resource "google_compute_instance" "instances" {
 
   boot_disk {
     auto_delete = true
-    device_name = "filmlinkd-bot"
+    source      = var.attached_bot_data_disk_self_link
+    device_name = "bot-disk"
+    mode        = "READ_WRITE"
 
     initialize_params {
       image = "cos-cloud/cos-stable"
     }
-  }
-
-  attached_disk {
-    source      = var.attached_bot_data_disk_self_link
-    device_name = "bot-disk"
-    mode        = "READ_WRITE"
   }
 
   network_interface {
