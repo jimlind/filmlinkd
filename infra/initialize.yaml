@@ -12,6 +12,7 @@ steps:
         tofu init
         tofu destroy -auto-approve
         tofu apply -auto-approve
+    allowFailure: true
 
 
   - name: "ghcr.io/opentofu/opentofu:latest"
@@ -23,3 +24,4 @@ steps:
         tofu init
         tofu destroy -auto-approve
         tofu apply -auto-approve
+    allowFailure: true
