@@ -1,0 +1,41 @@
+provider "google" {
+  project = "849234463174"
+  region  = "us-central1"
+  zone    = "us-central1-a"
+}
+
+# Call the disk module
+module "disks_module" {
+  source = "../disks"
+}
+
+resource "google_compute_instance" "instances" {
+  name         = "bot"
+  machine_type = "e2-micro"
+  zone         = "us-central1-a"
+
+  labels = {
+    container-vm = "filmlinkd-bot"
+    name         = "filmlinkd-bot"
+  }
+
+  boot_disk {
+    auto_delete = true
+    device_name = "filmlinkd-bot"
+
+    initialize_params {
+      image = "cos-cloud/cos-stable"
+    }
+  }
+
+  attached_disk {
+    source      = module.disks_module.bot_data_disk_self_link
+    device_name = "bot-disk"
+    mode        = "READ_WRITE"
+  }
+
+  network_interface {
+    network = "default"
+    access_config {}
+  }
+}
