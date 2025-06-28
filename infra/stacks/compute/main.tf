@@ -23,9 +23,15 @@ resource "google_compute_instance" "instances" {
     }
   }
 
-  # Key is required to load containers
+  # Something is required to load containers
   metadata = {
-    gce-container-declaration = ""
+    gce-container-declaration = <<-EOF
+      spec:
+        containers:
+          - name: filmlinkd
+            image: "ghcr.io/jimlind/filmlinkd:latest"
+        restartPolicy: Always
+    EOF
   }
 
   network_interface {
