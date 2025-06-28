@@ -5,3 +5,4 @@ Build individual jar files and execute
 
 Build docker image (for bot) and execute. Image is stored in Docker daemon not in build directory.
 > mvn compile jib:dockerBuild && docker run --rm filmlinkd
+

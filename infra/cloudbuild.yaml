@@ -2,6 +2,15 @@ options:
   logging: CLOUD_LOGGING_ONLY
 
 steps:
+  - name: "ghcr.io/opentofu/opentofu:latest"
+    entrypoint: "sh"
+    args:
+      - "-c"
+      - |
+        cd infra/root
+        tofu init
+        tofu destroy -auto-approve
+        tofu apply -auto-approve
 
   - name: "ghcr.io/opentofu/opentofu:latest"
     entrypoint: "sh"
