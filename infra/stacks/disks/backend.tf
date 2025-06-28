@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "my-opentofu-state"
+    bucket = "filmlinkd-state"
     prefix = "disks/state"
   }
 }
