@@ -4,11 +4,6 @@ provider "google" {
   zone    = "us-central1-a"
 }
 
-# Call the disk module
-module "disks_module" {
-  source = "../disks"
-}
-
 resource "google_compute_instance" "instances" {
   name         = "bot"
   machine_type = "e2-micro"
