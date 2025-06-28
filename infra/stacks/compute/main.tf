@@ -23,6 +23,11 @@ resource "google_compute_instance" "instances" {
     }
   }
 
+  # Key is required to load containers
+  metadata = {
+    gce-container-declaration = ""
+  }
+
   network_interface {
     network = "default"
     access_config {}
