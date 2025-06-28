@@ -23,7 +23,9 @@ resource "google_compute_instance" "instances" {
     }
   }
 
-  # Something is required to load containers
+  # Something is required to load containers.
+  # This is not an official API and subject to change at any time.
+  # We shouldn't trust it.
   metadata = {
     gce-container-declaration = <<-EOF
       spec:
@@ -32,6 +34,11 @@ resource "google_compute_instance" "instances" {
             image: "ghcr.io/jimlind/filmlinkd:latest"
         restartPolicy: Always
     EOF
+  }
+
+  service_account {
+    email = "compute-runner@filmlinkd.iam.gserviceaccount.com"
+    scopes = ["https://www.googleapis.com/auth/cloud-platform"]
   }
 
   network_interface {
