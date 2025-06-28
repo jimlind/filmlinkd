@@ -18,6 +18,10 @@ resource "google_compute_instance" "instances" {
     source = var.attached_bot_data_disk_self_link
   }
 
+  container {
+    image = "ghcr.io/jimlind/filmlinkd:latest"
+  }
+
   network_interface {
     network = "default"
     access_config {}
