@@ -14,8 +14,13 @@ resource "google_compute_instance" "instances" {
     name         = "filmlinkd-bot"
   }
 
+
   boot_disk {
-    source = var.attached_bot_data_disk_self_link
+    initialize_params {
+      image = "cos-cloud/cos-stable"
+      type  = "pd-standard"
+      size  = 20
+    }
   }
 
   container {

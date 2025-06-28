@@ -7,7 +7,7 @@ steps:
     args:
       - "-c"
       - |
-        cd infra/root
+        cd infra/stacks/compute
         tofu init
         tofu destroy -auto-approve
         tofu apply -auto-approve
