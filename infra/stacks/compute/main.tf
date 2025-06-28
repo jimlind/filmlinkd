@@ -23,12 +23,16 @@ resource "google_compute_instance" "instances" {
     }
   }
 
-  container {
-    image = "ghcr.io/jimlind/filmlinkd:latest"
-  }
-
   network_interface {
     network = "default"
     access_config {}
+  }
+
+  metadata = {
+    startup-script = <<-EOF
+      #!/bin/bash
+      sudo docker pull ghcr.io/jimlind/filmlinkd:latest
+      sudo docker run -d --name filmlinkd ghcr.io/jimlind/filmlinkd:latest
+    EOF
   }
 }
