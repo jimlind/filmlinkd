@@ -10,5 +10,6 @@ resource "google_compute_disk" "bot_data_disk" {
   zone    = "us-central1-a"
   size    = 20
   project = "filmlinkd"
+  image   = "cos-cloud/cos-stable"
 }
 
