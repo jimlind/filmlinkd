@@ -11,21 +11,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Bot {
   public static void main(String[] args) {
-    System.out.println("Starting the Application");
-    log.info("Starting the Application Info");
-    log.debug("Starting the Application Debug");
-    log.warn("Starting the Application Warn");
-    log.error("Starting the Application Error");
+    log.info("Starting the Bot With An Info Log");
 
     Injector injector = Guice.createInjector(new GuiceModule());
+
+    log.info("Injectors Created");
 
     // Start the Discord server
     injector.getInstance(DiscordSystem.class).start();
 
+    log.info("Discord System Started");
+
     // Start the Subscribers and build the Publishers
     injector.getInstance(PubSubManager.class).activate();
 
+    log.info("PubSub Manager Activated");
+
     // Register shutdown events
     Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownThread.class));
+
+    log.info("Shutdown Hook Added");
   }
 }
