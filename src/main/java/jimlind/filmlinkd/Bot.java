@@ -18,7 +18,11 @@ public class Bot {
     log.info("Injectors Created");
 
     // Start the Discord server
-    injector.getInstance(DiscordSystem.class).start();
+    try {
+      injector.getInstance(DiscordSystem.class).start();
+    } catch (Exception e) {
+      log.error("Failed To Start the Discord Server", e);
+    }
 
     log.info("Discord System Started");
 
