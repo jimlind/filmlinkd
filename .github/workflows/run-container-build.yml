@@ -33,7 +33,7 @@ jobs:
       - name: Get Git Tags
         id: tags
         run: |
-          git fetch --tags
+          git fetch --tags --force
           GIT_TAGS=$(git tag --points-at HEAD | paste -sd, -)
           TAGS="${{ github.sha }},latest"
           if [ -n "${GIT_TAGS}" ]; then
