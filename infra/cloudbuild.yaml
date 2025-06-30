@@ -20,8 +20,6 @@ steps:
       - update-container
       - bot
       - --container-image=ghcr.io/jimlind/filmlinkd:latest
-      - --zone=us-central1-a
-      - --container-env=GOOGLE_CLOUD_PROJECT=filmlinkd
 
   - name: "ghcr.io/opentofu/opentofu:latest"
     entrypoint: "sh"

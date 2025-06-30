@@ -32,9 +32,6 @@ resource "google_compute_instance" "instances" {
         containers:
           - name: filmlinkd
             image: "ghcr.io/jimlind/filmlinkd:latest"
-            env:
-              - name: GOOGLE_CLOUD_PROJECT
-                value: "filmlinkd"
         restartPolicy: Always
     EOF
   }
