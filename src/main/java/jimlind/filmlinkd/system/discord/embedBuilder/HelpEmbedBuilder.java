@@ -2,32 +2,39 @@ package jimlind.filmlinkd.system.discord.embedBuilder;
 
 import com.google.inject.Inject;
 import java.util.ArrayList;
+import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringBuilder.DescriptionStringBuilder;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class HelpEmbedBuilder {
+  private final AppConfig appConfig;
   private final DescriptionStringBuilder descriptionStringBuilder;
   private final EmbedBuilder embedBuilder;
 
   @Inject
   HelpEmbedBuilder(
-      DescriptionStringBuilder descriptionStringBuilder, EmbedBuilderFactory embedBuilderFactory) {
+      AppConfig appConfig,
+      DescriptionStringBuilder descriptionStringBuilder,
+      EmbedBuilderFactory embedBuilderFactory) {
+    this.appConfig = appConfig;
     this.descriptionStringBuilder = descriptionStringBuilder;
     this.embedBuilder = embedBuilderFactory.create();
   }
 
-  public ArrayList<MessageEmbed> create(
-      String name, String version, long userCount, long guildCount) {
-
+  public ArrayList<MessageEmbed> create(long userCount, long guildCount) {
     // Set title
     embedBuilder.setTitle("(Help!) I Need Somebody", "https://jimlind.github.io/filmlinkd/");
 
     // Set description
     String descriptionText =
         String.format(
-            "%s v%s\nTracking %s users on %s servers", name, version, userCount, guildCount);
+            "%s v%s\nTracking %s users on %s servers",
+            appConfig.getApplicationName(),
+            appConfig.getApplicationVersion(),
+            userCount,
+            guildCount);
     embedBuilder.setDescription(
         descriptionStringBuilder.setDescriptionText(descriptionText).build());
 

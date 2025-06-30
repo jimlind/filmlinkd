@@ -34,15 +34,12 @@ public class HelpHandler implements Handler {
       return;
     }
 
-    String name = getClass().getPackage().getImplementationTitle();
-    String version = getClass().getPackage().getImplementationVersion();
     long userCount = firestoreManager.getUserCount();
     long guildCount =
         event.getJDA().getShardManager() != null
             ? event.getJDA().getShardManager().getGuildCache().size()
             : event.getJDA().getGuildCache().size();
-    ArrayList<MessageEmbed> messageEmbedList =
-        helpEmbedBuilder.create(name, version, userCount, guildCount);
+    ArrayList<MessageEmbed> messageEmbedList = helpEmbedBuilder.create(userCount, guildCount);
 
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
