@@ -33,7 +33,8 @@ public class FirestoreManager {
 
     FirestoreOptions.Builder builder =
         FirestoreOptions.getDefaultInstance().toBuilder()
-            .setProjectId(appConfig.getGoogleProjectId());
+            .setProjectId(appConfig.getGoogleProjectId())
+            .setDatabaseId(this.appConfig.getFirestoreDatabaseId());
     FirestoreOptions firestoreOptions = builder.build();
 
     this.db = firestoreOptions.getService();

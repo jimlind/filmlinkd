@@ -11,13 +11,11 @@ import org.jetbrains.annotations.Nullable;
 
 @Singleton
 public class AppConfig {
-  private static final Properties appProperties = new Properties();
-  private static final Properties envProperties = new Properties();
-
   @Getter private final String applicationName;
   @Getter private final String applicationVersion;
-
+  @Getter private final String discordApplicationId;
   @Getter private final String discordBotToken;
+  @Getter private final String firestoreDatabaseId;
   @Getter private final String firestoreCollectionId;
   @Getter private final String googleProjectId;
   @Getter private final String letterboxdApiKey;
@@ -29,34 +27,33 @@ public class AppConfig {
 
   @Inject
   AppConfig(SecretManager secretManager) {
+    // Process application properties resource
+    Properties appProperties = loadPropertiesFromResource("application.properties");
+
+    // Load application properties directly
+    applicationName = appProperties.getProperty(AppConstants.PROP_KEY_APPLICATION_NAME);
+    applicationVersion = appProperties.getProperty(AppConstants.PROP_KEY_APPLICATION_VERSION);
+    firestoreDatabaseId = appProperties.getProperty(AppConstants.PROP_KEY_FIRESTORE_DATABASE_ID);
+    googleProjectId = appProperties.getProperty(AppConstants.PROP_KEY_GOOGLE_PROJECT_ID);
+
+    // Load Secrets via names in application properties
+    String letterboxdKeyName =
+        appProperties.getProperty(AppConstants.PROP_KEY_LETTERBOXD_API_KEY_SECRET_NAME);
+    String letterboxdSharedName =
+        appProperties.getProperty(AppConstants.PROP_KEY_LETTERBOXD_API_SHARED_SECRET_NAME);
+    letterboxdApiKey = secretManager.getSecret(googleProjectId, letterboxdKeyName);
+    letterboxdApiShared = secretManager.getSecret(googleProjectId, letterboxdSharedName);
+
+    // Process environment properties resource
     @Nullable String environment = System.getenv("FILMLINKD_ENVIRONMENT");
     String env = environment == null ? "dev" : environment.equals("PRODUCTION") ? "prod" : "dev";
     String envResource = String.format("%s/environment.properties", env);
+    Properties envProperties = loadPropertiesFromResource(envResource);
 
-    try (InputStream input = AppConfig.class.getClassLoader().getResourceAsStream(envResource)) {
-      if (input == null) {
-        throw new IllegalArgumentException("Empty environment properties file found");
-      }
-      envProperties.load(input);
-    } catch (IOException e) {
-      // Because this might only happen on initialization throw an argument exception
-      throw new IllegalArgumentException("Error while loading environment properties file", e);
-    }
-
-    try (InputStream input =
-        AppConfig.class.getClassLoader().getResourceAsStream("application.properties")) {
-      if (input == null) {
-        throw new IllegalArgumentException("Empty application properties file found");
-      }
-      appProperties.load(input);
-    } catch (IOException e) {
-      // Because this might only happen on initialization throw an argument exception
-      throw new IllegalArgumentException("Error while loading application properties file", e);
-    }
-
+    // Load environment properties directly
+    discordApplicationId = envProperties.getProperty(AppConstants.PROP_KEY_DISCORD_APPLICATION_ID);
     firestoreCollectionId =
         envProperties.getProperty(AppConstants.PROP_KEY_FIRESTORE_COLLECTION_ID);
-    googleProjectId = envProperties.getProperty(AppConstants.PROP_KEY_GOOGLE_PROJECT_ID);
     pubSubCommandSubscriptionName =
         envProperties.getProperty(AppConstants.PROP_KEY_COMMAND_SUBSCRIPTION_NAME);
     pubSubCommandTopicName = envProperties.getProperty(AppConstants.PROP_KEY_COMMAND_TOPIC_NAME);
@@ -64,22 +61,25 @@ public class AppConfig {
         envProperties.getProperty(AppConstants.PROP_KEY_LOG_ENTRY_SUBSCRIPTION_NAME);
     pubSubLogEntryTopicName = envProperties.getProperty(AppConstants.PROP_KEY_LOG_ENTRY_TOPIC_NAME);
 
+    // Load Secrets via names in environment properties
     discordBotToken =
         secretManager.getSecret(
             googleProjectId,
             envProperties.getProperty(AppConstants.PROP_KEY_DISCORD_BOT_TOKEN_SECRET_NAME));
+  }
 
-    letterboxdApiKey =
-        secretManager.getSecret(
-            googleProjectId,
-            envProperties.getProperty(AppConstants.PROP_KEY_LETTERBOXD_API_KEY_SECRET_NAME));
+  private Properties loadPropertiesFromResource(String resourcePath) {
+    Properties properties = new Properties();
 
-    letterboxdApiShared =
-        secretManager.getSecret(
-            googleProjectId,
-            envProperties.getProperty(AppConstants.PROP_KEY_LETTERBOXD_API_SHARED_SECRET_NAME));
+    try (InputStream input = AppConfig.class.getClassLoader().getResourceAsStream(resourcePath)) {
+      if (input == null) {
+        throw new IllegalArgumentException(String.format("Empty %s found", resourcePath));
+      }
+      properties.load(input);
+    } catch (IOException e) {
+      throw new IllegalArgumentException(String.format("Error while loading %s", resourcePath), e);
+    }
 
-    applicationName = appProperties.getProperty("app.name");
-    applicationVersion = appProperties.getProperty("app.version");
+    return properties;
   }
 }
