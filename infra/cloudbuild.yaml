@@ -33,6 +33,16 @@ steps:
         tofu apply -auto-approve
     allowFailure: true
 
+  - name: "ghcr.io/opentofu/opentofu:latest"
+    entrypoint: "sh"
+    args:
+      - "-c"
+      - |
+        cd infra/stacks/pubsub
+        tofu init
+        tofu destroy -auto-approve
+        tofu apply -auto-approve
+    allowFailure: true
 
   - name: "ghcr.io/opentofu/opentofu:latest"
     entrypoint: "sh"
