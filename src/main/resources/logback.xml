@@ -1,7 +1,6 @@
 <configuration>
     <appender name="CLOUD" class="com.google.cloud.logging.logback.LoggingAppender">
         <loggingEventEnhancer>jimlind.filmlinkd.system.google.LoggingEnhancer</loggingEventEnhancer>
-        <projectId>filmlinkd</projectId>
     </appender>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
