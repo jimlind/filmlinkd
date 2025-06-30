@@ -20,6 +20,7 @@ steps:
       - update-container
       - bot
       - --container-image=ghcr.io/jimlind/filmlinkd:latest
+      - --zone=us-central1-a
 
   - name: "ghcr.io/opentofu/opentofu:latest"
     entrypoint: "sh"
