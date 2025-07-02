@@ -7,7 +7,7 @@ steps:
     args:
       - "-c"
       - |
-        cd infra/stacks/compute
+        cd infra/compute
         tofu init
         tofu destroy -auto-approve
         tofu apply -auto-approve
@@ -27,30 +27,7 @@ steps:
     args:
       - "-c"
       - |
-        cd infra/stacks/firestore
+        cd infra/data
         tofu init
-        tofu destroy -auto-approve
-        tofu apply -auto-approve
-    allowFailure: true
-
-  - name: "ghcr.io/opentofu/opentofu:latest"
-    entrypoint: "sh"
-    args:
-      - "-c"
-      - |
-        cd infra/stacks/pubsub
-        tofu init
-        tofu destroy -auto-approve
-        tofu apply -auto-approve
-    allowFailure: true
-
-  - name: "ghcr.io/opentofu/opentofu:latest"
-    entrypoint: "sh"
-    args:
-      - "-c"
-      - |
-        cd infra/stacks/secret-manager
-        tofu init
-        tofu destroy -auto-approve
         tofu apply -auto-approve
     allowFailure: true

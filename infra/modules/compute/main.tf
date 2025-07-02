@@ -25,7 +25,7 @@ resource "google_compute_instance" "instances" {
 
   # Something is required to load containers.
   # This is not an official API and subject to change at any time.
-  # We shouldn't trust it.
+  # We shouldn't trust it, so the cloudbuild job repeats the process.
   metadata = {
     gce-container-declaration = <<-EOF
       spec:
@@ -42,7 +42,6 @@ resource "google_compute_instance" "instances" {
   }
 
   network_interface {
-    network = "default"
-    access_config {}
+    network = var.subnet_self_link
   }
 }
