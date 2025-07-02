@@ -42,6 +42,6 @@ resource "google_compute_instance" "instances" {
   }
 
   network_interface {
-    network = var.subnet_self_link
+    subnetwork = var.subnet_self_link
   }
 }
