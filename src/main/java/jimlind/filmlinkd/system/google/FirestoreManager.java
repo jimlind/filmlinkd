@@ -5,6 +5,7 @@ import com.google.cloud.firestore.*;
 import com.google.inject.Inject;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -70,6 +71,20 @@ public class FirestoreManager {
       return query.get().getCount();
     } catch (Exception e) {
       return 0;
+    }
+  }
+
+  public List<QueryDocumentSnapshot> getActiveUsers() {
+    String collectionId = appConfig.getFirestoreCollectionId();
+    ApiFuture<QuerySnapshot> query =
+        this.db
+            .collection(collectionId)
+            .whereNotEqualTo("channelList", Collections.emptyList())
+            .get();
+    try {
+      return query.get().getDocuments();
+    } catch (Exception e) {
+      return Collections.emptyList();
     }
   }
 
