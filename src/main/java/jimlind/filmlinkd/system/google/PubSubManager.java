@@ -44,16 +44,24 @@ public class PubSubManager {
   }
 
   public void activate() {
-    commandPublisher =
-        buildPublisher(appConfig.getGoogleProjectId(), appConfig.getPubSubCommandTopicName());
-    logEntryPublisher =
-        buildPublisher(appConfig.getGoogleProjectId(), appConfig.getPubSubLogEntryTopicName());
+    buildCommandPublisher();
+    buildLogEntryPublisher();
 
     logEntrySubscriber =
         buildSubscriber(
             appConfig.getGoogleProjectId(),
             appConfig.getPubSubLogEntrySubscriptionName(),
             appConfig.getPubSubLogEntryTopicName());
+  }
+
+  public void buildCommandPublisher() {
+    commandPublisher =
+        buildPublisher(appConfig.getGoogleProjectId(), appConfig.getPubSubCommandTopicName());
+  }
+
+  public void buildLogEntryPublisher() {
+    logEntryPublisher =
+        buildPublisher(appConfig.getGoogleProjectId(), appConfig.getPubSubLogEntryTopicName());
   }
 
   public void deactivate() {
@@ -81,14 +89,14 @@ public class PubSubManager {
   }
 
   public void publishCommand(Command command) {
-    if (this.commandPublisher == null) {
+    if (commandPublisher == null) {
       return;
     }
 
     ByteString data = ByteString.copyFromUtf8(command.toJson());
     PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
     try {
-      this.commandPublisher.publish(pubsubMessage).get();
+      commandPublisher.publish(pubsubMessage).get();
     } catch (Exception e) {
       log.atWarn()
           .setMessage("Unable to Publish command")
@@ -99,14 +107,14 @@ public class PubSubManager {
   }
 
   public void publishLogEntry(Message logEntry) {
-    if (this.logEntryPublisher == null) {
+    if (logEntryPublisher == null) {
       return;
     }
 
     ByteString data = ByteString.copyFromUtf8(logEntry.toJson());
     PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
     try {
-      this.logEntryPublisher.publish(pubsubMessage).get();
+      logEntryPublisher.publish(pubsubMessage).get();
     } catch (Exception e) {
       log.atWarn()
           .setMessage("Unable to Publish logEntry")
