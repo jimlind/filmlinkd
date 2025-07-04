@@ -31,7 +31,7 @@ resource "google_compute_instance" "instances" {
       spec:
         containers:
           - name: filmlinkd
-            image: "ghcr.io/jimlind/filmlinkd:latest"
+            image: "ghcr.io/jimlind/filmlinkd/bot-image:latest"
         restartPolicy: Always
     EOF
   }

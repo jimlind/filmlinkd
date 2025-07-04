@@ -19,7 +19,7 @@ steps:
       - instances
       - update-container
       - bot
-      - --container-image=ghcr.io/jimlind/filmlinkd:latest
+      - --container-image=ghcr.io/jimlind/filmlinkd/bot-image:latest
       - --zone=us-central1-a
 
   - name: "ghcr.io/opentofu/opentofu:latest"
