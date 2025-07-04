@@ -11,11 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Bot {
   public static void main(String[] args) {
-    log.info("Starting the Bot With An Info Log");
+    log.info("Starting the Bot Class");
 
+    // Create the Injector
     Injector injector = Guice.createInjector(new GuiceModule());
-
-    log.info("Injectors Created");
 
     // Start the Discord server
     try {
@@ -24,16 +23,10 @@ public class Bot {
       log.error("Failed To Start the Discord Server", e);
     }
 
-    log.info("Discord System Started");
-
     // Start the Subscribers and build the Publishers
     injector.getInstance(PubSubManager.class).activate();
 
-    log.info("PubSub Manager Activated");
-
     // Register shutdown events
     Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownThread.class));
-
-    log.info("Shutdown Hook Added");
   }
 }
