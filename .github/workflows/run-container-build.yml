@@ -46,11 +46,11 @@ jobs:
           mvn compile com.google.cloud.tools:jib-maven-plugin:build \
             -Pbot \
             -Djib.to.image=ghcr.io/${{ github.repository }}/bot-image \
-            -Djib.to.tags=bot,${{ steps.tags.outputs.TAGS }}
+            -Djib.to.tags=${{ steps.tags.outputs.TAGS }}
 
       - name: Build and push scraper container image with Jib
         run: |
           mvn compile com.google.cloud.tools:jib-maven-plugin:build \
             -Pscraper \
             -Djib.to.image=ghcr.io/${{ github.repository }}/scraper-image \
-            -Djib.to.tags=scraper,${{ steps.tags.outputs.TAGS }}
+            -Djib.to.tags=${{ steps.tags.outputs.TAGS }}
