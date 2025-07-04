@@ -41,8 +41,16 @@ jobs:
           fi
           echo "TAGS=${TAGS}" >> $GITHUB_OUTPUT
 
-      - name: Build and push container image with Jib
+      - name: Build and push bot container image with Jib
         run: |
           mvn compile com.google.cloud.tools:jib-maven-plugin:build \
-            -Djib.to.image=ghcr.io/${{ github.repository }} \
-            -Djib.to.tags=${{ steps.tags.outputs.TAGS }}
+            -Pbot \
+            -Djib.to.image=ghcr.io/${{ github.repository }}/bot-image \
+            -Djib.to.tags=bot,${{ steps.tags.outputs.TAGS }}
+
+      - name: Build and push scraper container image with Jib
+        run: |
+          mvn compile com.google.cloud.tools:jib-maven-plugin:build \
+            -Pscraper \
+            -Djib.to.image=ghcr.io/${{ github.repository }}/scraper-image \
+            -Djib.to.tags=scraper,${{ steps.tags.outputs.TAGS }}

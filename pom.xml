@@ -185,10 +185,10 @@
                 <version>3.4.6</version>
                 <configuration>
                     <to>
-                        <image>filmlinkd</image>
+                        <image>${finalName}</image>
                     </to>
                     <container>
-                        <mainClass>jimlind.filmlinkd.Bot</mainClass>
+                        <mainClass>${mainClass}</mainClass>
                     </container>
                 </configuration>
             </plugin>
