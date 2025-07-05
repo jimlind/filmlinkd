@@ -1,7 +1,7 @@
 package jimlind.filmlinkd.factory;
 
 import com.google.inject.Inject;
-import jimlind.filmlinkd.system.ScrapedResultChecker;
+import jimlind.filmlinkd.runnable.ScrapedResultChecker;
 import jimlind.filmlinkd.system.ScrapedResultQueue;
 import jimlind.filmlinkd.system.discord.ShardManagerStorage;
 import jimlind.filmlinkd.system.discord.embedBuilder.DiaryEntryEmbedBuilder;

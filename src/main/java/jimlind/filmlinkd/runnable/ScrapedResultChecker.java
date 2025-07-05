@@ -1,10 +1,11 @@
-package jimlind.filmlinkd.system;
+package jimlind.filmlinkd.runnable;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.ScrapedResult;
 import jimlind.filmlinkd.model.User;
+import jimlind.filmlinkd.system.ScrapedResultQueue;
 import jimlind.filmlinkd.system.discord.ShardManagerStorage;
 import jimlind.filmlinkd.system.discord.embedBuilder.DiaryEntryEmbedBuilder;
 import jimlind.filmlinkd.system.google.FirestoreManager;
