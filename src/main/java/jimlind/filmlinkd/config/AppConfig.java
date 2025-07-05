@@ -20,6 +20,7 @@ public class AppConfig {
   @Getter private final String googleProjectId;
   @Getter private final String letterboxdApiKey;
   @Getter private final String letterboxdApiShared;
+  @Getter private final int scraperPaginationLimit;
   @Getter private final String pubSubCommandSubscriptionName;
   @Getter private final String pubSubCommandTopicName;
   @Getter private final String pubSubLogEntrySubscriptionName;
@@ -54,6 +55,8 @@ public class AppConfig {
     discordApplicationId = envProperties.getProperty(AppConstants.PROP_KEY_DISCORD_APPLICATION_ID);
     firestoreCollectionId =
         envProperties.getProperty(AppConstants.PROP_KEY_FIRESTORE_COLLECTION_ID);
+    scraperPaginationLimit =
+        Integer.parseInt(envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_PAGINATION_LIMIT));
     pubSubCommandSubscriptionName =
         envProperties.getProperty(AppConstants.PROP_KEY_COMMAND_SUBSCRIPTION_NAME);
     pubSubCommandTopicName = envProperties.getProperty(AppConstants.PROP_KEY_COMMAND_TOPIC_NAME);
