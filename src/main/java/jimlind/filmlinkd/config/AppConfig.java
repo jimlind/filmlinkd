@@ -20,11 +20,13 @@ public class AppConfig {
   @Getter private final String googleProjectId;
   @Getter private final String letterboxdApiKey;
   @Getter private final String letterboxdApiShared;
-  @Getter private final int scraperPaginationLimit;
   @Getter private final String pubSubCommandSubscriptionName;
   @Getter private final String pubSubCommandTopicName;
   @Getter private final String pubSubLogEntrySubscriptionName;
   @Getter private final String pubSubLogEntryTopicName;
+  @Getter private final int scraperPaginationLimit;
+  @Getter private final int scraperGeneralPeriod;
+  @Getter private final int scraperVipPeriod;
 
   @Inject
   AppConfig(SecretManager secretManager) {
@@ -55,14 +57,18 @@ public class AppConfig {
     discordApplicationId = envProperties.getProperty(AppConstants.PROP_KEY_DISCORD_APPLICATION_ID);
     firestoreCollectionId =
         envProperties.getProperty(AppConstants.PROP_KEY_FIRESTORE_COLLECTION_ID);
-    scraperPaginationLimit =
-        Integer.parseInt(envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_PAGINATION_LIMIT));
     pubSubCommandSubscriptionName =
         envProperties.getProperty(AppConstants.PROP_KEY_COMMAND_SUBSCRIPTION_NAME);
     pubSubCommandTopicName = envProperties.getProperty(AppConstants.PROP_KEY_COMMAND_TOPIC_NAME);
     pubSubLogEntrySubscriptionName =
         envProperties.getProperty(AppConstants.PROP_KEY_LOG_ENTRY_SUBSCRIPTION_NAME);
     pubSubLogEntryTopicName = envProperties.getProperty(AppConstants.PROP_KEY_LOG_ENTRY_TOPIC_NAME);
+    scraperPaginationLimit =
+        Integer.parseInt(envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_PAGINATION_LIMIT));
+    scraperGeneralPeriod =
+        Integer.parseInt(envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_GENERAL_PERIOD));
+    scraperVipPeriod =
+        Integer.parseInt(envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_VIP_PERIOD));
 
     // Load Secrets via names in environment properties
     discordBotToken =

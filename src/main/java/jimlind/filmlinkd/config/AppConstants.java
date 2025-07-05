@@ -18,4 +18,6 @@ public class AppConstants {
   public static final String PROP_KEY_COMMAND_SUBSCRIPTION_NAME = "commandSubscriptionName";
   public static final String PROP_KEY_FIRESTORE_COLLECTION_ID = "firesStoreCollectionId";
   public static final String PROP_KEY_SCRAPER_PAGINATION_LIMIT = "scraperPaginationLimit";
+  public static final String PROP_KEY_SCRAPER_GENERAL_PERIOD = "scraperGeneralPeriod";
+  public static final String PROP_KEY_SCRAPER_VIP_PERIOD = "scraperVipPeriod";
 }
