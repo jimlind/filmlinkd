@@ -22,6 +22,16 @@ steps:
       - --container-image=ghcr.io/jimlind/filmlinkd/bot-image:latest
       - --zone=us-central1-a
 
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - compute
+      - instances
+      - update-container
+      - scraper
+      - --container-image=ghcr.io/jimlind/filmlinkd/scraper-image:latest
+      - --zone=us-central1-a
+
   - name: "ghcr.io/opentofu/opentofu:latest"
     entrypoint: "sh"
     args:
