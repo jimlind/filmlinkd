@@ -1,0 +1,13 @@
+NEED
+* Wire Up Scraper Message Sending
+* Move back to the default database name to take advantage of free tier credits
+* Ensure that memory can be reported from VM usage
+* Optimize Entry API to stop parsing earlier (not checking all 10 entries)
+* Clear the user list on a timer to rebuild for the scraper
+
+DONE
+* Delete all existing infrastructure and let terraform build it fresh
+* Use STANDARD network tier
+* Setup Network so there is one external ip address for the network
+* Ensure local development is using the new v6 account
+* Fix database access
