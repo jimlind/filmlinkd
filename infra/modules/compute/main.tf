@@ -4,7 +4,7 @@ provider "google" {
   zone    = "us-central1-a"
 }
 
-resource "google_compute_instance" "instances" {
+resource "google_compute_instance" "bot-instance" {
   name         = "bot"
   machine_type = "e2-micro"
   zone         = "us-central1-a"
@@ -46,7 +46,7 @@ resource "google_compute_instance" "instances" {
   }
 }
 
-resource "google_compute_instance" "instances" {
+resource "google_compute_instance" "scraper-instance" {
   name         = "scraper"
   machine_type = "e2-micro"
   zone         = "us-central1-a"
