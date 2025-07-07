@@ -27,6 +27,7 @@ resource "google_compute_instance" "bot-instance" {
   # This is not an official API and subject to change at any time.
   # We shouldn't trust it, so the cloudbuild job repeats the process.
   metadata = {
+    google-monitoring-enabled = "true"
     gce-container-declaration = <<-EOF
       spec:
         containers:
@@ -69,6 +70,7 @@ resource "google_compute_instance" "scraper-instance" {
   # This is not an official API and subject to change at any time.
   # We shouldn't trust it, so the cloudbuild job repeats the process.
   metadata = {
+    google-monitoring-enabled = "true"
     gce-container-declaration = <<-EOF
       spec:
         containers:
