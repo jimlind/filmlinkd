@@ -6,6 +6,7 @@ import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.factory.ScrapedResultCheckerFactory;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.runnable.GeneralScraperTask;
+import jimlind.filmlinkd.runnable.GeneralUserCacheClearTask;
 import jimlind.filmlinkd.system.*;
 import jimlind.filmlinkd.system.discord.ConnectionManager;
 import jimlind.filmlinkd.system.discord.EventListener;
@@ -46,7 +47,8 @@ public class GuiceModule extends AbstractModule {
     bind(PubSubSubscriberListener.class).in(Scopes.SINGLETON);
     bind(GeneralScraper.class).in(Scopes.SINGLETON);
     bind(GeneralScraperTask.class).in(Scopes.SINGLETON);
-    bind(UserCache.class).in(Scopes.SINGLETON);
+    bind(GeneralUserCache.class).in(Scopes.SINGLETON);
+    bind(GeneralUserCacheClearTask.class).in(Scopes.SINGLETON);
     bind(VipScraper.class).in(Scopes.SINGLETON);
 
     // Discord System Modules
