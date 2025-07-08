@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import jimlind.filmlinkd.factory.MessageFactory;
 import jimlind.filmlinkd.model.Message;
-import jimlind.filmlinkd.system.UserCache;
+import jimlind.filmlinkd.system.GeneralUserCache;
 import jimlind.filmlinkd.system.google.PubSubManager;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesAPI;
 import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
@@ -16,18 +16,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GeneralScraperTask implements Runnable {
 
-  private final UserCache userCache;
+  private final GeneralUserCache generalUserCache;
   private final LogEntriesAPI logEntriesAPI;
   private final MessageFactory messageFactory;
   private final PubSubManager pubSubManager;
 
   @Inject
   public GeneralScraperTask(
-      UserCache userCache,
+      GeneralUserCache generalUserCache,
       LogEntriesAPI logEntriesAPI,
       MessageFactory messageFactory,
       PubSubManager pubSubManager) {
-    this.userCache = userCache;
+    this.generalUserCache = generalUserCache;
     this.logEntriesAPI = logEntriesAPI;
     this.messageFactory = messageFactory;
     this.pubSubManager = pubSubManager;
@@ -36,7 +36,7 @@ public class GeneralScraperTask implements Runnable {
   @Override
   public void run() {
     Message.PublishSource source = Message.PublishSource.Normal;
-    List<Map.Entry<String, String>> userPage = userCache.getNextPage();
+    List<Map.Entry<String, String>> userPage = generalUserCache.getNextPage();
     for (Map.Entry<String, String> entry : userPage) {
 
       ArrayList<String> publishedEntryIdList = new ArrayList<String>();
@@ -57,7 +57,7 @@ public class GeneralScraperTask implements Runnable {
           log.info("Publishing {}x films from {}", publishedEntryIdList.size(), name);
         }
         for (String entryId : publishedEntryIdList) {
-          userCache.setIfNewer(entry.getKey(), entryId);
+          generalUserCache.setIfNewer(entry.getKey(), entryId);
         }
       }
     }
