@@ -11,7 +11,7 @@ import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 
 @Singleton
-public class UserCache {
+public class GeneralUserCache {
   private final AppConfig appConfig;
   private final FirestoreManager firestoreManager;
   private final UserFactory userFactory;
@@ -22,7 +22,7 @@ public class UserCache {
   private int paginationIndex = 0;
 
   @Inject
-  public UserCache(
+  public GeneralUserCache(
       AppConfig appConfig, FirestoreManager firestoreManager, UserFactory userFactory) {
     this.appConfig = appConfig;
     this.firestoreManager = firestoreManager;
@@ -72,6 +72,10 @@ public class UserCache {
     }
 
     return sublist;
+  }
+
+  public void clear() {
+    userCache.clear();
   }
 
   private List<Map.Entry<String, String>> getSublist(int index) {
