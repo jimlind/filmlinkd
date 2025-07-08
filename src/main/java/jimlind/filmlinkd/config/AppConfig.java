@@ -26,6 +26,7 @@ public class AppConfig {
   @Getter private final String pubSubLogEntryTopicName;
   @Getter private final int scraperPaginationLimit;
   @Getter private final int scraperGeneralPeriod;
+  @Getter private final int scraperGeneralUserCachePeriod;
   @Getter private final int scraperVipPeriod;
 
   @Inject
@@ -67,6 +68,9 @@ public class AppConfig {
         Integer.parseInt(envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_PAGINATION_LIMIT));
     scraperGeneralPeriod =
         Integer.parseInt(envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_GENERAL_PERIOD));
+    scraperGeneralUserCachePeriod =
+        Integer.parseInt(
+            envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_GENERAL_USER_CACHE_PERIOD));
     scraperVipPeriod =
         Integer.parseInt(envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_VIP_PERIOD));
 
