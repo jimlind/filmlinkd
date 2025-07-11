@@ -92,82 +92,73 @@ resource "google_compute_instance" "scraper-instance" {
       set -x # Keep this for command tracing
 
       # Define download URL and local path
-      # Escape the Bash variable definitions themselves if they contain Terraform interpolations,
-      # but these specific lines are fine as they are setting Bash variables.
       OPS_AGENT_DOWNLOAD_URL="https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh"
       LOCAL_SCRIPT_PATH="/tmp/add-google-cloud-ops-agent-repo.sh"
       CURL_LOG_FILE="/tmp/curl_debug_output.log" # Log file for curl
 
-      # Escape the Bash variable references
-      echo "Attempting to download Ops Agent script from $${OPS_AGENT_DOWNLOAD_URL} to $${LOCAL_SCRIPT_PATH}" | tee -a "$${CURL_LOG_FILE}"
+      echo "Attempting to download Ops Agent script from ${OPS_AGENT_DOWNLOAD_URL} to ${LOCAL_SCRIPT_PATH}" | tee -a "${CURL_LOG_FILE}"
 
       # Step 1: Download the Ops Agent installation script to /tmp, forcing IPv4
       # Using '-v' for verbose output, '-k' for insecure (temporarily),
       # and redirecting all output to tee to capture to a file and console.
-      curl --ipv4 -vk "$${OPS_AGENT_DOWNLOAD_URL}" -o "$${LOCAL_SCRIPT_PATH}" 2>&1 | tee -a "$${CURL_LOG_FILE}"
+      curl --ipv4 -vk "${OPS_AGENT_DOWNLOAD_URL}" -o "${LOCAL_SCRIPT_PATH}" 2>&1 | tee -a "${CURL_LOG_FILE}"
       CURL_EXIT_CODE=$? # Capture curl's exit code immediately
 
-      # Escape the Bash variable references
-      echo "Curl command finished with exit code: $${CURL_EXIT_CODE}" | tee -a "$${CURL_LOG_FILE}"
+      echo "Curl command finished with exit code: ${CURL_EXIT_CODE}" | tee -a "${CURL_LOG_FILE}"
 
       # Check if the download was successful
-      if [ "$${CURL_EXIT_CODE}" -ne 0 ]; then
-          # Escape the Bash variable references
-          echo "Error: Failed to download $${OPS_AGENT_DOWNLOAD_URL} using IPv4. Curl exit code: $${CURL_EXIT_CODE}" >&2 | tee -a "$${CURL_LOG_FILE}"
+      if [ "${CURL_EXIT_CODE}" -ne 0 ]; then
+          echo "Error: Failed to download ${OPS_AGENT_DOWNLOAD_URL} using IPv4. Curl exit code: ${CURL_EXIT_CODE}" >&2 | tee -a "${CURL_LOG_FILE}"
           exit 1
       fi
 
-      echo "Curl download reported success (exit code 0). Continuing..." | tee -a "$${CURL_LOG_FILE}"
+      echo "Curl download reported success (exit code 0). Continuing..." | tee -a "${CURL_LOG_FILE}"
 
       # Step 2: Make the script executable
       # Check if the downloaded file exists before attempting chmod
-      if [ ! -f "$${LOCAL_SCRIPT_PATH}" ]; then
-          # Escape the Bash variable references
-          echo "Error: Downloaded script $${LOCAL_SCRIPT_PATH} does not exist after curl." >&2 | tee -a "$${CURL_LOG_FILE}"
+      if [ ! -f "${LOCAL_SCRIPT_PATH}" ]; then
+          echo "Error: Downloaded script ${LOCAL_SCRIPT_PATH} does not exist after curl." >&2 | tee -a "${CURL_LOG_FILE}"
           exit 6 # New error code for missing file
       fi
 
-      chmod +x "$${LOCAL_SCRIPT_PATH}"
+      chmod +x "${LOCAL_SCRIPT_PATH}"
 
       # Check if chmod was successful
       if [ $? -ne 0 ]; then
-          # Escape the Bash variable references (and $? for good measure)
-          echo "Error: Failed to make $${LOCAL_SCRIPT_PATH} executable. Exit code: $$?" >&2 | tee -a "$${CURL_LOG_FILE}"
+          echo "Error: Failed to make ${LOCAL_SCRIPT_PATH} executable." >&2 | tee -a "${CURL_LOG_FILE}"
           exit 5
       fi
 
-      echo "Script made executable. Running installation script..." | tee -a "$${CURL_LOG_FILE}"
+      echo "Script made executable. Running installation script..." | tee -a "${CURL_LOG_FILE}"
 
       # Step 3: Run the installation script
-      sudo "$${LOCAL_SCRIPT_PATH}" --also-install --version=latest
+      sudo "${LOCAL_SCRIPT_PATH}" --also-install --version=latest
 
       # Check if the installation script ran successfully
       if [ $? -ne 0 ]; then
-          # Escape the Bash variable references (and $? for good measure)
-          echo "Error: Ops Agent installation script failed. Exit code: $$?" >&2 | tee -a "$${CURL_LOG_FILE}"
+          echo "Error: Ops Agent installation script failed." >&2 | tee -a "${CURL_LOG_FILE}"
           exit 2
       fi
 
-      echo "Installation script completed. Creating config directory..." | tee -a "$${CURL_LOG_FILE}"
+      echo "Installation script completed. Creating config directory..." | tee -a "${CURL_LOG_FILE}"
 
       # Step 4: Create the Ops Agent configuration directory if it doesn't exist
       sudo mkdir -p /etc/google-cloud-ops-agent/
 
-      echo "Config directory created. Writing config file..." | tee -a "$${CURL_LOG_FILE}"
+      echo "Config directory created. Writing config file..." | tee -a "${CURL_LOG_FILE}"
 
-      # Step 5: Write the configuration file (already correctly escaped)
+      # Step 5: Write the configuration file
       sudo tee /etc/google-cloud-ops-agent/config.yaml > /dev/null << EOT
 ${file("${path.module}/ops-agent-config.yaml")}
 EOT
 
       # Check if the config file was written successfully
       if [ $? -ne 0 ]; then
-          # Escape the Bash variable references (and $? for good measure)
-          echo "Error: Failed to write Ops Agent config file. Exit code: $$?" >&2 | tee -a "$${CURL_LOG_FILE}"
+          echo "Error: Failed to write Ops Agent config file." >&2 | tee -a "${CURL_LOG_FILE}"
           exit 3
       fi
 
-      echo "Config file written. Restarting service..." | tee -a "$${CURL_LOG_FILE}"
+      echo "Config file written. Restarting service..." | tee -a "${CURL_LOG_FILE}"
 
       # Step 6: Restart the Ops Agent service (it should now exist)
       sleep 5 # Give systemd time to register the service
@@ -175,12 +166,11 @@ EOT
 
       # Check if the service restarted successfully
       if [ $? -ne 0 ]; then
-          # Escape the Bash variable references (and $? for good measure)
-          echo "Error: Failed to restart Ops Agent service. Exit code: $$?" >&2 | tee -a "$${CURL_LOG_FILE}"
+          echo "Error: Failed to restart Ops Agent service." >&2 | tee -a "${CURL_LOG_FILE}"
           exit 4
       fi
 
-      echo "Ops Agent installation and configuration script completed successfully." | tee -a "$${CURL_LOG_FILE}"
+      echo "Ops Agent installation and configuration script completed successfully." | tee -a "${CURL_LOG_FILE}"
     EOF
   }
 
