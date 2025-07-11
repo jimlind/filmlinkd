@@ -89,6 +89,14 @@ resource "google_compute_instance" "scraper-instance" {
     EOF
     startup-script            = <<-EOF
       #!/bin/bash
+
+      # Step 0: Does anything work at all?
+      curl -vvv https://www.google.com
+      curl -v -o /tmp/test_download.sh https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
+      df -h /tmp
+      mount | grep '/tmp'
+      ls -ld /tmp
+
       # Step 1: Download the Ops Agent installation script to /tmp
       curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh -o /tmp/add-google-cloud-ops-agent-repo.sh
       # Check if the download was successful
