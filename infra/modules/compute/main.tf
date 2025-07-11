@@ -37,7 +37,7 @@ resource "google_compute_instance" "bot-instance" {
     EOF
     startup-script            = <<-EOF
       #!/bin/bash
-      curl --ipv4 -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
+      curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
       bash add-google-cloud-ops-agent-repo.sh --also-install --version=latest
       sudo tee /etc/google-cloud-ops-agent/config.yaml > /dev/null << EOS
 ${file("${path.module}/ops-agent-config.yaml")}
@@ -91,14 +91,14 @@ resource "google_compute_instance" "scraper-instance" {
       #!/bin/bash
 
       # Step 0: Does anything work at all?
-      curl --ipv4 -vvv https://www.google.com
-      curl --ipv4 -v -o /tmp/test_download.sh https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
+      curl -vvv https://www.google.com
+      curl -v -o /tmp/test_download.sh https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
       df -h /tmp
       mount | grep '/tmp'
       ls -ld /tmp
 
       # Step 1: Download the Ops Agent installation script to /tmp
-      curl --ipv4 -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh -o /tmp/add-google-cloud-ops-agent-repo.sh
+      curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh -o /tmp/add-google-cloud-ops-agent-repo.sh
       # Check if the download was successful
       if [ $? -ne 0 ]; then
           echo "Error: Failed to download add-google-cloud-ops-agent-repo.sh." >&2
