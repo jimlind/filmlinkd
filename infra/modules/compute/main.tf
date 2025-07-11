@@ -10,8 +10,9 @@ resource "google_compute_instance" "bot-instance" {
   zone         = "us-central1-a"
 
   labels = {
-    container-vm = "filmlinkd-bot"
-    name         = "filmlinkd-bot"
+    container-vm          = "filmlinkd-bot"
+    name                  = "filmlinkd-bot"
+    goog-ops-agent-policy = "v2-x86-template-1-0-0"
   }
 
 
@@ -53,8 +54,9 @@ resource "google_compute_instance" "scraper-instance" {
   zone         = "us-central1-a"
 
   labels = {
-    container-vm = "filmlinkd-scraper"
-    name         = "filmlinkd-scraper"
+    container-vm          = "filmlinkd-scraper"
+    name                  = "filmlinkd-scraper"
+    goog-ops-agent-policy = "v2-x86-template-1-0-0"
   }
 
 

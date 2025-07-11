@@ -41,15 +41,3 @@ steps:
         tofu init
         tofu apply -auto-approve
     allowFailure: true
-
-  - name: "gcr.io/cloud-builders/gcloud"
-    entrypoint: "bash"
-    args:
-      - '-c'
-      - |
-        gcloud compute ssh scraper --zone=us-central1-a --project=filmlinkd \
-        --command=" \
-          set -ex; \
-          sudo systemctl restart google-cloud-ops-agent; \
-          echo 'Ops Agent installation and configuration completed successfully.' \
-        "
