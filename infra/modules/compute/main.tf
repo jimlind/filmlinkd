@@ -89,9 +89,9 @@ resource "google_compute_instance" "scraper-instance" {
     EOF
     startup-script            = <<-EOF
       #!/bin/bash
-      set -x
 
       # Step 0: Does anything work at all?
+      curl --ipv4 -vvv https://www.google.com
       curl --ipv4 -v -o /tmp/test_download.sh https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
       df -h /tmp
       mount | grep '/tmp'
