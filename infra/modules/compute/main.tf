@@ -95,7 +95,7 @@ resource "google_compute_instance" "scraper-instance" {
       OPS_AGENT_DOWNLOAD_URL="https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh"
       TEMP_SCRIPT_PATH="/tmp/add-google-cloud-ops-agent-repo.sh"
       FINAL_SCRIPT_DIR="/var/lib/google/scripts" # Writable and executable location on COS
-      FINAL_SCRIPT_PATH="$${FINAL_SCRIPT_DIR}/add-google-cloud-ops-agent-repo.sh"
+      FINAL_SCRIPT_PATH="${FINAL_SCRIPT_DIR}/add-google-cloud-ops-agent-repo.sh"
       CURL_LOG_FILE="/tmp/curl_debug_output.log" # Log file for curl
 
       echo "Attempting to download Ops Agent script from $${OPS_AGENT_DOWNLOAD_URL} to $${TEMP_SCRIPT_PATH}" | tee -a "$${CURL_LOG_FILE}"
