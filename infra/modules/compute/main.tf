@@ -96,7 +96,7 @@ resource "google_compute_instance" "scraper-instance" {
       LOCAL_SCRIPT_PATH="/tmp/add-google-cloud-ops-agent-repo.sh"
       CURL_LOG_FILE="/tmp/curl_debug_output.log" # Log file for curl
 
-      echo "$$(date): Attempting to download Ops Agent script from ${OPS_AGENT_DOWNLOAD_URL} to ${LOCAL_SCRIPT_PATH}" | tee -a "${CURL_LOG_FILE}"
+      echo "$(date): Attempting to download Ops Agent script from ${OPS_AGENT_DOWNLOAD_URL} to ${LOCAL_SCRIPT_PATH}" | tee -a "${CURL_LOG_FILE}"
 
       # Step 1: Download the Ops Agent installation script to /tmp, forcing IPv4
       # Using '-v' for verbose output, '-k' for insecure (temporarily),
@@ -104,20 +104,20 @@ resource "google_compute_instance" "scraper-instance" {
       curl --ipv4 -vk "${OPS_AGENT_DOWNLOAD_URL}" -o "${LOCAL_SCRIPT_PATH}" 2>&1 | tee -a "${CURL_LOG_FILE}"
       CURL_EXIT_CODE=$? # Capture curl's exit code immediately
 
-      echo "$$(date): Curl command finished with exit code: ${CURL_EXIT_CODE}" | tee -a "${CURL_LOG_FILE}"
+      echo "$(date): Curl command finished with exit code: ${CURL_EXIT_CODE}" | tee -a "${CURL_LOG_FILE}"
 
       # Check if the download was successful
       if [ "${CURL_EXIT_CODE}" -ne 0 ]; then
-          echo "$$(date): Error: Failed to download ${OPS_AGENT_DOWNLOAD_URL} using IPv4. Curl exit code: ${CURL_EXIT_CODE}" >&2 | tee -a "${CURL_LOG_FILE}"
+          echo "$(date): Error: Failed to download ${OPS_AGENT_DOWNLOAD_URL} using IPv4. Curl exit code: ${CURL_EXIT_CODE}" >&2 | tee -a "${CURL_LOG_FILE}"
           exit 1
       fi
 
-      echo "$$(date): Curl download reported success (exit code 0). Continuing..." | tee -a "${CURL_LOG_FILE}"
+      echo "$(date): Curl download reported success (exit code 0). Continuing..." | tee -a "${CURL_LOG_FILE}"
 
       # Step 2: Make the script executable
       # Check if the downloaded file exists before attempting chmod
       if [ ! -f "${LOCAL_SCRIPT_PATH}" ]; then
-          echo "$$(date): Error: Downloaded script ${LOCAL_SCRIPT_PATH} does not exist after curl." >&2 | tee -a "${CURL_LOG_FILE}"
+          echo "$(date): Error: Downloaded script ${LOCAL_SCRIPT_PATH} does not exist after curl." >&2 | tee -a "${CURL_LOG_FILE}"
           exit 6 # New error code for missing file
       fi
 
@@ -125,27 +125,27 @@ resource "google_compute_instance" "scraper-instance" {
 
       # Check if chmod was successful
       if [ $? -ne 0 ]; then
-          echo "$$(date): Error: Failed to make ${LOCAL_SCRIPT_PATH} executable." >&2 | tee -a "${CURL_LOG_FILE}"
+          echo "$(date): Error: Failed to make ${LOCAL_SCRIPT_PATH} executable." >&2 | tee -a "${CURL_LOG_FILE}"
           exit 5
       fi
 
-      echo "$$(date): Script made executable. Running installation script..." | tee -a "${CURL_LOG_FILE}"
+      echo "$(date): Script made executable. Running installation script..." | tee -a "${CURL_LOG_FILE}"
 
       # Step 3: Run the installation script
       sudo "${LOCAL_SCRIPT_PATH}" --also-install --version=latest
 
       # Check if the installation script ran successfully
       if [ $? -ne 0 ]; then
-          echo "$$(date): Error: Ops Agent installation script failed." >&2 | tee -a "${CURL_LOG_FILE}"
+          echo "$(date): Error: Ops Agent installation script failed." >&2 | tee -a "${CURL_LOG_FILE}"
           exit 2
       fi
 
-      echo "$$(date): Installation script completed. Creating config directory..." | tee -a "${CURL_LOG_FILE}"
+      echo "$(date): Installation script completed. Creating config directory..." | tee -a "${CURL_LOG_FILE}"
 
       # Step 4: Create the Ops Agent configuration directory if it doesn't exist
       sudo mkdir -p /etc/google-cloud-ops-agent/
 
-      echo "$$(date): Config directory created. Writing config file..." | tee -a "${CURL_LOG_FILE}"
+      echo "$(date): Config directory created. Writing config file..." | tee -a "${CURL_LOG_FILE}"
 
       # Step 5: Write the configuration file
       sudo tee /etc/google-cloud-ops-agent/config.yaml > /dev/null << EOT
@@ -154,11 +154,11 @@ EOT
 
       # Check if the config file was written successfully
       if [ $? -ne 0 ]; then
-          echo "$$(date): Error: Failed to write Ops Agent config file." >&2 | tee -a "${CURL_LOG_FILE}"
+          echo "$(date): Error: Failed to write Ops Agent config file." >&2 | tee -a "${CURL_LOG_FILE}"
           exit 3
       fi
 
-      echo "$$date): Config file written. Restarting service..." | tee -a "${CURL_LOG_FILE}"
+      echo "$(date): Config file written. Restarting service..." | tee -a "${CURL_LOG_FILE}"
 
       # Step 6: Restart the Ops Agent service (it should now exist)
       sleep 5 # Give systemd time to register the service
@@ -166,11 +166,11 @@ EOT
 
       # Check if the service restarted successfully
       if [ $? -ne 0 ]; then
-          echo "$$(date): Error: Failed to restart Ops Agent service." >&2 | tee -a "${CURL_LOG_FILE}"
+          echo "$(date): Error: Failed to restart Ops Agent service." >&2 | tee -a "${CURL_LOG_FILE}"
           exit 4
       fi
 
-      echo "$$(date): Ops Agent installation and configuration script completed successfully." | tee -a "${CURL_LOG_FILE}"
+      echo "$(date): Ops Agent installation and configuration script completed successfully." | tee -a "${CURL_LOG_FILE}"
     EOF
   }
 
