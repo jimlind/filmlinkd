@@ -35,15 +35,6 @@ resource "google_compute_instance" "bot-instance" {
             image: "ghcr.io/jimlind/filmlinkd/bot-image:latest"
         restartPolicy: Always
     EOF
-    startup-script            = <<-EOF
-      #!/bin/bash
-      curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
-      bash add-google-cloud-ops-agent-repo.sh --also-install --version=latest
-      sudo tee /etc/google-cloud-ops-agent/config.yaml > /dev/null << EOS
-${file("ops-agent-config.yaml")}
-EOS
-      sudo systemctl restart google-cloud-ops-agent
-    EOF
   }
 
   service_account {
@@ -86,15 +77,6 @@ resource "google_compute_instance" "scraper-instance" {
           - name: filmlinkd
             image: "ghcr.io/jimlind/filmlinkd/scraper-image:latest"
         restartPolicy: Always
-    EOF
-    startup-script            = <<-EOF
-      #!/bin/bash
-      curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
-      bash add-google-cloud-ops-agent-repo.sh --also-install --version=latest
-      sudo tee /etc/google-cloud-ops-agent/config.yaml > /dev/null << EOS
-${file("ops-agent-config.yaml")}
-EOS
-      sudo systemctl restart google-cloud-ops-agent
     EOF
   }
 
