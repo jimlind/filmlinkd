@@ -5,8 +5,9 @@ import com.google.inject.Scopes;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.factory.ScrapedResultCheckerFactory;
 import jimlind.filmlinkd.factory.UserFactory;
-import jimlind.filmlinkd.runnable.GeneralScraperTask;
-import jimlind.filmlinkd.runnable.GeneralUserCacheClearTask;
+import jimlind.filmlinkd.runnable.GeneralScraper;
+import jimlind.filmlinkd.runnable.GeneralUserCacheClearer;
+import jimlind.filmlinkd.runnable.StatLogger;
 import jimlind.filmlinkd.system.*;
 import jimlind.filmlinkd.system.discord.ConnectionManager;
 import jimlind.filmlinkd.system.discord.EventListener;
@@ -45,11 +46,12 @@ public class GuiceModule extends AbstractModule {
     // General System Modules
     bind(EntryCache.class).in(Scopes.SINGLETON);
     bind(PubSubSubscriberListener.class).in(Scopes.SINGLETON);
+    bind(GeneralScraperScheduler.class).in(Scopes.SINGLETON);
     bind(GeneralScraper.class).in(Scopes.SINGLETON);
-    bind(GeneralScraperTask.class).in(Scopes.SINGLETON);
     bind(GeneralUserCache.class).in(Scopes.SINGLETON);
-    bind(GeneralUserCacheClearTask.class).in(Scopes.SINGLETON);
-    bind(VipScraper.class).in(Scopes.SINGLETON);
+    bind(GeneralUserCacheClearer.class).in(Scopes.SINGLETON);
+    bind(VipScraperScheduler.class).in(Scopes.SINGLETON);
+    bind(StatLogger.class).in(Scopes.SINGLETON);
 
     // Discord System Modules
     bind(DiscordSystem.class).in(Scopes.SINGLETON);

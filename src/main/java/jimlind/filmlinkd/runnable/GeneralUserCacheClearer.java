@@ -5,12 +5,12 @@ import jimlind.filmlinkd.system.GeneralUserCache;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class GeneralUserCacheClearTask implements Runnable {
+public class GeneralUserCacheClearer implements Runnable {
 
   private final GeneralUserCache generalUserCache;
 
   @Inject
-  public GeneralUserCacheClearTask(GeneralUserCache generalUserCache) {
+  public GeneralUserCacheClearer(GeneralUserCache generalUserCache) {
     this.generalUserCache = generalUserCache;
   }
 

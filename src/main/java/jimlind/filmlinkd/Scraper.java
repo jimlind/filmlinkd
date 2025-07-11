@@ -2,10 +2,14 @@ package jimlind.filmlinkd;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import jimlind.filmlinkd.config.GuiceModule;
-import jimlind.filmlinkd.system.GeneralScraper;
+import jimlind.filmlinkd.runnable.StatLogger;
+import jimlind.filmlinkd.system.GeneralScraperScheduler;
 import jimlind.filmlinkd.system.ShutdownThread;
-import jimlind.filmlinkd.system.VipScraper;
+import jimlind.filmlinkd.system.VipScraperScheduler;
 import jimlind.filmlinkd.system.google.PubSubManager;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,8 +25,12 @@ public class Scraper {
     injector.getInstance(PubSubManager.class).buildLogEntryPublisher();
 
     // Start the Scrapers
-    injector.getInstance(GeneralScraper.class).start();
-    injector.getInstance(VipScraper.class).start();
+    injector.getInstance(GeneralScraperScheduler.class).start();
+    injector.getInstance(VipScraperScheduler.class).start();
+
+    // Schedule Memory Logger
+    ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    scheduler.scheduleAtFixedRate(injector.getInstance(StatLogger.class), 0, 30, TimeUnit.MINUTES);
 
     // Register shutdown events
     Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownThread.class));

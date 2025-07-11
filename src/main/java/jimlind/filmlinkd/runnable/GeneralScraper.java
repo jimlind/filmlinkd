@@ -14,7 +14,7 @@ import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class GeneralScraperTask implements Runnable {
+public class GeneralScraper implements Runnable {
 
   private final GeneralUserCache generalUserCache;
   private final LogEntriesAPI logEntriesAPI;
@@ -22,7 +22,7 @@ public class GeneralScraperTask implements Runnable {
   private final PubSubManager pubSubManager;
 
   @Inject
-  public GeneralScraperTask(
+  public GeneralScraper(
       GeneralUserCache generalUserCache,
       LogEntriesAPI logEntriesAPI,
       MessageFactory messageFactory,
@@ -42,6 +42,12 @@ public class GeneralScraperTask implements Runnable {
       ArrayList<String> publishedEntryIdList = new ArrayList<String>();
 
       List<LBLogEntry> logEntryList = logEntriesAPI.getRecentForUser(entry.getKey(), 10);
+
+      //      // Filter out entries that are less than 3 minutes old
+      //      if (Date.now() - Date.parse(logEntry.whenCreated) < 180000) {
+      //        return false;
+      //      }
+
       logEntryList.stream()
           .filter(logEntry -> 0 < LidComparer.compare(logEntry.id, entry.getValue()))
           .forEach(
