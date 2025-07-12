@@ -5,7 +5,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import jimlind.filmlinkd.model.CombinedLBFilmModel;
 import jimlind.filmlinkd.system.discord.embedBuilder.FilmEmbedBuilder;
-import jimlind.filmlinkd.system.letterboxd.api.FilmAPI;
+import jimlind.filmlinkd.system.letterboxd.api.FilmApi;
 import jimlind.filmlinkd.system.letterboxd.web.LetterboxdIdWeb;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -14,14 +14,14 @@ public class RouletteHandler implements Handler {
   private static final String CHARACTERS =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-  private final FilmAPI filmAPI;
+  private final FilmApi filmApi;
   private final FilmEmbedBuilder filmEmbedBuilder;
   private final LetterboxdIdWeb letterboxdIdWeb;
 
   @Inject
   RouletteHandler(
-      FilmAPI filmAPI, FilmEmbedBuilder filmEmbedBuilder, LetterboxdIdWeb letterboxdIdWeb) {
-    this.filmAPI = filmAPI;
+      FilmApi filmApi, FilmEmbedBuilder filmEmbedBuilder, LetterboxdIdWeb letterboxdIdWeb) {
+    this.filmApi = filmApi;
     this.filmEmbedBuilder = filmEmbedBuilder;
     this.letterboxdIdWeb = letterboxdIdWeb;
   }
@@ -31,7 +31,7 @@ public class RouletteHandler implements Handler {
     event.deferReply().queue();
     String filmString = findAFilm(getRandomLID(), 0);
 
-    CombinedLBFilmModel combinedLBFilmModel = filmAPI.fetch(filmString);
+    CombinedLBFilmModel combinedLBFilmModel = filmApi.fetch(filmString);
     if (combinedLBFilmModel == null) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;

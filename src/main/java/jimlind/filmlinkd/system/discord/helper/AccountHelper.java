@@ -1,7 +1,7 @@
 package jimlind.filmlinkd.system.discord.helper;
 
 import com.google.inject.Inject;
-import jimlind.filmlinkd.system.letterboxd.api.MemberAPI;
+import jimlind.filmlinkd.system.letterboxd.api.MemberApi;
 import jimlind.filmlinkd.system.letterboxd.model.LBMember;
 import jimlind.filmlinkd.system.letterboxd.web.MemberWeb;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -9,12 +9,12 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.jetbrains.annotations.Nullable;
 
 public class AccountHelper {
-  private final MemberAPI memberAPI;
+  private final MemberApi memberApi;
   private final MemberWeb memberWeb;
 
   @Inject
-  AccountHelper(MemberAPI memberAPI, MemberWeb memberWeb) {
-    this.memberAPI = memberAPI;
+  AccountHelper(MemberApi memberApi, MemberWeb memberWeb) {
+    this.memberApi = memberApi;
     this.memberWeb = memberWeb;
   }
 
@@ -24,6 +24,6 @@ public class AccountHelper {
     String userName = accountMap != null ? accountMap.getAsString() : "";
     String userLID = this.memberWeb.getMemberLIDFromUsername(userName);
 
-    return this.memberAPI.fetch(userLID);
+    return this.memberApi.fetch(userLID);
   }
 }

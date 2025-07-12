@@ -15,7 +15,7 @@ import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.google.PubSubManager;
-import jimlind.filmlinkd.system.letterboxd.api.LogEntriesAPI;
+import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LBMember;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
@@ -28,7 +28,7 @@ public class FollowHandler implements Handler {
   private final CommandFactory commandFactory;
   private final FollowEmbedBuilder followEmbedBuilder;
   private final FirestoreManager firestoreManager;
-  private final LogEntriesAPI logEntriesAPI;
+  private final LogEntriesApi logEntriesApi;
   private final MessageFactory messageFactory;
   private final PubSubManager pubSubManager;
   private final UserFactory userFactory;
@@ -40,7 +40,7 @@ public class FollowHandler implements Handler {
       CommandFactory commandFactory,
       FollowEmbedBuilder followEmbedBuilder,
       FirestoreManager firestoreManager,
-      LogEntriesAPI logEntriesAPI,
+      LogEntriesApi logEntriesApi,
       MessageFactory messageFactory,
       PubSubManager pubSubManager,
       UserFactory userFactory) {
@@ -49,7 +49,7 @@ public class FollowHandler implements Handler {
     this.commandFactory = commandFactory;
     this.followEmbedBuilder = followEmbedBuilder;
     this.firestoreManager = firestoreManager;
-    this.logEntriesAPI = logEntriesAPI;
+    this.logEntriesApi = logEntriesApi;
     this.messageFactory = messageFactory;
     this.pubSubManager = pubSubManager;
     this.userFactory = userFactory;
@@ -85,7 +85,7 @@ public class FollowHandler implements Handler {
       return;
     }
 
-    List<LBLogEntry> logEntryList = this.logEntriesAPI.getRecentForUser(member.id, 1);
+    List<LBLogEntry> logEntryList = this.logEntriesApi.getRecentForUser(member.id, 1);
     if (logEntryList.size() == 1) {
       LBLogEntry logEntry = logEntryList.getFirst();
 

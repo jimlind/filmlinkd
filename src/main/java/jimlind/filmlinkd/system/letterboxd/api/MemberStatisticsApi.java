@@ -3,11 +3,11 @@ package jimlind.filmlinkd.system.letterboxd.api;
 import com.google.inject.Inject;
 import jimlind.filmlinkd.system.letterboxd.model.LBMemberStatistics;
 
-public class MemberStatisticsAPI {
+public class MemberStatisticsApi {
   private final Client client;
 
   @Inject
-  MemberStatisticsAPI(Client client) {
+  MemberStatisticsApi(Client client) {
     this.client = client;
   }
 

@@ -4,11 +4,11 @@ import com.google.inject.Inject;
 import jimlind.filmlinkd.system.letterboxd.model.LBSearchResponse;
 import jimlind.filmlinkd.system.letterboxd.utils.UrlUtils;
 
-public class ContributorAPI {
+public class ContributorApi {
   private final Client client;
 
   @Inject
-  ContributorAPI(Client client) {
+  ContributorApi(Client client) {
     this.client = client;
   }
 

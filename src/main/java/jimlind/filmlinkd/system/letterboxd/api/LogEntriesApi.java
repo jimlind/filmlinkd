@@ -5,11 +5,11 @@ import java.util.List;
 import jimlind.filmlinkd.system.letterboxd.model.LBLogEntriesResponse;
 import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
 
-public class LogEntriesAPI {
+public class LogEntriesApi {
   private final Client client;
 
   @Inject
-  LogEntriesAPI(Client client) {
+  LogEntriesApi(Client client) {
     this.client = client;
   }
 

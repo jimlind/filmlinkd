@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import jimlind.filmlinkd.system.discord.embedBuilder.DiaryListEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
-import jimlind.filmlinkd.system.letterboxd.api.LogEntriesAPI;
+import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LBMember;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -14,16 +14,16 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 public class DiaryHandler implements Handler {
   private final AccountHelper accountHelper;
   private final DiaryListEmbedBuilder diaryListEmbedBuilder;
-  private final LogEntriesAPI logEntriesAPI;
+  private final LogEntriesApi logEntriesApi;
 
   @Inject
   DiaryHandler(
       AccountHelper accountHelper,
       DiaryListEmbedBuilder diaryListEmbedBuilder,
-      LogEntriesAPI logEntriesAPI) {
+      LogEntriesApi logEntriesApi) {
     this.accountHelper = accountHelper;
     this.diaryListEmbedBuilder = diaryListEmbedBuilder;
-    this.logEntriesAPI = logEntriesAPI;
+    this.logEntriesApi = logEntriesApi;
   }
 
   @Override
@@ -36,7 +36,7 @@ public class DiaryHandler implements Handler {
       return;
     }
 
-    List<LBLogEntry> logEntryList = logEntriesAPI.getRecentForUser(member.id, 5);
+    List<LBLogEntry> logEntryList = logEntriesApi.getRecentForUser(member.id, 5);
     if (logEntryList.isEmpty()) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;

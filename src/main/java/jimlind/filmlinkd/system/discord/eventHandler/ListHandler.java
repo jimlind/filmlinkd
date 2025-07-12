@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import java.util.ArrayList;
 import jimlind.filmlinkd.system.discord.embedBuilder.ListEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
-import jimlind.filmlinkd.system.letterboxd.api.ListAPI;
+import jimlind.filmlinkd.system.letterboxd.api.ListApi;
 import jimlind.filmlinkd.system.letterboxd.model.LBListSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LBListsResponse;
 import jimlind.filmlinkd.system.letterboxd.model.LBMember;
@@ -15,13 +15,13 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 public class ListHandler implements Handler {
 
   private final AccountHelper accountHelper;
-  private final ListAPI listAPI;
+  private final ListApi listApi;
   private final ListEmbedBuilder listEmbedBuilder;
 
   @Inject
-  ListHandler(AccountHelper accountHelper, ListAPI listAPI, ListEmbedBuilder listEmbedBuilder) {
+  ListHandler(AccountHelper accountHelper, ListApi listApi, ListEmbedBuilder listEmbedBuilder) {
     this.accountHelper = accountHelper;
-    this.listAPI = listAPI;
+    this.listApi = listApi;
     this.listEmbedBuilder = listEmbedBuilder;
   }
 
@@ -41,7 +41,7 @@ public class ListHandler implements Handler {
     String cleanListName = listNameString.toLowerCase().replaceAll("[^a-z0-9]+", "");
 
     LBListSummary foundList = null;
-    LBListsResponse listsResponse = listAPI.fetch(member.id, 50);
+    LBListsResponse listsResponse = listApi.fetch(member.id, 50);
     if (listsResponse == null) {
       event.getHook().sendMessage("No Results Found").queue();
       return;

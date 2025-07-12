@@ -4,19 +4,19 @@ import com.google.inject.Inject;
 import java.util.ArrayList;
 import jimlind.filmlinkd.model.CombinedLBFilmModel;
 import jimlind.filmlinkd.system.discord.embedBuilder.FilmEmbedBuilder;
-import jimlind.filmlinkd.system.letterboxd.api.FilmAPI;
+import jimlind.filmlinkd.system.letterboxd.api.FilmApi;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 public class FilmHandler implements Handler {
 
-  private final FilmAPI filmAPI;
+  private final FilmApi filmApi;
   private final FilmEmbedBuilder filmEmbedBuilder;
 
   @Inject
-  FilmHandler(FilmAPI filmAPI, FilmEmbedBuilder filmEmbedBuilder) {
-    this.filmAPI = filmAPI;
+  FilmHandler(FilmApi filmApi, FilmEmbedBuilder filmEmbedBuilder) {
+    this.filmApi = filmApi;
     this.filmEmbedBuilder = filmEmbedBuilder;
   }
 
@@ -26,7 +26,7 @@ public class FilmHandler implements Handler {
 
     OptionMapping optionMapping = event.getInteraction().getOption("film-name");
     String filmName = optionMapping != null ? optionMapping.getAsString() : "";
-    CombinedLBFilmModel combinedLBFilmModel = filmAPI.fetch(filmName);
+    CombinedLBFilmModel combinedLBFilmModel = filmApi.fetch(filmName);
 
     if (combinedLBFilmModel == null) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();

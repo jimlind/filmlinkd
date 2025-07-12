@@ -107,12 +107,12 @@ public class GuiceModule extends AbstractModule {
 
     // Letterboxd API Modules
     bind(Client.class).in(Scopes.SINGLETON);
-    bind(ContributorAPI.class).in(Scopes.SINGLETON);
-    bind(FilmAPI.class).in(Scopes.SINGLETON);
-    bind(ListAPI.class).in(Scopes.SINGLETON);
-    bind(LogEntriesAPI.class).in(Scopes.SINGLETON);
-    bind(MemberAPI.class).in(Scopes.SINGLETON);
-    bind(MemberStatisticsAPI.class).in(Scopes.SINGLETON);
+    bind(ContributorApi.class).in(Scopes.SINGLETON);
+    bind(FilmApi.class).in(Scopes.SINGLETON);
+    bind(ListApi.class).in(Scopes.SINGLETON);
+    bind(LogEntriesApi.class).in(Scopes.SINGLETON);
+    bind(MemberApi.class).in(Scopes.SINGLETON);
+    bind(MemberStatisticsApi.class).in(Scopes.SINGLETON);
     // Letterboxd Web Scraper Modules
     bind(LetterboxdIdWeb.class).in(Scopes.SINGLETON);
     bind(MemberWeb.class).in(Scopes.SINGLETON);

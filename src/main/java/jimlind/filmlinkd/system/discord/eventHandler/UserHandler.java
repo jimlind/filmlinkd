@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import java.util.ArrayList;
 import jimlind.filmlinkd.system.discord.embedBuilder.UserEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
-import jimlind.filmlinkd.system.letterboxd.api.MemberStatisticsAPI;
+import jimlind.filmlinkd.system.letterboxd.api.MemberStatisticsApi;
 import jimlind.filmlinkd.system.letterboxd.model.LBMember;
 import jimlind.filmlinkd.system.letterboxd.model.LBMemberStatistics;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -12,16 +12,16 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 public class UserHandler implements Handler {
   private final AccountHelper accountHelper;
-  private final MemberStatisticsAPI memberStatisticsAPI;
+  private final MemberStatisticsApi memberStatisticsApi;
   private final UserEmbedBuilder userEmbedBuilder;
 
   @Inject
   UserHandler(
       AccountHelper accountHelper,
-      MemberStatisticsAPI memberStatisticsAPI,
+      MemberStatisticsApi memberStatisticsApi,
       UserEmbedBuilder userEmbedBuilder) {
     this.accountHelper = accountHelper;
-    this.memberStatisticsAPI = memberStatisticsAPI;
+    this.memberStatisticsApi = memberStatisticsApi;
     this.userEmbedBuilder = userEmbedBuilder;
   }
 
@@ -35,7 +35,7 @@ public class UserHandler implements Handler {
       return;
     }
 
-    LBMemberStatistics memberStatistics = this.memberStatisticsAPI.fetch(member.id);
+    LBMemberStatistics memberStatistics = this.memberStatisticsApi.fetch(member.id);
     if (memberStatistics == null) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;

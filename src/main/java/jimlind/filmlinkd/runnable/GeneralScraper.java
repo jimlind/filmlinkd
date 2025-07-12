@@ -8,7 +8,7 @@ import jimlind.filmlinkd.factory.MessageFactory;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.system.GeneralUserCache;
 import jimlind.filmlinkd.system.google.PubSubManager;
-import jimlind.filmlinkd.system.letterboxd.api.LogEntriesAPI;
+import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 import lombok.extern.slf4j.Slf4j;
@@ -17,18 +17,18 @@ import lombok.extern.slf4j.Slf4j;
 public class GeneralScraper implements Runnable {
 
   private final GeneralUserCache generalUserCache;
-  private final LogEntriesAPI logEntriesAPI;
+  private final LogEntriesApi logEntriesApi;
   private final MessageFactory messageFactory;
   private final PubSubManager pubSubManager;
 
   @Inject
   public GeneralScraper(
       GeneralUserCache generalUserCache,
-      LogEntriesAPI logEntriesAPI,
+      LogEntriesApi logEntriesApi,
       MessageFactory messageFactory,
       PubSubManager pubSubManager) {
     this.generalUserCache = generalUserCache;
-    this.logEntriesAPI = logEntriesAPI;
+    this.logEntriesApi = logEntriesApi;
     this.messageFactory = messageFactory;
     this.pubSubManager = pubSubManager;
   }
@@ -41,7 +41,7 @@ public class GeneralScraper implements Runnable {
 
       ArrayList<String> publishedEntryIdList = new ArrayList<String>();
 
-      List<LBLogEntry> logEntryList = logEntriesAPI.getRecentForUser(entry.getKey(), 10);
+      List<LBLogEntry> logEntryList = logEntriesApi.getRecentForUser(entry.getKey(), 10);
 
       //      // Filter out entries that are less than 3 minutes old
       //      if (Date.now() - Date.parse(logEntry.whenCreated) < 180000) {

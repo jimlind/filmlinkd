@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import jimlind.filmlinkd.system.discord.embedBuilder.LoggedEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
-import jimlind.filmlinkd.system.letterboxd.api.FilmAPI;
-import jimlind.filmlinkd.system.letterboxd.api.LogEntriesAPI;
+import jimlind.filmlinkd.system.letterboxd.api.FilmApi;
+import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.model.LBFilmSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LBMember;
@@ -16,19 +16,19 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 public class LoggedHandler implements Handler {
   private final AccountHelper accountHelper;
-  private final FilmAPI filmAPI;
-  private final LogEntriesAPI logEntriesAPI;
+  private final FilmApi filmApi;
+  private final LogEntriesApi logEntriesApi;
   private final LoggedEmbedBuilder loggedEmbedBuilder;
 
   @Inject
   LoggedHandler(
       AccountHelper accountHelper,
-      FilmAPI filmAPI,
-      LogEntriesAPI logEntriesAPI,
+      FilmApi filmApi,
+      LogEntriesApi logEntriesApi,
       LoggedEmbedBuilder loggedEmbedBuilder) {
     this.accountHelper = accountHelper;
-    this.filmAPI = filmAPI;
-    this.logEntriesAPI = logEntriesAPI;
+    this.filmApi = filmApi;
+    this.logEntriesApi = logEntriesApi;
     this.loggedEmbedBuilder = loggedEmbedBuilder;
   }
 
@@ -40,14 +40,14 @@ public class LoggedHandler implements Handler {
 
     OptionMapping filmNameMap = event.getInteraction().getOption("film-name");
     String filmAsString = filmNameMap != null ? filmNameMap.getAsString() : "";
-    LBFilmSummary film = filmAPI.search(filmAsString);
+    LBFilmSummary film = filmApi.search(filmAsString);
 
     if (member == null || film == null) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;
     }
 
-    List<LBLogEntry> logEntryList = logEntriesAPI.getByUserAndFilm(member.id, film.id);
+    List<LBLogEntry> logEntryList = logEntriesApi.getByUserAndFilm(member.id, film.id);
     if (logEntryList.isEmpty()) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;

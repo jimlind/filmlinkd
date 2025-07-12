@@ -8,12 +8,12 @@ import jimlind.filmlinkd.system.letterboxd.model.LBFilmSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LBSearchResponse;
 import jimlind.filmlinkd.system.letterboxd.utils.UrlUtils;
 
-public class FilmAPI {
+public class FilmApi {
 
   private final Client client;
 
   @Inject
-  FilmAPI(Client client) {
+  FilmApi(Client client) {
     this.client = client;
   }
 
