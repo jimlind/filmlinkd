@@ -13,8 +13,14 @@ import jimlind.filmlinkd.system.VipScraperScheduler;
 import jimlind.filmlinkd.system.google.PubSubManager;
 import lombok.extern.slf4j.Slf4j;
 
+/** The main entry point for the scraper application. */
 @Slf4j
 public class Scraper {
+  /**
+   * Initializes and starts all core application systems.
+   *
+   * @param args Command line arguments (not used).
+   */
   public static void main(String[] args) {
     log.info("Starting the Scraper Class");
 

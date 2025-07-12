@@ -12,8 +12,14 @@ import jimlind.filmlinkd.system.ShutdownThread;
 import jimlind.filmlinkd.system.google.PubSubManager;
 import lombok.extern.slf4j.Slf4j;
 
+/** The main entry point for the bot application. */
 @Slf4j
 public class Bot {
+  /**
+   * Initializes and starts all core application systems.
+   *
+   * @param args Command line arguments (not used).
+   */
   public static void main(String[] args) {
     log.info("Starting the Bot Class");
 
