@@ -28,17 +28,17 @@ public class StatLogger implements Runnable {
     MemoryUsage heapUsage = memoryBean.getHeapMemoryUsage();
     log.atInfo()
         .setMessage("JVM Heap Statistics (MB)")
-        .addKeyValue("used", String.valueOf(heapUsage.getUsed() / MEGABYTE))
-        .addKeyValue("committed", String.valueOf(heapUsage.getCommitted() / MEGABYTE))
-        .addKeyValue("max", String.valueOf(heapUsage.getMax() / MEGABYTE))
+        .addKeyValue("used", (double) heapUsage.getUsed() / MEGABYTE)
+        .addKeyValue("committed", (double) heapUsage.getCommitted() / MEGABYTE)
+        .addKeyValue("max", (double) heapUsage.getMax() / MEGABYTE)
         .log();
 
     MemoryUsage nonHeapUsage = memoryBean.getNonHeapMemoryUsage();
     log.atInfo()
         .setMessage("JVM Non-Heap Statistics (MB)")
-        .addKeyValue("used", nonHeapUsage.getUsed() / MEGABYTE)
-        .addKeyValue("committed", nonHeapUsage.getCommitted() / MEGABYTE)
-        .addKeyValue("max", nonHeapUsage.getMax() / MEGABYTE)
+        .addKeyValue("used", (double) nonHeapUsage.getUsed() / MEGABYTE)
+        .addKeyValue("committed", (double) nonHeapUsage.getCommitted() / MEGABYTE)
+        .addKeyValue("max", (double) nonHeapUsage.getMax() / MEGABYTE)
         .log();
 
     log.atInfo()
