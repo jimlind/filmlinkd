@@ -10,17 +10,30 @@ import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 import lombok.extern.slf4j.Slf4j;
 
+/** A factory for creating instances of the {@link ScrapedResult} model. */
 @Slf4j
 public class ScrapedResultFactory {
   private final FirestoreManager firestoreManager;
   private final UserFactory userFactory;
 
+  /**
+   * Constructor for the {@link ScrapedResultFactory}.
+   *
+   * @param firestoreManager Class that handles all Firestore interactions
+   * @param userFactory Factory for creating {@link User} model
+   */
   @Inject
   public ScrapedResultFactory(FirestoreManager firestoreManager, UserFactory userFactory) {
     this.firestoreManager = firestoreManager;
     this.userFactory = userFactory;
   }
 
+  /**
+   * Attempts to translate a message from PubSub to a {@link ScrapedResult} model that we can use.
+   *
+   * @param pubsubMessage The message from PubSub
+   * @return A {@link ScrapedResult} or null if unable to create
+   */
   public ScrapedResult createFromPubSubMessage(PubsubMessage pubsubMessage) {
     // Translate to a message object
     String data = pubsubMessage.getData().toStringUtf8();

@@ -7,12 +7,21 @@ import jimlind.filmlinkd.system.discord.ShardManagerStorage;
 import jimlind.filmlinkd.system.discord.embedBuilder.DiaryEntryEmbedBuilder;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 
+/** A factory for creating instances of the {@link ScrapedResultChecker} model. */
 public class ScrapedResultCheckerFactory {
   private final DiaryEntryEmbedBuilder diaryEntryEmbedBuilder;
   private final FirestoreManager firestoreManager;
   private final ScrapedResultQueue scrapedResultQueue;
   private final ShardManagerStorage shardManagerStorage;
 
+  /**
+   * Constructor for {@link ScrapedResultCheckerFactory}.
+   *
+   * @param diaryEntryEmbedBuilder A class that builds diaryEntryEmbed objects
+   * @param firestoreManager A class that handles FireStore data interactions
+   * @param scrapedResultQueue A class that stores results in local memory
+   * @param shardManagerStorage A class that stores shard information
+   */
   @Inject
   public ScrapedResultCheckerFactory(
       DiaryEntryEmbedBuilder diaryEntryEmbedBuilder,
@@ -25,6 +34,13 @@ public class ScrapedResultCheckerFactory {
     this.shardManagerStorage = shardManagerStorage;
   }
 
+  /**
+   * Creates a {@link ScrapedResultChecker}.
+   *
+   * @param shardId The shard id to help us know which places have received data
+   * @param totalShards The total number of shards in use
+   * @return A {@link ScrapedResultChecker} appropriate for one shard
+   */
   public ScrapedResultChecker create(int shardId, int totalShards) {
     return new ScrapedResultChecker(
         diaryEntryEmbedBuilder,
