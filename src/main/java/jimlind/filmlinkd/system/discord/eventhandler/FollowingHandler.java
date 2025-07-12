@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.TreeMap;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.model.User;
-import jimlind.filmlinkd.system.discord.embedBuilder.FollowingEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.FollowingEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;

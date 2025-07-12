@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.discord.stringBuilder;
+package jimlind.filmlinkd.system.discord.stringbuilder;
 
 import java.util.List;
 import java.util.stream.Collectors;

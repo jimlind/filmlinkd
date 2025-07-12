@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.discord.stringBuilder;
+package jimlind.filmlinkd.system.discord.stringbuilder;
 
 public class StarsStringBuilder {
   private float starCount = 0;

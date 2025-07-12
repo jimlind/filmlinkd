@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.discord.stringBuilder;
+package jimlind.filmlinkd.system.discord.stringbuilder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

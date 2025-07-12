@@ -1,11 +1,11 @@
-package jimlind.filmlinkd.system.discord.embedBuilder;
+package jimlind.filmlinkd.system.discord.embedbuilder;
 
 import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
-import jimlind.filmlinkd.system.discord.stringBuilder.StarsStringBuilder;
-import jimlind.filmlinkd.system.discord.stringBuilder.UserStringBuilder;
+import jimlind.filmlinkd.system.discord.stringbuilder.StarsStringBuilder;
+import jimlind.filmlinkd.system.discord.stringbuilder.UserStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LBMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;

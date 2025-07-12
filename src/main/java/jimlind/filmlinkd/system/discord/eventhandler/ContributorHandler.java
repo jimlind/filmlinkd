@@ -2,7 +2,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
 import java.util.ArrayList;
-import jimlind.filmlinkd.system.discord.embedBuilder.ContributorEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.ContributorEmbedBuilder;
 import jimlind.filmlinkd.system.letterboxd.api.ContributorApi;
 import jimlind.filmlinkd.system.letterboxd.model.LBContributor;
 import jimlind.filmlinkd.system.letterboxd.model.LBSearchResponse;

@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.discord.embedBuilder;
+package jimlind.filmlinkd.system.discord.embedbuilder;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
-import jimlind.filmlinkd.system.discord.stringBuilder.DescriptionStringBuilder;
+import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LBContributionStatistics;
 import jimlind.filmlinkd.system.letterboxd.model.LBContributor;
 import jimlind.filmlinkd.system.letterboxd.model.LBLink;

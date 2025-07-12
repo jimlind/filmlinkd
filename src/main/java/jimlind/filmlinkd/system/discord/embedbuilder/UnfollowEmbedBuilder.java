@@ -1,23 +1,24 @@
-package jimlind.filmlinkd.system.discord.embedBuilder;
+package jimlind.filmlinkd.system.discord.embedbuilder;
 
 import com.google.inject.Inject;
 import java.util.ArrayList;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
-import jimlind.filmlinkd.system.discord.stringBuilder.DescriptionStringBuilder;
-import jimlind.filmlinkd.system.discord.stringBuilder.UserStringBuilder;
+import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
+import jimlind.filmlinkd.system.discord.stringbuilder.UserStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LBMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class RefreshEmbedBuilder {
+public class UnfollowEmbedBuilder {
   private final DescriptionStringBuilder descriptionStringBuilder;
-  private final net.dv8tion.jda.api.EmbedBuilder embedBuilder;
+  private final EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
   private final UserStringBuilder userStringBuilder;
   private LBMember member = null;
 
   @Inject
-  public RefreshEmbedBuilder(
+  public UnfollowEmbedBuilder(
       DescriptionStringBuilder descriptionStringBuilder,
       EmbedBuilderFactory embedBuilderFactory,
       ImageUtils imageUtils,
@@ -28,7 +29,7 @@ public class RefreshEmbedBuilder {
     embedBuilder = embedBuilderFactory.create();
   }
 
-  public RefreshEmbedBuilder setMember(LBMember member) {
+  public UnfollowEmbedBuilder setMember(LBMember member) {
     this.member = member;
     return this;
   }
@@ -40,7 +41,8 @@ public class RefreshEmbedBuilder {
 
     String userName = userStringBuilder.setUserName(member.username).build();
     String description =
-        String.format("I updated my display data for %s (%s).", member.displayName, userName);
+        String.format(
+            "I unfollowed %s (%s).\nNo hard feelings I hope.", member.displayName, userName);
     embedBuilder.setDescription(descriptionStringBuilder.setDescriptionText(description).build());
     embedBuilder.setThumbnail(imageUtils.getTallest(member.avatar));
 

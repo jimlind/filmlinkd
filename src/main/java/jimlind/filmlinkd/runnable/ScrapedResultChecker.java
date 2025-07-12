@@ -7,7 +7,7 @@ import jimlind.filmlinkd.model.ScrapedResult;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.ScrapedResultQueue;
 import jimlind.filmlinkd.system.discord.ShardManagerStorage;
-import jimlind.filmlinkd.system.discord.embedBuilder.DiaryEntryEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.DiaryEntryEmbedBuilder;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 import lombok.extern.slf4j.Slf4j;

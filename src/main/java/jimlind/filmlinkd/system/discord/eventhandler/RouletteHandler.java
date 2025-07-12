@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import jimlind.filmlinkd.model.CombinedLBFilmModel;
-import jimlind.filmlinkd.system.discord.embedBuilder.FilmEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.FilmEmbedBuilder;
 import jimlind.filmlinkd.system.letterboxd.api.FilmApi;
 import jimlind.filmlinkd.system.letterboxd.web.LetterboxdIdWeb;
 import net.dv8tion.jda.api.entities.MessageEmbed;

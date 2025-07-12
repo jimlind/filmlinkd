@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.discord.embedBuilder;
+package jimlind.filmlinkd.system.discord.embedbuilder;
 
 import com.google.inject.Inject;
 import io.github.furstenheim.CopyDown;
@@ -13,7 +13,7 @@ import java.util.Locale;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.User;
-import jimlind.filmlinkd.system.discord.stringBuilder.StarsStringBuilder;
+import jimlind.filmlinkd.system.discord.stringbuilder.StarsStringBuilder;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;

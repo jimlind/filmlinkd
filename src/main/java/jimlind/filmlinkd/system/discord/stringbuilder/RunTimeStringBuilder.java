@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.discord.stringBuilder;
+package jimlind.filmlinkd.system.discord.stringbuilder;
 
 public class RunTimeStringBuilder {
   private int runTime = 0;

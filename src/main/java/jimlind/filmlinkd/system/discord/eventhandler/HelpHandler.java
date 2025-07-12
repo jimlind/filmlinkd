@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import jimlind.filmlinkd.system.discord.embedBuilder.HelpEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.HelpEmbedBuilder;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;

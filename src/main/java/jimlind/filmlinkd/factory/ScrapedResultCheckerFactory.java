@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import jimlind.filmlinkd.runnable.ScrapedResultChecker;
 import jimlind.filmlinkd.system.ScrapedResultQueue;
 import jimlind.filmlinkd.system.discord.ShardManagerStorage;
-import jimlind.filmlinkd.system.discord.embedBuilder.DiaryEntryEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.DiaryEntryEmbedBuilder;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 
 /** A factory for creating instances of the {@link ScrapedResultChecker} model. */

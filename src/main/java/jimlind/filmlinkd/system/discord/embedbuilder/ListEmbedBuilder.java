@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.discord.embedBuilder;
+package jimlind.filmlinkd.system.discord.embedbuilder;
 
 import com.google.inject.Inject;
 import io.github.furstenheim.CopyDown;
@@ -6,7 +6,7 @@ import io.github.furstenheim.Options;
 import io.github.furstenheim.OptionsBuilder;
 import java.util.ArrayList;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
-import jimlind.filmlinkd.system.discord.stringBuilder.DescriptionStringBuilder;
+import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LBListEntrySummary;
 import jimlind.filmlinkd.system.letterboxd.model.LBListSummary;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;

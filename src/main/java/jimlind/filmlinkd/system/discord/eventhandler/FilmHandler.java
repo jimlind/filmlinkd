@@ -3,7 +3,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 import com.google.inject.Inject;
 import java.util.ArrayList;
 import jimlind.filmlinkd.model.CombinedLBFilmModel;
-import jimlind.filmlinkd.system.discord.embedBuilder.FilmEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.FilmEmbedBuilder;
 import jimlind.filmlinkd.system.letterboxd.api.FilmApi;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

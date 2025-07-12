@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.discord.embedBuilder;
+package jimlind.filmlinkd.system.discord.embedbuilder;
 
 import com.google.inject.Inject;
 import java.util.ArrayList;
@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.model.User;
-import jimlind.filmlinkd.system.discord.stringBuilder.DescriptionStringBuilder;
-import jimlind.filmlinkd.system.discord.stringBuilder.UserStringBuilder;
+import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
+import jimlind.filmlinkd.system.discord.stringbuilder.UserStringBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class FollowingEmbedBuilder {

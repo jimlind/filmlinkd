@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.discord.stringBuilder;
+package jimlind.filmlinkd.system.discord.stringbuilder;
 
 public class UserStringBuilder {
   private String userName = "";

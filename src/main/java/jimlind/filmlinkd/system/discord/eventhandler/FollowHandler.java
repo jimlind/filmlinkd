@@ -10,7 +10,7 @@ import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.model.Command;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.User;
-import jimlind.filmlinkd.system.discord.embedBuilder.FollowEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.FollowEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.google.FirestoreManager;

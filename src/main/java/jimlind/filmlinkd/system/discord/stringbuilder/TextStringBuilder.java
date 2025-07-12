@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.discord.stringBuilder;
+package jimlind.filmlinkd.system.discord.stringbuilder;
 
 import io.github.furstenheim.CopyDown;
 import io.github.furstenheim.Options;
