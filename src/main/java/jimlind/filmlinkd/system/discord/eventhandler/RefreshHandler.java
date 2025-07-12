@@ -1,31 +1,27 @@
-package jimlind.filmlinkd.system.discord.eventHandler;
+package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
 import java.util.ArrayList;
-import jimlind.filmlinkd.system.discord.embedBuilder.UnfollowEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedBuilder.RefreshEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
-import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.letterboxd.model.LBMember;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-public class UnfollowHandler implements Handler {
+public class RefreshHandler implements Handler {
   private final AccountHelper accountHelper;
-  private final ChannelHelper channelHelper;
   private final FirestoreManager firestoreManager;
-  private final UnfollowEmbedBuilder unfollowEmbedBuilder;
+  private final RefreshEmbedBuilder refreshEmbedBuilder;
 
   @Inject
-  UnfollowHandler(
+  RefreshHandler(
       AccountHelper accountHelper,
-      ChannelHelper channelHelper,
       FirestoreManager firestoreManager,
-      UnfollowEmbedBuilder unfollowEmbedBuilder) {
+      RefreshEmbedBuilder refreshEmbedBuilder) {
     this.accountHelper = accountHelper;
-    this.channelHelper = channelHelper;
     this.firestoreManager = firestoreManager;
-    this.unfollowEmbedBuilder = unfollowEmbedBuilder;
+    this.refreshEmbedBuilder = refreshEmbedBuilder;
   }
 
   @Override
@@ -38,18 +34,12 @@ public class UnfollowHandler implements Handler {
       return;
     }
 
-    String channelId = channelHelper.getChannelId(event);
-    if (channelId.isBlank()) {
-      event.getHook().sendMessage(NO_CHANNEL_FOUND).queue();
+    if (!this.firestoreManager.updateUserDisplayData(member)) {
+      event.getHook().sendMessage("Refresh Failed").queue();
       return;
     }
 
-    if (!firestoreManager.removeUserSubscription(member.id, channelId)) {
-      event.getHook().sendMessage("Unfollow Failed").queue();
-      return;
-    }
-
-    ArrayList<MessageEmbed> messageEmbedList = unfollowEmbedBuilder.setMember(member).build();
+    ArrayList<MessageEmbed> messageEmbedList = refreshEmbedBuilder.setMember(member).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

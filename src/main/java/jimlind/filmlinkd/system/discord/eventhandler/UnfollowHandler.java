@@ -1,27 +1,31 @@
-package jimlind.filmlinkd.system.discord.eventHandler;
+package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
 import java.util.ArrayList;
-import jimlind.filmlinkd.system.discord.embedBuilder.RefreshEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedBuilder.UnfollowEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
+import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.letterboxd.model.LBMember;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-public class RefreshHandler implements Handler {
+public class UnfollowHandler implements Handler {
   private final AccountHelper accountHelper;
+  private final ChannelHelper channelHelper;
   private final FirestoreManager firestoreManager;
-  private final RefreshEmbedBuilder refreshEmbedBuilder;
+  private final UnfollowEmbedBuilder unfollowEmbedBuilder;
 
   @Inject
-  RefreshHandler(
+  UnfollowHandler(
       AccountHelper accountHelper,
+      ChannelHelper channelHelper,
       FirestoreManager firestoreManager,
-      RefreshEmbedBuilder refreshEmbedBuilder) {
+      UnfollowEmbedBuilder unfollowEmbedBuilder) {
     this.accountHelper = accountHelper;
+    this.channelHelper = channelHelper;
     this.firestoreManager = firestoreManager;
-    this.refreshEmbedBuilder = refreshEmbedBuilder;
+    this.unfollowEmbedBuilder = unfollowEmbedBuilder;
   }
 
   @Override
@@ -34,12 +38,18 @@ public class RefreshHandler implements Handler {
       return;
     }
 
-    if (!this.firestoreManager.updateUserDisplayData(member)) {
-      event.getHook().sendMessage("Refresh Failed").queue();
+    String channelId = channelHelper.getChannelId(event);
+    if (channelId.isBlank()) {
+      event.getHook().sendMessage(NO_CHANNEL_FOUND).queue();
       return;
     }
 
-    ArrayList<MessageEmbed> messageEmbedList = refreshEmbedBuilder.setMember(member).build();
+    if (!firestoreManager.removeUserSubscription(member.id, channelId)) {
+      event.getHook().sendMessage("Unfollow Failed").queue();
+      return;
+    }
+
+    ArrayList<MessageEmbed> messageEmbedList = unfollowEmbedBuilder.setMember(member).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

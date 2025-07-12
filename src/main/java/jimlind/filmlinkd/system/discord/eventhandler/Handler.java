@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.discord.eventHandler;
+package jimlind.filmlinkd.system.discord.eventhandler;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 

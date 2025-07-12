@@ -14,7 +14,7 @@ import jimlind.filmlinkd.system.discord.EventListener;
 import jimlind.filmlinkd.system.discord.ShardManagerStorage;
 import jimlind.filmlinkd.system.discord.SlashCommandManager;
 import jimlind.filmlinkd.system.discord.embedBuilder.*;
-import jimlind.filmlinkd.system.discord.eventHandler.*;
+import jimlind.filmlinkd.system.discord.eventhandler.*;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.discord.stringBuilder.*;

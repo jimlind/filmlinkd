@@ -3,7 +3,7 @@ package jimlind.filmlinkd.system.discord;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import javax.annotation.Nullable;
-import jimlind.filmlinkd.system.discord.eventHandler.Handler;
+import jimlind.filmlinkd.system.discord.eventhandler.Handler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class SlashCommandManager {
@@ -28,7 +28,7 @@ public class SlashCommandManager {
   private @Nullable Handler getHandlerFromEventName(String name) {
     String fragment = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
     String className =
-        String.format("jimlind.filmlinkd.system.discord.eventHandler.%sHandler", fragment);
+        String.format("jimlind.filmlinkd.system.discord.eventhandler.%sHandler", fragment);
 
     try {
       Class<?> clazz = Class.forName(className);

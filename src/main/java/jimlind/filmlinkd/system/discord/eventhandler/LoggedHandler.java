@@ -1,29 +1,35 @@
-package jimlind.filmlinkd.system.discord.eventHandler;
+package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-import jimlind.filmlinkd.system.discord.embedBuilder.DiaryListEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedBuilder.LoggedEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
+import jimlind.filmlinkd.system.letterboxd.api.FilmApi;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
+import jimlind.filmlinkd.system.letterboxd.model.LBFilmSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LBMember;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
-public class DiaryHandler implements Handler {
+public class LoggedHandler implements Handler {
   private final AccountHelper accountHelper;
-  private final DiaryListEmbedBuilder diaryListEmbedBuilder;
+  private final FilmApi filmApi;
   private final LogEntriesApi logEntriesApi;
+  private final LoggedEmbedBuilder loggedEmbedBuilder;
 
   @Inject
-  DiaryHandler(
+  LoggedHandler(
       AccountHelper accountHelper,
-      DiaryListEmbedBuilder diaryListEmbedBuilder,
-      LogEntriesApi logEntriesApi) {
+      FilmApi filmApi,
+      LogEntriesApi logEntriesApi,
+      LoggedEmbedBuilder loggedEmbedBuilder) {
     this.accountHelper = accountHelper;
-    this.diaryListEmbedBuilder = diaryListEmbedBuilder;
+    this.filmApi = filmApi;
     this.logEntriesApi = logEntriesApi;
+    this.loggedEmbedBuilder = loggedEmbedBuilder;
   }
 
   @Override
@@ -31,19 +37,24 @@ public class DiaryHandler implements Handler {
     event.deferReply().queue();
 
     LBMember member = accountHelper.getMember(event);
-    if (member == null) {
+
+    OptionMapping filmNameMap = event.getInteraction().getOption("film-name");
+    String filmAsString = filmNameMap != null ? filmNameMap.getAsString() : "";
+    LBFilmSummary film = filmApi.search(filmAsString);
+
+    if (member == null || film == null) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;
     }
 
-    List<LBLogEntry> logEntryList = logEntriesApi.getRecentForUser(member.id, 5);
+    List<LBLogEntry> logEntryList = logEntriesApi.getByUserAndFilm(member.id, film.id);
     if (logEntryList.isEmpty()) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;
     }
 
     ArrayList<MessageEmbed> messageEmbedList =
-        diaryListEmbedBuilder.setMember(member).setLogEntryList(logEntryList).build();
+        loggedEmbedBuilder.setLogEntryList(logEntryList).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }
