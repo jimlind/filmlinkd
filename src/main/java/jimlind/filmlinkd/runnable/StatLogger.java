@@ -28,9 +28,9 @@ public class StatLogger implements Runnable {
     MemoryUsage heapUsage = memoryBean.getHeapMemoryUsage();
     log.atInfo()
         .setMessage("JVM Heap Statistics (MB)")
-        .addKeyValue("used", heapUsage.getUsed() / MEGABYTE)
-        .addKeyValue("committed", heapUsage.getCommitted() / MEGABYTE)
-        .addKeyValue("max", heapUsage.getMax() / MEGABYTE)
+        .addKeyValue("used", String.valueOf(heapUsage.getUsed() / MEGABYTE))
+        .addKeyValue("committed", String.valueOf(heapUsage.getCommitted() / MEGABYTE))
+        .addKeyValue("max", String.valueOf(heapUsage.getMax() / MEGABYTE))
         .log();
 
     MemoryUsage nonHeapUsage = memoryBean.getNonHeapMemoryUsage();
