@@ -52,10 +52,10 @@ public class FirestoreManager {
     }
   }
 
-  public @Nullable QueryDocumentSnapshot getUserDocument(String userLID) {
+  public @Nullable QueryDocumentSnapshot getUserDocument(String userLid) {
     String collectionId = appConfig.getFirestoreCollectionId();
     ApiFuture<QuerySnapshot> query =
-        this.db.collection(collectionId).whereEqualTo("letterboxdId", userLID).limit(1).get();
+        this.db.collection(collectionId).whereEqualTo("letterboxdId", userLid).limit(1).get();
 
     try {
       return query.get().getDocuments().get(0);
@@ -100,9 +100,9 @@ public class FirestoreManager {
     }
   }
 
-  public boolean addUserSubscription(String userLID, String channelId) {
+  public boolean addUserSubscription(String userLid, String channelId) {
     // Create user but also save snapshot to update with
-    QueryDocumentSnapshot snapshot = this.getUserDocument(userLID);
+    QueryDocumentSnapshot snapshot = this.getUserDocument(userLid);
     User user = this.userFactory.createFromSnapshot(snapshot);
     if (snapshot == null || user == null) {
       return false;
@@ -137,9 +137,9 @@ public class FirestoreManager {
     return true;
   }
 
-  public boolean removeUserSubscription(String userLID, String channelId) {
+  public boolean removeUserSubscription(String userLid, String channelId) {
     // Create user but also save snapshot to update with
-    QueryDocumentSnapshot snapshot = this.getUserDocument(userLID);
+    QueryDocumentSnapshot snapshot = this.getUserDocument(userLid);
     User user = this.userFactory.createFromSnapshot(snapshot);
     if (snapshot == null || user == null) {
       return false;
@@ -192,10 +192,10 @@ public class FirestoreManager {
   }
 
   public boolean updateUserPrevious(
-      String userLID, String diaryLID, long diaryPublishedDate, String diaryURI) {
+      String userLid, String diaryLid, long diaryPublishedDate, String diaryUri) {
 
     // Create user but also save snapshot to update with
-    QueryDocumentSnapshot snapshot = this.getUserDocument(userLID);
+    QueryDocumentSnapshot snapshot = this.getUserDocument(userLid);
     User user = this.userFactory.createFromSnapshot(snapshot);
     if (snapshot == null || user == null) {
       return false;
@@ -208,12 +208,12 @@ public class FirestoreManager {
     }
 
     // Nothing to update. Return `true` as if the action succeeded.
-    if (previousList.contains(diaryLID)) {
+    if (previousList.contains(diaryLid)) {
       return true;
     }
 
     // The previous list should be considered the primary source of truth
-    user.previous.list = LidComparer.buildMostRecentList(previousList, diaryLID, 10);
+    user.previous.list = LidComparer.buildMostRecentList(previousList, diaryLid, 10);
 
     // The scraping process uses the previous lid as it's source of truth to determine which
     // entries are new. Maybe that should be changed eventually.
@@ -222,7 +222,7 @@ public class FirestoreManager {
     // This data is only used if I'm trying to debug publishing issues
     user.updated = Instant.now().toEpochMilli();
     user.previous.published = diaryPublishedDate;
-    user.previous.uri = diaryURI;
+    user.previous.uri = diaryUri;
 
     // Perform the update
     try {
@@ -231,7 +231,7 @@ public class FirestoreManager {
       log.atError()
           .setMessage("Unable to Update Previous: Update Failed")
           .addKeyValue("user", user)
-          .addKeyValue("diaryLID", diaryLID)
+          .addKeyValue("diaryLid", diaryLid)
           .log();
       return false;
     }
