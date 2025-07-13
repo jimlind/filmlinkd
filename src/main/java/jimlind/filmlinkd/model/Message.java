@@ -3,10 +3,17 @@ package jimlind.filmlinkd.model;
 import com.google.gson.Gson;
 import org.jetbrains.annotations.Nullable;
 
+/** Message is a bit of a broad term here but this is used to send to all shards. */
 public class Message {
   public Entry entry;
   @Nullable public String channelId;
 
+  /**
+   * A channel override means that we want to publish to one specific channel and not publish to all
+   * channels that the user is followed in.
+   *
+   * @return Indicator that a channel was specified for the message
+   */
   public boolean hasChannelOverride() {
     if (this.channelId == null) {
       return false;
@@ -15,21 +22,29 @@ public class Message {
     return !this.channelId.isBlank();
   }
 
+  /**
+   * Needed to create a string object to be passed around in PubSub messages.
+   *
+   * @return A JSON string of the data in this model
+   */
   public String toJson() {
     return new Gson().toJson(this);
   }
 
+  /** The different kinds of diary entries. */
   public enum Type {
     watch,
     review,
   }
 
+  /** Where the new diary entry comes from. */
   public enum PublishSource {
     Normal,
     VIP,
     Follow,
   }
 
+  /** All the data needed for a diary entry. */
   public static class Entry {
     public String lid;
     public String userName;

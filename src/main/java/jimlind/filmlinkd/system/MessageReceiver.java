@@ -9,12 +9,20 @@ import java.util.regex.Pattern;
 import jimlind.filmlinkd.factory.ScrapedResultFactory;
 import jimlind.filmlinkd.model.ScrapedResult;
 
+/** The MessageReceiver gets PubSub messages and responds to them appropriately. */
 @Singleton
 public class MessageReceiver implements com.google.cloud.pubsub.v1.MessageReceiver {
   private final EntryCache entryCache;
   private final ScrapedResultFactory scrapedResultFactory;
   private final ScrapedResultQueue scrapedResultQueue;
 
+  /**
+   * Constructor for the {@link MessageReceiver}.
+   *
+   * @param entryCache Where we keep a record of most of recent diary entries
+   * @param scrapedResultFactory Factory for creating {@link ScrapedResult} model from message data
+   * @param scrapedResultQueue Where we put PubSub events to keep from overwhelming the system
+   */
   @Inject
   public MessageReceiver(
       EntryCache entryCache,
@@ -25,10 +33,14 @@ public class MessageReceiver implements com.google.cloud.pubsub.v1.MessageReceiv
     this.scrapedResultQueue = scrapedResultQueue;
   }
 
+  /**
+   * This writes to a queue so that I can rate limit the amount of processing that happens. If we
+   * let every PubSub event trigger some logic it can take over the CPU really quickly.
+   *
+   * @param pubsubMessage The message coming from PubSub event containing the payload
+   * @param ackReplyConsumer The class needed to acknowledge receiving the message
+   */
   @Override
-  // This writes to a queue so that I can rate limit the amount of processing that
-  // happens. If we let every PubSub event trigger some logic it can take over the
-  // CPU really quickly.
   public void receiveMessage(PubsubMessage pubsubMessage, AckReplyConsumer ackReplyConsumer) {
     // Immediately ack the message. It'll get sent again eventually if it doesn't register.
     ackReplyConsumer.ack();

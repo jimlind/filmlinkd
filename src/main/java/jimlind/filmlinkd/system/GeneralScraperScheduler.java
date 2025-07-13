@@ -7,12 +7,21 @@ import java.util.concurrent.TimeUnit;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.runnable.GeneralUserCacheClearer;
 
+/** Sets up the scraper that runs over every user. */
 public class GeneralScraperScheduler {
   private final AppConfig appConfig;
   private final jimlind.filmlinkd.runnable.GeneralScraper generalScraper;
   private final GeneralUserCache generalUserCache;
   private final GeneralUserCacheClearer generalUserCacheClearer;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param appConfig Holds all the configs that determine how the system run
+   * @param generalScraper The scraper task that we are scheduling
+   * @param generalUserCache Where we store in memory versions records of latest diary entry
+   * @param generalUserCacheClearer The user clear cache
+   */
   @Inject
   public GeneralScraperScheduler(
       AppConfig appConfig,
@@ -25,6 +34,7 @@ public class GeneralScraperScheduler {
     this.generalUserCacheClearer = generalUserCacheClearer;
   }
 
+  /** Method that activates the scrapers so that the Class can be instantiated but inactive. */
   public void start() {
     generalUserCache.initializeRandomPage();
 
