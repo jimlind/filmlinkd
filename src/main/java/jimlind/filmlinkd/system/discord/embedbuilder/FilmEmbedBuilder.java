@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
-import jimlind.filmlinkd.model.CombinedLBFilmModel;
+import jimlind.filmlinkd.model.CombinedLbFilmModel;
 import jimlind.filmlinkd.system.discord.stringbuilder.*;
-import jimlind.filmlinkd.system.letterboxd.model.LBFilm;
-import jimlind.filmlinkd.system.letterboxd.model.LBFilmStatistics;
-import jimlind.filmlinkd.system.letterboxd.model.LBFilmStatisticsCounts;
-import jimlind.filmlinkd.system.letterboxd.model.LBFilmSummary;
+import jimlind.filmlinkd.system.letterboxd.model.LbFilm;
+import jimlind.filmlinkd.system.letterboxd.model.LbFilmStatistics;
+import jimlind.filmlinkd.system.letterboxd.model.LbFilmStatisticsCounts;
+import jimlind.filmlinkd.system.letterboxd.model.LbFilmSummary;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -18,7 +18,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 public class FilmEmbedBuilder {
   private final EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
-  private CombinedLBFilmModel filmCombination = null;
+  private CombinedLbFilmModel filmCombination = null;
 
   @Inject
   FilmEmbedBuilder(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
@@ -26,7 +26,7 @@ public class FilmEmbedBuilder {
     this.imageUtils = imageUtils;
   }
 
-  public FilmEmbedBuilder setFilmCombination(CombinedLBFilmModel filmCombination) {
+  public FilmEmbedBuilder setFilmCombination(CombinedLbFilmModel filmCombination) {
     this.filmCombination = filmCombination;
     return this;
   }
@@ -36,9 +36,9 @@ public class FilmEmbedBuilder {
       return new ArrayList<>();
     }
 
-    LBFilm film = filmCombination.film;
-    LBFilmStatistics statistics = filmCombination.filmStatistics;
-    LBFilmSummary summary = filmCombination.filmSummary;
+    LbFilm film = filmCombination.film;
+    LbFilmStatistics statistics = filmCombination.filmStatistics;
+    LbFilmSummary summary = filmCombination.filmSummary;
 
     String releaseYear = film.releaseYear > 0 ? String.format(" (%s)", film.releaseYear) : "";
     String imageURL = imageUtils.getTallest(film.poster);
@@ -85,7 +85,7 @@ public class FilmEmbedBuilder {
     }
 
     // Add statistics counts
-    LBFilmStatisticsCounts counts = statistics.counts;
+    LbFilmStatisticsCounts counts = statistics.counts;
     description += ":eyes: " + new CountStringBuilder().setCount(counts.watches).build() + ", ";
     description +=
         "<:r:851138401557676073> " + new CountStringBuilder().setCount(counts.likes).build() + ", ";

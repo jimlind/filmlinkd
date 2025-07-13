@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
 import jimlind.filmlinkd.system.discord.stringbuilder.UserStringBuilder;
-import jimlind.filmlinkd.system.letterboxd.model.LBMember;
+import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -14,7 +14,7 @@ public class RefreshEmbedBuilder {
   private final net.dv8tion.jda.api.EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
   private final UserStringBuilder userStringBuilder;
-  private LBMember member = null;
+  private LbMember member = null;
 
   @Inject
   public RefreshEmbedBuilder(
@@ -28,7 +28,7 @@ public class RefreshEmbedBuilder {
     embedBuilder = embedBuilderFactory.create();
   }
 
-  public RefreshEmbedBuilder setMember(LBMember member) {
+  public RefreshEmbedBuilder setMember(LbMember member) {
     this.member = member;
     return this;
   }

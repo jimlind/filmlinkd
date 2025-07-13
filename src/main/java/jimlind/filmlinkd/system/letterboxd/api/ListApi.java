@@ -1,7 +1,7 @@
 package jimlind.filmlinkd.system.letterboxd.api;
 
 import com.google.inject.Inject;
-import jimlind.filmlinkd.system.letterboxd.model.LBListsResponse;
+import jimlind.filmlinkd.system.letterboxd.model.LbListsResponse;
 
 public class ListApi {
   private final Client client;
@@ -11,11 +11,11 @@ public class ListApi {
     this.client = client;
   }
 
-  public LBListsResponse fetch(String userId, int count) {
+  public LbListsResponse fetch(String userId, int count) {
     String uriTemplate = "lists/?member=%s&memberRelationship=%s&perPage=%s&where=%s";
     String path = String.format(uriTemplate, userId, "Owner", 50, "Published");
 
-    LBListsResponse listsResponse = client.getAuthorized(path, LBListsResponse.class);
+    LbListsResponse listsResponse = client.getAuthorized(path, LbListsResponse.class);
     if (listsResponse == null || listsResponse.items.isEmpty()) {
       return null;
     }

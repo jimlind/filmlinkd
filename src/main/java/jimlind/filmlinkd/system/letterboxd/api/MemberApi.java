@@ -1,7 +1,7 @@
 package jimlind.filmlinkd.system.letterboxd.api;
 
 import com.google.inject.Inject;
-import jimlind.filmlinkd.system.letterboxd.model.LBMember;
+import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 
 public class MemberApi {
   private final Client client;
@@ -11,13 +11,13 @@ public class MemberApi {
     this.client = client;
   }
 
-  public LBMember fetch(String userLID) {
+  public LbMember fetch(String userLID) {
     if (userLID.isBlank()) {
       return null;
     }
 
     String memberDetailsPath = String.format("member/%s", userLID);
 
-    return this.client.getAuthorized(memberDetailsPath, LBMember.class);
+    return this.client.getAuthorized(memberDetailsPath, LbMember.class);
   }
 }

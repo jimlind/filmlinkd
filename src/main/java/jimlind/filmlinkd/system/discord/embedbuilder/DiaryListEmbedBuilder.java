@@ -6,8 +6,8 @@ import java.util.List;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.StarsStringBuilder;
 import jimlind.filmlinkd.system.discord.stringbuilder.UserStringBuilder;
-import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
-import jimlind.filmlinkd.system.letterboxd.model.LBMember;
+import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
+import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -16,8 +16,8 @@ public class DiaryListEmbedBuilder {
   private final EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
 
-  private LBMember member = null;
-  private List<LBLogEntry> logEntryList = new ArrayList<>();
+  private LbMember member = null;
+  private List<LbLogEntry> logEntryList = new ArrayList<>();
 
   @Inject
   public DiaryListEmbedBuilder(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
@@ -25,12 +25,12 @@ public class DiaryListEmbedBuilder {
     this.imageUtils = imageUtils;
   }
 
-  public DiaryListEmbedBuilder setMember(LBMember member) {
+  public DiaryListEmbedBuilder setMember(LbMember member) {
     this.member = member;
     return this;
   }
 
-  public DiaryListEmbedBuilder setLogEntryList(List<LBLogEntry> logEntryList) {
+  public DiaryListEmbedBuilder setLogEntryList(List<LbLogEntry> logEntryList) {
     this.logEntryList = logEntryList;
     return this;
   }
@@ -41,7 +41,7 @@ public class DiaryListEmbedBuilder {
     }
 
     ArrayList<String> entryList = new ArrayList<>();
-    for (LBLogEntry logEntry : logEntryList) {
+    for (LbLogEntry logEntry : logEntryList) {
       String firstLine =
           String.format(
               "[**%s (%s)**](https://boxd.it/%s)",

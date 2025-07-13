@@ -9,7 +9,7 @@ import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.system.GeneralUserCache;
 import jimlind.filmlinkd.system.google.PubSubManager;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
-import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
+import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,7 +41,7 @@ public class GeneralScraper implements Runnable {
 
       ArrayList<String> publishedEntryIdList = new ArrayList<String>();
 
-      List<LBLogEntry> logEntryList = logEntriesApi.getRecentForUser(entry.getKey(), 10);
+      List<LbLogEntry> logEntryList = logEntriesApi.getRecentForUser(entry.getKey(), 10);
 
       //      // Filter out entries that are less than 3 minutes old
       //      if (Date.now() - Date.parse(logEntry.whenCreated) < 180000) {

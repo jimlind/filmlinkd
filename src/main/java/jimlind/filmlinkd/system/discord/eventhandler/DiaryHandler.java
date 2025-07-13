@@ -6,8 +6,8 @@ import java.util.List;
 import jimlind.filmlinkd.system.discord.embedbuilder.DiaryListEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
-import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
-import jimlind.filmlinkd.system.letterboxd.model.LBMember;
+import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
+import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -30,13 +30,13 @@ public class DiaryHandler implements Handler {
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
 
-    LBMember member = accountHelper.getMember(event);
+    LbMember member = accountHelper.getMember(event);
     if (member == null) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;
     }
 
-    List<LBLogEntry> logEntryList = logEntriesApi.getRecentForUser(member.id, 5);
+    List<LbLogEntry> logEntryList = logEntriesApi.getRecentForUser(member.id, 5);
     if (logEntryList.isEmpty()) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;

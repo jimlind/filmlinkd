@@ -7,9 +7,9 @@ import jimlind.filmlinkd.system.discord.embedbuilder.LoggedEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.letterboxd.api.FilmApi;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
-import jimlind.filmlinkd.system.letterboxd.model.LBFilmSummary;
-import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
-import jimlind.filmlinkd.system.letterboxd.model.LBMember;
+import jimlind.filmlinkd.system.letterboxd.model.LbFilmSummary;
+import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
+import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -36,18 +36,18 @@ public class LoggedHandler implements Handler {
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
 
-    LBMember member = accountHelper.getMember(event);
+    LbMember member = accountHelper.getMember(event);
 
     OptionMapping filmNameMap = event.getInteraction().getOption("film-name");
     String filmAsString = filmNameMap != null ? filmNameMap.getAsString() : "";
-    LBFilmSummary film = filmApi.search(filmAsString);
+    LbFilmSummary film = filmApi.search(filmAsString);
 
     if (member == null || film == null) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;
     }
 
-    List<LBLogEntry> logEntryList = logEntriesApi.getByUserAndFilm(member.id, film.id);
+    List<LbLogEntry> logEntryList = logEntriesApi.getByUserAndFilm(member.id, film.id);
     if (logEntryList.isEmpty()) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;

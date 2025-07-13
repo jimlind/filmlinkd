@@ -2,7 +2,7 @@ package jimlind.filmlinkd.system.discord.helper;
 
 import com.google.inject.Inject;
 import jimlind.filmlinkd.system.letterboxd.api.MemberApi;
-import jimlind.filmlinkd.system.letterboxd.model.LBMember;
+import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.web.MemberWeb;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -19,7 +19,7 @@ public class AccountHelper {
   }
 
   @Nullable
-  public LBMember getMember(SlashCommandInteractionEvent event) {
+  public LbMember getMember(SlashCommandInteractionEvent event) {
     OptionMapping accountMap = event.getInteraction().getOption("account");
     String userName = accountMap != null ? accountMap.getAsString() : "";
     String userLID = this.memberWeb.getMemberLIDFromUsername(userName);

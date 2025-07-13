@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.model.User;
-import jimlind.filmlinkd.system.letterboxd.model.LBMember;
+import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +41,7 @@ public class FirestoreManager {
     this.db = firestoreOptions.getService();
   }
 
-  public void createUserDocument(LBMember member) {
+  public void createUserDocument(LbMember member) {
     String collectionId = appConfig.getFirestoreCollectionId();
     User user = userFactory.createFromMember(member);
 
@@ -165,7 +165,7 @@ public class FirestoreManager {
     return true;
   }
 
-  public boolean updateUserDisplayData(LBMember member) {
+  public boolean updateUserDisplayData(LbMember member) {
     // Create user but also save snapshot to update with
     QueryDocumentSnapshot snapshot = this.getUserDocument(member.id);
     User user = this.userFactory.createFromSnapshot(snapshot);

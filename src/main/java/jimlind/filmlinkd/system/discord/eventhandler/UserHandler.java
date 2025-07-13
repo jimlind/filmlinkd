@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import jimlind.filmlinkd.system.discord.embedbuilder.UserEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.letterboxd.api.MemberStatisticsApi;
-import jimlind.filmlinkd.system.letterboxd.model.LBMember;
-import jimlind.filmlinkd.system.letterboxd.model.LBMemberStatistics;
+import jimlind.filmlinkd.system.letterboxd.model.LbMember;
+import jimlind.filmlinkd.system.letterboxd.model.LbMemberStatistics;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -29,13 +29,13 @@ public class UserHandler implements Handler {
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
 
-    LBMember member = this.accountHelper.getMember(event);
+    LbMember member = this.accountHelper.getMember(event);
     if (member == null) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;
     }
 
-    LBMemberStatistics memberStatistics = this.memberStatisticsApi.fetch(member.id);
+    LbMemberStatistics memberStatistics = this.memberStatisticsApi.fetch(member.id);
     if (memberStatistics == null) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;

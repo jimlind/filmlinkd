@@ -3,7 +3,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 import com.google.inject.Inject;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import jimlind.filmlinkd.model.CombinedLBFilmModel;
+import jimlind.filmlinkd.model.CombinedLbFilmModel;
 import jimlind.filmlinkd.system.discord.embedbuilder.FilmEmbedBuilder;
 import jimlind.filmlinkd.system.letterboxd.api.FilmApi;
 import jimlind.filmlinkd.system.letterboxd.web.LetterboxdIdWeb;
@@ -31,7 +31,7 @@ public class RouletteHandler implements Handler {
     event.deferReply().queue();
     String filmString = findAFilm(getRandomLID(), 0);
 
-    CombinedLBFilmModel combinedLBFilmModel = filmApi.fetch(filmString);
+    CombinedLbFilmModel combinedLBFilmModel = filmApi.fetch(filmString);
     if (combinedLBFilmModel == null) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;

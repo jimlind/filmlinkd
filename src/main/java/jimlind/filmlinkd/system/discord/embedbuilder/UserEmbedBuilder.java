@@ -16,8 +16,8 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 public class UserEmbedBuilder {
   private final EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
-  private LBMember member = null;
-  private LBMemberStatistics memberStatistics = null;
+  private LbMember member = null;
+  private LbMemberStatistics memberStatistics = null;
 
   @Inject
   public UserEmbedBuilder(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
@@ -25,12 +25,12 @@ public class UserEmbedBuilder {
     embedBuilder = embedBuilderFactory.create();
   }
 
-  public UserEmbedBuilder setMember(LBMember member) {
+  public UserEmbedBuilder setMember(LbMember member) {
     this.member = member;
     return this;
   }
 
-  public UserEmbedBuilder setMemberStatistics(LBMemberStatistics memberStatistics) {
+  public UserEmbedBuilder setMemberStatistics(LbMemberStatistics memberStatistics) {
     this.memberStatistics = memberStatistics;
     return this;
   }
@@ -41,7 +41,7 @@ public class UserEmbedBuilder {
     }
 
     String displayName = new UserStringBuilder().setUserName(member.displayName).build();
-    LBPronoun pronoun = member.pronoun;
+    LbPronoun pronoun = member.pronoun;
     List<String> pronounList =
         List.of(pronoun.subjectPronoun, pronoun.objectPronoun, pronoun.possessivePronoun);
 
@@ -55,7 +55,7 @@ public class UserEmbedBuilder {
       description += "\n------------\n";
     }
 
-    Function<LBFilmSummary, String> mapFilmToString =
+    Function<LbFilmSummary, String> mapFilmToString =
         film ->
             String.format("- [%s (%s)](https://boxd.it/%s)", film.name, film.releaseYear, film.id);
     List<String> filmStringList = member.favoriteFilms.stream().map(mapFilmToString).toList();

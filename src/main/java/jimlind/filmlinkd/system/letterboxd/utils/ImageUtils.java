@@ -1,20 +1,20 @@
 package jimlind.filmlinkd.system.letterboxd.utils;
 
-import jimlind.filmlinkd.system.letterboxd.model.LBImage;
-import jimlind.filmlinkd.system.letterboxd.model.LBImageSize;
+import jimlind.filmlinkd.system.letterboxd.model.LbImage;
+import jimlind.filmlinkd.system.letterboxd.model.LbImageSize;
 
 public class ImageUtils {
-  public String getTallest(LBImage image) {
+  public String getTallest(LbImage image) {
     if (image == null || image.sizes == null) {
       return "";
     }
 
-    LBImageSize emptyImage = new LBImageSize();
+    LbImageSize emptyImage = new LbImageSize();
     emptyImage.url = "";
     emptyImage.height = 0;
     emptyImage.width = 0;
 
-    LBImageSize tallestImage =
+    LbImageSize tallestImage =
         image.sizes.stream()
             .reduce(emptyImage, (result, next) -> next.height > result.height ? next : result);
 

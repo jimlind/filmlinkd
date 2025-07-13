@@ -2,7 +2,7 @@ package jimlind.filmlinkd.factory;
 
 import com.google.inject.Inject;
 import jimlind.filmlinkd.model.Message;
-import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
+import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import jimlind.filmlinkd.system.letterboxd.utils.DateUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.LinkUtils;
@@ -34,7 +34,7 @@ public class MessageFactory {
    * @param publishSource The source of the message creation (scraping, etc)
    * @return A {@link Message} object
    */
-  public Message createFromLogEntry(LBLogEntry logEntry, Message.PublishSource publishSource) {
+  public Message createFromLogEntry(LbLogEntry logEntry, Message.PublishSource publishSource) {
     Message message = new Message();
 
     message.entry = new Message.Entry();

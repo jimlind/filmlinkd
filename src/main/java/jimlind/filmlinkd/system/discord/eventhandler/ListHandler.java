@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import jimlind.filmlinkd.system.discord.embedbuilder.ListEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.letterboxd.api.ListApi;
-import jimlind.filmlinkd.system.letterboxd.model.LBListSummary;
-import jimlind.filmlinkd.system.letterboxd.model.LBListsResponse;
-import jimlind.filmlinkd.system.letterboxd.model.LBMember;
+import jimlind.filmlinkd.system.letterboxd.model.LbListSummary;
+import jimlind.filmlinkd.system.letterboxd.model.LbListsResponse;
+import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -29,7 +29,7 @@ public class ListHandler implements Handler {
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
 
-    LBMember member = accountHelper.getMember(event);
+    LbMember member = accountHelper.getMember(event);
     if (member == null) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;
@@ -40,14 +40,14 @@ public class ListHandler implements Handler {
 
     String cleanListName = listNameString.toLowerCase().replaceAll("[^a-z0-9]+", "");
 
-    LBListSummary foundList = null;
-    LBListsResponse listsResponse = listApi.fetch(member.id, 50);
+    LbListSummary foundList = null;
+    LbListsResponse listsResponse = listApi.fetch(member.id, 50);
     if (listsResponse == null) {
       event.getHook().sendMessage("No Results Found").queue();
       return;
     }
 
-    for (LBListSummary item : listsResponse.items) {
+    for (LbListSummary item : listsResponse.items) {
       if (cleanListName.equals(item.name.toLowerCase().replaceAll("[^a-z0-9]+", ""))) {
         foundList = item;
       }

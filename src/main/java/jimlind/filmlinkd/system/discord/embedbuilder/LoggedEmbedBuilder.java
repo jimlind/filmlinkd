@@ -9,8 +9,8 @@ import java.util.List;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
 import jimlind.filmlinkd.system.discord.stringbuilder.StarsStringBuilder;
-import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
-import jimlind.filmlinkd.system.letterboxd.model.LBReview;
+import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
+import jimlind.filmlinkd.system.letterboxd.model.LbReview;
 import jimlind.filmlinkd.system.letterboxd.utils.DateUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -22,7 +22,7 @@ public class LoggedEmbedBuilder {
   private final DateUtils dateUtils;
   private final EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
-  private List<LBLogEntry> logEntryList = new ArrayList<>();
+  private List<LbLogEntry> logEntryList = new ArrayList<>();
 
   @Inject
   public LoggedEmbedBuilder(
@@ -32,14 +32,14 @@ public class LoggedEmbedBuilder {
     embedBuilder = embedBuilderFactory.create();
   }
 
-  public LoggedEmbedBuilder setLogEntryList(List<LBLogEntry> logEntryList) {
+  public LoggedEmbedBuilder setLogEntryList(List<LbLogEntry> logEntryList) {
     this.logEntryList = logEntryList;
     return this;
   }
 
   public ArrayList<MessageEmbed> build() {
     StringBuilder description = new StringBuilder();
-    for (LBLogEntry logEntry : logEntryList) {
+    for (LbLogEntry logEntry : logEntryList) {
       String action = "Logged";
       String date = dateUtils.toPattern(logEntry.whenCreated);
 
@@ -68,7 +68,7 @@ public class LoggedEmbedBuilder {
       }
     }
 
-    LBLogEntry firstLogEntry = logEntryList.get(0);
+    LbLogEntry firstLogEntry = logEntryList.get(0);
     String title =
         String.format(
             "%s's Recent Entries for %s (%s)\n",
@@ -86,7 +86,7 @@ public class LoggedEmbedBuilder {
     return embedList;
   }
 
-  private String formatReview(LBReview review) {
+  private String formatReview(LbReview review) {
     String reviewText = review.text;
     if (reviewText.length() > 200) {
       reviewText = reviewText.substring(0, 200).trim();

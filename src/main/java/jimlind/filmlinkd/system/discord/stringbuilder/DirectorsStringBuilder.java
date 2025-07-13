@@ -2,16 +2,16 @@ package jimlind.filmlinkd.system.discord.stringbuilder;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import jimlind.filmlinkd.system.letterboxd.model.LBContributionType;
-import jimlind.filmlinkd.system.letterboxd.model.LBFilmContributions;
+import jimlind.filmlinkd.system.letterboxd.model.LbContributionType;
+import jimlind.filmlinkd.system.letterboxd.model.LbFilmContributions;
 
 public class DirectorsStringBuilder {
-  public LBFilmContributions directors = null;
+  public LbFilmContributions directors = null;
 
-  public DirectorsStringBuilder setContributionList(List<LBFilmContributions> contributionList) {
-    List<LBFilmContributions> filteredContributions =
+  public DirectorsStringBuilder setContributionList(List<LbFilmContributions> contributionList) {
+    List<LbFilmContributions> filteredContributions =
         contributionList.stream()
-            .filter(contributions -> contributions.type.equals(LBContributionType.Director))
+            .filter(contributions -> contributions.type.equals(LbContributionType.Director))
             .toList();
     if (!filteredContributions.isEmpty()) {
       directors = filteredContributions.getFirst();

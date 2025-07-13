@@ -6,7 +6,7 @@ import jimlind.filmlinkd.system.discord.embedbuilder.UnfollowEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.google.FirestoreManager;
-import jimlind.filmlinkd.system.letterboxd.model.LBMember;
+import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -32,7 +32,7 @@ public class UnfollowHandler implements Handler {
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
 
-    LBMember member = accountHelper.getMember(event);
+    LbMember member = accountHelper.getMember(event);
     if (member == null) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;

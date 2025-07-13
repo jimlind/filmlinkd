@@ -7,8 +7,8 @@ import io.github.furstenheim.OptionsBuilder;
 import java.util.ArrayList;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
-import jimlind.filmlinkd.system.letterboxd.model.LBListEntrySummary;
-import jimlind.filmlinkd.system.letterboxd.model.LBListSummary;
+import jimlind.filmlinkd.system.letterboxd.model.LbListEntrySummary;
+import jimlind.filmlinkd.system.letterboxd.model.LbListSummary;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -16,7 +16,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 public class ListEmbedBuilder {
   private final EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
-  private LBListSummary listSummary = null;
+  private LbListSummary listSummary = null;
 
   @Inject
   ListEmbedBuilder(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
@@ -24,7 +24,7 @@ public class ListEmbedBuilder {
     this.imageUtils = imageUtils;
   }
 
-  public ListEmbedBuilder setListSummary(LBListSummary listSummary) {
+  public ListEmbedBuilder setListSummary(LbListSummary listSummary) {
     this.listSummary = listSummary;
     return this;
   }
@@ -48,7 +48,7 @@ public class ListEmbedBuilder {
     String listDescription = new CopyDown(options).convert(listSummary.description);
     descriptionText.append(listDescription.replaceAll("[\r\n]+", "\n")).append("\n");
 
-    for (LBListEntrySummary summary : listSummary.previewEntries) {
+    for (LbListEntrySummary summary : listSummary.previewEntries) {
       String prefix = summary.rank != 0 ? "1." : "-";
       descriptionText.append(
           String.format(

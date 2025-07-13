@@ -8,22 +8,22 @@ import java.util.LinkedList;
 import java.util.List;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
-import jimlind.filmlinkd.system.letterboxd.model.LBContributionStatistics;
-import jimlind.filmlinkd.system.letterboxd.model.LBContributor;
-import jimlind.filmlinkd.system.letterboxd.model.LBLink;
+import jimlind.filmlinkd.system.letterboxd.model.LbContributionStatistics;
+import jimlind.filmlinkd.system.letterboxd.model.LbContributor;
+import jimlind.filmlinkd.system.letterboxd.model.LbLink;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class ContributorEmbedBuilder {
   private final EmbedBuilder embedBuilder;
-  private LBContributor contributor = null;
+  private LbContributor contributor = null;
 
   @Inject
   public ContributorEmbedBuilder(EmbedBuilderFactory embedBuilderFactory) {
     embedBuilder = embedBuilderFactory.create();
   }
 
-  public ContributorEmbedBuilder setContributor(LBContributor contributor) {
+  public ContributorEmbedBuilder setContributor(LbContributor contributor) {
     this.contributor = contributor;
     return this;
   }
@@ -36,14 +36,14 @@ public class ContributorEmbedBuilder {
     embedBuilder.setTitle(contributor.name, String.format("https://boxd.it/%s", contributor.id));
 
     List<String> linkStrings = new LinkedList<>();
-    for (LBLink link : contributor.links) {
+    for (LbLink link : contributor.links) {
       String text = String.format("[%s](%s)", link.type, link.url);
       linkStrings.add(text);
     }
     String joinedLinkStrings = String.join(" | ", linkStrings);
 
     List<String> contributionStrings = new LinkedList<>();
-    for (LBContributionStatistics contribution : contributor.statistics.contributions) {
+    for (LbContributionStatistics contribution : contributor.statistics.contributions) {
       String text = String.format("**%s:** %s", contribution.type, contribution.filmCount);
       contributionStrings.add(text);
     }

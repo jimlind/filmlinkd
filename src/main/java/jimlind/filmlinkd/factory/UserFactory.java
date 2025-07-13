@@ -4,7 +4,7 @@ import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.inject.Inject;
 import java.util.ArrayList;
 import jimlind.filmlinkd.model.User;
-import jimlind.filmlinkd.system.letterboxd.model.LBMember;
+import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 
 /** A factory for creating instances of the {@link User} model. */
@@ -37,12 +37,12 @@ public class UserFactory {
   }
 
   /**
-   * Create a {@link User} from an {@link LBMember}.
+   * Create a {@link User} from an {@link LbMember}.
    *
    * @param member A model from the Letterboxd API response
    * @return Data model for user information
    */
-  public User createFromMember(LBMember member) {
+  public User createFromMember(LbMember member) {
     try {
       User user = new User();
 

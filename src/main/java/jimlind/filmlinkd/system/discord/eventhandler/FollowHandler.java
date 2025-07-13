@@ -16,8 +16,8 @@ import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.google.PubSubManager;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
-import jimlind.filmlinkd.system.letterboxd.model.LBLogEntry;
-import jimlind.filmlinkd.system.letterboxd.model.LBMember;
+import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
+import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -59,7 +59,7 @@ public class FollowHandler implements Handler {
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
 
-    LBMember member = accountHelper.getMember(event);
+    LbMember member = accountHelper.getMember(event);
     if (member == null) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;
@@ -85,9 +85,9 @@ public class FollowHandler implements Handler {
       return;
     }
 
-    List<LBLogEntry> logEntryList = this.logEntriesApi.getRecentForUser(member.id, 1);
+    List<LbLogEntry> logEntryList = this.logEntriesApi.getRecentForUser(member.id, 1);
     if (logEntryList.size() == 1) {
-      LBLogEntry logEntry = logEntryList.getFirst();
+      LbLogEntry logEntry = logEntryList.getFirst();
 
       Command command = commandFactory.create(Command.Type.FOLLOW, logEntry.owner.id, logEntry.id);
       this.pubSubManager.publishCommand(command);

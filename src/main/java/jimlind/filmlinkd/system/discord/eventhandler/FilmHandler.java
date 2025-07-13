@@ -2,7 +2,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
 import java.util.ArrayList;
-import jimlind.filmlinkd.model.CombinedLBFilmModel;
+import jimlind.filmlinkd.model.CombinedLbFilmModel;
 import jimlind.filmlinkd.system.discord.embedbuilder.FilmEmbedBuilder;
 import jimlind.filmlinkd.system.letterboxd.api.FilmApi;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -26,7 +26,7 @@ public class FilmHandler implements Handler {
 
     OptionMapping optionMapping = event.getInteraction().getOption("film-name");
     String filmName = optionMapping != null ? optionMapping.getAsString() : "";
-    CombinedLBFilmModel combinedLBFilmModel = filmApi.fetch(filmName);
+    CombinedLbFilmModel combinedLBFilmModel = filmApi.fetch(filmName);
 
     if (combinedLBFilmModel == null) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();

@@ -4,14 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collections;
-import jimlind.filmlinkd.system.letterboxd.model.LBImage;
-import jimlind.filmlinkd.system.letterboxd.model.LBImageSize;
+import jimlind.filmlinkd.system.letterboxd.model.LbImage;
+import jimlind.filmlinkd.system.letterboxd.model.LbImageSize;
 import org.junit.jupiter.api.Test;
 
 public class ImageUtilsTest {
 
-  private LBImageSize createImageSize(String url, int height, int width) {
-    LBImageSize size = new LBImageSize();
+  private LbImageSize createImageSize(String url, int height, int width) {
+    LbImageSize size = new LbImageSize();
     size.url = url;
     size.height = height;
     size.width = width;
@@ -21,12 +21,12 @@ public class ImageUtilsTest {
   @Test
   void getTallest_whenImageIsNull_returnsEmptyString() {
     String tallestUrl = new ImageUtils().getTallest(null);
-    assertEquals("", tallestUrl, "Should return an empty string for a null LBImage.");
+    assertEquals("", tallestUrl, "Should return an empty string for a null LbImage.");
   }
 
   @Test
   void getTallest_whenImageSizesIsNull_thenThrowsNullPointerException() {
-    LBImage image = new LBImage();
+    LbImage image = new LbImage();
     image.sizes = null; // Explicitly set to null
 
     String tallestUrl = new ImageUtils().getTallest(image);
@@ -36,7 +36,7 @@ public class ImageUtilsTest {
 
   @Test
   void getTallest_whenImageSizesIsEmpty_returnsEmptyString() {
-    LBImage image = new LBImage();
+    LbImage image = new LbImage();
     image.sizes = Collections.emptyList();
 
     String tallestUrl = new ImageUtils().getTallest(image);
@@ -45,7 +45,7 @@ public class ImageUtilsTest {
 
   @Test
   void getTallest_whenSingleImageSize_returnsItsUrl() {
-    LBImage image = new LBImage();
+    LbImage image = new LbImage();
     image.sizes =
         Collections.singletonList(createImageSize("http://example.com/image1.jpg", 100, 50));
 
@@ -56,7 +56,7 @@ public class ImageUtilsTest {
 
   @Test
   void getTallest_whenMultipleImageSizes_tallestIsFirst() {
-    LBImage image = new LBImage();
+    LbImage image = new LbImage();
     image.sizes =
         Arrays.asList(
             createImageSize("http://example.com/tallest.jpg", 200, 100),
@@ -71,7 +71,7 @@ public class ImageUtilsTest {
 
   @Test
   void getTallest_whenMultipleImageSizes_tallestIsInMiddle() {
-    LBImage image = new LBImage();
+    LbImage image = new LbImage();
     image.sizes =
         Arrays.asList(
             createImageSize("http://example.com/shorter1.jpg", 100, 50),
@@ -87,7 +87,7 @@ public class ImageUtilsTest {
 
   @Test
   void getTallest_whenMultipleImageSizes_tallestIsLast() {
-    LBImage image = new LBImage();
+    LbImage image = new LbImage();
     image.sizes =
         Arrays.asList(
             createImageSize("http://example.com/shorter1.jpg", 100, 50),
@@ -103,7 +103,7 @@ public class ImageUtilsTest {
 
   @Test
   void getTallest_whenMultipleImageSizes_allSameMaxHeight_returnsFirstEncounteredWithMaxHeight() {
-    LBImage image = new LBImage();
+    LbImage image = new LbImage();
     // The reduce logic (next.height > result.height) means the first one establishing the max
     // height is kept.
     image.sizes =
@@ -122,7 +122,7 @@ public class ImageUtilsTest {
   @Test
   void
       getTallest_whenMultipleImageSizes_differentOrderSameMaxHeight_returnsFirstEncounteredWithMaxHeight() {
-    LBImage image = new LBImage();
+    LbImage image = new LbImage();
     image.sizes =
         Arrays.asList(
             createImageSize("http://example.com/shorter.jpg", 100, 50),
@@ -138,7 +138,7 @@ public class ImageUtilsTest {
 
   @Test
   void getTallest_whenAllImageSizesHaveZeroHeight_returnsEmptyString() {
-    LBImage image = new LBImage();
+    LbImage image = new LbImage();
     image.sizes =
         Arrays.asList(
             createImageSize("http://example.com/zero1.jpg", 0, 50),
@@ -152,7 +152,7 @@ public class ImageUtilsTest {
 
   @Test
   void getTallest_whenSomeImagesHaveZeroHeightAndOneIsTaller() {
-    LBImage image = new LBImage();
+    LbImage image = new LbImage();
     image.sizes =
         Arrays.asList(
             createImageSize("http://example.com/zero1.jpg", 0, 50),
