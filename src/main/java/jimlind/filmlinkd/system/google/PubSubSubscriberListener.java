@@ -3,6 +3,7 @@ package jimlind.filmlinkd.system.google;
 import com.google.cloud.pubsub.v1.Subscriber;
 import lombok.extern.slf4j.Slf4j;
 
+/** Wrapper for the Subscriber.Listener that logs what the subscribers are doing. */
 @Slf4j
 public class PubSubSubscriberListener extends Subscriber.Listener {
 
