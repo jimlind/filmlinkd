@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.Properties;
 import jimlind.filmlinkd.system.google.SecretManager;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
 @Singleton
@@ -28,6 +29,7 @@ public class AppConfig {
   @Getter private final int scraperGeneralPeriod;
   @Getter private final int scraperGeneralUserCachePeriod;
   @Getter private final int scraperVipPeriod;
+  @Getter @Setter private String mainClass;
 
   @Inject
   AppConfig(SecretManager secretManager) {

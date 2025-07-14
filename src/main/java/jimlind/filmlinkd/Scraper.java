@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.config.GuiceModule;
 import jimlind.filmlinkd.runnable.StatLogger;
 import jimlind.filmlinkd.system.GeneralScraperScheduler;
@@ -26,6 +27,7 @@ public class Scraper {
 
     // Create the Injector
     Injector injector = Guice.createInjector(new GuiceModule());
+    injector.getInstance(AppConfig.class).setMainClass(Scraper.class.getName());
 
     // Build the Publishers
     injector.getInstance(PubSubManager.class).buildLogEntryPublisher();

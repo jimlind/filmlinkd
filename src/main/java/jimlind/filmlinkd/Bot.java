@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.config.GuiceModule;
 import jimlind.filmlinkd.runnable.StatLogger;
 import jimlind.filmlinkd.system.DiscordSystem;
@@ -25,6 +26,7 @@ public class Bot {
 
     // Create the Injector
     Injector injector = Guice.createInjector(new GuiceModule());
+    injector.getInstance(AppConfig.class).setMainClass(Bot.class.getName());
 
     // Start the Discord server
     try {
