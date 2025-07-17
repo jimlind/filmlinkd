@@ -10,6 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import org.slf4j.event.KeyValuePair;
 
+/**
+ * Translates a variety of inputs to formats that Google logging supports and can easily filter on
+ * when generating reports.
+ */
 public class LoggingEnhancer implements LoggingEventEnhancer {
 
   @Override

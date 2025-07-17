@@ -8,7 +8,12 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Duration;
-import com.google.pubsub.v1.*;
+import com.google.pubsub.v1.ExpirationPolicy;
+import com.google.pubsub.v1.ProjectName;
+import com.google.pubsub.v1.PubsubMessage;
+import com.google.pubsub.v1.Subscription;
+import com.google.pubsub.v1.SubscriptionName;
+import com.google.pubsub.v1.TopicName;
 import java.util.Objects;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.model.Command;
@@ -17,6 +22,7 @@ import jimlind.filmlinkd.system.MessageReceiver;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 
+/** Handles all things related to the PubSub service. Creating, activating, etc. */
 @Singleton
 @Slf4j
 public class PubSubManager {
@@ -33,6 +39,13 @@ public class PubSubManager {
   @Nullable private Subscriber logEntrySubscriber;
   @Nullable private Subscriber commandSubscriber;
 
+  /**
+   * The constructor for this class.
+   *
+   * @param appConfig Contains application and environment variables
+   * @param messageReceiver Receives the PubSub message object
+   * @param pubSubSubscriberListener Listens for PubSub messages
+   */
   @Inject
   PubSubManager(
       AppConfig appConfig,
@@ -43,6 +56,7 @@ public class PubSubManager {
     this.pubSubSubscriberListener = pubSubSubscriberListener;
   }
 
+  /** Builds all the needed publishers and subscribers. */
   public void activate() {
     buildCommandPublisher();
     buildLogEntryPublisher();
@@ -54,16 +68,19 @@ public class PubSubManager {
             appConfig.getPubSubLogEntryTopicName());
   }
 
+  /** Builds the command publisher. */
   public void buildCommandPublisher() {
     commandPublisher =
         buildPublisher(appConfig.getGoogleProjectId(), appConfig.getPubSubCommandTopicName());
   }
 
+  /** Builds the log entry publisher. */
   public void buildLogEntryPublisher() {
     logEntryPublisher =
         buildPublisher(appConfig.getGoogleProjectId(), appConfig.getPubSubLogEntryTopicName());
   }
 
+  /** Deactivates the publishers and subscribers if they have been created. */
   public void deactivate() {
     if (logEntrySubscriber != null) {
       log.atInfo()
@@ -88,6 +105,12 @@ public class PubSubManager {
     }
   }
 
+  /**
+   * Publishes a command to the command topic. Commands capture when users have performed a slash
+   * command so all shards can react in the same way.
+   *
+   * @param command The command to translate to JSON then publish
+   */
   public void publishCommand(Command command) {
     if (commandPublisher == null) {
       return;
@@ -106,6 +129,12 @@ public class PubSubManager {
     }
   }
 
+  /**
+   * Publishes a log entry to the log entry topic. LogEntry captures when new entries are found
+   * (usually by scraping) so that all shards can have a consistent state.
+   *
+   * @param logEntry The log entry to translate to JSON then publish
+   */
   public void publishLogEntry(Message logEntry) {
     if (logEntryPublisher == null) {
       return;
