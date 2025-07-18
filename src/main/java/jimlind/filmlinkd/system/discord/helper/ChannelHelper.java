@@ -8,7 +8,17 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
+/** A Collection of (actually one) methods that help translate channel data. */
 public class ChannelHelper {
+  /**
+   * Get the channel id as a string from the SlashCommandInteractionEvent. Returns an empty string
+   * if nothing is available. There may be a channel value attached to the event option. That
+   * channel value should come in as a properly created channel but might be a string. If there is
+   * no option used then get the channel from the place that the event was created.
+   *
+   * @param event The SlashCommandInteractionEvent that contains the channel option or channel guild
+   * @return The channel id as a string or empty string if not found
+   */
   public String getChannelId(SlashCommandInteractionEvent event) {
     OptionMapping channelMap = event.getInteraction().getOption("channel");
     if (channelMap == null) {
