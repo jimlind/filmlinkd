@@ -12,10 +12,17 @@ import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
+/** Handles the /help command to show a help message and allow users to test the bot. */
 public class HelpHandler implements Handler {
   private final FirestoreManager firestoreManager;
   private final HelpEmbedBuilder helpEmbedBuilder;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param firestoreManager Service that handles all Firestore interactions
+   * @param helpEmbedBuilder Builds the embed for the /help command
+   */
   @Inject
   HelpHandler(FirestoreManager firestoreManager, HelpEmbedBuilder helpEmbedBuilder) {
     this.firestoreManager = firestoreManager;

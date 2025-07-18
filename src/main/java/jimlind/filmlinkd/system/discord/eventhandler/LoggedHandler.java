@@ -14,12 +14,21 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
+/** Handles the /logged command to show the most recent times a user has logged a film. */
 public class LoggedHandler implements Handler {
   private final AccountHelper accountHelper;
   private final FilmApi filmApi;
   private final LogEntriesApi logEntriesApi;
   private final LoggedEmbedBuilder loggedEmbedBuilder;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param accountHelper Handles translating account names to proper data models
+   * @param filmApi Fetches film data from Letterboxd API
+   * @param logEntriesApi Fetches user entry data from Letterboxd API
+   * @param loggedEmbedBuilder Builds the embed for the /logged command
+   */
   @Inject
   LoggedHandler(
       AccountHelper accountHelper,

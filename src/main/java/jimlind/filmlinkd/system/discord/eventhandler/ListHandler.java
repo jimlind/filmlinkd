@@ -12,12 +12,20 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
+/** Handles the /list command to a summary of a user's list matching the search input. */
 public class ListHandler implements Handler {
 
   private final AccountHelper accountHelper;
   private final ListApi listApi;
   private final ListEmbedBuilder listEmbedBuilder;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param accountHelper Handles translating account names to proper data models
+   * @param listApi Fetches list data from Letterboxd API
+   * @param listEmbedBuilder Builds the embed for the /list command
+   */
   @Inject
   ListHandler(AccountHelper accountHelper, ListApi listApi, ListEmbedBuilder listEmbedBuilder) {
     this.accountHelper = accountHelper;

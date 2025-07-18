@@ -10,11 +10,18 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
+/** Handles the /contributor command to show the contributors matching the search input. */
 public class ContributorHandler implements Handler {
 
   private final ContributorApi contributorApi;
   private final ContributorEmbedBuilder contributorEmbedBuilder;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param contributorApi Fetches contributor data from Letterboxd API
+   * @param contributorEmbedBuilder Builds the embed for the /contributor command
+   */
   @Inject
   ContributorHandler(
       ContributorApi contributorApi, ContributorEmbedBuilder contributorEmbedBuilder) {

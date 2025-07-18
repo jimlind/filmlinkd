@@ -10,6 +10,7 @@ import jimlind.filmlinkd.system.letterboxd.web.LetterboxdIdWeb;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/** Handles the /roulette command to show a random film. */
 public class RouletteHandler implements Handler {
   private static final String CHARACTERS =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -18,6 +19,13 @@ public class RouletteHandler implements Handler {
   private final FilmEmbedBuilder filmEmbedBuilder;
   private final LetterboxdIdWeb letterboxdIdWeb;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param filmApi Fetches film data from Letterboxd API
+   * @param filmEmbedBuilder Builds the embed for the /filmEmbed command
+   * @param letterboxdIdWeb Class that translates a Letterboxd id to another piece of data
+   */
   @Inject
   RouletteHandler(
       FilmApi filmApi, FilmEmbedBuilder filmEmbedBuilder, LetterboxdIdWeb letterboxdIdWeb) {
@@ -29,20 +37,20 @@ public class RouletteHandler implements Handler {
   @Override
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
-    String filmString = findAFilm(getRandomLID(), 0);
+    String filmString = findOneFilm(getRandomLid(), 0);
 
-    CombinedLbFilmModel combinedLBFilmModel = filmApi.fetch(filmString);
-    if (combinedLBFilmModel == null) {
+    CombinedLbFilmModel combinedLbFilmModel = filmApi.fetch(filmString);
+    if (combinedLbFilmModel == null) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;
     }
 
     ArrayList<MessageEmbed> messageEmbedList =
-        filmEmbedBuilder.setFilmCombination(combinedLBFilmModel).build();
+        filmEmbedBuilder.setFilmCombination(combinedLbFilmModel).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 
-  private String findAFilm(String filmId, int count) {
+  private String findOneFilm(String filmId, int count) {
     // Send the users to this wierd movie that Letterboxd tries to default to
     if (filmId.length() < 2) {
       return "undefined";
@@ -52,11 +60,11 @@ public class RouletteHandler implements Handler {
     if (location.contains("/film/")) {
       return location.substring(location.lastIndexOf("/film/") + 6, location.lastIndexOf("/"));
     } else {
-      return findAFilm(filmId.substring(0, filmId.length() - 1), count + 1);
+      return findOneFilm(filmId.substring(0, filmId.length() - 1), count + 1);
     }
   }
 
-  private String getRandomLID() {
+  private String getRandomLid() {
     SecureRandom random = new SecureRandom();
     StringBuilder stringBuilder = new StringBuilder();
 

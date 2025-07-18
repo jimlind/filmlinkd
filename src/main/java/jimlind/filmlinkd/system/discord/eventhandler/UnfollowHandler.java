@@ -10,12 +10,21 @@ import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/** Handles the /unfollow command to unfollow a user and stop showing new diary entries. */
 public class UnfollowHandler implements Handler {
   private final AccountHelper accountHelper;
   private final ChannelHelper channelHelper;
   private final FirestoreManager firestoreManager;
   private final UnfollowEmbedBuilder unfollowEmbedBuilder;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param accountHelper Handles translating account names to proper data models
+   * @param channelHelper Service that parses a channel id from a slash event with options
+   * @param firestoreManager Service that handles all Firestore interactions
+   * @param unfollowEmbedBuilder Builds the embed for the /unfollow command
+   */
   @Inject
   UnfollowHandler(
       AccountHelper accountHelper,

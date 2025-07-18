@@ -22,6 +22,7 @@ import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/** Handles the /follow command to follow a user and show new diary entries in specified channel. */
 public class FollowHandler implements Handler {
   private final AccountHelper accountHelper;
   private final ChannelHelper channelHelper;
@@ -33,6 +34,19 @@ public class FollowHandler implements Handler {
   private final PubSubManager pubSubManager;
   private final UserFactory userFactory;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param accountHelper Handles translating account names to proper data models
+   * @param channelHelper Service that parses a channel id from a slash event with options
+   * @param commandFactory Builds the command object that is pushed into the PubSub system
+   * @param followEmbedBuilder Builds the embed for the /follow command
+   * @param firestoreManager Service that handles all Firestore interactions
+   * @param logEntriesApi Fetches log entry data from Letterboxd API
+   * @param messageFactory Builds the message object that is pushed into the PubSub system
+   * @param pubSubManager Handles the PubSub system to accept commands and messages
+   * @param userFactory Builds the user object from a Firestore snapshot
+   */
   @Inject
   public FollowHandler(
       AccountHelper accountHelper,

@@ -14,12 +14,21 @@ import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/** Handles the /following command to show the users followed in the specified channel. */
 public class FollowingHandler implements Handler {
   private final ChannelHelper channelHelper;
   private final FirestoreManager firestoreManager;
   private final FollowingEmbedBuilder followingEmbedBuilder;
   private final UserFactory userFactory;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param channelHelper Service that parses a channel id from a slash event with options
+   * @param firestoreManager Service that handles all Firestore interactions
+   * @param followingEmbedBuilder Builds the embed for the /following command
+   * @param userFactory Builds the user object from a Firestore snapshot
+   */
   @Inject
   FollowingHandler(
       ChannelHelper channelHelper,

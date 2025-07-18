@@ -10,11 +10,19 @@ import jimlind.filmlinkd.system.letterboxd.model.LbMemberStatistics;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/** Handles the /user command to show a user matching the search input. */
 public class UserHandler implements Handler {
   private final AccountHelper accountHelper;
   private final MemberStatisticsApi memberStatisticsApi;
   private final UserEmbedBuilder userEmbedBuilder;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param accountHelper Handles translating account names to proper data models
+   * @param memberStatisticsApi Fetches member statistics data from Letterboxd API
+   * @param userEmbedBuilder Builds the embed for the /user command
+   */
   @Inject
   UserHandler(
       AccountHelper accountHelper,

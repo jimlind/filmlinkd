@@ -11,11 +11,19 @@ import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/** Handles the /diary command to show the recent diary entries from the user. */
 public class DiaryHandler implements Handler {
   private final AccountHelper accountHelper;
   private final DiaryListEmbedBuilder diaryListEmbedBuilder;
   private final LogEntriesApi logEntriesApi;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param accountHelper Handles translating account names to proper data models
+   * @param diaryListEmbedBuilder Builds the embed for the /diary command
+   * @param logEntriesApi Fetches log entry data from Letterboxd API
+   */
   @Inject
   DiaryHandler(
       AccountHelper accountHelper,
