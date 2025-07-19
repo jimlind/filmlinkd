@@ -4,6 +4,7 @@ NEED
 * Optimize Entry API to stop parsing earlier (not checking all 10 entries)
 * Create VIP Scraper
 * Ensure that charts are duplicated
+* Post an actual diary entry as the last part of Help:Test
 
 DONE
 * Delete all existing infrastructure and let terraform build it fresh
