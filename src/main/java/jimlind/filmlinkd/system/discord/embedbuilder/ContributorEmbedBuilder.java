@@ -14,20 +14,38 @@ import jimlind.filmlinkd.system.letterboxd.model.LbLink;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
+/** Builds a Discord embed to display information about a contributor. */
 public class ContributorEmbedBuilder {
   private final EmbedBuilder embedBuilder;
   private LbContributor contributor = null;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param embedBuilderFactory A factory for creating instances of the {@link EmbedBuilder} model
+   */
   @Inject
   public ContributorEmbedBuilder(EmbedBuilderFactory embedBuilderFactory) {
     embedBuilder = embedBuilderFactory.create();
   }
 
+  /**
+   * Setter for the contributor attribute.
+   *
+   * @param contributor Contributor model from Letterboxd API
+   * @return This class for chaining
+   */
   public ContributorEmbedBuilder setContributor(LbContributor contributor) {
     this.contributor = contributor;
     return this;
   }
 
+  /**
+   * Builds the embed.
+   *
+   * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
+   *     contains only one embed.
+   */
   public ArrayList<MessageEmbed> build() {
     if (contributor == null) {
       return new ArrayList<>();

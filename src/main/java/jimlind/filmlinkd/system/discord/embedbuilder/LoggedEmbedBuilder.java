@@ -18,12 +18,20 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+/** Builds a Discord embed to display information about what a user has logged. */
 public class LoggedEmbedBuilder {
   private final DateUtils dateUtils;
   private final EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
   private List<LbLogEntry> logEntryList = new ArrayList<>();
 
+  /**
+   * Constructor for this class.
+   *
+   * @param dateUtils Helpers for processing Letterboxd dates
+   * @param embedBuilderFactory A factory for creating instances of the {@link EmbedBuilder} model.
+   * @param imageUtils Assists in finding optimal Letterboxd images
+   */
   @Inject
   public LoggedEmbedBuilder(
       DateUtils dateUtils, EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
@@ -32,11 +40,23 @@ public class LoggedEmbedBuilder {
     embedBuilder = embedBuilderFactory.create();
   }
 
+  /**
+   * Setter for the logEntryList attribute.
+   *
+   * @param logEntryList Log Entry list from Letterboxd API
+   * @return This class for chaining
+   */
   public LoggedEmbedBuilder setLogEntryList(List<LbLogEntry> logEntryList) {
     this.logEntryList = logEntryList;
     return this;
   }
 
+  /**
+   * Builds the embed.
+   *
+   * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
+   *     contains only one embed.
+   */
   public ArrayList<MessageEmbed> build() {
     StringBuilder description = new StringBuilder();
     for (LbLogEntry logEntry : logEntryList) {

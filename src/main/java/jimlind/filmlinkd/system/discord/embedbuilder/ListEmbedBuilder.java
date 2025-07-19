@@ -13,22 +13,41 @@ import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
+/** Builds a Discord embed to display information about users list. */
 public class ListEmbedBuilder {
   private final EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
   private LbListSummary listSummary = null;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param embedBuilderFactory A factory for creating instances of the {@link EmbedBuilder} model.
+   * @param imageUtils Assists in finding optimal Letterboxd images
+   */
   @Inject
   ListEmbedBuilder(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
     embedBuilder = embedBuilderFactory.create();
     this.imageUtils = imageUtils;
   }
 
+  /**
+   * Setter for the listSummary attribute.
+   *
+   * @param listSummary ListSummary model from Letterboxd API
+   * @return This class for chaining
+   */
   public ListEmbedBuilder setListSummary(LbListSummary listSummary) {
     this.listSummary = listSummary;
     return this;
   }
 
+  /**
+   * Builds the embed.
+   *
+   * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
+   *     contains only one embed.
+   */
   public ArrayList<MessageEmbed> build() {
     if (listSummary == null) {
       return new ArrayList<>();

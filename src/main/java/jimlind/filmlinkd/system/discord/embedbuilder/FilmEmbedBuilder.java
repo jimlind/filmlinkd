@@ -6,7 +6,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.model.CombinedLbFilmModel;
-import jimlind.filmlinkd.system.discord.stringbuilder.*;
+import jimlind.filmlinkd.system.discord.stringbuilder.CountStringBuilder;
+import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
+import jimlind.filmlinkd.system.discord.stringbuilder.DirectorsStringBuilder;
+import jimlind.filmlinkd.system.discord.stringbuilder.RunTimeStringBuilder;
+import jimlind.filmlinkd.system.discord.stringbuilder.StarsStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilm;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilmStatistics;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilmStatisticsCounts;
@@ -15,37 +19,53 @@ import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
+/** Builds a Discord embed to display information about a film. */
 public class FilmEmbedBuilder {
   private final EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
   private CombinedLbFilmModel filmCombination = null;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param embedBuilderFactory A factory for creating instances of the {@link EmbedBuilder} model
+   * @param imageUtils Assists in finding optimal Letterboxd images
+   */
   @Inject
   FilmEmbedBuilder(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
     embedBuilder = embedBuilderFactory.create();
     this.imageUtils = imageUtils;
   }
 
+  /**
+   * Setter for the filmCombination attribute.
+   *
+   * @param filmCombination Film model created from multiple Letterboxd API calls
+   * @return This class for chaining
+   */
   public FilmEmbedBuilder setFilmCombination(CombinedLbFilmModel filmCombination) {
     this.filmCombination = filmCombination;
     return this;
   }
 
+  /**
+   * Builds the embed.
+   *
+   * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
+   *     contains only one embed.
+   */
   public ArrayList<MessageEmbed> build() {
     if (filmCombination == null) {
       return new ArrayList<>();
     }
 
     LbFilm film = filmCombination.film;
-    LbFilmStatistics statistics = filmCombination.filmStatistics;
-    LbFilmSummary summary = filmCombination.filmSummary;
-
     String releaseYear = film.releaseYear > 0 ? String.format(" (%s)", film.releaseYear) : "";
-    String imageURL = imageUtils.getTallest(film.poster);
+    String imageUrl = imageUtils.getTallest(film.poster);
 
     embedBuilder.setTitle(film.name + releaseYear);
     embedBuilder.setUrl(String.format("https://boxd.it/%s", film.id));
-    embedBuilder.setThumbnail(imageURL.isBlank() ? null : imageURL);
+    embedBuilder.setThumbnail(imageUrl.isBlank() ? null : imageUrl);
 
     String description = "";
     // Add tagline to description
@@ -54,6 +74,7 @@ public class FilmEmbedBuilder {
     }
 
     // Add rating to description
+    LbFilmSummary summary = filmCombination.filmSummary;
     if (summary.rating > 0) {
       String stars = new StarsStringBuilder().setStarCount(summary.rating).build();
       String rating = String.format("%.2f", summary.rating);
@@ -85,6 +106,7 @@ public class FilmEmbedBuilder {
     }
 
     // Add statistics counts
+    LbFilmStatistics statistics = filmCombination.filmStatistics;
     LbFilmStatisticsCounts counts = statistics.counts;
     description += ":eyes: " + new CountStringBuilder().setCount(counts.watches).build() + ", ";
     description +=

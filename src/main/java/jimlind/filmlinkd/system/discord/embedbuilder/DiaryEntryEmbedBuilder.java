@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+/** Builds a Discord embed to display information about a specific diary entry. */
 @Slf4j
 public class DiaryEntryEmbedBuilder {
   private final EmbedBuilder embedBuilder;
@@ -28,6 +29,12 @@ public class DiaryEntryEmbedBuilder {
   @Nullable private Message message;
   @Nullable private User user;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param embedBuilderFactory A factory for creating instances of the {@link EmbedBuilder} model
+   * @param starsStringBuilder Builds the stars emoji string
+   */
   @Inject
   public DiaryEntryEmbedBuilder(
       EmbedBuilderFactory embedBuilderFactory, StarsStringBuilder starsStringBuilder) {
@@ -35,16 +42,35 @@ public class DiaryEntryEmbedBuilder {
     embedBuilder = embedBuilderFactory.create();
   }
 
+  /**
+   * Setter for the message attribute.
+   *
+   * @param message Message model here contains the data for a new diary entry usually retrieved
+   *     from the PubSub listener
+   * @return This class for chaining
+   */
   public DiaryEntryEmbedBuilder setMessage(Message message) {
     this.message = message;
     return this;
   }
 
+  /**
+   * Setter for the user attribute.
+   *
+   * @param user User model containing important data to display about the user
+   * @return This class for chaining
+   */
   public DiaryEntryEmbedBuilder setUser(User user) {
     this.user = user;
     return this;
   }
 
+  /**
+   * Builds the embed.
+   *
+   * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
+   *     contains only one embed.
+   */
   public ArrayList<MessageEmbed> build() {
     if (message == null || user == null) {
       return new ArrayList<>();
@@ -52,8 +78,8 @@ public class DiaryEntryEmbedBuilder {
 
     String profileName = user.displayName;
     String authorTitle = "%s %sed...".formatted(profileName, message.entry.type.toString());
-    String profileURL = "https://letterboxd.com/%s/".formatted(user.userName);
-    embedBuilder.setAuthor(authorTitle, profileURL, user.image);
+    String profileUrl = "https://letterboxd.com/%s/".formatted(user.userName);
+    embedBuilder.setAuthor(authorTitle, profileUrl, user.image);
 
     String adult = message.entry.adult ? ":underage: " : "";
     String year = message.entry.filmYear != 0 ? "(" + message.entry.filmYear + ")" : "";
