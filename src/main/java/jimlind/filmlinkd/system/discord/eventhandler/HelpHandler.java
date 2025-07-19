@@ -54,7 +54,7 @@ public class HelpHandler implements Handler {
   private void queueAdditionalTestMessages(MessageChannel channel) {
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-    final int[] count = {1};
+    final int[] count = {0};
     Runnable task =
         () -> {
           try {
