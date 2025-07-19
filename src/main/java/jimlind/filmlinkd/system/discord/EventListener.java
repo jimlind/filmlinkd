@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.NotNull;
 
+/** Custom listener for Discord events. On Ready and Slash Commands are needed here. */
 @Slf4j
 public class EventListener extends ListenerAdapter {
   private final ScrapedResultCheckerFactory scrapedResultCheckerFactory;
