@@ -5,6 +5,7 @@ NEED
 * Create VIP Scraper
 * Ensure that charts are duplicated
 * Post an actual diary entry as the last part of Help:Test
+* Post a permissions status message with Help
 
 DONE
 * Delete all existing infrastructure and let terraform build it fresh
