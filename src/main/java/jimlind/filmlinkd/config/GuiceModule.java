@@ -96,7 +96,7 @@ public class GuiceModule extends AbstractModule {
     bind(CountStringBuilder.class).in(Scopes.NO_SCOPE);
     bind(DescriptionStringBuilder.class).in(Scopes.NO_SCOPE);
     bind(DirectorsStringBuilder.class).in(Scopes.NO_SCOPE);
-    bind(RunTimeStringBuilder.class).in(Scopes.NO_SCOPE);
+    bind(RuntimeStringBuilder.class).in(Scopes.NO_SCOPE);
     bind(StarsStringBuilder.class).in(Scopes.NO_SCOPE);
     bind(TextStringBuilder.class).in(Scopes.NO_SCOPE);
     bind(UserStringBuilder.class).in(Scopes.NO_SCOPE);

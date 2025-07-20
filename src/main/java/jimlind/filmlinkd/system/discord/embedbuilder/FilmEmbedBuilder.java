@@ -9,7 +9,7 @@ import jimlind.filmlinkd.model.CombinedLbFilmModel;
 import jimlind.filmlinkd.system.discord.stringbuilder.CountStringBuilder;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
 import jimlind.filmlinkd.system.discord.stringbuilder.DirectorsStringBuilder;
-import jimlind.filmlinkd.system.discord.stringbuilder.RunTimeStringBuilder;
+import jimlind.filmlinkd.system.discord.stringbuilder.RuntimeStringBuilder;
 import jimlind.filmlinkd.system.discord.stringbuilder.StarsStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilm;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilmStatistics;
@@ -93,7 +93,7 @@ public class FilmEmbedBuilder {
       metadata.add(film.primaryLanguage.name);
     }
     if (film.runTime > 0) {
-      metadata.add(new RunTimeStringBuilder().setRunTime(film.runTime).build());
+      metadata.add(new RuntimeStringBuilder().setRuntime(film.runTime).build());
     }
     if (!metadata.isEmpty()) {
       description += String.join(", ", metadata) + "\n";
