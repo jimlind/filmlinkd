@@ -60,7 +60,7 @@ public class FollowEmbedBuilder {
       return new ArrayList<>();
     }
 
-    String userName = userStringBuilder.setUserName(member.username).build();
+    String userName = userStringBuilder.setUsername(member.username).build();
     String description =
         String.format("I am now following %s (%s).\n", member.displayName, userName);
     description += "I'll try to post their most recent entry in the appropriate channel.";

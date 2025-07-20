@@ -60,7 +60,7 @@ public class RefreshEmbedBuilder {
       return new ArrayList<>();
     }
 
-    String userName = userStringBuilder.setUserName(member.username).build();
+    String userName = userStringBuilder.setUsername(member.username).build();
     String description =
         String.format("I updated my display data for %s (%s).", member.displayName, userName);
     embedBuilder.setDescription(descriptionStringBuilder.setDescriptionText(description).build());

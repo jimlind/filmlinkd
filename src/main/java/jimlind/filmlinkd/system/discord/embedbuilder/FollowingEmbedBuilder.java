@@ -58,7 +58,7 @@ public class FollowingEmbedBuilder {
       String userDisplay =
           String.format(
               "• %s [%s](https://boxd.it/%s)\n",
-              new UserStringBuilder().setUserName(user.userName).build(),
+              new UserStringBuilder().setUsername(user.userName).build(),
               user.letterboxdId,
               user.letterboxdId);
 

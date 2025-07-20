@@ -89,7 +89,7 @@ public class UserEmbedBuilder {
             "Logged films: %s total | %s this year",
             memberStatistics.counts.watches, memberStatistics.counts.filmsInDiaryThisYear);
 
-    String displayName = new UserStringBuilder().setUserName(member.displayName).build();
+    String displayName = new UserStringBuilder().setUsername(member.displayName).build();
     LbPronoun pronoun = member.pronoun;
     List<String> pronounList =
         List.of(pronoun.subjectPronoun, pronoun.objectPronoun, pronoun.possessivePronoun);

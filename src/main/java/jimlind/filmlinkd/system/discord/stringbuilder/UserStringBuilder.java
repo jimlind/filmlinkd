@@ -2,16 +2,16 @@ package jimlind.filmlinkd.system.discord.stringbuilder;
 
 /** Build a string that displays a username escaping characters that might be formatting. */
 public class UserStringBuilder {
-  private String userName = "";
+  private String username = "";
 
   /**
-   * Setter for the userName attribute.
+   * Setter for the username attribute.
    *
-   * @param userName The raw user name string from Letterboxd
+   * @param username The raw username string from Letterboxd
    * @return This class for chaining
    */
-  public UserStringBuilder setUserName(String userName) {
-    this.userName = userName;
+  public UserStringBuilder setUsername(String username) {
+    this.username = username;
     return this;
   }
 
@@ -23,22 +23,22 @@ public class UserStringBuilder {
   public String build() {
     int position = 0;
     while (true) {
-      char firstChar = this.userName.charAt(position);
-      char lastChar = this.userName.charAt(this.userName.length() - position - 1);
+      char firstChar = this.username.charAt(position);
+      char lastChar = this.username.charAt(this.username.length() - position - 1);
 
       if ((firstChar == '_') && firstChar == lastChar) {
-        this.userName =
-            this.userName.substring(position + 1, this.userName.length() - position - 1);
+        this.username =
+            this.username.substring(position + 1, this.username.length() - position - 1);
         position++;
       } else {
         if (position > 0) {
           String underscores = "\\_".repeat(position);
-          this.userName = underscores + this.userName + underscores;
+          this.username = underscores + this.username + underscores;
         }
         break;
       }
     }
 
-    return this.userName.toLowerCase();
+    return this.username.toLowerCase();
   }
 }

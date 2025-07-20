@@ -60,7 +60,7 @@ public class UnfollowEmbedBuilder {
       return new ArrayList<>();
     }
 
-    String userName = userStringBuilder.setUserName(member.username).build();
+    String userName = userStringBuilder.setUsername(member.username).build();
     String description =
         String.format(
             "I unfollowed %s (%s).\nNo hard feelings I hope.", member.displayName, userName);

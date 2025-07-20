@@ -90,7 +90,7 @@ public class DiaryListEmbedBuilder {
     embedBuilder.setTitle(
         String.format(
             "Recent Diary Activity from %s",
-            new UserStringBuilder().setUserName(member.displayName).build()));
+            new UserStringBuilder().setUsername(member.displayName).build()));
     embedBuilder.setUrl(String.format("https://boxd.it/%s", member.id));
     embedBuilder.setThumbnail(imageUtils.getTallest(member.avatar));
 
