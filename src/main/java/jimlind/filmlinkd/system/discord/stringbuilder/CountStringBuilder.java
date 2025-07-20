@@ -1,13 +1,25 @@
 package jimlind.filmlinkd.system.discord.stringbuilder;
 
+/** Build a string that displays a count in a user-friendly way. */
 public class CountStringBuilder {
   private long count = 0L;
 
+  /**
+   * Setter for the count attribute.
+   *
+   * @param count The quantity of things
+   * @return This class for chaining
+   */
   public CountStringBuilder setCount(long count) {
     this.count = count;
     return this;
   }
 
+  /**
+   * Builds the string.
+   *
+   * @return A user-friendly count display
+   */
   public String build() {
     long thousand = 1000L;
     long million = 1000000L;

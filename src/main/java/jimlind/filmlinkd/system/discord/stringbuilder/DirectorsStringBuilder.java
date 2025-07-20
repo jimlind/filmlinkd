@@ -5,9 +5,17 @@ import java.util.stream.Collectors;
 import jimlind.filmlinkd.system.letterboxd.model.LbContributionType;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilmContributions;
 
+/** Build a string that displays a list of directors with Letterboxd links. */
 public class DirectorsStringBuilder {
+  /** The Directors. */
   public LbFilmContributions directors = null;
 
+  /**
+   * Setter for the contributionList attribute.
+   *
+   * @param contributionList The list of all contributions
+   * @return This class for chaining
+   */
   public DirectorsStringBuilder setContributionList(List<LbFilmContributions> contributionList) {
     List<LbFilmContributions> filteredContributions =
         contributionList.stream()
@@ -20,6 +28,11 @@ public class DirectorsStringBuilder {
     return this;
   }
 
+  /**
+   * Builds the string.
+   *
+   * @return The list of directors with Letterboxd links
+   */
   public String build() {
     if (directors == null) {
       return "";
