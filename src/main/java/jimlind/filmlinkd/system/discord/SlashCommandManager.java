@@ -6,15 +6,28 @@ import javax.annotation.Nullable;
 import jimlind.filmlinkd.system.discord.eventhandler.Handler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/** Handles all slash commands. The process command here transfers logic to appropriate handler. */
 public class SlashCommandManager {
 
   private final Injector injector;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param injector The Guice injector with all dependencies
+   */
   @Inject
   SlashCommandManager(Injector injector) {
     this.injector = injector;
   }
 
+  /**
+   * Process the event. The handler needed to process the event is found via the
+   * getHandlerFromEventName method.
+   *
+   * @param event the event
+   * @return the boolean
+   */
   public boolean process(SlashCommandInteractionEvent event) {
     Handler handler = getHandlerFromEventName(event.getName());
     if (handler != null) {
