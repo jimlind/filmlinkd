@@ -4,8 +4,15 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/** Scrapes the Letterboxd website for public Letterboxd ID redirect information. */
 public class LetterboxdIdWeb {
-  public String getLocationFromLID(String letterboxdId) {
+  /**
+   * Gets the canonical location of a Letterboxd ID redirect.
+   *
+   * @param letterboxdId Any Letterboxd ID (could represent any data model)
+   * @return String representing the canonical location of the redirect
+   */
+  public String getLocationFromLid(String letterboxdId) {
     String url = String.format("https://boxd.it/%s", letterboxdId);
 
     try {

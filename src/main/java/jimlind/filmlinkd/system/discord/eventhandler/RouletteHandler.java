@@ -56,7 +56,7 @@ public class RouletteHandler implements Handler {
       return "undefined";
     }
 
-    String location = letterboxdIdWeb.getLocationFromLID(filmId);
+    String location = letterboxdIdWeb.getLocationFromLid(filmId);
     if (location.contains("/film/")) {
       return location.substring(location.lastIndexOf("/film/") + 6, location.lastIndexOf("/"));
     } else {

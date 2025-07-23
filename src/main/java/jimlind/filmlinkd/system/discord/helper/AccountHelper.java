@@ -38,7 +38,7 @@ public class AccountHelper {
   public LbMember getMember(SlashCommandInteractionEvent event) {
     OptionMapping accountMap = event.getInteraction().getOption("account");
     String userName = accountMap != null ? accountMap.getAsString() : "";
-    String userLid = this.memberWeb.getMemberLIDFromUsername(userName);
+    String userLid = this.memberWeb.getMemberLidFromUsername(userName);
 
     return this.memberApi.fetch(userLid);
   }

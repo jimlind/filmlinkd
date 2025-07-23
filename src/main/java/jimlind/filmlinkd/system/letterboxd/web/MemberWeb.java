@@ -4,8 +4,17 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/** Scrapes the Letterboxd website for public member information. */
 public class MemberWeb {
-  public String getMemberLIDFromUsername(String username) {
+  /**
+   * The best way to get the Letterboxd ID associated with a username is by loading the profile page
+   * on the web and parsing the data from the headers. The Letterboxd ID is needed for all API
+   * queries. The Letterboxd API to search for user data isn't as helpful.
+   *
+   * @param username A Letterboxd username
+   * @return The Letterboxd ID associated with the username.
+   */
+  public String getMemberLidFromUsername(String username) {
     String url = String.format("https://letterboxd.com/%s/", username.toLowerCase());
 
     try {
