@@ -7,8 +7,15 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+/** Utilities to translate Letterboxd date strings to other formats. */
 public class DateUtils {
 
+  /**
+   * Translates a Letterboxd date string to a timestamp in milliseconds.
+   *
+   * @param dateString A Letterboxd date string
+   * @return A timestamp in milliseconds
+   */
   public long toMilliseconds(String dateString) {
     try {
       LocalDate date = LocalDate.parse(dateString);
@@ -27,6 +34,12 @@ public class DateUtils {
     return 0L;
   }
 
+  /**
+   * Translates a Letterboxd date string to a human-readable date string.
+   *
+   * @param dateString A Letterboxd date string
+   * @return A human-readable date string
+   */
   public String toPattern(String dateString) {
     long timestamp = toMilliseconds(dateString);
     Instant instant = Instant.ofEpochMilli(timestamp);
