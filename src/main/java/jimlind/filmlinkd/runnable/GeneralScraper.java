@@ -13,6 +13,10 @@ import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Scrapes the next page from the GeneralUserCache publishes a message in PubSub to notify the other
+ * systems.
+ */
 @Slf4j
 public class GeneralScraper implements Runnable {
 
@@ -21,6 +25,14 @@ public class GeneralScraper implements Runnable {
   private final MessageFactory messageFactory;
   private final PubSubManager pubSubManager;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param generalUserCache Where we store in memory versions records of latest diary entry
+   * @param logEntriesApi Fetches log entry data from Letterboxd API
+   * @param messageFactory Builds the message object that is pushed into the PubSub system
+   * @param pubSubManager Handles the PubSub system to accept commands and messages
+   */
   @Inject
   public GeneralScraper(
       GeneralUserCache generalUserCache,

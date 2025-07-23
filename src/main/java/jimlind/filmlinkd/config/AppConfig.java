@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
+/** Contains application and environment variables. */
 @Singleton
 public class AppConfig {
   @Getter private final String applicationName;

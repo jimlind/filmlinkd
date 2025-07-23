@@ -17,6 +17,12 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 
+/**
+ * This is a scheduled task that checks the ScrapedResultQueue and posts the appropriate messages to
+ * channels as needed. The ScrapedResultQueue exists because I couldn't figure out how to throttle
+ * PubSub responses using the actual documented process. I probably could and this would become a
+ * listener instead.
+ */
 @Slf4j
 public class ScrapedResultChecker implements Runnable {
   private final DiaryEntryEmbedBuilder diaryEntryEmbedBuilder;
@@ -27,6 +33,16 @@ public class ScrapedResultChecker implements Runnable {
   private final int shardId;
   private final int totalShards;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param diaryEntryEmbedBuilder A class that builds diaryEntryEmbed objects
+   * @param firestoreManager A class that handles FireStore data interactions
+   * @param scrapedResultQueue A class that stores results in local memory
+   * @param shardManagerStorage A class that stores shard information
+   * @param shardId The shard id to help us know which shard we are running this from
+   * @param totalShards The total number of shards in use
+   */
   public ScrapedResultChecker(
       DiaryEntryEmbedBuilder diaryEntryEmbedBuilder,
       FirestoreManager firestoreManager,

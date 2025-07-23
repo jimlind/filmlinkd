@@ -1,10 +1,19 @@
 package jimlind.filmlinkd.runnable;
 
 import com.google.inject.Inject;
-import java.lang.management.*;
+import java.lang.management.ClassLoadingMXBean;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
+import java.lang.management.ThreadMXBean;
 import jimlind.filmlinkd.config.AppConfig;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Log a bunch of information about the status of the JVM as info for debugging purposes. There are
+ * lots of ways that you could configure different systems to access this data but this feels the
+ * most predictable for me.
+ */
 @Slf4j
 public class StatLogger implements Runnable {
   private static final long MEGABYTE = 1024L * 1024L;
@@ -14,6 +23,11 @@ public class StatLogger implements Runnable {
   private final MemoryMXBean memoryBean;
   private final ThreadMXBean threadBean;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param appConfig Contains application and environment variables
+   */
   @Inject
   public StatLogger(AppConfig appConfig) {
     this.appConfig = appConfig;

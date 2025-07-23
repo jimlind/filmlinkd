@@ -1,5 +1,6 @@
 package jimlind.filmlinkd.config;
 
+/** A collection of constant strings to avoid hardcoding everywhere. */
 public class AppConstants {
   public static final String PROP_KEY_APPLICATION_NAME = "app.name";
   public static final String PROP_KEY_APPLICATION_VERSION = "app.version";
