@@ -1,6 +1,9 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
-// https://api-docs.letterboxd.com/#/schemas/Review
+/**
+ * Implements the <a href="https://api-docs.letterboxd.com/#/schemas/Review">Review</a> schema
+ * model.
+ */
 public class LbReview {
   public String lbml;
   public boolean containsSpoilers;

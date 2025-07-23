@@ -1,6 +1,10 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
-// https://api-docs.letterboxd.com/#/schemas/FilmStatisticsCounts
+/**
+ * Implements the <a
+ * href="https://api-docs.letterboxd.com/#/schemas/FilmStatisticsCounts">FilmStatisticsCounts</a>
+ * schema model.
+ */
 public class LbFilmStatisticsCounts {
   public long watches;
   public long likes;

@@ -2,7 +2,10 @@ package jimlind.filmlinkd.system.letterboxd.model;
 
 import java.util.List;
 
-// https://api-docs.letterboxd.com/#/schemas/FilmSummary
+/**
+ * Implements the <a href="https://api-docs.letterboxd.com/#/schemas/FilmSummary">FilmSummary</a>
+ * schema model.
+ */
 public class LbFilmSummary {
   public String id;
   public String name;

@@ -1,6 +1,10 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
-// https://api-docs.letterboxd.com/#/schemas/ContributorSummary
+/**
+ * Implements the <a
+ * href="https://api-docs.letterboxd.com/#/schemas/ContributorSummary">ContributorSummary</a> schema
+ * model.
+ */
 public class LbContributorSummary {
   public String id;
   public String name;

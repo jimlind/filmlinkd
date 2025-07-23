@@ -1,6 +1,8 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
-// https://api-docs.letterboxd.com/#/schemas/Link
+/**
+ * Implements the <a href="https://api-docs.letterboxd.com/#/schemas/Link">Link</a> schema model.
+ */
 public enum LbLinkType {
   letterboxd,
   boxd,

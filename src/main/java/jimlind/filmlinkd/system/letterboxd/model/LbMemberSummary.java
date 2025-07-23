@@ -1,6 +1,9 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
-// https://api-docs.letterboxd.com/#/schemas/MemberSummary
+/**
+ * Implements the <a
+ * href="https://api-docs.letterboxd.com/#/schemas/MemberSummary">MemberSummary</a> schema model.
+ */
 public class LbMemberSummary {
   public String id;
   public String username;

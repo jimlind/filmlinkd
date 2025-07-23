@@ -1,6 +1,10 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
-// https://api-docs.letterboxd.com/#/schemas/AbstractSearchItem
+/**
+ * Implements the <a
+ * href="https://api-docs.letterboxd.com/#/schemas/AbstractSearchItem">AbstractSearchItem</a> schema
+ * model.
+ */
 public class LbAbstractSearchItem {
   public String type;
   public float score;

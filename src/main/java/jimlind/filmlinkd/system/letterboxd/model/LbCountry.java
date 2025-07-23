@@ -1,6 +1,9 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
-// https://api-docs.letterboxd.com/#/schemas/Country
+/**
+ * Implements the <a href="https://api-docs.letterboxd.com/#/schemas/Country">Country</a> schema
+ * model.
+ */
 public class LbCountry {
   public String code;
   public String name;

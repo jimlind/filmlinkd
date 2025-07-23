@@ -1,6 +1,9 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
-// https://api-docs.letterboxd.com/#/schemas/Language
+/**
+ * Implements the <a href="https://api-docs.letterboxd.com/#/schemas/Language">Language</a> schema
+ * model.
+ */
 public class LbLanguage {
   public String code;
   public String name;

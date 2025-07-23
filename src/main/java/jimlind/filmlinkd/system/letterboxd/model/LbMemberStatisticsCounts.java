@@ -1,6 +1,10 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
-// https://api-docs.letterboxd.com/#/schemas/MemberStatisticsCounts
+/**
+ * Implements the <a
+ * href="https://api-docs.letterboxd.com/#/schemas/MemberStatisticsCounts">MemberStatisticsCounts</a>
+ * schema model.
+ */
 public class LbMemberStatisticsCounts {
   public int filmLikes;
   public int listLikes;

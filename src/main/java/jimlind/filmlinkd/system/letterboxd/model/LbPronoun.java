@@ -1,6 +1,9 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
-// https://api-docs.letterboxd.com/#/schemas/Pronoun
+/**
+ * Implements the <a href="https://api-docs.letterboxd.com/#/schemas/Pronoun">Pronoun</a> schema
+ * model.
+ */
 public class LbPronoun {
   public String id;
   public String label;

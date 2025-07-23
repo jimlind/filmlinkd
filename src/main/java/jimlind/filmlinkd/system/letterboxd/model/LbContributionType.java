@@ -1,6 +1,10 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
-// https://api-docs.letterboxd.com/#/schemas/ContributionType
+/**
+ * Implements the <a
+ * href="https://api-docs.letterboxd.com/#/schemas/ContributionType">ContributionType</a> schema
+ * model.
+ */
 public enum LbContributionType {
   Director,
   CoDirector,

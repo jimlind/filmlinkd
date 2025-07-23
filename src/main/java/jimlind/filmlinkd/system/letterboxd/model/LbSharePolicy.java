@@ -1,6 +1,9 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
-// https://api-docs.letterboxd.com/#/schemas/SharePolicy
+/**
+ * Implements the <a href="https://api-docs.letterboxd.com/#/schemas/SharePolicy">SharePolicy</a>
+ * schema model.
+ */
 public enum LbSharePolicy {
   Anyone,
   Friends,

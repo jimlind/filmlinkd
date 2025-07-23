@@ -1,6 +1,6 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
-// https://api-docs.letterboxd.com/#/schemas/Tag
+/** Implements the <a href="https://api-docs.letterboxd.com/#/schemas/Tag">Tag</a> schema model. */
 public class LbTag {
   @Deprecated public String tag;
   public String code;

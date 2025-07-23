@@ -1,6 +1,9 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
-// https://api-docs.letterboxd.com/#/schemas/ListIdentifier
+/**
+ * Implements the <a
+ * href="https://api-docs.letterboxd.com/#/schemas/ListIdentifier">ListIdentifier</a> schema model.
+ */
 public class LbListIdentifier {
   public String id;
 }

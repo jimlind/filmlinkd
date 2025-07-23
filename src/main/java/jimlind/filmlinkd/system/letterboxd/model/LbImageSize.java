@@ -1,6 +1,9 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
-// https://api-docs.letterboxd.com/#/schemas/ImageSize
+/**
+ * Implements the <a href="https://api-docs.letterboxd.com/#/schemas/ImageSize">ImageSize</a> schema
+ * model.
+ */
 public class LbImageSize {
   public int width;
   public int height;

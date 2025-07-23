@@ -1,6 +1,8 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
-// https://api-docs.letterboxd.com/#/schemas/Genre
+/**
+ * Implements the <a href="https://api-docs.letterboxd.com/#/schemas/Genre">Genre</a> schema model.
+ */
 public class LbGenre {
   public String id;
   public String name;

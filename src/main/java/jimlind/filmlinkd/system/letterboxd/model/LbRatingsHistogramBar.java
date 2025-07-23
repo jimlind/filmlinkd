@@ -1,6 +1,10 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
-// https://api-docs.letterboxd.com/#/schemas/RatingsHistogramBar
+/**
+ * Implements the <a
+ * href="https://api-docs.letterboxd.com/#/schemas/RatingsHistogramBar">RatingsHistogramBar</a>
+ * schema model.
+ */
 public class LbRatingsHistogramBar {
   public float rating;
   public float normalizedWeight;

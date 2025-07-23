@@ -3,7 +3,10 @@ package jimlind.filmlinkd.system.letterboxd.model;
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
-// https://api-docs.letterboxd.com/#/schemas/LogEntry
+/**
+ * Implements the <a href="https://api-docs.letterboxd.com/#/schemas/LogEntry">LogEntry</a> schema
+ * model.
+ */
 public class LbLogEntry {
   public String id;
   public String name;

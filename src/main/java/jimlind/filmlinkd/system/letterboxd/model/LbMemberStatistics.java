@@ -2,7 +2,11 @@ package jimlind.filmlinkd.system.letterboxd.model;
 
 import java.util.List;
 
-// https://api-docs.letterboxd.com/#/schemas/MemberStatistics
+/**
+ * Implements the <a
+ * href="https://api-docs.letterboxd.com/#/schemas/MemberStatistics">MemberStatistics</a> schema
+ * model.
+ */
 public class LbMemberStatistics {
   public LbMemberIdentifier member;
   public LbMemberStatisticsCounts counts;
