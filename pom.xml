@@ -70,6 +70,12 @@
             <artifactId>guava</artifactId>
             <version>33.4.8-jre</version>
         </dependency>
+        <!-- Set version of commons to override a vulnerable dependency of checkstyle -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.18.0</version>
+        </dependency>
 
         <!-- Logging -->
         <dependency>
@@ -131,7 +137,7 @@
         <dependency>
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
-            <version>10.25.0</version>
+            <version>10.26.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
