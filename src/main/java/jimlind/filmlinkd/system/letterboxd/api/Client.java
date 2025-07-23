@@ -17,20 +17,47 @@ import javax.crypto.spec.SecretKeySpec;
 import jimlind.filmlinkd.config.AppConfig;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * The basis for the rest of the Letterboxd API calls. Contains all the logic to make calls that
+ * need to be authorized and those that don't.
+ */
 @Slf4j
 public class Client {
   static final String BASE_URL = "https://api.letterboxd.com/api/v0/";
   private final AppConfig appConfig;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param appConfig Contains application and environment variables
+   */
   @Inject
   Client(AppConfig appConfig) {
     this.appConfig = appConfig;
   }
 
+  /**
+   * Gets data from the Letterboxd API when the request does not need to be authorized so passes an
+   * empty string for auth.
+   *
+   * @param path The partial path for the API request (everything after /v0/) including any path or
+   *     query params
+   * @param inputClass The datatype that is returned.
+   * @return Returns the datatype as defined by the inputs.
+   */
   public <T> T get(String path, Class<T> inputClass) {
     return this.request(path, "", inputClass);
   }
 
+  /**
+   * Gets data from the Letterboxd API when the request needs to be authorized so building that
+   * auth.
+   *
+   * @param path The partial path for the API request (everything after /v0/) including any path or
+   *     query params
+   * @param inputClass The datatype that is returned.
+   * @return Returns the datatype as defined by the inputs.
+   */
   public <T> T getAuthorized(String path, Class<T> inputClass) {
     String key = appConfig.getLetterboxdApiKey();
     String nonce = String.valueOf(java.util.UUID.randomUUID());
@@ -93,7 +120,9 @@ public class Client {
 
   private String bytesToHex(byte[] in) {
     final StringBuilder builder = new StringBuilder();
-    for (final byte b : in) builder.append(String.format("%02x", b));
+    for (final byte b : in) {
+      builder.append(String.format("%02x", b));
+    }
     return builder.toString();
   }
 
@@ -102,10 +131,10 @@ public class Client {
     SecretKeySpec secretKeySpec = new SecretKeySpec(shared.getBytes(), "HmacSHA256");
 
     try {
-      Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
-      sha256_HMAC.init(secretKeySpec);
+      Mac sha256Hmac = Mac.getInstance("HmacSHA256");
+      sha256Hmac.init(secretKeySpec);
       String data = method.toUpperCase() + "\u0000" + url + "\u0000"; // "�"
-      return bytesToHex(sha256_HMAC.doFinal(data.getBytes()));
+      return bytesToHex(sha256Hmac.doFinal(data.getBytes()));
     } catch (Exception e) {
       return "";
     }

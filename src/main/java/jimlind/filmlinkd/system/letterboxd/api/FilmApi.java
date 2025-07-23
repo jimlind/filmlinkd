@@ -8,15 +8,30 @@ import jimlind.filmlinkd.system.letterboxd.model.LbFilmSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LbSearchResponse;
 import jimlind.filmlinkd.system.letterboxd.utils.UrlUtils;
 
+/**
+ * Implements <a href="https://api-docs.letterboxd.com/#operation-GET-search">GET /search</a> for
+ * films.
+ */
 public class FilmApi {
-
   private final Client client;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param client The Letterboxd API client that does authorization and object casting.
+   */
   @Inject
   FilmApi(Client client) {
     this.client = client;
   }
 
+  /**
+   * Searches for film with the Letterboxd API. Only returns a small amount of information about the
+   * film for showing a snipped not the full film information available.
+   *
+   * @param searchTerm Search terms to use to find the film
+   * @return The response from the search API as {@link LbFilmSummary}
+   */
   public LbFilmSummary search(String searchTerm) {
     // Search for the film by name
     String uriTemplate = "search/?input=%s&include=%s&perPage=%s&searchMethod=%s";
@@ -31,6 +46,13 @@ public class FilmApi {
     return searchResponse.items.get(0).film;
   }
 
+  /**
+   * Searches for film with the Letterboxd API. Then loads up details and statistics about the film
+   * to return a more complete data set of what is available.
+   *
+   * @param searchTerm Search terms to use to find the film
+   * @return The merged response from several API calls as {@link CombinedLbFilmModel}
+   */
   public CombinedLbFilmModel fetch(String searchTerm) {
     // Load film summary
     LbFilmSummary filmSummary = this.search(searchTerm);
@@ -53,11 +75,11 @@ public class FilmApi {
       return null;
     }
 
-    CombinedLbFilmModel combinedLBFilmModel = new CombinedLbFilmModel();
-    combinedLBFilmModel.film = filmDetailsResponse;
-    combinedLBFilmModel.filmStatistics = filmStatisticsResponse;
-    combinedLBFilmModel.filmSummary = filmSummary;
+    CombinedLbFilmModel combinedLbFilmModel = new CombinedLbFilmModel();
+    combinedLbFilmModel.film = filmDetailsResponse;
+    combinedLbFilmModel.filmStatistics = filmStatisticsResponse;
+    combinedLbFilmModel.filmSummary = filmSummary;
 
-    return combinedLBFilmModel;
+    return combinedLbFilmModel;
   }
 }
