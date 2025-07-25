@@ -238,13 +238,10 @@
                 <version>3.26.0</version>
                 <configuration>
                     <rulesets>
-                        <ruleset>category/java/bestpractices.xml</ruleset>
-                        <ruleset>category/java/design.xml</ruleset>
-                        <ruleset>category/java/errorprone.xml</ruleset>
-                        <ruleset>category/java/performance.xml</ruleset>
+                        <ruleset>${basedir}/config/pmd/ruleset.xml</ruleset>
                     </rulesets>
                     <failOnViolation>true</failOnViolation>
-                    <failurePriority>2</failurePriority>
+                    <failurePriority>3</failurePriority>
                     <outputDirectory>${project.build.directory}/site</outputDirectory>
                 </configuration>
             </plugin>

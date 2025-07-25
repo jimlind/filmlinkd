@@ -16,7 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 
 /** The main entry point for the scraper application. */
 @Slf4j
-public class Scraper {
+public final class Scraper {
+  private Scraper() {}
+
   /**
    * Initializes and starts all core application systems.
    *
@@ -37,8 +39,10 @@ public class Scraper {
     injector.getInstance(VipScraperScheduler.class).start();
 
     // Schedule Memory Logger
-    ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    scheduler.scheduleAtFixedRate(injector.getInstance(StatLogger.class), 0, 30, TimeUnit.MINUTES);
+    try (ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor()) {
+      scheduler.scheduleAtFixedRate(
+          injector.getInstance(StatLogger.class), 0, 30, TimeUnit.MINUTES);
+    }
 
     // Register shutdown events
     Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownThread.class));

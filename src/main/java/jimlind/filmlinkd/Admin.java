@@ -8,7 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 
 /** The main entry point for the admin application. */
 @Slf4j
-public class Admin {
+public final class Admin {
+  private Admin() {}
+
   /**
    * Initializes and starts all core application systems.
    *

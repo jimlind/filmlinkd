@@ -15,7 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 
 /** The main entry point for the bot application. */
 @Slf4j
-public class Bot {
+public final class Bot {
+  private Bot() {}
+
   /**
    * Initializes and starts all core application systems.
    *
@@ -29,18 +31,16 @@ public class Bot {
     injector.getInstance(AppConfig.class).setMainClass(Bot.class.getName());
 
     // Start the Discord server
-    try {
-      injector.getInstance(DiscordSystem.class).start();
-    } catch (Exception e) {
-      log.error("Failed To Start the Discord Server", e);
-    }
+    injector.getInstance(DiscordSystem.class).start();
 
     // Start the Subscribers and build the Publishers
     injector.getInstance(PubSubManager.class).activate();
 
     // Schedule Memory Logger
-    ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    scheduler.scheduleAtFixedRate(injector.getInstance(StatLogger.class), 0, 30, TimeUnit.MINUTES);
+    try (ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor()) {
+      scheduler.scheduleAtFixedRate(
+          injector.getInstance(StatLogger.class), 0, 30, TimeUnit.MINUTES);
+    }
 
     // Register shutdown events
     Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownThread.class));

@@ -53,7 +53,7 @@ public class AppConfig {
 
     // Process environment properties resource
     @Nullable String environment = System.getenv("FILMLINKD_ENVIRONMENT");
-    String env = environment == null ? "dev" : environment.equals("PRODUCTION") ? "prod" : "dev";
+    String env = "PRODUCTION".equals(environment) ? "prod" : "dev";
     String envResource = String.format("%s/environment.properties", env);
     Properties envProperties = loadPropertiesFromResource(envResource);
 
@@ -87,7 +87,7 @@ public class AppConfig {
   private Properties loadPropertiesFromResource(String resourcePath) {
     Properties properties = new Properties();
 
-    try (InputStream input = AppConfig.class.getClassLoader().getResourceAsStream(resourcePath)) {
+    try (InputStream input = getClassLoader().getResourceAsStream(resourcePath)) {
       if (input == null) {
         throw new IllegalArgumentException(String.format("Empty %s found", resourcePath));
       }
@@ -97,5 +97,9 @@ public class AppConfig {
     }
 
     return properties;
+  }
+
+  private ClassLoader getClassLoader() {
+    return Thread.currentThread().getContextClassLoader();
   }
 }
