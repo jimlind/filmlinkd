@@ -40,7 +40,8 @@ public class ScrapedResultFactory {
     Message message = new GsonBuilder().create().fromJson(data, Message.class);
 
     // Attempt to get user based on Message
-    QueryDocumentSnapshot snapshot = firestoreManager.getUserDocument(message.entry.userLid);
+    String userLid = message.getEntry().getUserLid();
+    QueryDocumentSnapshot snapshot = firestoreManager.getUserDocument(userLid);
     if (snapshot == null) {
       log.atWarn()
           .setMessage("Invalid User Passed in PubSub Message")
@@ -61,8 +62,8 @@ public class ScrapedResultFactory {
     }
 
     ScrapedResult scrapedResult = new ScrapedResult();
-    scrapedResult.message = message;
-    scrapedResult.user = user;
+    scrapedResult.setMessage(message);
+    scrapedResult.setUser(user);
 
     return scrapedResult;
   }
