@@ -5,6 +5,7 @@ import io.github.furstenheim.CopyDown;
 import io.github.furstenheim.Options;
 import io.github.furstenheim.OptionsBuilder;
 import java.util.ArrayList;
+import java.util.List;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LbListEntrySummary;
@@ -48,7 +49,7 @@ public class ListEmbedBuilder {
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
-  public ArrayList<MessageEmbed> build() {
+  public List<MessageEmbed> build() {
     if (listSummary == null) {
       return new ArrayList<>();
     }
@@ -79,7 +80,7 @@ public class ListEmbedBuilder {
         new DescriptionStringBuilder().setDescriptionText(descriptionText.toString()).build();
     embedBuilder.setDescription(description);
 
-    ArrayList<MessageEmbed> embedList = new ArrayList<>();
+    List<MessageEmbed> embedList = new ArrayList<>();
     embedList.add(embedBuilder.build());
 
     return embedList;

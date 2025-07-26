@@ -2,6 +2,7 @@ package jimlind.filmlinkd.system.discord.embedbuilder;
 
 import com.google.inject.Inject;
 import java.util.ArrayList;
+import java.util.List;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
@@ -43,7 +44,7 @@ public class HelpEmbedBuilder {
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
-  public ArrayList<MessageEmbed> create(long userCount, long guildCount) {
+  public List<MessageEmbed> create(long userCount, long guildCount) {
     EmbedBuilder embedBuilder = embedBuilderFactory.create();
 
     // Set title
@@ -84,7 +85,7 @@ public class HelpEmbedBuilder {
     embedBuilder.addField(
         ":left_speech_bubble: Discord", "[Join the Discord](https://discord.gg/deZ7EUguge)", true);
 
-    ArrayList<MessageEmbed> collection = new ArrayList<>();
+    List<MessageEmbed> collection = new ArrayList<>();
     collection.add(embedBuilder.build());
 
     return collection;
@@ -96,7 +97,7 @@ public class HelpEmbedBuilder {
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list *
    *     contains only one embed.
    */
-  public ArrayList<MessageEmbed> createTestMessage() {
+  public List<MessageEmbed> createTestMessage() {
     return this.createTestMessage(-1);
   }
 
@@ -107,7 +108,7 @@ public class HelpEmbedBuilder {
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
-  public ArrayList<MessageEmbed> createTestMessage(int step) {
+  public List<MessageEmbed> createTestMessage(int step) {
     EmbedBuilder embedBuilder = embedBuilderFactory.create();
 
     switch (step) {
@@ -166,7 +167,7 @@ public class HelpEmbedBuilder {
         break;
     }
 
-    ArrayList<MessageEmbed> collection = new ArrayList<>();
+    List<MessageEmbed> collection = new ArrayList<>();
     collection.add(embedBuilder.build());
 
     return collection;

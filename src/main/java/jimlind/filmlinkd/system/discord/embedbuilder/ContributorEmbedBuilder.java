@@ -17,7 +17,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 /** Builds a Discord embed to display information about a contributor. */
 public class ContributorEmbedBuilder {
   private final EmbedBuilder embedBuilder;
-  private LbContributor contributor = null;
+  private LbContributor contributor;
 
   /**
    * Constructor for this class.
@@ -46,7 +46,7 @@ public class ContributorEmbedBuilder {
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
-  public ArrayList<MessageEmbed> build() {
+  public List<MessageEmbed> build() {
     if (contributor == null) {
       return new ArrayList<>();
     }
@@ -76,7 +76,7 @@ public class ContributorEmbedBuilder {
             .setDescriptionText(String.join("\n\n", descriptionElements))
             .build());
 
-    ArrayList<MessageEmbed> embedList = new ArrayList<>();
+    List<MessageEmbed> embedList = new ArrayList<>();
     embedList.add(embedBuilder.build());
 
     return embedList;

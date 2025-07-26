@@ -2,6 +2,7 @@ package jimlind.filmlinkd.system.discord.embedbuilder;
 
 import com.google.inject.Inject;
 import java.util.ArrayList;
+import java.util.List;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
 import jimlind.filmlinkd.system.discord.stringbuilder.UserStringBuilder;
@@ -55,7 +56,7 @@ public class RefreshEmbedBuilder {
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
-  public ArrayList<MessageEmbed> build() {
+  public List<MessageEmbed> build() {
     if (member == null) {
       return new ArrayList<>();
     }
@@ -66,7 +67,7 @@ public class RefreshEmbedBuilder {
     embedBuilder.setDescription(descriptionStringBuilder.setDescriptionText(description).build());
     embedBuilder.setThumbnail(imageUtils.getTallest(member.avatar));
 
-    ArrayList<MessageEmbed> collection = new ArrayList<>();
+    List<MessageEmbed> collection = new ArrayList<>();
     collection.add(embedBuilder.build());
 
     return collection;

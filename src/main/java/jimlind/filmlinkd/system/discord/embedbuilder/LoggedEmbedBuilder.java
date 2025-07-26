@@ -57,7 +57,7 @@ public class LoggedEmbedBuilder {
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
-  public ArrayList<MessageEmbed> build() {
+  public List<MessageEmbed> build() {
     StringBuilder description = new StringBuilder();
     for (LbLogEntry logEntry : logEntryList) {
       String action = "Logged";
@@ -100,7 +100,7 @@ public class LoggedEmbedBuilder {
     embedBuilder.setDescription(
         new DescriptionStringBuilder().setDescriptionText(description.toString()).build());
 
-    ArrayList<MessageEmbed> embedList = new ArrayList<>();
+    List<MessageEmbed> embedList = new ArrayList<>();
     embedList.add(embedBuilder.build());
 
     return embedList;

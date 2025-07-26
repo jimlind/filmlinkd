@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.model.Message;
@@ -71,7 +72,7 @@ public class DiaryEntryEmbedBuilder {
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
-  public ArrayList<MessageEmbed> build() {
+  public List<MessageEmbed> build() {
     if (message == null || user == null) {
       return new ArrayList<>();
     }
@@ -136,7 +137,7 @@ public class DiaryEntryEmbedBuilder {
       embedBuilder.setThumbnail(message.entry.image);
     }
 
-    ArrayList<MessageEmbed> collection = new ArrayList<MessageEmbed>();
+    List<MessageEmbed> collection = new ArrayList<MessageEmbed>();
     collection.add(embedBuilder.build());
 
     return collection;

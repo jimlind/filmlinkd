@@ -60,12 +60,12 @@ public class DiaryListEmbedBuilder {
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
-  public ArrayList<MessageEmbed> build() {
+  public List<MessageEmbed> build() {
     if (member == null) {
       return new ArrayList<>();
     }
 
-    ArrayList<String> entryList = new ArrayList<>();
+    List<String> entryList = new ArrayList<>();
     for (LbLogEntry logEntry : logEntryList) {
       String firstLine =
           String.format(
@@ -94,7 +94,7 @@ public class DiaryListEmbedBuilder {
     embedBuilder.setUrl(String.format("https://boxd.it/%s", member.id));
     embedBuilder.setThumbnail(imageUtils.getTallest(member.avatar));
 
-    ArrayList<MessageEmbed> embedList = new ArrayList<>();
+    List<MessageEmbed> embedList = new ArrayList<>();
     embedList.add(embedBuilder.build());
 
     return embedList;

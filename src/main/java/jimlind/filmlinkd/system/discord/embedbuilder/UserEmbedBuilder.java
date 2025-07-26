@@ -63,7 +63,7 @@ public class UserEmbedBuilder {
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
-  public ArrayList<MessageEmbed> build() {
+  public List<MessageEmbed> build() {
     if (member == null || memberStatistics == null) {
       return new ArrayList<>();
     }
@@ -100,7 +100,7 @@ public class UserEmbedBuilder {
     embedBuilder.setDescription(
         new DescriptionStringBuilder().setDescriptionText(description).build());
 
-    ArrayList<MessageEmbed> embedList = new ArrayList<>();
+    List<MessageEmbed> embedList = new ArrayList<>();
     embedList.add(embedBuilder.build());
 
     return embedList;
