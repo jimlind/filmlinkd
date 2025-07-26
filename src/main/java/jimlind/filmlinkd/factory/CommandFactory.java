@@ -15,9 +15,9 @@ public class CommandFactory {
    */
   public Command create(Command.Type type, String user, String entry) {
     Command commandObject = new Command();
-    commandObject.type = type;
-    commandObject.user = user;
-    commandObject.entry = entry;
+    commandObject.setType(type);
+    commandObject.setUser(user);
+    commandObject.setEntry(entry);
 
     return commandObject;
   }
