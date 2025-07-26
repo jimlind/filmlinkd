@@ -27,8 +27,8 @@ public class GeneralUserCache {
   // This is a string/string key value store for user data
   // The key is the user's letterboxd id
   // The value is the last known letterboxd entry id for the user
-  private final HashMap<String, String> userCache = new HashMap<String, String>();
-  private int paginationIndex = 0;
+  private final Map<String, String> userCache = new HashMap<>();
+  private int paginationIndex;
 
   /**
    * Constructor for this class.
