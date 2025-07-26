@@ -3,6 +3,9 @@ package jimlind.filmlinkd.system;
 import com.google.inject.Singleton;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import jimlind.filmlinkd.model.ScrapedResult;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,8 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 @Singleton
 @Slf4j
 public class ScrapedResultQueue {
-  private final LinkedList<ScrapedResult> scrapedResultList = new LinkedList<ScrapedResult>();
-  private final ArrayList<Integer> fetchIdList = new ArrayList<Integer>();
+  private final List<ScrapedResult> scrapedResultList = new LinkedList<>();
+  private final List<Integer> fetchIdList = new ArrayList<>();
 
   /**
    * Puts a message in the queue for processing offline from the PubSub system.
@@ -53,7 +56,7 @@ public class ScrapedResultQueue {
     ScrapedResult scrapedResult;
     try {
       scrapedResult = scrapedResultList.getFirst();
-    } catch (Exception e) {
+    } catch (NoSuchElementException e) {
       return null;
     }
 

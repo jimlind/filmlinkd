@@ -1,4 +1,5 @@
 NEED
+* Revisit all the try/catches I deleted
 * Wire Up Scraper Message Sending Completely
 * Move back to the default database name to take advantage of free tier credits
 * Optimize Entry API to stop parsing earlier (not checking all 10 entries)
