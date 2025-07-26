@@ -3,6 +3,7 @@ package jimlind.filmlinkd.factory;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.inject.Inject;
 import java.util.ArrayList;
+import java.util.Locale;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
@@ -28,12 +29,8 @@ public class UserFactory {
    * @return Data model for user information
    */
   public User createFromSnapshot(QueryDocumentSnapshot snapshot) {
-    try {
-      User user = snapshot.toObject(User.class);
-      return fillDefaults(user);
-    } catch (Exception e) {
-      return null;
-    }
+    User user = snapshot.toObject(User.class);
+    return fillDefaults(user);
   }
 
   /**
@@ -43,22 +40,18 @@ public class UserFactory {
    * @return Data model for user information
    */
   public User createFromMember(LbMember member) {
-    try {
-      User user = new User();
+    User user = new User();
 
-      user.id = member.id;
-      user.created = 0L; // TODO: Should this get filled?
-      user.checked = 0L; // TODO: Should this get filled?
-      user.displayName = member.displayName;
-      user.image = imageUtils.getTallest(member.avatar);
-      user.letterboxdId = member.id;
-      user.updated = 0L; // TODO: Should this get filled?
-      user.userName = member.username.toLowerCase();
+    user.setId(member.id);
+    user.setCreated(0L); // TODO: Should this get filled?
+    user.setChecked(0L); // TODO: Should this get filled?
+    user.setDisplayName(member.displayName);
+    user.setImage(imageUtils.getTallest(member.avatar));
+    user.setLetterboxdId(member.id);
+    user.setUpdated(0L); // TODO: Should this get filled?
+    user.setUserName(member.username.toLowerCase(Locale.ROOT));
 
-      return fillDefaults(user);
-    } catch (Exception e) {
-      return null;
-    }
+    return fillDefaults(user);
   }
 
   /**
@@ -69,14 +62,17 @@ public class UserFactory {
    * @return The user now with minimum necessary default data
    */
   private User fillDefaults(User user) {
-    //
+    // If previous data isn't set in user model set some defaults
     if (user.previous == null) {
-      user.previous = new User.Previous();
-      user.previous.lid = "0";
-      user.previous.list = new ArrayList<String>();
+      User.Previous previous = new User.Previous();
+      previous.setLid("0");
+      previous.setList(new ArrayList<>());
+      user.setPrevious(previous);
     }
+
+    // If channelList data isn't set in user model set some defaults
     if (user.channelList == null) {
-      user.channelList = new ArrayList<User.Channel>();
+      user.setChannelList(new ArrayList<>());
     }
 
     return user;
