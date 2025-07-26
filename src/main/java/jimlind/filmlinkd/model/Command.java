@@ -1,8 +1,12 @@
 package jimlind.filmlinkd.model;
 
 import com.google.gson.Gson;
+import lombok.Getter;
+import lombok.Setter;
 
 /** Command Model used to inform all shards and applications about current state. */
+@Getter
+@Setter
 public class Command {
   public Type type = Type.FOLLOW;
   public String user;

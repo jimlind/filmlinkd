@@ -1,9 +1,13 @@
 package jimlind.filmlinkd.model;
 
 import com.google.gson.Gson;
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
 /** Message is a bit of a broad term here but this is used to send to all shards. */
+@Getter
+@Setter
 public class Message {
   public Entry entry;
   @Nullable public String channelId;
@@ -15,11 +19,7 @@ public class Message {
    * @return Indicator that a channel was specified for the message
    */
   public boolean hasChannelOverride() {
-    if (this.channelId == null) {
-      return false;
-    }
-
-    return !this.channelId.isBlank();
+    return channelId != null && !channelId.isBlank();
   }
 
   /**
@@ -45,6 +45,8 @@ public class Message {
   }
 
   /** All the data needed for a diary entry. */
+  @Getter
+  @Setter
   public static class Entry {
     public String lid;
     public String userName;

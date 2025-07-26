@@ -3,9 +3,14 @@ package jimlind.filmlinkd.model;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import lombok.Getter;
+import lombok.Setter;
 
 /** Data model for user information directly mimicking the Firestore model form. */
+@Getter
+@Setter
 public class User {
   public String id;
 
@@ -18,7 +23,7 @@ public class User {
   public long updated;
   public String userName;
 
-  public ArrayList<Channel> channelList;
+  public List<Channel> channelList;
   public Previous previous;
   public Footer footer;
 
@@ -28,8 +33,8 @@ public class User {
    * @return A list of channelIds as strings. The contents are numeric but we don't use these for
    *     calculations.
    */
-  public ArrayList<String> getChannelList() {
-    ArrayList<String> channelListResults = new ArrayList<String>();
+  public List<String> getChannelList() {
+    List<String> channelListResults = new ArrayList<>();
     if (this.channelList == null) {
       return channelListResults;
     }
@@ -48,11 +53,8 @@ public class User {
    * @return The LetterboxdId of the most recent previous entry.
    */
   public String getMostRecentPrevious() {
-    if (previous.list == null || previous.list.isEmpty()) {
-      return previous.lid;
-    }
-
-    return previous.list.getLast();
+    List<String> list = previous.getList();
+    return (list == null || list.isEmpty()) ? previous.lid : list.getLast();
   }
 
   /**
@@ -73,11 +75,13 @@ public class User {
   }
 
   /** Storage object for previous entries for this user. */
+  @Getter
+  @Setter
   public static class Previous {
     // This `id` is sometimes a string and sometimes a number. It is totally useless data.
     @Deprecated public Object id;
     public String lid;
-    public ArrayList<String> list;
+    public List<String> list;
     public long published;
     public String uri;
   }
