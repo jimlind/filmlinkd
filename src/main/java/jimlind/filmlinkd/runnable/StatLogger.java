@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
  * most predictable for me.
  */
 @Slf4j
+@SuppressWarnings({"PMD.AvoidDuplicateLiterals", "PMD.LawOfDemeter"})
 public class StatLogger implements Runnable {
   private static final long MEGABYTE = 1024L * 1024L;
 
