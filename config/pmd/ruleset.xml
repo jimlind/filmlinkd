@@ -13,4 +13,5 @@
     </rule>
     <rule ref="category/java/errorprone.xml"/>
     <rule ref="category/java/performance.xml"/>
+    <rule ref="category/java/security.xml"/>
 </ruleset>
