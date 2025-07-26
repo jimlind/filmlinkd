@@ -2,6 +2,7 @@ package jimlind.filmlinkd.runnable;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.ScrapedResult;
 import jimlind.filmlinkd.model.User;
@@ -60,71 +61,45 @@ public class ScrapedResultChecker implements Runnable {
 
   @Override
   public void run() {
-    try {
-      ScrapedResult result = scrapedResultQueue.get(shardId, totalShards);
-      if (result == null) {
-        return;
+    ScrapedResult result = scrapedResultQueue.get(shardId, totalShards);
+    if (result == null) {
+      return;
+    }
+
+    Message message = result.message;
+    User user = result.user;
+
+    List<MessageEmbed> embedList = diaryEntryEmbedBuilder.setMessage(message).setUser(user).build();
+
+    JDA shard = shardManagerStorage.get().getShardById(shardId);
+    if (shard == null) {
+      log.atError().setMessage("Unable to Load Shard").addKeyValue("shard", shardId).log();
+      return;
+    }
+
+    for (String channelId : getChannelListFromScrapeResult(result)) {
+      GuildMessageChannel channel = shard.getChannelById(GuildMessageChannel.class, channelId);
+
+      // Not finding a channel is extremely normal when running shards so we ignore the
+      // possible issue and don't log anything
+      if (channel == null) {
+        continue;
       }
 
-      Message message = result.message;
-      User user = result.user;
-
-      ArrayList<MessageEmbed> embedList = null;
-      try {
-        embedList = diaryEntryEmbedBuilder.setMessage(message).setUser(user).build();
-      } catch (Exception e) {
-        log.atError()
-            .setMessage("Creating Diary Entry Embed Failed")
-            .addKeyValue("message", message)
-            .addKeyValue("user", user)
-            .addKeyValue("exception", e)
-            .log();
-        return;
+      // Not having proper permissions is more normal than it should be so we ignore the
+      // possible issue and don't log anything
+      Member self = channel.getGuild().getSelfMember();
+      if (!self.hasPermission(
+          channel,
+          Permission.VIEW_CHANNEL,
+          Permission.MESSAGE_SEND,
+          Permission.MESSAGE_EMBED_LINKS)) {
+        continue;
       }
 
-      JDA shard = shardManagerStorage.get().getShardById(shardId);
-      if (shard == null) {
-        log.atError().setMessage("Unable to Load Shard").addKeyValue("shard", shardId).log();
-        return;
-      }
-
-      for (String channelId : getChannelListFromScrapeResult(result)) {
-        GuildMessageChannel channel = shard.getChannelById(GuildMessageChannel.class, channelId);
-
-        // Not finding a channel is extremely normal when running shards so we ignore the
-        // possible issue and don't log anything
-        if (channel == null) {
-          continue;
-        }
-
-        // Not having proper permissions is more normal than it should be so we ignore the
-        // possible issue and don't log anything
-        Member self = channel.getGuild().getSelfMember();
-        if (!self.hasPermission(
-            channel,
-            Permission.VIEW_CHANNEL,
-            Permission.MESSAGE_SEND,
-            Permission.MESSAGE_EMBED_LINKS)) {
-          continue;
-        }
-
-        try {
-          channel
-              .sendMessageEmbeds(embedList)
-              .queue(m -> sendSuccess(m, result, channel), m -> sendFailure(message, channel));
-        } catch (Exception e) {
-          log.atError()
-              .setMessage("Send MessageEmbeds Failed")
-              .addKeyValue("shard", shardId)
-              .addKeyValue("message", message)
-              .addKeyValue("channel", channelId)
-              .addKeyValue("exception", e.toString())
-              .log();
-        }
-      }
-
-    } catch (Exception e) {
-      log.atError().setMessage("Getting Scraped Result Failed").addKeyValue("exception", e).log();
+      channel
+          .sendMessageEmbeds(embedList)
+          .queue(m -> sendSuccess(m, result, channel), m -> sendFailure(message, channel));
     }
   }
 
@@ -132,28 +107,27 @@ public class ScrapedResultChecker implements Runnable {
       net.dv8tion.jda.api.entities.Message jdaMessage,
       ScrapedResult scrapedResult,
       GuildMessageChannel channel) {
-    Message.Entry entry = scrapedResult.message.entry;
+    Message.Entry entry = scrapedResult.getMessage().getEntry();
 
     // Log delay time between now and published time
     log.atInfo()
         .setMessage("Entry Publish Delay")
-        .addKeyValue("delay", Instant.now().toEpochMilli() - entry.publishedDate)
-        .addKeyValue("source", entry.publishSource.toString())
+        .addKeyValue("delay", Instant.now().toEpochMilli() - entry.getPublishedDate())
+        .addKeyValue("source", entry.getPublishSource().toString())
         .log();
 
     // Log a too much information about the successfully sent message
     log.atInfo()
         .setMessage("Successfully Sent Message")
         .addKeyValue("channelId", channel.getId())
-        .addKeyValue("message", scrapedResult.message)
+        .addKeyValue("message", scrapedResult.getMessage())
         .addKeyValue("channel", channel)
         .addKeyValue("jdaMessage", jdaMessage)
         .log();
 
+    List<String> previousList = scrapedResult.getUser().getPrevious().getList();
     boolean entryIsNew =
-        scrapedResult.user.previous.list == null
-            || scrapedResult.user.previous.list.isEmpty()
-            || !scrapedResult.user.previous.list.contains(entry.lid);
+        previousList == null || previousList.isEmpty() || !previousList.contains(entry.lid);
 
     // If the entry is new write attempt to write it to the database
     if (entryIsNew) {
@@ -164,7 +138,7 @@ public class ScrapedResultChecker implements Runnable {
       if (!updateSuccess) {
         log.atError()
             .setMessage("Entry did not Update")
-            .addKeyValue("entry", scrapedResult.message.entry)
+            .addKeyValue("entry", scrapedResult.getMessage().getEntry())
             .log();
       }
     }
@@ -178,23 +152,18 @@ public class ScrapedResultChecker implements Runnable {
         .log();
   }
 
-  private ArrayList<String> getChannelListFromScrapeResult(ScrapedResult scrapedResult) {
-    ArrayList<String> channelList = new ArrayList<String>();
-    Message message = scrapedResult.message;
-    String previous = scrapedResult.user.getMostRecentPrevious();
-    boolean isNewerThanKnown = LidComparer.compare(previous, scrapedResult.message.entry.lid) < 0;
+  private List<String> getChannelListFromScrapeResult(ScrapedResult scrapedResult) {
+    List<String> channelList = new ArrayList<>();
+    Message message = scrapedResult.getMessage();
+    String previous = scrapedResult.getUser().getMostRecentPrevious();
+    boolean isNewerThanKnown =
+        LidComparer.compare(previous, scrapedResult.getMessage().getEntry().getLid()) < 0;
 
     if (message.hasChannelOverride() && !isNewerThanKnown) {
       channelList.add(message.channelId);
       return channelList;
     }
 
-    try {
-      return scrapedResult.user.getChannelList();
-    } catch (Exception e) {
-      log.info("Unable to fetch channel list from user", e);
-    }
-
-    return channelList;
+    return scrapedResult.getUser().getChannelList();
   }
 }
