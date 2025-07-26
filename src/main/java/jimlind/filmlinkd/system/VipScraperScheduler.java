@@ -29,5 +29,6 @@ public class VipScraperScheduler extends GeneralScraperScheduler {
   }
 
   /** Does nothing. */
+  @Override
   public void start() {}
 }

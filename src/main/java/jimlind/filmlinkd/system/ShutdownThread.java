@@ -23,6 +23,7 @@ public class ShutdownThread extends Thread {
   }
 
   /** Shutdown the systems as meets the individual needs. */
+  @Override
   public void run() {
     log.info("Shutting Things Down!");
     discordSystem.stop();

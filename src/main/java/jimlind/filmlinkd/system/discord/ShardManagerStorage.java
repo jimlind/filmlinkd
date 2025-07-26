@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
  */
 @Singleton
 public class ShardManagerStorage {
-  private net.dv8tion.jda.api.sharding.ShardManager shardManager = null;
+  private net.dv8tion.jda.api.sharding.ShardManager shardManager;
 
   /** Constructor for this class. */
   @Inject

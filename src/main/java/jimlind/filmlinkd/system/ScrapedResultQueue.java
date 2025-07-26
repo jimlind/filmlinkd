@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
-
 import jimlind.filmlinkd.model.ScrapedResult;
 import lombok.extern.slf4j.Slf4j;
 

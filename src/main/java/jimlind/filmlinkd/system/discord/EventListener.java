@@ -41,12 +41,13 @@ public class EventListener extends ListenerAdapter {
     }
 
     int shardId = jda.getShardInfo().getShardId();
-    ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    scheduler.scheduleAtFixedRate(
-        scrapedResultCheckerFactory.create(shardId, manager.getShardsTotal()),
-        0,
-        1,
-        TimeUnit.SECONDS);
+    try (ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor()) {
+      scheduler.scheduleAtFixedRate(
+          scrapedResultCheckerFactory.create(shardId, manager.getShardsTotal()),
+          0,
+          1,
+          TimeUnit.SECONDS);
+    }
   }
 
   @Override
