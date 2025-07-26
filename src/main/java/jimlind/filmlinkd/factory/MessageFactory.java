@@ -2,7 +2,11 @@ package jimlind.filmlinkd.factory;
 
 import com.google.inject.Inject;
 import jimlind.filmlinkd.model.Message;
+import jimlind.filmlinkd.system.letterboxd.model.LbDiaryDetails;
+import jimlind.filmlinkd.system.letterboxd.model.LbFilmSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
+import jimlind.filmlinkd.system.letterboxd.model.LbMemberSummary;
+import jimlind.filmlinkd.system.letterboxd.model.LbReview;
 import jimlind.filmlinkd.system.letterboxd.utils.DateUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.LinkUtils;
@@ -35,33 +39,57 @@ public class MessageFactory {
    * @return A {@link Message} object
    */
   public Message createFromLogEntry(LbLogEntry logEntry, Message.PublishSource publishSource) {
-    Message message = new Message();
+    Message.Entry entry = new Message.Entry();
+    entry.setLid(logEntry.id);
 
-    message.entry = new Message.Entry();
-    message.entry.lid = logEntry.id;
-    message.entry.userName = logEntry.owner.username;
-    message.entry.userLid = logEntry.owner.id;
-    message.entry.type =
-        (logEntry.review != null && !logEntry.review.text.isBlank())
-            ? Message.Type.review
-            : Message.Type.watch;
-    message.entry.link = linkUtils.getLetterboxd(logEntry.links);
-    message.entry.publishedDate = dateUtils.toMilliseconds(logEntry.whenCreated);
-    message.entry.filmTitle = logEntry.film.name;
-    message.entry.filmYear = logEntry.film.releaseYear;
-    message.entry.watchedDate =
-        dateUtils.toMilliseconds(
-            logEntry.diaryDetails != null ? logEntry.diaryDetails.diaryDate : "");
-    message.entry.image = imageUtils.getTallest(logEntry.film.poster);
-    message.entry.starCount = logEntry.rating;
-    message.entry.rewatch = logEntry.diaryDetails != null && logEntry.diaryDetails.rewatch;
-    message.entry.liked = logEntry.like;
-    message.entry.containsSpoilers = logEntry.review != null && logEntry.review.containsSpoilers;
-    message.entry.adult = logEntry.film.adult;
-    message.entry.review = logEntry.review != null ? logEntry.review.text : "";
-    message.entry.updatedDate = dateUtils.toMilliseconds(logEntry.whenUpdated);
-    message.entry.publishSource = publishSource;
+    LbMemberSummary owner = getOwner(logEntry);
+    entry.setUserName(owner.username);
+    entry.setUserLid(owner.id);
+
+    LbReview review = getReview(logEntry);
+    boolean hasValidReview = review != null && !review.text.isBlank();
+    entry.setType(hasValidReview ? Message.Type.review : Message.Type.watch);
+
+    entry.setLink(linkUtils.getLetterboxd(logEntry.links));
+    entry.setPublishedDate(dateUtils.toMilliseconds(logEntry.whenCreated));
+
+    LbFilmSummary film = getFilm(logEntry);
+    entry.setFilmTitle(film.name);
+    entry.setFilmYear(film.releaseYear);
+
+    LbDiaryDetails diaryDetails = getDiaryDetails(logEntry);
+    String diaryDate = (diaryDetails != null) ? diaryDetails.diaryDate : "";
+    entry.setWatchedDate(dateUtils.toMilliseconds(diaryDate));
+
+    entry.setImage(imageUtils.getTallest(film.poster));
+    entry.setStarCount(logEntry.rating);
+    entry.setRewatch(diaryDetails != null && diaryDetails.rewatch);
+    entry.setLiked(logEntry.like);
+    entry.setContainsSpoilers(review != null && review.containsSpoilers);
+    entry.setAdult(film.adult);
+    entry.setReview(review != null ? review.text : "");
+    entry.setUpdatedDate(dateUtils.toMilliseconds(logEntry.whenUpdated));
+    entry.setPublishSource(publishSource);
+
+    Message message = new Message();
+    message.setEntry(entry);
 
     return message;
+  }
+
+  private LbDiaryDetails getDiaryDetails(LbLogEntry logEntry) {
+    return logEntry.diaryDetails;
+  }
+
+  private LbFilmSummary getFilm(LbLogEntry logEntry) {
+    return logEntry.film;
+  }
+
+  private LbMemberSummary getOwner(LbLogEntry logEntry) {
+    return logEntry.owner;
+  }
+
+  private LbReview getReview(LbLogEntry logEntry) {
+    return logEntry.review;
   }
 }
