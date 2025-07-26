@@ -38,11 +38,12 @@ public class GeneralScraperScheduler {
   public void start() {
     generalUserCache.initializeRandomPage();
 
-    ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    scheduler.scheduleAtFixedRate(
-        generalScraper, 0, appConfig.getScraperGeneralPeriod(), TimeUnit.SECONDS);
-    scheduler.scheduleAtFixedRate(
-        generalUserCacheClearer, 0, appConfig.getScraperGeneralPeriod(), TimeUnit.HOURS);
+    try (ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor()) {
+      scheduler.scheduleAtFixedRate(
+          generalScraper, 0, appConfig.getScraperGeneralPeriod(), TimeUnit.SECONDS);
+      scheduler.scheduleAtFixedRate(
+          generalUserCacheClearer, 0, appConfig.getScraperGeneralPeriod(), TimeUnit.HOURS);
+    }
 
     //    // Listen for Command PubSub messages posted and upsert appropriate follow outcome data
     //    this.container.resolve('pubSubMessageListener').onCommandMessage((message: any) => {
