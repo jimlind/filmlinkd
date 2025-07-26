@@ -158,7 +158,7 @@ public class FirestoreManager {
       return false;
     }
 
-    ArrayList<User.Channel> channelList = user.channelList;
+    List<User.Channel> channelList = user.channelList;
 
     // If the channel is already subscribed then exit early positively
     for (User.Channel channel : channelList) {
