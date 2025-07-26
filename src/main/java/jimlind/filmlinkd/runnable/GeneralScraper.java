@@ -10,6 +10,7 @@ import jimlind.filmlinkd.system.GeneralUserCache;
 import jimlind.filmlinkd.system.google.PubSubManager;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
+import jimlind.filmlinkd.system.letterboxd.model.LbMemberSummary;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,13 +47,13 @@ public class GeneralScraper implements Runnable {
   }
 
   @Override
+  @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
   public void run() {
     Message.PublishSource source = Message.PublishSource.Normal;
     List<Map.Entry<String, String>> userPage = generalUserCache.getNextPage();
     for (Map.Entry<String, String> entry : userPage) {
 
-      ArrayList<String> publishedEntryIdList = new ArrayList<String>();
-
+      List<String> publishedEntryIdList = new ArrayList<>();
       List<LbLogEntry> logEntryList = logEntriesApi.getRecentForUser(entry.getKey(), 10);
 
       //      // Filter out entries that are less than 3 minutes old
@@ -71,13 +72,17 @@ public class GeneralScraper implements Runnable {
 
       if (!publishedEntryIdList.isEmpty()) {
         if (log.isInfoEnabled()) {
-          String name = logEntryList.getFirst().owner.displayName;
-          log.info("Publishing {}x films from {}", publishedEntryIdList.size(), name);
+          LbMemberSummary owner = getOwner(logEntryList.getFirst());
+          log.info("Publishing {}x films from {}", publishedEntryIdList.size(), owner.displayName);
         }
         for (String entryId : publishedEntryIdList) {
           generalUserCache.setIfNewer(entry.getKey(), entryId);
         }
       }
     }
+  }
+
+  private LbMemberSummary getOwner(LbLogEntry logEntry) {
+    return logEntry.owner;
   }
 }
