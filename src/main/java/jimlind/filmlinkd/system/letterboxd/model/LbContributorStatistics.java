@@ -1,5 +1,7 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
+import lombok.Getter;
+
 import java.util.List;
 
 /**
@@ -7,6 +9,7 @@ import java.util.List;
  * href="https://api-docs.letterboxd.com/#/schemas/ContributorStatistics">ContributorStatistics</a>
  * schema model.
  */
+@Getter
 public class LbContributorStatistics {
   public List<LbContributionStatistics> contributions;
 }

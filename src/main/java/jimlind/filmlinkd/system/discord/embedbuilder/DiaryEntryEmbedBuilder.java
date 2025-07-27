@@ -25,6 +25,7 @@ import org.jsoup.nodes.Document;
 /** Builds a Discord embed to display information about a specific diary entry. */
 @Slf4j
 public class DiaryEntryEmbedBuilder {
+  private static final int REVIEW_TEXT_MAX_LENGTH = 400;
   private final EmbedBuilder embedBuilder;
   private final StarsStringBuilder starsStringBuilder;
   @Nullable private Message message;
@@ -77,69 +78,105 @@ public class DiaryEntryEmbedBuilder {
       return new ArrayList<>();
     }
 
-    String profileName = user.displayName;
-    String authorTitle = "%s %sed...".formatted(profileName, message.entry.type.toString());
-    String profileUrl = "https://letterboxd.com/%s/".formatted(user.userName);
-    embedBuilder.setAuthor(authorTitle, profileUrl, user.image);
+    Message.Entry entry = message.getEntry();
+    String authorTitle = createAuthorTitle(entry, user);
+    String profileUrl = "https://letterboxd.com/%s/".formatted(user.getUserName());
+    embedBuilder.setAuthor(authorTitle, profileUrl, user.getImage());
 
-    String adult = message.entry.adult ? ":underage: " : "";
-    String year = message.entry.filmYear != 0 ? "(" + message.entry.filmYear + ")" : "";
-    embedBuilder.setTitle(adult + message.entry.filmTitle + " " + year, message.entry.link);
+    String embedTitle = createEmbedTitle(entry);
+    embedBuilder.setTitle(embedTitle, extractLink(entry));
 
-    // Build the Review Title
-    String reviewTitle = "";
-    if (message.entry.watchedDate != 0) {
-      String pattern =
-          Instant.now().toEpochMilli() - message.entry.watchedDate < 5000000000L
-              ? "**MMM dd**"
-              : "**MMM dd uuu**";
-      reviewTitle =
-          LocalDateTime.ofEpochSecond(message.entry.watchedDate / 1000, 0, ZoneOffset.UTC)
-              .format(DateTimeFormatter.ofPattern(pattern, Locale.ENGLISH));
-    }
-
-    if (message.entry.starCount > 0) {
-      reviewTitle += starsStringBuilder.setStarCount(message.entry.starCount).build();
-    }
-    if (message.entry.rewatch != null && message.entry.rewatch) {
-      reviewTitle += " <:r:851135667546488903>";
-    }
-    if (message.entry.liked != null && message.entry.liked) {
-      reviewTitle += " <:l:851138401557676073>";
-    }
-    reviewTitle = !reviewTitle.isEmpty() ? reviewTitle + "\u200b\n" : "";
-
-    // Build the Review Text
-    String reviewText = message.entry.review;
-    if (message.entry.review.length() > 400) {
-      reviewText = reviewText.substring(0, 400).trim();
-    }
-    Document reviewDocument = Jsoup.parseBodyFragment(reviewText);
-    Options options = OptionsBuilder.anOptions().withBr("\n").build();
-    reviewText = new CopyDown(options).convert(reviewDocument.body().toString());
-    if (message.entry.review.length() > 400) {
-      reviewText += "...";
-    }
-
-    // Format Review Title and Review Text as EmbedDescription
-    reviewText = message.entry.containsSpoilers ? "||" + reviewText + "||" : reviewText;
-    reviewText = reviewText.replaceAll("[\r\n]+", "\n");
+    String reviewTitle = createReviewTitle(entry);
+    String reviewText = createReviewText(entry);
     String rule = reviewTitle.length() > 1 && reviewText.length() > 1 ? "┈".repeat(12) + "\n" : "";
     embedBuilder.setDescription(reviewTitle + rule + reviewText);
 
     // If there is footer data with actual data then include it.
-    if (user.footer != null && !user.footer.text.isBlank()) {
-      embedBuilder.setFooter(user.footer.text, user.footer.icon);
+    User.Footer footer = extractFooter();
+    if (footer != null && !footer.text.isBlank()) {
+      embedBuilder.setFooter(footer.text, footer.icon);
     }
 
     // If there is an image then include it
-    if (!message.entry.image.isBlank()) {
-      embedBuilder.setThumbnail(message.entry.image);
+    String image = extractImage(entry);
+    if (!image.isBlank()) {
+      embedBuilder.setThumbnail(image);
     }
 
-    List<MessageEmbed> collection = new ArrayList<MessageEmbed>();
+    List<MessageEmbed> collection = new ArrayList<>();
     collection.add(embedBuilder.build());
 
     return collection;
+  }
+
+  private String createAuthorTitle(Message.Entry entry, User user) {
+    String profileName = user.getDisplayName();
+    return "%s %sed...".formatted(profileName, String.valueOf(entry.getType()));
+  }
+
+  private String createEmbedTitle(Message.Entry entry) {
+    String adult = entry.adult ? ":underage: " : "";
+    String year = entry.filmYear != 0 ? "(" + entry.filmYear + ")" : "";
+
+    return adult + entry.filmTitle + " " + year;
+  }
+
+  private String createReviewTitle(Message.Entry entry) {
+    StringBuilder reviewTitleBuilder = new StringBuilder(48);
+    if (entry.watchedDate != 0) {
+      String pattern =
+          Instant.now().toEpochMilli() - entry.watchedDate < 5000000000L
+              ? "**MMM dd**"
+              : "**MMM dd uuu**";
+      reviewTitleBuilder.append(
+          LocalDateTime.ofEpochSecond(entry.watchedDate / 1000, 0, ZoneOffset.UTC)
+              .format(DateTimeFormatter.ofPattern(pattern, Locale.ENGLISH)));
+    }
+
+    if (entry.starCount > 0) {
+      reviewTitleBuilder.append(starsStringBuilder.setStarCount(entry.starCount).build());
+    }
+    if (entry.rewatch != null && entry.rewatch) {
+      reviewTitleBuilder.append(" <:r:851135667546488903>");
+    }
+    if (entry.liked != null && entry.liked) {
+      reviewTitleBuilder.append(" <:l:851138401557676073>");
+    }
+    String reviewTitle = reviewTitleBuilder.toString();
+    return !reviewTitle.isEmpty() ? reviewTitle + "\u200b\n" : "";
+  }
+
+  private String createReviewText(Message.Entry entry) {
+    String reviewText = entry.review;
+    if (reviewText.length() > REVIEW_TEXT_MAX_LENGTH) {
+      reviewText = reviewText.substring(0, REVIEW_TEXT_MAX_LENGTH).trim();
+    }
+    Document reviewDocument = Jsoup.parseBodyFragment(reviewText);
+    Options options = OptionsBuilder.anOptions().withBr("\n").build();
+    reviewText = new CopyDown(options).convert(reviewDocument.body().toString());
+    if (entry.review.length() > REVIEW_TEXT_MAX_LENGTH) {
+      reviewText += "...";
+    }
+
+    // Format Review Title and Review Text as EmbedDescription
+    reviewText = entry.containsSpoilers ? "||" + reviewText + "||" : reviewText;
+    reviewText = reviewText.replaceAll("[\r\n]+", "\n");
+
+    return reviewText;
+  }
+
+  private User.Footer extractFooter() {
+    if (user == null) {
+      return null;
+    }
+    return user.getFooter();
+  }
+
+  private String extractImage(Message.Entry entry) {
+    return entry.getImage();
+  }
+
+  private String extractLink(Message.Entry entry) {
+    return entry.getLink();
   }
 }

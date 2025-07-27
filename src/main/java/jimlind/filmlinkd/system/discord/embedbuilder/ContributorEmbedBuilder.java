@@ -54,14 +54,14 @@ public class ContributorEmbedBuilder {
     embedBuilder.setTitle(contributor.name, String.format("https://boxd.it/%s", contributor.id));
 
     List<String> linkStrings = new LinkedList<>();
-    for (LbLink link : contributor.links) {
+    for (LbLink link : contributor.getLinks()) {
       String text = String.format("[%s](%s)", link.type, link.url);
       linkStrings.add(text);
     }
     String joinedLinkStrings = String.join(" | ", linkStrings);
 
     List<String> contributionStrings = new LinkedList<>();
-    for (LbContributionStatistics contribution : contributor.statistics.contributions) {
+    for (LbContributionStatistics contribution : contributor.getStatistics().getContributions()) {
       String text = String.format("**%s:** %s", contribution.type, contribution.filmCount);
       contributionStrings.add(text);
     }

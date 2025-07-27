@@ -23,7 +23,7 @@ public class ShardManagerStorage {
    * @return true if shard manager is set, false if otherwise
    */
   public boolean isSet() {
-    return !(shardManager == null);
+    return shardManager != null;
   }
 
   /**
