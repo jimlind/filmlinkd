@@ -61,8 +61,7 @@ public class LoggedHandler implements Handler {
       return;
     }
 
-    List<MessageEmbed> messageEmbedList =
-        loggedEmbedBuilder.setLogEntryList(logEntryList).build();
+    List<MessageEmbed> messageEmbedList = loggedEmbedBuilder.setLogEntryList(logEntryList).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }
