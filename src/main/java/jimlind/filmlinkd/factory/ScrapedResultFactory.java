@@ -35,12 +35,10 @@ public class ScrapedResultFactory {
    * @return A {@link ScrapedResult} or null if unable to create
    */
   public ScrapedResult createFromPubSubMessage(PubsubMessage pubsubMessage) {
-    // Translate to a message object
-    String data = pubsubMessage.getData().toStringUtf8();
-    Message message = new GsonBuilder().create().fromJson(data, Message.class);
+    Message message = translateMessage(pubsubMessage);
 
     // Attempt to get user based on Message
-    String userLid = message.getEntry().getUserLid();
+    String userLid = getUserLid(message);
     QueryDocumentSnapshot snapshot = firestoreManager.getUserDocument(userLid);
     if (snapshot == null) {
       log.atWarn()
@@ -66,5 +64,18 @@ public class ScrapedResultFactory {
     scrapedResult.setUser(user);
 
     return scrapedResult;
+  }
+
+  private Message.Entry getEntry(Message message) {
+    return message.getEntry();
+  }
+
+  private String getUserLid(Message message) {
+    return getEntry(message).getUserLid();
+  }
+
+  private Message translateMessage(PubsubMessage pubsubMessage) {
+    String data = pubsubMessage.getData().toStringUtf8();
+    return new GsonBuilder().create().fromJson(data, Message.class);
   }
 }
