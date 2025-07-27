@@ -39,4 +39,30 @@ public class ScrapedResult {
 
     return getUser().getChannelList();
   }
+
+  /**
+   * We expect duplicates to come in from the PubSub queue all the time so we need to limit when we
+   * actually want them to be put in the queue for processing.
+   *
+   * @return Should this result be queued?
+   */
+  public boolean shouldBeQueued() {
+    // If there is an override then it should always be queued
+    if (getMessage().hasChannelOverride()) {
+      return true;
+    }
+
+    // If entry matches the most recent previous do not queue, this is most common
+    if (getUser().getMostRecentPrevious().equals(getMessage().getEntry().getLid())) {
+      return false;
+    }
+
+    // If previous result list doesn't exist it can't contain the entry
+    if (getUser().getPrevious().getList() == null || getUser().getPrevious().getList().isEmpty()) {
+      return true;
+    }
+
+    // If entry matches any of the previous logged entries do not queue
+    return !getUser().getPrevious().getList().contains(getMessage().getEntry().getLid());
+  }
 }

@@ -62,39 +62,9 @@ public class MessageReceiver implements com.google.cloud.pubsub.v1.MessageReceiv
     }
 
     ScrapedResult scrapedResult = scrapedResultFactory.createFromPubSubMessage(pubsubMessage);
-    if (shouldBeQueued(scrapedResult)) {
+    if (scrapedResult.shouldBeQueued()) {
       scrapedResultQueue.set(scrapedResult);
     }
-  }
-
-  // We expect duplicates to come in from the PubSub queue all the time so we need to limit when we
-  // actually want them to be put in the queue for processing.
-  private boolean shouldBeQueued(ScrapedResult scrapedResult) {
-    // If there is an override then it should always be queued
-    if (scrapedResult.getMessage().hasChannelOverride()) {
-      return true;
-    }
-
-    // If entry matches the most recent previous do not queue, this is most common
-    if (scrapedResult
-        .getUser()
-        .getMostRecentPrevious()
-        .equals(scrapedResult.getMessage().getEntry().getLid())) {
-      return false;
-    }
-
-    // If previous result list doesn't exist it can't contain the entry
-    if (scrapedResult.getUser().getPrevious().getList() == null
-        || scrapedResult.getUser().getPrevious().getList().isEmpty()) {
-      return true;
-    }
-
-    // If entry matches any of the previous logged entries do not queue
-    return !scrapedResult
-        .getUser()
-        .getPrevious()
-        .getList()
-        .contains(scrapedResult.getMessage().getEntry().getLid());
   }
 
   private String getEntryLid(String input) {
