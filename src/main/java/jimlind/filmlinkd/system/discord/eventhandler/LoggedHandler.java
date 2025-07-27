@@ -1,7 +1,6 @@
 package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 import jimlind.filmlinkd.system.discord.embedbuilder.LoggedEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
@@ -62,7 +61,7 @@ public class LoggedHandler implements Handler {
       return;
     }
 
-    ArrayList<MessageEmbed> messageEmbedList =
+    List<MessageEmbed> messageEmbedList =
         loggedEmbedBuilder.setLogEntryList(logEntryList).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }

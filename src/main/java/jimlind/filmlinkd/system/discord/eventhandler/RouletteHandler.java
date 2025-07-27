@@ -2,7 +2,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
 import java.security.SecureRandom;
-import java.util.ArrayList;
+import java.util.List;
 import jimlind.filmlinkd.model.CombinedLbFilmModel;
 import jimlind.filmlinkd.system.discord.embedbuilder.FilmEmbedBuilder;
 import jimlind.filmlinkd.system.letterboxd.api.FilmApi;
@@ -45,7 +45,7 @@ public class RouletteHandler implements Handler {
       return;
     }
 
-    ArrayList<MessageEmbed> messageEmbedList =
+    List<MessageEmbed> messageEmbedList =
         filmEmbedBuilder.setFilmCombination(combinedLbFilmModel).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }

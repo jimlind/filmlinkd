@@ -1,7 +1,7 @@
 package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
-import java.util.ArrayList;
+import java.util.List;
 import jimlind.filmlinkd.system.discord.embedbuilder.UnfollowEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
@@ -58,7 +58,7 @@ public class UnfollowHandler implements Handler {
       return;
     }
 
-    ArrayList<MessageEmbed> messageEmbedList = unfollowEmbedBuilder.setMember(member).build();
+    List<MessageEmbed> messageEmbedList = unfollowEmbedBuilder.setMember(member).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

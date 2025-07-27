@@ -1,7 +1,7 @@
 package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
-import java.util.ArrayList;
+import java.util.List;
 import jimlind.filmlinkd.system.discord.embedbuilder.RefreshEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.google.FirestoreManager;
@@ -47,7 +47,7 @@ public class RefreshHandler implements Handler {
       return;
     }
 
-    ArrayList<MessageEmbed> messageEmbedList = refreshEmbedBuilder.setMember(member).build();
+    List<MessageEmbed> messageEmbedList = refreshEmbedBuilder.setMember(member).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

@@ -274,7 +274,7 @@ public class FirestoreManager {
     }
 
     // Default to an empty list, but set it if not null
-    ArrayList<String> previousList = new ArrayList<>();
+    List<String> previousList = new ArrayList<>();
     if (user.previous.list != null) {
       previousList = user.previous.list;
     }

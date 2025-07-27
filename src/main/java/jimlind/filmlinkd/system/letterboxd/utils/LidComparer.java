@@ -4,6 +4,7 @@ import static java.lang.Math.max;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 /** Utilities to build data sets that come from comparing Letterboxd IDs. */
 public class LidComparer {
@@ -44,7 +45,7 @@ public class LidComparer {
    * @return A new list of Letterboxd IDs
    */
   public static ArrayList<String> buildMostRecentList(
-      ArrayList<String> list, String diaryLid, int count) {
+      List<String> list, String diaryLid, int count) {
     list.add(diaryLid);
     ArrayList<String> uniqueList =
         new ArrayList<String>(new HashSet<String>(list)); // Remove duplicates

@@ -1,7 +1,7 @@
 package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
-import java.util.ArrayList;
+import java.util.List;
 import jimlind.filmlinkd.system.discord.embedbuilder.UserEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.letterboxd.api.MemberStatisticsApi;
@@ -49,7 +49,7 @@ public class UserHandler implements Handler {
       return;
     }
 
-    ArrayList<MessageEmbed> messageEmbedList =
+    List<MessageEmbed> messageEmbedList =
         this.userEmbedBuilder.setMember(member).setMemberStatistics(memberStatistics).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }

@@ -1,7 +1,7 @@
 package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -46,7 +46,7 @@ public class HelpHandler implements Handler {
         event.getJDA().getShardManager() != null
             ? event.getJDA().getShardManager().getGuildCache().size()
             : event.getJDA().getGuildCache().size();
-    ArrayList<MessageEmbed> messageEmbedList = helpEmbedBuilder.create(userCount, guildCount);
+    List<MessageEmbed> messageEmbedList = helpEmbedBuilder.create(userCount, guildCount);
 
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
