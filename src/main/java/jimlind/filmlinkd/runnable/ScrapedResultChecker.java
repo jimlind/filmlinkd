@@ -1,7 +1,6 @@
 package jimlind.filmlinkd.runnable;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.ScrapedResult;
@@ -10,7 +9,6 @@ import jimlind.filmlinkd.system.ScrapedResultQueue;
 import jimlind.filmlinkd.system.discord.ShardManagerStorage;
 import jimlind.filmlinkd.system.discord.embedbuilder.DiaryEntryEmbedBuilder;
 import jimlind.filmlinkd.system.google.FirestoreManager;
-import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
@@ -77,7 +75,7 @@ public class ScrapedResultChecker implements Runnable {
       return;
     }
 
-    for (String channelId : getChannelListFromScrapeResult(result)) {
+    for (String channelId : result.getChannelList()) {
       GuildMessageChannel channel = shard.getChannelById(GuildMessageChannel.class, channelId);
 
       // Not finding a channel is extremely normal when running shards so we ignore the
@@ -107,13 +105,13 @@ public class ScrapedResultChecker implements Runnable {
       net.dv8tion.jda.api.entities.Message jdaMessage,
       ScrapedResult scrapedResult,
       GuildMessageChannel channel) {
-    Message.Entry entry = scrapedResult.getMessage().getEntry();
+    Message.Entry entry = scrapedResult.getEntry();
 
     // Log delay time between now and published time
     log.atInfo()
         .setMessage("Entry Publish Delay")
         .addKeyValue("delay", Instant.now().toEpochMilli() - entry.getPublishedDate())
-        .addKeyValue("source", entry.getPublishSource().toString())
+        .addKeyValue("source", String.valueOf(entry.getPublishSource()))
         .log();
 
     // Log a too much information about the successfully sent message
@@ -125,7 +123,7 @@ public class ScrapedResultChecker implements Runnable {
         .addKeyValue("jdaMessage", jdaMessage)
         .log();
 
-    List<String> previousList = scrapedResult.getUser().getPrevious().getList();
+    List<String> previousList = scrapedResult.getPreviousList();
     boolean entryIsNew =
         previousList == null || previousList.isEmpty() || !previousList.contains(entry.lid);
 
@@ -138,7 +136,7 @@ public class ScrapedResultChecker implements Runnable {
       if (!updateSuccess) {
         log.atError()
             .setMessage("Entry did not Update")
-            .addKeyValue("entry", scrapedResult.getMessage().getEntry())
+            .addKeyValue("entry", scrapedResult.getEntry())
             .log();
       }
     }
@@ -150,20 +148,5 @@ public class ScrapedResultChecker implements Runnable {
         .addKeyValue("message", message)
         .addKeyValue("channel", channel)
         .log();
-  }
-
-  private List<String> getChannelListFromScrapeResult(ScrapedResult scrapedResult) {
-    List<String> channelList = new ArrayList<>();
-    Message message = scrapedResult.getMessage();
-    String previous = scrapedResult.getUser().getMostRecentPrevious();
-    boolean isNewerThanKnown =
-        LidComparer.compare(previous, scrapedResult.getMessage().getEntry().getLid()) < 0;
-
-    if (message.hasChannelOverride() && !isNewerThanKnown) {
-      channelList.add(message.channelId);
-      return channelList;
-    }
-
-    return scrapedResult.getUser().getChannelList();
   }
 }
