@@ -6,6 +6,7 @@ import java.util.List;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.StarsStringBuilder;
 import jimlind.filmlinkd.system.discord.stringbuilder.UserStringBuilder;
+import jimlind.filmlinkd.system.letterboxd.model.LbDiaryDetails;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
@@ -17,7 +18,7 @@ public class DiaryListEmbedBuilder {
   private final EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
 
-  private LbMember member = null;
+  private LbMember member;
   private List<LbLogEntry> logEntryList = new ArrayList<>();
 
   /**
@@ -60,6 +61,7 @@ public class DiaryListEmbedBuilder {
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
+  @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
   public List<MessageEmbed> build() {
     if (member == null) {
       return new ArrayList<>();
@@ -70,18 +72,27 @@ public class DiaryListEmbedBuilder {
       String firstLine =
           String.format(
               "[**%s (%s)**](https://boxd.it/%s)",
-              logEntry.film.name, logEntry.film.releaseYear, logEntry.id);
+              logEntry.getFilm().name, logEntry.getFilm().releaseYear, logEntry.id);
       entryList.add(firstLine);
 
-      String secondLine = logEntry.diaryDetails != null ? logEntry.diaryDetails.diaryDate : "";
-      secondLine += " " + new StarsStringBuilder().setStarCount(logEntry.rating).build();
-      secondLine +=
-          logEntry.diaryDetails != null && logEntry.diaryDetails.rewatch
-              ? " <:r:851135667546488903>"
-              : "";
-      secondLine += logEntry.like ? " <:l:851138401557676073>" : "";
-      secondLine += logEntry.review != null ? " :speech_balloon:" : "";
-      entryList.add(secondLine);
+      StringBuilder secondLineBuilder = new StringBuilder(66);
+      LbDiaryDetails diaryDetails = extractDiaryDetails(logEntry);
+      if (diaryDetails != null) {
+        secondLineBuilder.append(diaryDetails.diaryDate);
+      }
+
+      secondLineBuilder
+          .append(' ')
+          .append(new StarsStringBuilder().setStarCount(logEntry.getRating()).build());
+      if (diaryDetails != null && diaryDetails.rewatch) {
+        secondLineBuilder.append(" <:r:851135667546488903>");
+      }
+
+      // TODO: Somehow "like" isn't part of the model
+      secondLineBuilder
+          .append(logEntry.like ? " <:l:851138401557676073>" : "")
+          .append(logEntry.getReview() != null ? " :speech_balloon:" : "");
+      entryList.add(secondLineBuilder.toString());
     }
 
     String out = String.join("\n", entryList);
@@ -98,5 +109,9 @@ public class DiaryListEmbedBuilder {
     embedList.add(embedBuilder.build());
 
     return embedList;
+  }
+
+  private LbDiaryDetails extractDiaryDetails(LbLogEntry logEntry) {
+    return logEntry.getDiaryDetails();
   }
 }
