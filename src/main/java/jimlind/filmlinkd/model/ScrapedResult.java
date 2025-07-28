@@ -27,6 +27,12 @@ public class ScrapedResult {
     return getPrevious().getList();
   }
 
+  /**
+   * Gets the list of channels to send a scraped result to. Get all channels if the entry is brand
+   * new. If it isn't brand new, and it has a channel override set, use that channel instead.
+   *
+   * @return A list of channel ids as strings
+   */
   public List<String> getChannelList() {
     List<String> channelList = new ArrayList<>();
     String previous = getUser().getMostRecentPrevious();

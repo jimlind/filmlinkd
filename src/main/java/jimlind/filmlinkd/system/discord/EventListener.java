@@ -31,7 +31,7 @@ public class EventListener extends ListenerAdapter {
 
   @Override
   public void onReady(@NotNull ReadyEvent readyEvent) {
-    JDA jda = extractJDA(readyEvent);
+    JDA jda = extractJda(readyEvent);
 
     ShardManager manager = jda.getShardManager();
     if (manager == null) {
@@ -72,7 +72,7 @@ public class EventListener extends ListenerAdapter {
     return jda.getGuildCache();
   }
 
-  private JDA extractJDA(ReadyEvent event) {
+  private JDA extractJda(ReadyEvent event) {
     return event.getJDA();
   }
 
