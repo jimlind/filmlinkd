@@ -20,8 +20,8 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 public class UserEmbedBuilder {
   private final EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
-  private LbMember member = null;
-  private LbMemberStatistics memberStatistics = null;
+  private LbMember member;
+  private LbMemberStatistics memberStatistics;
 
   /**
    * Constructor for this class.
@@ -68,37 +68,40 @@ public class UserEmbedBuilder {
       return new ArrayList<>();
     }
 
-    String description = "";
+    StringBuilder descriptionBuilder = new StringBuilder();
     if (member.location != null) {
-      description += String.format("***%s***\n", member.location);
+      descriptionBuilder.append(String.format("***%s***\n", member.location));
     }
 
     if (!member.bio.isBlank()) {
-      description += new TextStringBuilder().setHtmlText(member.bio).build(1000);
-      description += "\n------------\n";
+      descriptionBuilder
+          .append(new TextStringBuilder().setHtmlText(member.bio).build(1000))
+          .append("\n------------\n");
     }
 
     Function<LbFilmSummary, String> mapFilmToString =
         film ->
             String.format("- [%s (%s)](https://boxd.it/%s)", film.name, film.releaseYear, film.id);
-    List<String> filmStringList = member.favoriteFilms.stream().map(mapFilmToString).toList();
-    description += String.join("\n", filmStringList) + "\n";
-
-    description +=
-        String.format(
-            "Logged films: %s total | %s this year",
-            memberStatistics.counts.watches, memberStatistics.counts.filmsInDiaryThisYear);
+    List<String> filmStringList = member.getFavoriteFilms().stream().map(mapFilmToString).toList();
+    descriptionBuilder
+        .append(String.join("\n", filmStringList))
+        .append('\n')
+        .append(
+            String.format(
+                "Logged films: %s total | %s this year",
+                memberStatistics.getCounts().watches,
+                memberStatistics.getCounts().filmsInDiaryThisYear));
 
     String displayName = new UserStringBuilder().setUsername(member.displayName).build();
-    LbPronoun pronoun = member.pronoun;
-    List<String> pronounList =
-        List.of(pronoun.subjectPronoun, pronoun.objectPronoun, pronoun.possessivePronoun);
-    embedBuilder.setTitle(displayName + " " + String.join("/", pronounList));
+    LbPronoun pronoun = member.getPronoun();
+    String pronounString =
+        String.join("/", pronoun.subjectPronoun, pronoun.objectPronoun, pronoun.possessivePronoun);
+    embedBuilder.setTitle(displayName + " " + pronounString);
 
     embedBuilder.setUrl(String.format("https://boxd.it/%s", member.id));
     embedBuilder.setThumbnail(imageUtils.getTallest(member.avatar));
     embedBuilder.setDescription(
-        new DescriptionStringBuilder().setDescriptionText(description).build());
+        new DescriptionStringBuilder().setDescriptionText(descriptionBuilder.toString()).build());
 
     List<MessageEmbed> embedList = new ArrayList<>();
     embedList.add(embedBuilder.build());

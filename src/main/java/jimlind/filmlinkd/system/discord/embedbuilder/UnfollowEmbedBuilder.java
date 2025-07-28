@@ -17,7 +17,7 @@ public class UnfollowEmbedBuilder {
   private final EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
   private final UserStringBuilder userStringBuilder;
-  private LbMember member = null;
+  private LbMember member;
 
   /**
    * Constructor for this class.

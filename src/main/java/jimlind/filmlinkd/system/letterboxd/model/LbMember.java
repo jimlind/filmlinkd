@@ -1,11 +1,14 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
+import lombok.Getter;
+
 import java.util.List;
 
 /**
  * Implements the <a href="https://api-docs.letterboxd.com/#/schemas/Member">Member</a> schema
  * model.
  */
+@Getter
 public class LbMember {
   public String id;
   public String username;

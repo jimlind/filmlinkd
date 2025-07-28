@@ -20,6 +20,7 @@ import org.jsoup.nodes.Document;
 
 /** Builds a Discord embed to display information about what a user has logged. */
 public class LoggedEmbedBuilder {
+  private static final int MAX_REVIEW_LENGTH = 200;
   private final DateUtils dateUtils;
   private final EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
@@ -57,6 +58,7 @@ public class LoggedEmbedBuilder {
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
+  @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
   public List<MessageEmbed> build() {
     StringBuilder description = new StringBuilder();
     for (LbLogEntry logEntry : logEntryList) {
@@ -65,7 +67,7 @@ public class LoggedEmbedBuilder {
 
       if (logEntry.diaryDetails != null) {
         action = "Watched";
-        date = dateUtils.toPattern(logEntry.diaryDetails.diaryDate);
+        date = dateUtils.toPattern(logEntry.getDiaryDetails().diaryDate);
       }
 
       if (logEntry.review != null) {
@@ -77,14 +79,14 @@ public class LoggedEmbedBuilder {
 
       String stars = new StarsStringBuilder().setStarCount(logEntry.rating).build();
       String rewatch =
-          logEntry.diaryDetails != null && logEntry.diaryDetails.rewatch
+          logEntry.getDiaryDetails() != null && logEntry.getDiaryDetails().isRewatch()
               ? " <:r:851135667546488903>"
               : "";
       String like = logEntry.like ? " <:l:851138401557676073>" : "";
-      description.append(stars).append(rewatch).append(like).append("\n");
+      description.append(stars).append(rewatch).append(like).append('\n');
 
       if (logEntry.review != null) {
-        description.append(formatReview(logEntry.review)).append("\n");
+        description.append(formatReview(logEntry.review)).append('\n');
       }
     }
 
@@ -92,11 +94,11 @@ public class LoggedEmbedBuilder {
     String title =
         String.format(
             "%s's Recent Entries for %s (%s)\n",
-            firstLogEntry.owner.displayName,
-            firstLogEntry.film.name,
-            firstLogEntry.film.releaseYear);
+            firstLogEntry.getOwner().displayName,
+            firstLogEntry.getFilm().name,
+            firstLogEntry.getFilm().releaseYear);
     embedBuilder.setTitle(title);
-    embedBuilder.setThumbnail(imageUtils.getTallest(firstLogEntry.film.poster));
+    embedBuilder.setThumbnail(imageUtils.getTallest(firstLogEntry.getFilm().poster));
     embedBuilder.setDescription(
         new DescriptionStringBuilder().setDescriptionText(description.toString()).build());
 
@@ -108,13 +110,13 @@ public class LoggedEmbedBuilder {
 
   private String formatReview(LbReview review) {
     String reviewText = review.text;
-    if (reviewText.length() > 200) {
-      reviewText = reviewText.substring(0, 200).trim();
+    if (reviewText.length() > MAX_REVIEW_LENGTH) {
+      reviewText = reviewText.substring(0, MAX_REVIEW_LENGTH).trim();
     }
     Document reviewDocument = Jsoup.parseBodyFragment(reviewText);
     Options options = OptionsBuilder.anOptions().withBr("\n").build();
     reviewText = new CopyDown(options).convert(reviewDocument.body().toString());
-    if (review.text.length() > 200) {
+    if (review.text.length() > MAX_REVIEW_LENGTH) {
       reviewText += "...";
     }
 
