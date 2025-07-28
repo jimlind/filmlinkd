@@ -3,6 +3,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.inject.Inject;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.model.User;
@@ -53,7 +54,7 @@ public class FollowingHandler implements Handler {
     List<QueryDocumentSnapshot> documentList =
         this.firestoreManager.getUserDocumentListByChannelId(channelId);
 
-    TreeMap<String, User> userMap = new TreeMap<>(LidComparer::compare);
+    Map<String, User> userMap = new TreeMap<>(LidComparer::compare);
     for (QueryDocumentSnapshot snapshot : documentList) {
       User user = userFactory.createFromSnapshot(snapshot);
       if (user != null) {

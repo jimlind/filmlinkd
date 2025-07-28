@@ -2,6 +2,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
 import java.util.List;
+import java.util.Locale;
 import jimlind.filmlinkd.system.discord.embedbuilder.ListEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.letterboxd.api.ListApi;
@@ -46,7 +47,7 @@ public class ListHandler implements Handler {
     OptionMapping listOptionMapping = event.getInteraction().getOption("list-name");
     String listNameString = listOptionMapping != null ? listOptionMapping.getAsString() : "";
 
-    String cleanListName = listNameString.toLowerCase().replaceAll("[^a-z0-9]+", "");
+    String cleanListName = listNameString.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]+", "");
 
     LbListSummary foundList = null;
     LbListsResponse listsResponse = listApi.fetch(member.id, 50);
@@ -55,8 +56,8 @@ public class ListHandler implements Handler {
       return;
     }
 
-    for (LbListSummary item : listsResponse.items) {
-      if (cleanListName.equals(item.name.toLowerCase().replaceAll("[^a-z0-9]+", ""))) {
+    for (LbListSummary item : listsResponse.getItems()) {
+      if (cleanListName.equals(item.name.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]+", ""))) {
         foundList = item;
       }
     }

@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 /** Handles the /roulette command to show a random film. */
 public class RouletteHandler implements Handler {
+  private static final int MIN_FILM_ID_LENGTH = 2;
   private static final String CHARACTERS =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
@@ -52,13 +53,13 @@ public class RouletteHandler implements Handler {
 
   private String findOneFilm(String filmId, int count) {
     // Send the users to this wierd movie that Letterboxd tries to default to
-    if (filmId.length() < 2) {
+    if (filmId.length() < MIN_FILM_ID_LENGTH) {
       return "undefined";
     }
 
     String location = letterboxdIdWeb.getLocationFromLid(filmId);
     if (location.contains("/film/")) {
-      return location.substring(location.lastIndexOf("/film/") + 6, location.lastIndexOf("/"));
+      return location.substring(location.lastIndexOf("/film/") + 6, location.lastIndexOf('/'));
     } else {
       return findOneFilm(filmId.substring(0, filmId.length() - 1), count + 1);
     }
