@@ -2,7 +2,7 @@ package jimlind.filmlinkd.system.discord.stringbuilder;
 
 /** Build a string that displays runtime in a user-friendly way. */
 public class RuntimeStringBuilder {
-  private int runtime = 0;
+  private int runtime;
 
   /**
    * Setter for the runtime attribute.

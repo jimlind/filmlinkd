@@ -2,7 +2,7 @@ package jimlind.filmlinkd.system.discord.stringbuilder;
 
 /** Build a string that displays a count in a user-friendly way. */
 public class CountStringBuilder {
-  private long count = 0L;
+  private long count;
 
   /**
    * Setter for the count attribute.

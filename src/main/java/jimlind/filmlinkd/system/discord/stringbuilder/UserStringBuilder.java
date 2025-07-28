@@ -1,5 +1,7 @@
 package jimlind.filmlinkd.system.discord.stringbuilder;
 
+import java.util.Locale;
+
 /** Build a string that displays a username escaping characters that might be formatting. */
 public class UserStringBuilder {
   private String username = "";
@@ -20,6 +22,7 @@ public class UserStringBuilder {
    *
    * @return The username suitable for embedding in Discord
    */
+  @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
   public String build() {
     int position = 0;
     while (true) {
@@ -32,13 +35,15 @@ public class UserStringBuilder {
         position++;
       } else {
         if (position > 0) {
+          StringBuilder stringBuilder = new StringBuilder();
           String underscores = "\\_".repeat(position);
-          this.username = underscores + this.username + underscores;
+          stringBuilder.append(underscores).append(this.username).append(underscores);
+          this.username = stringBuilder.toString();
         }
         break;
       }
     }
 
-    return this.username.toLowerCase();
+    return this.username.toLowerCase(Locale.ROOT);
   }
 }

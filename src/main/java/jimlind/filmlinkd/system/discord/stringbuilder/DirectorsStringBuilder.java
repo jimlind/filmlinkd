@@ -8,7 +8,7 @@ import jimlind.filmlinkd.system.letterboxd.model.LbFilmContributions;
 /** Build a string that displays a list of directors with Letterboxd links. */
 public class DirectorsStringBuilder {
   /** The Directors. */
-  public LbFilmContributions directors = null;
+  public LbFilmContributions directors;
 
   /**
    * Setter for the contributionList attribute.
@@ -39,7 +39,7 @@ public class DirectorsStringBuilder {
     }
 
     String directorLinks =
-        directors.contributors.stream()
+        directors.getContributors().stream()
             .map(c -> String.format("[%s](https://boxd.it/%s)", c.name, c.id))
             .collect(Collectors.joining(", "));
 
