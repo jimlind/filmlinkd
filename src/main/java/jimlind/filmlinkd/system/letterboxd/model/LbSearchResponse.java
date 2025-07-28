@@ -1,8 +1,7 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
-import lombok.Getter;
-
 import java.util.List;
+import lombok.Getter;
 
 /**
  * Implements the <a
