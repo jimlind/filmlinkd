@@ -44,6 +44,7 @@ public class FollowingEmbedBuilder {
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains as many embed objects as are needed to contain all users.
    */
+  @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
   public List<MessageEmbed> build() {
     List<MessageEmbed> embedList = new ArrayList<>();
 

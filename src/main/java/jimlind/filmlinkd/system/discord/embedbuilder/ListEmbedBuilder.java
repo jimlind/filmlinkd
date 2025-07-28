@@ -18,7 +18,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 public class ListEmbedBuilder {
   private final EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
-  private LbListSummary listSummary = null;
+  private LbListSummary listSummary;
 
   /**
    * Constructor for this class.
@@ -56,24 +56,27 @@ public class ListEmbedBuilder {
 
     embedBuilder.setTitle(listSummary.name);
     embedBuilder.setUrl(String.format("https://boxd.it/%s", listSummary.id));
-    embedBuilder.setThumbnail(imageUtils.getTallest(listSummary.previewEntries.get(0).film.poster));
+    embedBuilder.setThumbnail(
+        imageUtils.getTallest(listSummary.getPreviewEntries().getFirst().getFilm().poster));
 
     StringBuilder descriptionText =
         new StringBuilder(
             String.format(
                 "**List of %s films curated by [%s](https://boxd.it/%s)**\n\n",
-                listSummary.filmCount, listSummary.owner.displayName, listSummary.owner.id));
+                listSummary.filmCount,
+                listSummary.getOwner().displayName,
+                listSummary.getOwner().id));
 
     Options options = OptionsBuilder.anOptions().withBr("\n").build();
     String listDescription = new CopyDown(options).convert(listSummary.description);
-    descriptionText.append(listDescription.replaceAll("[\r\n]+", "\n")).append("\n");
+    descriptionText.append(listDescription.replaceAll("[\r\n]+", "\n")).append('\n');
 
-    for (LbListEntrySummary summary : listSummary.previewEntries) {
+    for (LbListEntrySummary summary : listSummary.getPreviewEntries()) {
       String prefix = summary.rank != 0 ? "1." : "-";
       descriptionText.append(
           String.format(
               "%s [%s (%s)](https://boxd.it/%s)\n",
-              prefix, summary.film.name, summary.film.releaseYear, summary.film.id));
+              prefix, summary.getFilm().name, summary.getFilm().releaseYear, summary.getFilm().id));
     }
 
     String description =
