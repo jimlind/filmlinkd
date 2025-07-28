@@ -23,6 +23,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 /** Handles the /follow command to follow a user and show new diary entries in specified channel. */
 public class FollowHandler implements Handler {
+  private static final int EXPECTED_SINGLE_RESULT = 1;
   private final AccountHelper accountHelper;
   private final ChannelHelper channelHelper;
   private final CommandFactory commandFactory;
@@ -99,10 +100,11 @@ public class FollowHandler implements Handler {
     }
 
     List<LbLogEntry> logEntryList = this.logEntriesApi.getRecentForUser(member.id, 1);
-    if (logEntryList.size() == 1) {
+    if (logEntryList.size() == EXPECTED_SINGLE_RESULT) {
       LbLogEntry logEntry = logEntryList.getFirst();
 
-      Command command = commandFactory.create(Command.Type.FOLLOW, logEntry.owner.id, logEntry.id);
+      Command command =
+          commandFactory.create(Command.Type.FOLLOW, logEntry.getOwner().id, logEntry.id);
       this.pubSubManager.publishCommand(command);
 
       Message.PublishSource source = Message.PublishSource.Follow;

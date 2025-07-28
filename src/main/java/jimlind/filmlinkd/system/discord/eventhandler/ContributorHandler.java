@@ -42,7 +42,7 @@ public class ContributorHandler implements Handler {
       return;
     }
 
-    LbContributor contributor = searchResponse.items.getFirst().contributor;
+    LbContributor contributor = searchResponse.getItems().getFirst().contributor;
     List<MessageEmbed> messageEmbedList =
         contributorEmbedBuilder.setContributor(contributor).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
