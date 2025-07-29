@@ -1,13 +1,16 @@
 package jimlind.filmlinkd.system.google;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.spi.LoggerContextVO;
 import com.google.cloud.logging.LogEntry;
 import com.google.cloud.logging.Payload;
 import com.google.cloud.logging.logback.LoggingEventEnhancer;
 import com.google.gson.Gson;
+import java.nio.channels.OverlappingFileLockException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.slf4j.event.KeyValuePair;
 
 /**
@@ -16,15 +19,22 @@ import org.slf4j.event.KeyValuePair;
  */
 public class LoggingEnhancer implements LoggingEventEnhancer {
 
+  private static final int MAX_LOG_ENTRY_LENGTH = 128000;
+
+  private static LoggerContextVO extractLoggerContextVO(ILoggingEvent loggingEvent) {
+    return loggingEvent.getLoggerContextVO();
+  }
+
   @Override
   public void enhanceLogEntry(LogEntry.Builder logEntryBuilder, ILoggingEvent loggingEvent) {
-    HashMap<String, Object> map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>();
+
     map.put("thread", loggingEvent.getThreadName());
-    map.put("context", loggingEvent.getLoggerContextVO().getName());
+    map.put("context", extractLoggerContextVO(loggingEvent).getName());
     map.put("logger", loggingEvent.getLoggerName());
 
     List<KeyValuePair> valueList = loggingEvent.getKeyValuePairs();
-    HashMap<String, Object> metadata = new HashMap<>();
+    Map<String, Object> metadata = new HashMap<>();
     if (valueList != null) {
       for (KeyValuePair pair : valueList) {
         metadata.put(pair.key, limitLength(parseValue(pair.value)));
@@ -47,24 +57,26 @@ public class LoggingEnhancer implements LoggingEventEnhancer {
       return input;
     }
 
+    // TODO: Check what sort of exception I can actually get out of here.
+    String result;
     try {
-      return new Gson().toJson(input);
-    } catch (Exception e) {
-      // Do Nothing. This can fail for a multitude of reasonable reasons
+      result = new Gson().toJson(input);
+    } catch (OverlappingFileLockException jsonException) {
+      try {
+        result = input.toString();
+      } catch (OverlappingFileLockException toStringException) {
+        result = toStringException.toString();
+      }
     }
 
-    try {
-      return input.toString();
-    } catch (Exception e) {
-      return e.toString();
-    }
+    return result;
   }
 
   private Object limitLength(Object input) {
     if (input instanceof String) {
       byte[] inputBytes = ((String) input).getBytes(StandardCharsets.UTF_8);
-      if (inputBytes.length > 128000) {
-        return new String(inputBytes, 0, 128000, StandardCharsets.UTF_8);
+      if (inputBytes.length > MAX_LOG_ENTRY_LENGTH) {
+        return new String(inputBytes, 0, MAX_LOG_ENTRY_LENGTH, StandardCharsets.UTF_8);
       }
     }
     return input;
