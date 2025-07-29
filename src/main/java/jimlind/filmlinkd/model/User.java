@@ -33,7 +33,7 @@ public class User {
    * @return A list of channelIds as strings. The contents are numeric but we don't use these for
    *     calculations.
    */
-  public List<String> getChannelList() {
+  public List<String> getChannelIdList() {
     List<String> channelListResults = new ArrayList<>();
     if (this.channelList == null) {
       return channelListResults;

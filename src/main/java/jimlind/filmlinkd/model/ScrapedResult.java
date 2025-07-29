@@ -43,7 +43,7 @@ public class ScrapedResult {
       return channelList;
     }
 
-    return getUser().getChannelList();
+    return getUser().getChannelIdList();
   }
 
   /**

@@ -2,16 +2,19 @@ package jimlind.filmlinkd.system.google;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.AggregateQuerySnapshot;
+import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.FirestoreOptions;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.inject.Inject;
+import java.nio.channels.OverlappingFileLockException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.factory.UserFactory;
@@ -20,11 +23,13 @@ import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /** Handles all Firestore communication. Should probably be split into multiple classes. */
 @Slf4j
 public class FirestoreManager {
+  private static final String USER_KEY = "user";
 
   private final AppConfig appConfig;
   private final Firestore db;
@@ -50,7 +55,20 @@ public class FirestoreManager {
             .setDatabaseId(this.appConfig.getFirestoreDatabaseId());
     FirestoreOptions firestoreOptions = builder.build();
 
-    this.db = firestoreOptions.getService();
+    this.db = extractService(firestoreOptions);
+  }
+
+  private static Firestore extractService(FirestoreOptions firestoreOptions) {
+    return firestoreOptions.getService();
+  }
+
+  @NotNull
+  private static DocumentReference getReference(QueryDocumentSnapshot snapshot) {
+    return snapshot.getReference();
+  }
+
+  private static User.Previous getPrevious(User user) {
+    return user.getPrevious();
   }
 
   /**
@@ -64,7 +82,7 @@ public class FirestoreManager {
 
     try {
       this.db.collection(collectionId).document(user.id).set(user.toMap()).get();
-    } catch (Exception e) {
+    } catch (InterruptedException | ExecutionException e) {
       log.atError().setMessage("Unable to set user document").log();
     }
   }
@@ -82,8 +100,8 @@ public class FirestoreManager {
         this.db.collection(collectionId).whereEqualTo("letterboxdId", userLid).limit(1).get();
 
     try {
-      return query.get().getDocuments().get(0);
-    } catch (Exception e) {
+      return query.get().getDocuments().getFirst();
+    } catch (InterruptedException | ExecutionException e) {
       return null;
     }
   }
@@ -98,7 +116,7 @@ public class FirestoreManager {
     ApiFuture<AggregateQuerySnapshot> query = this.db.collection(collectionId).count().get();
     try {
       return query.get().getCount();
-    } catch (Exception e) {
+    } catch (InterruptedException | ExecutionException e) {
       return 0;
     }
   }
@@ -118,7 +136,7 @@ public class FirestoreManager {
             .get();
     try {
       return query.get().getDocuments();
-    } catch (Exception e) {
+    } catch (InterruptedException | ExecutionException e) {
       return Collections.emptyList();
     }
   }
@@ -137,7 +155,7 @@ public class FirestoreManager {
         this.db.collection(collectionId).whereArrayContains("channelList", channelMap).get();
     try {
       return query.get().getDocuments();
-    } catch (Exception e) {
+    } catch (InterruptedException | ExecutionException e) {
       return new ArrayList<>();
     }
   }
@@ -158,26 +176,26 @@ public class FirestoreManager {
       return false;
     }
 
-    List<User.Channel> channelList = user.channelList;
-
     // If the channel is already subscribed then exit early positively
-    for (User.Channel channel : channelList) {
-      if (channel.channelId.equals(channelId)) {
+    for (String userChannelId : user.getChannelIdList()) {
+      if (userChannelId.equals(channelId)) {
         return true;
       }
     }
 
     User.Channel newChannel = new User.Channel();
     newChannel.channelId = channelId;
-    user.channelList.add(newChannel);
+    user.getChannelList().add(newChannel);
 
     // Perform the update
+    // TODO: Check what sort of exception I can actually get out of here.
     try {
-      snapshot.getReference().update(user.toMap());
-    } catch (Exception e) {
+      DocumentReference reference = getReference(snapshot);
+      reference.update(user.toMap());
+    } catch (OverlappingFileLockException e) {
       log.atError()
           .setMessage("Unable to Add to Channel List: Update Failed")
-          .addKeyValue("user", user)
+          .addKeyValue(USER_KEY, user)
           .addKeyValue("channelId", channelId)
           .addKeyValue("exception", e)
           .log();
@@ -202,17 +220,18 @@ public class FirestoreManager {
       return false;
     }
 
-    user.channelList =
-        user.channelList.stream()
+    user.setChannelList(
+        user.getChannelList().stream()
             .filter(channel -> !channel.channelId.equals(channelId))
-            .collect(Collectors.toCollection(ArrayList::new));
+            .collect(Collectors.toCollection(ArrayList::new)));
 
+    // TODO: Check what sort of exception I can actually get out of here.
     try {
-      snapshot.getReference().update(user.toMap());
-    } catch (Exception e) {
+      getReference(snapshot).update(user.toMap());
+    } catch (OverlappingFileLockException e) {
       log.atError()
           .setMessage("Unable to Remove from Channel List: Update Failed")
-          .addKeyValue("user", user)
+          .addKeyValue(USER_KEY, user)
           .addKeyValue("channelId", channelId)
           .addKeyValue("exception", e)
           .log();
@@ -241,12 +260,14 @@ public class FirestoreManager {
     user.userName = member.username;
 
     // Perform the update
+    // TODO: Check what sort of exception I can actually get out of here.
     try {
-      snapshot.getReference().update(user.toMap());
-    } catch (Exception e) {
+      DocumentReference reference = getReference(snapshot);
+      reference.update(user.toMap());
+    } catch (OverlappingFileLockException e) {
       log.atError()
           .setMessage("Unable to Update Display Data: Update Failed")
-          .addKeyValue("user", user)
+          .addKeyValue(USER_KEY, user)
           .log();
       return false;
     }
@@ -275,8 +296,9 @@ public class FirestoreManager {
 
     // Default to an empty list, but set it if not null
     List<String> previousList = new ArrayList<>();
-    if (user.previous.list != null) {
-      previousList = user.previous.list;
+    User.Previous previous = getPrevious(user);
+    if (previous.getList() != null) {
+      previousList = getPrevious(user).getList();
     }
 
     // Nothing to update. Return `true` as if the action succeeded.
@@ -284,25 +306,29 @@ public class FirestoreManager {
       return true;
     }
 
+    User.Previous updatedPrevious = getPrevious(user);
+    updatedPrevious.setPublished(diaryPublishedDate); // Only used for debugging
+    updatedPrevious.setUri(diaryUri); // Only used for debugging
+
     // The previous list should be considered the primary source of truth
-    user.previous.list = LidComparer.buildMostRecentList(previousList, diaryLid, 10);
+    updatedPrevious.setList(LidComparer.buildMostRecentList(previousList, diaryLid, 10));
 
     // The scraping process uses the previous lid as it's source of truth to determine which
     // entries are new. Maybe that should be changed eventually.
-    user.previous.lid = user.getMostRecentPrevious();
+    updatedPrevious.setLid(user.getMostRecentPrevious());
 
-    // This data is only used if I'm trying to debug publishing issues
-    user.updated = Instant.now().toEpochMilli();
-    user.previous.published = diaryPublishedDate;
-    user.previous.uri = diaryUri;
+    user.setPrevious(updatedPrevious);
+    user.updated = Instant.now().toEpochMilli(); // Only used for debugging
 
     // Perform the update
+    // TODO: Check what sort of exception I can actually get out of here.
     try {
-      snapshot.getReference().update(user.toMap());
-    } catch (Exception e) {
+      DocumentReference reference = getReference(snapshot);
+      reference.update(user.toMap());
+    } catch (OverlappingFileLockException e) {
       log.atError()
           .setMessage("Unable to Update Previous: Update Failed")
-          .addKeyValue("user", user)
+          .addKeyValue(USER_KEY, user)
           .addKeyValue("diaryLid", diaryLid)
           .log();
       return false;
