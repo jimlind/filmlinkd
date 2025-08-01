@@ -21,7 +21,7 @@ public class LoggingEnhancer implements LoggingEventEnhancer {
 
   private static final int MAX_LOG_ENTRY_LENGTH = 128000;
 
-  private static LoggerContextVO extractLoggerContextVO(ILoggingEvent loggingEvent) {
+  private static LoggerContextVO extractLoggerContextVo(ILoggingEvent loggingEvent) {
     return loggingEvent.getLoggerContextVO();
   }
 
@@ -30,7 +30,7 @@ public class LoggingEnhancer implements LoggingEventEnhancer {
     Map<String, Object> map = new HashMap<>();
 
     map.put("thread", loggingEvent.getThreadName());
-    map.put("context", extractLoggerContextVO(loggingEvent).getName());
+    map.put("context", extractLoggerContextVo(loggingEvent).getName());
     map.put("logger", loggingEvent.getLoggerName());
 
     List<KeyValuePair> valueList = loggingEvent.getKeyValuePairs();
