@@ -36,7 +36,7 @@ public class LogEntriesApi {
     LbLogEntriesResponse logEntriesResponse =
         this.client.getAuthorized(logEntriesPath, LbLogEntriesResponse.class);
 
-    if (logEntriesResponse == null || logEntriesResponse.items.isEmpty()) {
+    if (logEntriesResponse == null || logEntriesResponse.getItems().isEmpty()) {
       return List.of();
     }
 
@@ -57,7 +57,7 @@ public class LogEntriesApi {
     LbLogEntriesResponse logEntriesResponse =
         this.client.getAuthorized(logEntriesPath, LbLogEntriesResponse.class);
 
-    if (logEntriesResponse == null || logEntriesResponse.items.isEmpty()) {
+    if (logEntriesResponse == null || logEntriesResponse.getItems().isEmpty()) {
       return List.of();
     }
 

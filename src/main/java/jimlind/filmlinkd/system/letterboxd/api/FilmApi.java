@@ -39,11 +39,11 @@ public class FilmApi {
     String searchPath = String.format(uriTemplate, input, "FilmSearchItem", 1, "Autocomplete");
 
     LbSearchResponse searchResponse = client.get(searchPath, LbSearchResponse.class);
-    if (searchResponse == null || searchResponse.items.isEmpty()) {
+    if (searchResponse == null || searchResponse.getItems().isEmpty()) {
       return null;
     }
 
-    return searchResponse.items.get(0).film;
+    return searchResponse.getItems().getFirst().film;
   }
 
   /**
@@ -76,9 +76,9 @@ public class FilmApi {
     }
 
     CombinedLbFilmModel combinedLbFilmModel = new CombinedLbFilmModel();
-    combinedLbFilmModel.film = filmDetailsResponse;
-    combinedLbFilmModel.filmStatistics = filmStatisticsResponse;
-    combinedLbFilmModel.filmSummary = filmSummary;
+    combinedLbFilmModel.setFilm(filmDetailsResponse);
+    combinedLbFilmModel.setFilmStatistics(filmStatisticsResponse);
+    combinedLbFilmModel.setFilmSummary(filmSummary);
 
     return combinedLbFilmModel;
   }

@@ -33,7 +33,7 @@ public class ContributorApi {
     String path = String.format(uriTemplate, input, "ContributorSearchItem", 1);
 
     LbSearchResponse searchResponse = this.client.get(path, LbSearchResponse.class);
-    if (searchResponse == null || searchResponse.items.isEmpty()) {
+    if (searchResponse == null || searchResponse.getItems().isEmpty()) {
       return null;
     }
 

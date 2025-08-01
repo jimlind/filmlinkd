@@ -29,7 +29,7 @@ public class ListApi {
     String path = String.format(uriTemplate, userId, "Owner", count, "Published");
 
     LbListsResponse listsResponse = client.getAuthorized(path, LbListsResponse.class);
-    if (listsResponse == null || listsResponse.items.isEmpty()) {
+    if (listsResponse == null || listsResponse.getItems().isEmpty()) {
       return null;
     }
 

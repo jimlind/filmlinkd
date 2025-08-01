@@ -10,8 +10,11 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Locale;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import jimlind.filmlinkd.config.AppConfig;
@@ -24,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Client {
   static final String BASE_URL = "https://api.letterboxd.com/api/v0/";
+  private static final String URI_KEY = "uri";
   private final AppConfig appConfig;
 
   /**
@@ -75,11 +79,11 @@ public class Client {
   }
 
   private <T> T request(String uri, String authorization, Class<T> inputClass) {
-    URI requestUri = null;
+    URI requestUri;
     try {
       requestUri = new URI(BASE_URL + uri);
     } catch (URISyntaxException e) {
-      log.atError().setMessage("Error building URI").addKeyValue("uri", uri).log();
+      log.atError().setMessage("Error building URI").addKeyValue(URI_KEY, uri).log();
       return null;
     }
 
@@ -92,27 +96,28 @@ public class Client {
             .GET()
             .build();
 
-    String responseBody = "";
+    String responseBody;
     try (HttpClient httpClient = HttpClient.newHttpClient()) {
       HttpResponse<String> httpResponse =
           httpClient.send(request, HttpResponse.BodyHandlers.ofString());
       if (httpResponse.statusCode() < 200 && httpResponse.statusCode() >= 300) {
-        log.atError().setMessage("Incorrect Response Status Code").addKeyValue("uri", uri).log();
+        log.atError().setMessage("Incorrect Response Status Code").addKeyValue(URI_KEY, uri).log();
         return null;
       }
       responseBody = httpResponse.body();
       if (responseBody.isBlank()) {
-        log.atError().setMessage("Response Body is Blank").addKeyValue("uri", uri).log();
+        log.atError().setMessage("Response Body is Blank").addKeyValue(URI_KEY, uri).log();
         return null;
       }
     } catch (InterruptedException | IOException e) {
-      log.atError().setMessage("Client Error").addKeyValue("uri", uri).log();
+      log.atError().setMessage("Client Error").addKeyValue(URI_KEY, uri).log();
       return null;
     }
 
+    // TODO: Check what sort of exception I can actually get out of here.
     try {
       return new GsonBuilder().create().fromJson(responseBody, inputClass);
-    } catch (Exception e) {
+    } catch (OutOfMemoryError e) {
       log.atError().setMessage("Error on Json Parsing").addKeyValue("body", responseBody).log();
       return null;
     }
@@ -133,9 +138,9 @@ public class Client {
     try {
       Mac sha256Hmac = Mac.getInstance("HmacSHA256");
       sha256Hmac.init(secretKeySpec);
-      String data = method.toUpperCase() + "\u0000" + url + "\u0000"; // "�"
+      String data = method.toUpperCase(Locale.ROOT) + "\u0000" + url + "\u0000"; // "�"
       return bytesToHex(sha256Hmac.doFinal(data.getBytes()));
-    } catch (Exception e) {
+    } catch (InvalidKeyException | NoSuchAlgorithmException e) {
       return "";
     }
   }
