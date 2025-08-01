@@ -13,7 +13,7 @@ public class PubSubSubscriberListener extends Subscriber.Listener {
       log.info("The Pub/Sub subscriber has encountered a fatal error and is shutting down.");
       log.info(failure.toString());
     }
-    System.exit(-1);
+    throw new IllegalStateException("PubSubListener Failed");
   }
 
   @Override
@@ -34,6 +34,6 @@ public class PubSubSubscriberListener extends Subscriber.Listener {
   @Override
   public void terminated(Subscriber.State from) {
     log.info("The Pub/Sub subscriber has been terminated.");
-    System.exit(-1);
+    throw new IllegalStateException("PubSubListener Terminated");
   }
 }

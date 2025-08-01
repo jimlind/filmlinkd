@@ -14,7 +14,9 @@ import com.google.pubsub.v1.PubsubMessage;
 import com.google.pubsub.v1.Subscription;
 import com.google.pubsub.v1.SubscriptionName;
 import com.google.pubsub.v1.TopicName;
+import java.io.IOException;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.model.Command;
 import jimlind.filmlinkd.model.Message;
@@ -26,6 +28,8 @@ import org.jetbrains.annotations.Nullable;
 @Singleton
 @Slf4j
 public class PubSubManager {
+  public static final String EXCEPTION_KEY = "exception";
+
   static final int RETENTION_SECONDS = 43200; // 12 Hours
   static final int EXPIRATION_SECONDS = 86400; // 24 Hours
   static final int ACK_DEADLINE_SECONDS = 10;
@@ -118,13 +122,14 @@ public class PubSubManager {
 
     ByteString data = ByteString.copyFromUtf8(command.toJson());
     PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
+    // TODO: Check what sort of exception I can actually get out of here.
     try {
       commandPublisher.publish(pubsubMessage).get();
-    } catch (Exception e) {
+    } catch (InterruptedException | ExecutionException e) {
       log.atWarn()
           .setMessage("Unable to Publish command")
           .addKeyValue("command", command)
-          .addKeyValue("exception", e)
+          .addKeyValue(EXCEPTION_KEY, e)
           .log();
     }
   }
@@ -142,26 +147,28 @@ public class PubSubManager {
 
     ByteString data = ByteString.copyFromUtf8(logEntry.toJson());
     PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
+    // TODO: Check what sort of exception I can actually get out of here.
     try {
       logEntryPublisher.publish(pubsubMessage).get();
-    } catch (Exception e) {
+    } catch (InterruptedException | ExecutionException e) {
       log.atWarn()
           .setMessage("Unable to Publish logEntry")
           .addKeyValue("logEntry", logEntry)
-          .addKeyValue("exception", e)
+          .addKeyValue(EXCEPTION_KEY, e)
           .log();
     }
   }
 
   private Publisher buildPublisher(String projectId, String topicId) {
     TopicName topicName = TopicName.of(projectId, topicId);
+    // TODO: Check what sort of exception I can actually get out of here.
     try {
       return Publisher.newBuilder(topicName).build();
-    } catch (Exception e) {
+    } catch (IOException e) {
       log.atError()
           .setMessage("Unable to build Publisher {}")
           .addArgument(topicId)
-          .addKeyValue("exception", e)
+          .addKeyValue(EXCEPTION_KEY, e)
           .log();
       return null;
     }
@@ -172,16 +179,17 @@ public class PubSubManager {
     TopicName topicName = TopicName.of(projectId, topicId);
     SubscriptionName subscriptionName = SubscriptionName.of(projectId, subscriptionId);
 
+    // TODO: Check what sort of exception I can actually get out of here.
     // This client create is designed specifically for a try-with-resources statement
     try (SubscriptionAdminClient client = SubscriptionAdminClient.create()) {
       // If the subscription doesn't exit, create it.
       if (!hasSubscription(client, projectName, subscriptionName)) {
         createSubscription(client, subscriptionName, topicName);
       }
-    } catch (Exception e) {
+    } catch (IOException e) {
       log.atError()
           .setMessage("Unable to setup connection to the PubSub client")
-          .addKeyValue("exception", e)
+          .addKeyValue(EXCEPTION_KEY, e)
           .log();
       return null;
     }
