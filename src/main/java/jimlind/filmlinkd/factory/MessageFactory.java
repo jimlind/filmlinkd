@@ -2,11 +2,11 @@ package jimlind.filmlinkd.factory;
 
 import com.google.inject.Inject;
 import jimlind.filmlinkd.model.Message;
+import jimlind.filmlinkd.model.Message.Type;
 import jimlind.filmlinkd.system.letterboxd.model.LbDiaryDetails;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilmSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LbMemberSummary;
-import jimlind.filmlinkd.system.letterboxd.model.LbReview;
 import jimlind.filmlinkd.system.letterboxd.utils.DateUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.LinkUtils;
@@ -47,9 +47,8 @@ public class MessageFactory {
     entry.setUserName(owner.username);
     entry.setUserLid(owner.id);
 
-    LbReview review = LogEntryAttributes.extractReview(logEntry);
-    boolean hasValidReview = review != null && !review.text.isBlank();
-    entry.setType(hasValidReview ? Message.Type.review : Message.Type.watch);
+    String reviewText = LogEntryAttributes.extractReviewText(logEntry);
+    entry.setType(reviewText.isEmpty() ? Type.review : Type.watch);
 
     entry.setLink(linkUtils.getLetterboxd(logEntry.links));
     entry.setPublishedDate(dateUtils.toMilliseconds(logEntry.whenCreated));
@@ -66,9 +65,9 @@ public class MessageFactory {
     entry.setStarCount(logEntry.rating);
     entry.setRewatch(diaryDetails != null && diaryDetails.isRewatch());
     entry.setLiked(logEntry.like);
-    entry.setContainsSpoilers(review != null && review.containsSpoilers);
+    entry.setContainsSpoilers(LogEntryAttributes.extractSpoilerStatus(logEntry));
     entry.setAdult(film.adult);
-    entry.setReview(review != null ? review.text : "");
+    entry.setReview(reviewText);
     entry.setUpdatedDate(dateUtils.toMilliseconds(logEntry.whenUpdated));
     entry.setPublishSource(publishSource);
 

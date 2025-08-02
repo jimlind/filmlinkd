@@ -5,6 +5,7 @@ import jimlind.filmlinkd.system.letterboxd.model.LbFilmSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LbMemberSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LbReview;
+import org.jetbrains.annotations.Nullable;
 
 /** Extract attributes from the LbLogEntry Model. */
 public final class LogEntryAttributes {
@@ -44,12 +45,35 @@ public final class LogEntryAttributes {
   }
 
   /**
-   * Extract the review from a log entry.
+   * Extrct the spoiler status from a log entry.
    *
    * @param logEntry A Letterboxd log entry
-   * @return The review
+   * @return If the log entry has spoilers
    */
-  public static LbReview extractReview(LbLogEntry logEntry) {
+  public static boolean extractSpoilerStatus(LbLogEntry logEntry) {
+    LbReview review = getLbReview(logEntry);
+    return review != null && review.containsSpoilers;
+  }
+
+  /**
+   * Extract the text of the review from a log entry.
+   *
+   * @param logEntry A Letterboxd log entry
+   * @return The review string
+   */
+  public static String extractReviewText(LbLogEntry logEntry) {
+    LbReview review = getLbReview(logEntry);
+    if (review == null) {
+      return "";
+    }
+    if (review.text.isBlank()) {
+      return "";
+    }
+    return review.toString();
+  }
+
+  @Nullable
+  private static LbReview getLbReview(LbLogEntry logEntry) {
     return logEntry.review;
   }
 }
