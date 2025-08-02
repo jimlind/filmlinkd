@@ -56,6 +56,7 @@ public class GeneralScraper implements Runnable {
       List<String> publishedEntryIdList = new ArrayList<>();
       List<LbLogEntry> logEntryList = logEntriesApi.getRecentForUser(entry.getKey(), 10);
 
+      // TODO:
       //      // Filter out entries that are less than 3 minutes old
       //      if (Date.now() - Date.parse(logEntry.whenCreated) < 180000) {
       //        return false;
