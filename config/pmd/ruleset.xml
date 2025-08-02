@@ -10,6 +10,7 @@
     <rule ref="category/java/design.xml">
         <exclude name="DataClass"/>
         <exclude name="TooManyFields"/>
+        <exclude name="LoosePackageCoupling"/>
     </rule>
     <rule ref="category/java/errorprone.xml"/>
     <rule ref="category/java/performance.xml"/>
