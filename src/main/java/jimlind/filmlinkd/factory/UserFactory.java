@@ -3,10 +3,10 @@ package jimlind.filmlinkd.factory;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.inject.Inject;
 import java.util.ArrayList;
-import java.util.Locale;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
+import jimlind.filmlinkd.system.letterboxd.utils.extractor.MemberAttributes;
 
 /** A factory for creating instances of the {@link User} model. */
 public class UserFactory {
@@ -49,7 +49,7 @@ public class UserFactory {
     user.setImage(imageUtils.getTallest(member.avatar));
     user.setLetterboxdId(member.id);
     user.setUpdated(0L); // TODO: Should this get filled?
-    user.setUserName(member.username.toLowerCase(Locale.ROOT));
+    user.setUserName(MemberAttributes.extractLowercaseUsername(member));
 
     return fillDefaults(user);
   }
