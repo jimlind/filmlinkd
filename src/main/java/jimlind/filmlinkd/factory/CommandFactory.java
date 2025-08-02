@@ -14,11 +14,6 @@ public class CommandFactory {
    * @return A new, populated {@link Command} object.
    */
   public Command create(Command.Type type, String user, String entry) {
-    Command commandObject = new Command();
-    commandObject.setType(type);
-    commandObject.setUser(user);
-    commandObject.setEntry(entry);
-
-    return commandObject;
+    return new Command(type, user, entry);
   }
 }
