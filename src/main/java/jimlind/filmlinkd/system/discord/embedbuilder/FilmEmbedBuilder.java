@@ -1,6 +1,7 @@
 package jimlind.filmlinkd.system.discord.embedbuilder;
 
 import com.google.inject.Inject;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,24 +67,24 @@ public class FilmEmbedBuilder {
 
     LbFilm film = getFilm();
 
-    String releaseYear =
-        film.getReleaseYear() > 0 ? String.format(" (%s)", film.getReleaseYear()) : "";
+    String releaseYear = film.getReleaseYear() > 0 ? " (" + film.getReleaseYear() + ")" : "";
     embedBuilder.setTitle(film.getName() + releaseYear);
-    embedBuilder.setUrl(String.format("https://boxd.it/%s", film.id));
+    embedBuilder.setUrl("https://boxd.it/%s" + film.id);
     String imageUrl = imageUtils.getTallest(film.getPoster());
     embedBuilder.setThumbnail(imageUrl.isBlank() ? null : imageUrl);
 
     StringBuilder descriptionBuilder = new StringBuilder();
     // Add tagline to description
     if (film.tagline != null) {
-      descriptionBuilder.append(String.format("**%s**\n", film.tagline));
+      descriptionBuilder.append("**").append(film.tagline).append("**");
     }
 
     // Add rating to description
     LbFilmSummary summary = extractFilmSummary();
     if (summary.rating > 0) {
       String stars = new StarsStringBuilder().setStarCount(summary.rating).build();
-      String rating = String.format("%.2f", summary.rating);
+      DecimalFormat formatter = new DecimalFormat("0.00");
+      String rating = formatter.format(summary.rating);
       descriptionBuilder.append(stars).append(' ').append(rating).append('\n');
     }
 

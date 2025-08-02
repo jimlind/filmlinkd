@@ -159,7 +159,7 @@ public class DiaryEntryEmbedBuilder {
     }
 
     // Format Review Title and Review Text as EmbedDescription
-    reviewText = entry.containsSpoilers ? "||" + reviewText + "||" : reviewText;
+    reviewText = entry.isContainsSpoilers() ? "||" + reviewText + "||" : reviewText;
     reviewText = reviewText.replaceAll("[\r\n]+", "\n");
 
     return reviewText;

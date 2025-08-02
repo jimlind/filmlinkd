@@ -89,13 +89,12 @@ public class DiaryListEmbedBuilder {
       secondLineBuilder
           .append(' ')
           .append(new StarsStringBuilder().setStarCount(logEntry.getRating()).build());
-      if (diaryDetails != null && diaryDetails.rewatch) {
+      if (diaryDetails != null && diaryDetails.isRewatch()) {
         secondLineBuilder.append(" <:r:851135667546488903>");
       }
 
-      // TODO: Somehow "like" isn't part of the model
       secondLineBuilder
-          .append(logEntry.like ? " <:l:851138401557676073>" : "")
+          .append(logEntry.isLike() ? " <:l:851138401557676073>" : "")
           .append(logEntry.getReview() != null ? " :speech_balloon:" : "");
       entryList.add(secondLineBuilder.toString());
     }
@@ -107,7 +106,7 @@ public class DiaryListEmbedBuilder {
         String.format(
             "Recent Diary Activity from %s",
             new UserStringBuilder().setUsername(member.displayName).build()));
-    embedBuilder.setUrl(String.format("https://boxd.it/%s", member.id));
+    embedBuilder.setUrl("https://boxd.it/%s" + member.id);
     embedBuilder.setThumbnail(imageUtils.getTallest(member.avatar));
 
     List<MessageEmbed> embedList = new ArrayList<>();
