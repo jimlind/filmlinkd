@@ -23,6 +23,15 @@ public class Message {
   }
 
   /**
+   * Get the Letterboxd ID for the user's post that initiated the message.
+   *
+   * @return A user's Letterboxd ID
+   */
+  public String getEntryUserLid() {
+    return entry.getUserLid();
+  }
+
+  /**
    * Needed to create a string object to be passed around in PubSub messages.
    *
    * @return A JSON string of the data in this model

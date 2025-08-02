@@ -28,6 +28,11 @@ public class ScrapedResultFactory {
     this.userFactory = userFactory;
   }
 
+  private static Message translateMessage(PubsubMessage pubsubMessage) {
+    String data = pubsubMessage.getData().toStringUtf8();
+    return new GsonBuilder().create().fromJson(data, Message.class);
+  }
+
   /**
    * Attempts to translate a message from PubSub to a {@link ScrapedResult} model that we can use.
    *
@@ -38,8 +43,7 @@ public class ScrapedResultFactory {
     Message message = translateMessage(pubsubMessage);
 
     // Attempt to get user based on Message
-    String userLid = getUserLid(message);
-    QueryDocumentSnapshot snapshot = firestoreManager.getUserDocument(userLid);
+    QueryDocumentSnapshot snapshot = firestoreManager.getUserDocument(message.getEntryUserLid());
     if (snapshot == null) {
       log.atWarn()
           .setMessage("Invalid User Passed in PubSub Message")
@@ -64,18 +68,5 @@ public class ScrapedResultFactory {
     scrapedResult.setUser(user);
 
     return scrapedResult;
-  }
-
-  private Message.Entry getEntry(Message message) {
-    return message.getEntry();
-  }
-
-  private String getUserLid(Message message) {
-    return getEntry(message).getUserLid();
-  }
-
-  private Message translateMessage(PubsubMessage pubsubMessage) {
-    String data = pubsubMessage.getData().toStringUtf8();
-    return new GsonBuilder().create().fromJson(data, Message.class);
   }
 }

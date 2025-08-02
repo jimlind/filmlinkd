@@ -15,14 +15,29 @@ public class ScrapedResult {
   public Message message;
   public User user;
 
+  /**
+   * Gets diary entry object from scraped result.
+   *
+   * @return The object containing all necessary diary entry data
+   */
   public Message.Entry getEntry() {
     return message.getEntry();
   }
 
+  /**
+   * Gets previous entry object from scraped result.
+   *
+   * @return The object containing the data about a user's previous entry
+   */
   public User.Previous getPrevious() {
     return user.getPrevious();
   }
 
+  /**
+   * Gets list of all previous entry ids from scraped result.
+   *
+   * @return A list of previous entry ids
+   */
   public List<String> getPreviousList() {
     return getPrevious().getList();
   }

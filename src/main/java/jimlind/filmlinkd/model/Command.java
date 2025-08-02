@@ -10,6 +10,13 @@ public class Command {
   private final String user;
   private final String entry;
 
+  /**
+   * Constructor for the Command model.
+   *
+   * @param type The type of command
+   * @param user The user who initiated the command
+   * @param entry The primary argument or entry for the command
+   */
   public Command(Type type, String user, String entry) {
     this.type = type;
     this.user = user;

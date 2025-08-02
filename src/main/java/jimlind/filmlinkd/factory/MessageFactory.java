@@ -10,6 +10,7 @@ import jimlind.filmlinkd.system.letterboxd.model.LbReview;
 import jimlind.filmlinkd.system.letterboxd.utils.DateUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.LinkUtils;
+import jimlind.filmlinkd.system.letterboxd.utils.extractor.LogEntryAttributes;
 
 /** A factory for creating instances of the {@link Message} model. */
 public class MessageFactory {
@@ -35,35 +36,35 @@ public class MessageFactory {
    * Create our proper {@link Message} object from two data sources.
    *
    * @param logEntry A model from the Letterboxd API response
-   * @param publishSource The source of the message creation (scraping, etc)
+   * @param publishSource The source of the message creation (scraping, etc.)
    * @return A {@link Message} object
    */
   public Message createFromLogEntry(LbLogEntry logEntry, Message.PublishSource publishSource) {
     Message.Entry entry = new Message.Entry();
     entry.setLid(logEntry.id);
 
-    LbMemberSummary owner = getOwner(logEntry);
+    LbMemberSummary owner = LogEntryAttributes.extractOwner(logEntry);
     entry.setUserName(owner.username);
     entry.setUserLid(owner.id);
 
-    LbReview review = getReview(logEntry);
+    LbReview review = LogEntryAttributes.extractReview(logEntry);
     boolean hasValidReview = review != null && !review.text.isBlank();
     entry.setType(hasValidReview ? Message.Type.review : Message.Type.watch);
 
     entry.setLink(linkUtils.getLetterboxd(logEntry.links));
     entry.setPublishedDate(dateUtils.toMilliseconds(logEntry.whenCreated));
 
-    LbFilmSummary film = getFilm(logEntry);
+    LbFilmSummary film = LogEntryAttributes.extractFilm(logEntry);
     entry.setFilmTitle(film.name);
     entry.setFilmYear(film.releaseYear);
 
-    LbDiaryDetails diaryDetails = getDiaryDetails(logEntry);
+    LbDiaryDetails diaryDetails = LogEntryAttributes.extractDiaryDetails(logEntry);
     String diaryDate = (diaryDetails != null) ? diaryDetails.diaryDate : "";
     entry.setWatchedDate(dateUtils.toMilliseconds(diaryDate));
 
     entry.setImage(imageUtils.getTallest(film.poster));
     entry.setStarCount(logEntry.rating);
-    entry.setRewatch(diaryDetails != null && diaryDetails.rewatch);
+    entry.setRewatch(diaryDetails != null && diaryDetails.isRewatch());
     entry.setLiked(logEntry.like);
     entry.setContainsSpoilers(review != null && review.containsSpoilers);
     entry.setAdult(film.adult);
@@ -75,21 +76,5 @@ public class MessageFactory {
     message.setEntry(entry);
 
     return message;
-  }
-
-  private LbDiaryDetails getDiaryDetails(LbLogEntry logEntry) {
-    return logEntry.diaryDetails;
-  }
-
-  private LbFilmSummary getFilm(LbLogEntry logEntry) {
-    return logEntry.film;
-  }
-
-  private LbMemberSummary getOwner(LbLogEntry logEntry) {
-    return logEntry.owner;
-  }
-
-  private LbReview getReview(LbLogEntry logEntry) {
-    return logEntry.review;
   }
 }

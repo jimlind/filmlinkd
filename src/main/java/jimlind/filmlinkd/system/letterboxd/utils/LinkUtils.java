@@ -3,6 +3,7 @@ package jimlind.filmlinkd.system.letterboxd.utils;
 import java.util.List;
 import jimlind.filmlinkd.system.letterboxd.model.LbLink;
 import jimlind.filmlinkd.system.letterboxd.model.LbLinkType;
+import jimlind.filmlinkd.system.letterboxd.utils.extractor.LinkAttributes;
 
 /** Utilities to translate Letterboxd Link objects to other formats. */
 public class LinkUtils {
@@ -19,7 +20,7 @@ public class LinkUtils {
     }
 
     for (LbLink link : linkList) {
-      if (link.getType() == LbLinkType.letterboxd) {
+      if (LinkAttributes.extractType(link) == LbLinkType.letterboxd) {
         return link.getUrl();
       }
     }
