@@ -11,8 +11,8 @@ A Letterboxd Discord Bot
 
 [![JUnit Tests Workflow Status](https://github.com/jimlind/filmlinkd/actions/workflows/run-junit-tests.yml/badge.svg)](https://github.com/jimlind/filmlinkd/actions/workflows/run-junit-tests.yml)
 [![Static Analysis Workflow Status](https://github.com/jimlind/filmlinkd/actions/workflows/run-static-analysis.yml/badge.svg)](https://github.com/jimlind/filmlinkd/actions/workflows/run-static-analysis.yml)
-[![Spotless Format Workflow Status](https://github.com/jimlind/filmlinkd/actions/workflows/runs-spotless-format-check.yml/badge.svg)](https://github.com/jimlind/filmlinkd/actions/workflows/runs-spotless-format-check.yml)
-[![Checkstyle Lint Workflow Status](https://github.com/jimlind/filmlinkd/actions/workflows/runs-checkstyle-linting-check.yml/badge.svg)](https://github.com/jimlind/filmlinkd/actions/workflows/runs-checkstyle-linting-check.yml)
+[![Spotless Format Workflow Status](https://github.com/jimlind/filmlinkd/actions/workflows/run-spotless-format-check.yml/badge.svg)](https://github.com/jimlind/filmlinkd/actions/workflows/run-spotless-format-check.yml)
+[![Checkstyle Lint Workflow Status](https://github.com/jimlind/filmlinkd/actions/workflows/run-checkstyle-linting-check.yml/badge.svg)](https://github.com/jimlind/filmlinkd/actions/workflows/run-checkstyle-linting-check.yml)
 
 ## Links
 
