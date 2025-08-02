@@ -3,6 +3,7 @@ package jimlind.filmlinkd.system.letterboxd.web;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Locale;
 
 /** Scrapes the Letterboxd website for public member information. */
 public class MemberWeb {
@@ -15,7 +16,7 @@ public class MemberWeb {
    * @return The Letterboxd ID associated with the username.
    */
   public String getMemberLidFromUsername(String username) {
-    String url = String.format("https://letterboxd.com/%s/", username.toLowerCase());
+    String url = String.format("https://letterboxd.com/%s/", username.toLowerCase(Locale.ROOT));
 
     try {
       HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
@@ -36,7 +37,7 @@ public class MemberWeb {
     }
 
     String letterboxdType = connection.getHeaderField("x-letterboxd-type");
-    if (letterboxdType != null && !letterboxdType.equals("Member")) {
+    if (letterboxdType != null && !"Member".equals(letterboxdType)) {
       return "";
     }
 

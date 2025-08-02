@@ -7,7 +7,11 @@ import java.util.HashSet;
 import java.util.List;
 
 /** Utilities to build data sets that come from comparing Letterboxd IDs. */
-public class LidComparer {
+public final class LidComparer {
+  private LidComparer() {
+    throw new UnsupportedOperationException("Utility class cannot be instantiated");
+  }
+
   /**
    * Compare Letterboxd IDs.
    *
@@ -44,18 +48,16 @@ public class LidComparer {
    * @param count The maximum size of the returned list
    * @return A new list of Letterboxd IDs
    */
-  public static ArrayList<String> buildMostRecentList(
-      List<String> list, String diaryLid, int count) {
+  public static List<String> buildMostRecentList(List<String> list, String diaryLid, int count) {
     list.add(diaryLid);
-    ArrayList<String> uniqueList =
-        new ArrayList<String>(new HashSet<String>(list)); // Remove duplicates
+    List<String> uniqueList = new ArrayList<>(new HashSet<>(list)); // Remove duplicates
     uniqueList.sort(LidComparer::compare);
     int positiveCount = max(0, count);
 
     int fromIndex = max(0, uniqueList.size() - positiveCount);
     int toIndex = uniqueList.size();
 
-    return new ArrayList<String>(uniqueList.subList(fromIndex, toIndex));
+    return new ArrayList<>(uniqueList.subList(fromIndex, toIndex));
   }
 
   /**

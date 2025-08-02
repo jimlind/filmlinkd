@@ -17,6 +17,7 @@ import jimlind.filmlinkd.system.google.PubSubManager;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
+import jimlind.filmlinkd.system.letterboxd.model.LbMemberSummary;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -69,6 +70,10 @@ public class FollowHandler implements Handler {
     this.userFactory = userFactory;
   }
 
+  private static LbMemberSummary getOwner(LbLogEntry logEntry) {
+    return logEntry.getOwner();
+  }
+
   @Override
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
@@ -104,7 +109,7 @@ public class FollowHandler implements Handler {
       LbLogEntry logEntry = logEntryList.getFirst();
 
       Command command =
-          commandFactory.create(Command.Type.FOLLOW, logEntry.getOwner().id, logEntry.id);
+          commandFactory.create(Command.Type.FOLLOW, getOwner(logEntry).id, logEntry.id);
       this.pubSubManager.publishCommand(command);
 
       Message.PublishSource source = Message.PublishSource.Follow;

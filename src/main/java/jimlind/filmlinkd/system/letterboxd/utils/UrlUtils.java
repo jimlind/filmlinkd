@@ -4,7 +4,11 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 /** Utilities to translate URLs from Letterboxd to universally usable URLs. */
-public class UrlUtils {
+public final class UrlUtils {
+  private UrlUtils() {
+    throw new UnsupportedOperationException("Utility class cannot be instantiated");
+  }
+
   /**
    * Encodes a given URL to remove all possible problematic symbols.
    *

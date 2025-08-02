@@ -30,7 +30,8 @@ public class ContributorEmbedBuilder {
     embedBuilder = embedBuilderFactory.create();
   }
 
-  private static List<LbContributionStatistics> getContributions(LbContributorStatistics statisticList) {
+  private static List<LbContributionStatistics> getContributions(
+      LbContributorStatistics statisticList) {
     return statisticList.getContributions();
   }
 

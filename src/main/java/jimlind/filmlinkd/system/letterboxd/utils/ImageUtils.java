@@ -23,8 +23,10 @@ public class ImageUtils {
     emptyImage.width = 0;
 
     LbImageSize tallestImage =
-        image.sizes.stream()
-            .reduce(emptyImage, (result, next) -> next.height > result.height ? next : result);
+        image.getSizes().stream()
+            .reduce(
+                emptyImage,
+                (result, next) -> next.getHeight() > result.getHeight() ? next : result);
 
     return tallestImage.url;
   }

@@ -19,8 +19,8 @@ public class LinkUtils {
     }
 
     for (LbLink link : linkList) {
-      if (link.type == LbLinkType.letterboxd) {
-        return link.url;
+      if (link.getType() == LbLinkType.letterboxd) {
+        return link.getUrl();
       }
     }
 
