@@ -105,7 +105,7 @@ class LidComparerTest {
       ArrayList<String> initialList = new ArrayList<>();
       String newLid = "new1";
       int count = 5;
-      ArrayList<String> result = LidComparer.buildMostRecentList(initialList, newLid, count);
+      List<String> result = LidComparer.buildMostRecentList(initialList, newLid, count);
 
       assertEquals(1, result.size());
       assertTrue(result.contains(newLid));
@@ -121,12 +121,12 @@ class LidComparerTest {
     void build_addToExistingListAndTrim() {
       // LidComparer sort order: numbers, then lowercase, then uppercase
       // "c", "B", "a", "1" -> "1", "a", "c", "B"
-      ArrayList<String> initialList = new ArrayList<>(Arrays.asList("c", "B")); // Sorted: B, c
+      List<String> initialList = new ArrayList<>(Arrays.asList("c", "B")); // Sorted: B, c
       String newLid = "a"; // Add "a" -> B, c, a -> sorted by LidComparer: a, c, B
       int count = 2;
       // Expected after sort: "a", "c", "B"
       // Expected after trim (count 2, most recent): "c", "B"
-      ArrayList<String> result = LidComparer.buildMostRecentList(initialList, newLid, count);
+      List<String> result = LidComparer.buildMostRecentList(initialList, newLid, count);
 
       assertEquals(2, result.size());
       assertEquals(Arrays.asList("c", "B"), result);
@@ -142,7 +142,7 @@ class LidComparerTest {
       // Expected after add and unique: "a", "c", "B"
       // Expected after sort: "a", "c", "B" (LidComparer: a, c, B)
       // Expected after trim (count 3): "a", "c", "B"
-      ArrayList<String> result = LidComparer.buildMostRecentList(initialList, newLid, count);
+      List<String> result = LidComparer.buildMostRecentList(initialList, newLid, count);
 
       assertEquals(3, result.size());
       assertEquals(Arrays.asList("a", "c", "B"), result);
@@ -158,7 +158,7 @@ class LidComparerTest {
       // Unique: "z", "M", "1", "x", "5"
       // Sorted by LidComparer: "1", "5", "x", "z", "M"
       // Trimmed to 3 most recent: "x", "z", "M"
-      ArrayList<String> result = LidComparer.buildMostRecentList(initialList, newLid, count);
+      List<String> result = LidComparer.buildMostRecentList(initialList, newLid, count);
 
       assertEquals(3, result.size());
       assertEquals(Arrays.asList("x", "z", "M"), result);
@@ -174,7 +174,7 @@ class LidComparerTest {
       // Unique: "b", "A", "1"
       // Sorted by LidComparer: "1", "b", "A"
       // Trimmed to 5 most recent: "1", "b", "A"
-      ArrayList<String> result = LidComparer.buildMostRecentList(initialList, newLid, count);
+      List<String> result = LidComparer.buildMostRecentList(initialList, newLid, count);
 
       assertEquals(3, result.size());
       assertEquals(Arrays.asList("1", "b", "A"), result);
@@ -186,7 +186,7 @@ class LidComparerTest {
       ArrayList<String> initialList = new ArrayList<>(Arrays.asList("a", "b"));
       String newLid = "c";
       int count = 0;
-      ArrayList<String> result = LidComparer.buildMostRecentList(initialList, newLid, count);
+      List<String> result = LidComparer.buildMostRecentList(initialList, newLid, count);
 
       assertTrue(result.isEmpty());
     }
@@ -197,7 +197,7 @@ class LidComparerTest {
       ArrayList<String> initialList = new ArrayList<>(Arrays.asList("a", "b"));
       String newLid = "c";
       int count = -2;
-      ArrayList<String> result = LidComparer.buildMostRecentList(initialList, newLid, count);
+      List<String> result = LidComparer.buildMostRecentList(initialList, newLid, count);
 
       assertTrue(result.isEmpty());
     }
@@ -208,7 +208,7 @@ class LidComparerTest {
       ArrayList<String> initialList = new ArrayList<>(Collections.singletonList("a"));
       String newLid = "b";
       int count = 1;
-      ArrayList<String> result = LidComparer.buildMostRecentList(initialList, newLid, count);
+      List<String> result = LidComparer.buildMostRecentList(initialList, newLid, count);
 
       assertNotSame(
           initialList,
@@ -224,15 +224,14 @@ class LidComparerTest {
     @Test
     @DisplayName("should correctly sort with mixed case and numbers before trimming")
     void build_complexSortAndTrim() {
-      ArrayList<String> initialList =
-          new ArrayList<>(Arrays.asList("Movie99", "filmAb", "Action1"));
+      List<String> initialList = new ArrayList<>(Arrays.asList("Movie99", "filmAb", "Action1"));
       String newLid = "epicZ"; // lowercase 'e', uppercase 'Z'
       int count = 2;
       // Combined: "Movie99", "filmAb", "Action1", "epicZ"
       // Sorted: "epicZ", "filmAb", "Action1", "Movie99"
       // Trimmed: "Action1", "Movie99"
 
-      ArrayList<String> result = LidComparer.buildMostRecentList(initialList, newLid, count);
+      List<String> result = LidComparer.buildMostRecentList(initialList, newLid, count);
       List<String> expected = Arrays.asList("Action1", "Movie99");
 
       assertEquals(2, result.size());
