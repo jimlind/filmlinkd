@@ -11,6 +11,7 @@ import jimlind.filmlinkd.system.discord.stringbuilder.UserStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilmSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.model.LbMemberStatistics;
+import jimlind.filmlinkd.system.letterboxd.model.LbMemberStatisticsCounts;
 import jimlind.filmlinkd.system.letterboxd.model.LbPronoun;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -89,11 +90,10 @@ public class UserEmbedBuilder {
         .append(
             String.format(
                 "Logged films: %s total | %s this year",
-                memberStatistics.getCounts().watches,
-                memberStatistics.getCounts().filmsInDiaryThisYear));
+                getCounts().getWatches(), getCounts().getFilmsInDiaryThisYear()));
 
     String displayName = new UserStringBuilder().setUsername(member.displayName).build();
-    LbPronoun pronoun = member.getPronoun();
+    LbPronoun pronoun = getPronoun();
     String pronounString =
         String.join("/", pronoun.subjectPronoun, pronoun.objectPronoun, pronoun.possessivePronoun);
     embedBuilder.setTitle(displayName + " " + pronounString);
@@ -107,5 +107,13 @@ public class UserEmbedBuilder {
     embedList.add(embedBuilder.build());
 
     return embedList;
+  }
+
+  private LbPronoun getPronoun() {
+    return member.getPronoun();
+  }
+
+  private LbMemberStatisticsCounts getCounts() {
+    return memberStatistics.getCounts();
   }
 }

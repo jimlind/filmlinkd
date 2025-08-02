@@ -57,6 +57,10 @@ public class ScrapedResultChecker implements Runnable {
     this.totalShards = totalShards;
   }
 
+  private static Message.Entry getEntry(ScrapedResult scrapedResult) {
+    return scrapedResult.getEntry();
+  }
+
   @Override
   public void run() {
     ScrapedResult result = scrapedResultQueue.get(shardId, totalShards);
@@ -105,7 +109,7 @@ public class ScrapedResultChecker implements Runnable {
       net.dv8tion.jda.api.entities.Message jdaMessage,
       ScrapedResult scrapedResult,
       GuildMessageChannel channel) {
-    Message.Entry entry = scrapedResult.getEntry();
+    Message.Entry entry = getEntry(scrapedResult);
 
     // Log delay time between now and published time
     log.atInfo()
@@ -136,7 +140,7 @@ public class ScrapedResultChecker implements Runnable {
       if (!updateSuccess) {
         log.atError()
             .setMessage("Entry did not Update")
-            .addKeyValue("entry", scrapedResult.getEntry())
+            .addKeyValue("entry", getEntry(scrapedResult))
             .log();
       }
     }

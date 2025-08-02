@@ -7,6 +7,7 @@ import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.StarsStringBuilder;
 import jimlind.filmlinkd.system.discord.stringbuilder.UserStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LbDiaryDetails;
+import jimlind.filmlinkd.system.letterboxd.model.LbFilmSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
@@ -31,6 +32,10 @@ public class DiaryListEmbedBuilder {
   public DiaryListEmbedBuilder(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
     embedBuilder = embedBuilderFactory.create();
     this.imageUtils = imageUtils;
+  }
+
+  private static LbFilmSummary getFilm(LbLogEntry logEntry) {
+    return logEntry.getFilm();
   }
 
   /**
@@ -69,10 +74,10 @@ public class DiaryListEmbedBuilder {
 
     List<String> entryList = new ArrayList<>();
     for (LbLogEntry logEntry : logEntryList) {
+      LbFilmSummary film = getFilm(logEntry);
       String firstLine =
           String.format(
-              "[**%s (%s)**](https://boxd.it/%s)",
-              logEntry.getFilm().name, logEntry.getFilm().releaseYear, logEntry.id);
+              "[**%s (%s)**](https://boxd.it/%s)", film.name, film.releaseYear, logEntry.id);
       entryList.add(firstLine);
 
       StringBuilder secondLineBuilder = new StringBuilder(66);

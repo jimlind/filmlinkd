@@ -1,10 +1,13 @@
 package jimlind.filmlinkd.system.letterboxd.model;
 
+import lombok.Getter;
+
 /**
  * Implements the <a
  * href="https://api-docs.letterboxd.com/#/schemas/MemberStatisticsCounts">MemberStatisticsCounts</a>
  * schema model.
  */
+@Getter
 public class LbMemberStatisticsCounts {
   public int filmLikes;
   public int listLikes;

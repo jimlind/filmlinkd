@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
+import jimlind.filmlinkd.system.letterboxd.model.LbFilmSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LbListEntrySummary;
 import jimlind.filmlinkd.system.letterboxd.model.LbListSummary;
+import jimlind.filmlinkd.system.letterboxd.model.LbMemberSummary;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -30,6 +32,10 @@ public class ListEmbedBuilder {
   ListEmbedBuilder(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
     embedBuilder = embedBuilderFactory.create();
     this.imageUtils = imageUtils;
+  }
+
+  private static LbFilmSummary getFilm(LbListEntrySummary summary) {
+    return summary.getFilm();
   }
 
   /**
@@ -57,15 +63,13 @@ public class ListEmbedBuilder {
     embedBuilder.setTitle(listSummary.name);
     embedBuilder.setUrl(String.format("https://boxd.it/%s", listSummary.id));
     embedBuilder.setThumbnail(
-        imageUtils.getTallest(listSummary.getPreviewEntries().getFirst().getFilm().poster));
+        imageUtils.getTallest(getFilm(listSummary.getPreviewEntries().getFirst()).poster));
 
     StringBuilder descriptionText =
         new StringBuilder(
             String.format(
                 "**List of %s films curated by [%s](https://boxd.it/%s)**\n\n",
-                listSummary.filmCount,
-                listSummary.getOwner().displayName,
-                listSummary.getOwner().id));
+                listSummary.filmCount, getOwner().displayName, getOwner().id));
 
     Options options = OptionsBuilder.anOptions().withBr("\n").build();
     String listDescription = new CopyDown(options).convert(listSummary.description);
@@ -76,7 +80,7 @@ public class ListEmbedBuilder {
       descriptionText.append(
           String.format(
               "%s [%s (%s)](https://boxd.it/%s)\n",
-              prefix, summary.getFilm().name, summary.getFilm().releaseYear, summary.getFilm().id));
+              prefix, getFilm(summary).name, getFilm(summary).releaseYear, getFilm(summary).id));
     }
 
     String description =
@@ -87,5 +91,9 @@ public class ListEmbedBuilder {
     embedList.add(embedBuilder.build());
 
     return embedList;
+  }
+
+  private LbMemberSummary getOwner() {
+    return listSummary.getOwner();
   }
 }

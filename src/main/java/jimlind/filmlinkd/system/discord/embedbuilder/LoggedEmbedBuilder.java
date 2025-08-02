@@ -9,12 +9,16 @@ import java.util.List;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
 import jimlind.filmlinkd.system.discord.stringbuilder.StarsStringBuilder;
+import jimlind.filmlinkd.system.letterboxd.model.LbDiaryDetails;
+import jimlind.filmlinkd.system.letterboxd.model.LbFilmSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
+import jimlind.filmlinkd.system.letterboxd.model.LbMemberSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LbReview;
 import jimlind.filmlinkd.system.letterboxd.utils.DateUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -39,6 +43,19 @@ public class LoggedEmbedBuilder {
     this.dateUtils = dateUtils;
     this.imageUtils = imageUtils;
     embedBuilder = embedBuilderFactory.create();
+  }
+
+  @Nullable
+  private static LbDiaryDetails getDiaryDetails(LbLogEntry logEntry) {
+    return logEntry.getDiaryDetails();
+  }
+
+  private static LbFilmSummary getFilm(LbLogEntry firstLogEntry) {
+    return firstLogEntry.getFilm();
+  }
+
+  private static LbMemberSummary getOwner(LbLogEntry firstLogEntry) {
+    return firstLogEntry.getOwner();
   }
 
   /**
@@ -67,7 +84,7 @@ public class LoggedEmbedBuilder {
 
       if (logEntry.diaryDetails != null) {
         action = "Watched";
-        date = dateUtils.toPattern(logEntry.getDiaryDetails().diaryDate);
+        date = dateUtils.toPattern(getDiaryDetails(logEntry).diaryDate);
       }
 
       if (logEntry.review != null) {
@@ -79,7 +96,7 @@ public class LoggedEmbedBuilder {
 
       String stars = new StarsStringBuilder().setStarCount(logEntry.rating).build();
       String rewatch =
-          logEntry.getDiaryDetails() != null && logEntry.getDiaryDetails().isRewatch()
+          getDiaryDetails(logEntry) != null && getDiaryDetails(logEntry).isRewatch()
               ? " <:r:851135667546488903>"
               : "";
       String like = logEntry.like ? " <:l:851138401557676073>" : "";
@@ -94,11 +111,11 @@ public class LoggedEmbedBuilder {
     String title =
         String.format(
             "%s's Recent Entries for %s (%s)\n",
-            firstLogEntry.getOwner().displayName,
-            firstLogEntry.getFilm().name,
-            firstLogEntry.getFilm().releaseYear);
+            getOwner(firstLogEntry).displayName,
+            getFilm(firstLogEntry).name,
+            getFilm(firstLogEntry).releaseYear);
     embedBuilder.setTitle(title);
-    embedBuilder.setThumbnail(imageUtils.getTallest(firstLogEntry.getFilm().poster));
+    embedBuilder.setThumbnail(imageUtils.getTallest(getFilm(firstLogEntry).poster));
     embedBuilder.setDescription(
         new DescriptionStringBuilder().setDescriptionText(description.toString()).build());
 

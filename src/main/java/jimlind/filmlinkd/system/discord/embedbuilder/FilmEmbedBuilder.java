@@ -38,6 +38,10 @@ public class FilmEmbedBuilder {
     this.imageUtils = imageUtils;
   }
 
+  private static LbFilmStatisticsCounts getStatisticsCounts(CombinedLbFilmModel filmCombination) {
+    return filmCombination.getStatisticsCounts();
+  }
+
   /**
    * Setter for the filmCombination attribute.
    *
@@ -60,7 +64,7 @@ public class FilmEmbedBuilder {
       return new ArrayList<>();
     }
 
-    LbFilm film = filmCombination.getFilm();
+    LbFilm film = getFilm();
 
     String releaseYear =
         film.getReleaseYear() > 0 ? String.format(" (%s)", film.getReleaseYear()) : "";
@@ -103,6 +107,10 @@ public class FilmEmbedBuilder {
     return embedList;
   }
 
+  private LbFilm getFilm() {
+    return filmCombination.getFilm();
+  }
+
   private String createGenre(LbFilm film) {
     List<LbGenre> genres = extractGenres(film);
     if (!genres.isEmpty()) {
@@ -130,7 +138,7 @@ public class FilmEmbedBuilder {
   }
 
   private String createStatistics(CombinedLbFilmModel filmCombination) {
-    LbFilmStatisticsCounts counts = filmCombination.getStatisticsCounts();
+    LbFilmStatisticsCounts counts = getStatisticsCounts(filmCombination);
 
     return ":eyes: "
         + new CountStringBuilder().setCount(counts.watches).build()

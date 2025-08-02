@@ -10,6 +10,7 @@ import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LbContributionStatistics;
 import jimlind.filmlinkd.system.letterboxd.model.LbContributor;
+import jimlind.filmlinkd.system.letterboxd.model.LbContributorStatistics;
 import jimlind.filmlinkd.system.letterboxd.model.LbLink;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -27,6 +28,10 @@ public class ContributorEmbedBuilder {
   @Inject
   public ContributorEmbedBuilder(EmbedBuilderFactory embedBuilderFactory) {
     embedBuilder = embedBuilderFactory.create();
+  }
+
+  private static List<LbContributionStatistics> getContributions(LbContributorStatistics statisticList) {
+    return statisticList.getContributions();
   }
 
   /**
@@ -60,8 +65,10 @@ public class ContributorEmbedBuilder {
     }
     String joinedLinkStrings = String.join(" | ", linkStrings);
 
+    LbContributorStatistics statisticList = getStatistics();
+    List<LbContributionStatistics> contributionList = getContributions(statisticList);
     List<String> contributionStrings = new LinkedList<>();
-    for (LbContributionStatistics contribution : contributor.getStatistics().getContributions()) {
+    for (LbContributionStatistics contribution : contributionList) {
       String text = String.format("**%s:** %s", contribution.type, contribution.filmCount);
       contributionStrings.add(text);
     }
@@ -80,5 +87,9 @@ public class ContributorEmbedBuilder {
     embedList.add(embedBuilder.build());
 
     return embedList;
+  }
+
+  private LbContributorStatistics getStatistics() {
+    return contributor.getStatistics();
   }
 }

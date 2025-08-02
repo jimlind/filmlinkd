@@ -5,9 +5,12 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Locale;
+import lombok.extern.slf4j.Slf4j;
 
 /** Utilities to translate Letterboxd date strings to other formats. */
+@Slf4j
 public class DateUtils {
 
   /**
@@ -17,18 +20,22 @@ public class DateUtils {
    * @return A timestamp in milliseconds
    */
   public long toMilliseconds(String dateString) {
-    try {
-      LocalDate date = LocalDate.parse(dateString);
-      return date.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
-    } catch (Exception e) {
-      // Do nothing
+    if (dateString == null || dateString.isEmpty()) {
+      return 0L;
     }
 
     try {
-      ZonedDateTime date = ZonedDateTime.parse(dateString);
-      return date.toInstant().toEpochMilli();
-    } catch (Exception e) {
-      // Do nothing
+      // Try parsing as LocalDate first
+      LocalDate localDate = LocalDate.parse(dateString);
+      return localDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
+    } catch (DateTimeParseException e1) {
+      try {
+        // Try parsing as ZonedDateTime
+        ZonedDateTime zonedDate = ZonedDateTime.parse(dateString);
+        return zonedDate.toInstant().toEpochMilli();
+      } catch (DateTimeParseException e2) {
+        log.atWarn().setMessage("Failed to parse date string: {}").addArgument(dateString).log();
+      }
     }
 
     return 0L;
