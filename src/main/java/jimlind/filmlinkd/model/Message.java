@@ -68,10 +68,10 @@ public class Message {
     public long watchedDate;
     public String image;
     public float starCount;
-    public Boolean rewatch;
-    public Boolean liked;
-    public Boolean containsSpoilers;
-    public Boolean adult;
+    public boolean rewatch;
+    public boolean liked;
+    public boolean containsSpoilers;
+    public boolean adult;
     public String review;
     public long updatedDate;
     public PublishSource publishSource;

@@ -83,6 +83,12 @@ public class DiaryEntryEmbedBuilder {
     String profileUrl = "https://letterboxd.com/%s/".formatted(user.getUserName());
     embedBuilder.setAuthor(authorTitle, profileUrl, user.getImage());
 
+    String footerText = user.getFooterText();
+    String footerIcon = user.getFooterIcon();
+    if (!footerText.isBlank() && !footerIcon.isBlank()) {
+      embedBuilder.setFooter(footerText, footerIcon);
+    }
+
     String embedTitle = createEmbedTitle(entry);
     embedBuilder.setTitle(embedTitle, extractLink(entry));
 
@@ -90,12 +96,6 @@ public class DiaryEntryEmbedBuilder {
     String reviewText = createReviewText(entry);
     String rule = reviewTitle.length() > 1 && reviewText.length() > 1 ? "┈".repeat(12) + "\n" : "";
     embedBuilder.setDescription(reviewTitle + rule + reviewText);
-
-    // If there is footer data with actual data then include it.
-    User.Footer footer = extractFooter();
-    if (footer != null && !footer.text.isBlank()) {
-      embedBuilder.setFooter(footer.text, footer.icon);
-    }
 
     // If there is an image then include it
     String image = extractImage(entry);
@@ -115,31 +115,31 @@ public class DiaryEntryEmbedBuilder {
   }
 
   private String createEmbedTitle(Message.Entry entry) {
-    String adult = entry.adult ? ":underage: " : "";
-    String year = entry.filmYear != 0 ? "(" + entry.filmYear + ")" : "";
+    String adult = entry.isAdult() ? ":underage: " : "";
+    String year = entry.getFilmYear() != 0 ? "(" + entry.getFilmYear() + ")" : "";
 
-    return adult + entry.filmTitle + " " + year;
+    return adult + entry.getFilmTitle() + " " + year;
   }
 
   private String createReviewTitle(Message.Entry entry) {
     StringBuilder reviewTitleBuilder = new StringBuilder(48);
-    if (entry.watchedDate != 0) {
+    if (entry.getWatchedDate() != 0) {
       String pattern =
-          Instant.now().toEpochMilli() - entry.watchedDate < 5000000000L
+          Instant.now().toEpochMilli() - entry.getWatchedDate() < 5000000000L
               ? "**MMM dd**"
               : "**MMM dd uuu**";
       reviewTitleBuilder.append(
-          LocalDateTime.ofEpochSecond(entry.watchedDate / 1000, 0, ZoneOffset.UTC)
+          LocalDateTime.ofEpochSecond(entry.getWatchedDate() / 1000, 0, ZoneOffset.UTC)
               .format(DateTimeFormatter.ofPattern(pattern, Locale.ENGLISH)));
     }
 
-    if (entry.starCount > 0) {
-      reviewTitleBuilder.append(starsStringBuilder.setStarCount(entry.starCount).build());
+    if (entry.getStarCount() > 0) {
+      reviewTitleBuilder.append(starsStringBuilder.setStarCount(entry.getStarCount()).build());
     }
-    if (entry.rewatch != null && entry.rewatch) {
+    if (entry.isRewatch()) {
       reviewTitleBuilder.append(" <:r:851135667546488903>");
     }
-    if (entry.liked != null && entry.liked) {
+    if (entry.isLiked()) {
       reviewTitleBuilder.append(" <:l:851138401557676073>");
     }
     String reviewTitle = reviewTitleBuilder.toString();
@@ -147,14 +147,14 @@ public class DiaryEntryEmbedBuilder {
   }
 
   private String createReviewText(Message.Entry entry) {
-    String reviewText = entry.review;
+    String reviewText = entry.getReview();
     if (reviewText.length() > REVIEW_TEXT_MAX_LENGTH) {
       reviewText = reviewText.substring(0, REVIEW_TEXT_MAX_LENGTH).trim();
     }
     Document reviewDocument = Jsoup.parseBodyFragment(reviewText);
     Options options = OptionsBuilder.anOptions().withBr("\n").build();
     reviewText = new CopyDown(options).convert(reviewDocument.body().toString());
-    if (entry.review.length() > REVIEW_TEXT_MAX_LENGTH) {
+    if (entry.getReview().length() > REVIEW_TEXT_MAX_LENGTH) {
       reviewText += "...";
     }
 
@@ -163,13 +163,6 @@ public class DiaryEntryEmbedBuilder {
     reviewText = reviewText.replaceAll("[\r\n]+", "\n");
 
     return reviewText;
-  }
-
-  private User.Footer extractFooter() {
-    if (user == null) {
-      return null;
-    }
-    return user.getFooter();
   }
 
   private String extractImage(Message.Entry entry) {

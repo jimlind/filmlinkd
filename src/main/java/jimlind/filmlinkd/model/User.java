@@ -58,6 +58,24 @@ public class User {
   }
 
   /**
+   * Gets the footer text from the user and ensures a string is always returned.
+   *
+   * @return The string of the footer text
+   */
+  public String getFooterText() {
+    return (footer == null || footer.text == null || footer.text.isBlank()) ? "" : footer.text;
+  }
+
+  /**
+   * Gets the footer icon from the user and ensures a string is always returned.
+   *
+   * @return The string of the footer icon
+   */
+  public String getFooterIcon() {
+    return (footer == null || footer.icon == null || footer.icon.isBlank()) ? "" : footer.icon;
+  }
+
+  /**
    * Creates the user data as generic object matching the same structure so that Firestore can
    * process it natively.
    *
