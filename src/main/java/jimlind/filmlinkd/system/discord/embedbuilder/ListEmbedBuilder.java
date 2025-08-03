@@ -61,7 +61,7 @@ public class ListEmbedBuilder {
     }
 
     embedBuilder.setTitle(listSummary.name);
-    embedBuilder.setUrl(String.format("https://boxd.it/%s", listSummary.id));
+    embedBuilder.setUrl("https://boxd.it/" + listSummary.getId());
     embedBuilder.setThumbnail(
         imageUtils.getTallest(getFilm(listSummary.getPreviewEntries().getFirst()).poster));
 
@@ -76,7 +76,7 @@ public class ListEmbedBuilder {
     descriptionText.append(listDescription.replaceAll("[\r\n]+", "\n")).append('\n');
 
     for (LbListEntrySummary summary : listSummary.getPreviewEntries()) {
-      String prefix = summary.rank != 0 ? "1." : "-";
+      String prefix = summary.getRank() != 0 ? "1." : "-";
       descriptionText.append(
           String.format(
               "%s [%s (%s)](https://boxd.it/%s)\n",

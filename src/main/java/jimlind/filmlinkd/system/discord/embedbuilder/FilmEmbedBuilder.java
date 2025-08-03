@@ -68,7 +68,7 @@ public class FilmEmbedBuilder {
 
     String releaseYear = film.getReleaseYear() > 0 ? " (" + film.getReleaseYear() + ")" : "";
     embedBuilder.setTitle(film.getName() + releaseYear);
-    Object[] urlArgs = {film.id};
+    Object[] urlArgs = {film.getId()};
     embedBuilder.setUrl("https://boxd.it/%s".formatted(urlArgs));
     String imageUrl = imageUtils.getTallest(film.getPoster());
     embedBuilder.setThumbnail(imageUrl.isBlank() ? null : imageUrl);
@@ -126,7 +126,7 @@ public class FilmEmbedBuilder {
       metadata.add(primaryLanguage.name);
     }
     if (film.runTime > 0) {
-      metadata.add(new RuntimeStringBuilder().setRuntime(film.runTime).build());
+      metadata.add(new RuntimeStringBuilder().setRuntime(film.getRunTime()).build());
     }
 
     String metadataString = "";
