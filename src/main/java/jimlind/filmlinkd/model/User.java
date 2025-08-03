@@ -88,6 +88,8 @@ public class User {
   }
 
   /** Storage object for how channelIds are stored in Firestore. */
+  @Getter
+  @Setter
   public static class Channel {
     public String channelId;
   }

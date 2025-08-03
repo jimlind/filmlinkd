@@ -61,14 +61,14 @@ public class FilmApi {
     }
 
     // Load film details
-    String filmDetailsPath = String.format("film/%s", filmSummary.id);
+    String filmDetailsPath = "film/" + filmSummary.getId();
     LbFilm filmDetailsResponse = this.client.getAuthorized(filmDetailsPath, LbFilm.class);
     if (filmDetailsResponse == null) {
       return null;
     }
 
     // Load film statistics
-    String filmStatisticsPath = String.format("film/%s/statistics", filmSummary.id);
+    String filmStatisticsPath = "film/" + filmSummary.getId() + "/statistics";
     LbFilmStatistics filmStatisticsResponse =
         this.client.getAuthorized(filmStatisticsPath, LbFilmStatistics.class);
     if (filmStatisticsResponse == null) {

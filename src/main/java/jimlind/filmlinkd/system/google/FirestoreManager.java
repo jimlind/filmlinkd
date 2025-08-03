@@ -184,7 +184,7 @@ public class FirestoreManager {
     }
 
     User.Channel newChannel = new User.Channel();
-    newChannel.channelId = channelId;
+    newChannel.setChannelId(channelId);
     user.getChannelList().add(newChannel);
 
     // Perform the update
@@ -255,9 +255,9 @@ public class FirestoreManager {
       return false;
     }
 
-    user.displayName = member.displayName;
-    user.image = imageUtils.getTallest(member.avatar);
-    user.userName = member.username;
+    user.setDisplayName(member.getDisplayName());
+    user.setImage(imageUtils.getTallest(member.getAvatar()));
+    user.setUserName(member.getUsername());
 
     // Perform the update
     // TODO: Check what sort of exception I can actually get out of here.
@@ -318,7 +318,7 @@ public class FirestoreManager {
     updatedPrevious.setLid(user.getMostRecentPrevious());
 
     user.setPrevious(updatedPrevious);
-    user.updated = Instant.now().toEpochMilli(); // Only used for debugging
+    user.setUpdated(Instant.now().toEpochMilli()); // Only used for debugging
 
     // Perform the update
     // TODO: Check what sort of exception I can actually get out of here.
