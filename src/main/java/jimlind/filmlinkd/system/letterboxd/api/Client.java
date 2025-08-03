@@ -19,6 +19,8 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import jimlind.filmlinkd.config.AppConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.client.utils.URIBuilder;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The basis for the rest of the Letterboxd API calls. Contains all the logic to make calls that
@@ -49,7 +51,7 @@ public class Client {
    * @param inputClass The datatype that is returned.
    * @return Returns the datatype as defined by the inputs.
    */
-  public <T> T get(String path, Class<T> inputClass) {
+  public @Nullable <T> T get(String path, Class<T> inputClass) {
     return this.request(path, "", inputClass);
   }
 
@@ -62,23 +64,28 @@ public class Client {
    * @param inputClass The datatype that is returned.
    * @return Returns the datatype as defined by the inputs.
    */
-  public <T> T getAuthorized(String path, Class<T> inputClass) {
+  public @Nullable <T> T getAuthorized(String path, Class<T> inputClass) {
     String key = appConfig.getLetterboxdApiKey();
     String nonce = String.valueOf(java.util.UUID.randomUUID());
     String now = String.valueOf(Instant.now().getEpochSecond());
 
-    // TODO: This feels like a terrible way to build a URL string
-    // The actual JAVA URI Classes probably can do it better
+    try {
+      URI uri =
+          new URIBuilder(BASE_URL + path)
+              .addParameter("apikey", key)
+              .addParameter("nonce", nonce)
+              .addParameter("timestamp", now)
+              .build();
+      String authorization = "Signature " + this.buildSignature("GET", uri.toString());
 
-    String symbol = path.contains("?") ? "&" : "?";
-    String uri = path + symbol + String.format("apikey=%s&nonce=%s&timestamp=%s", key, nonce, now);
-    String url = BASE_URL + uri;
-    String authorization = "Signature " + this.buildSignature("GET", url);
-
-    return this.request(uri, authorization, inputClass);
+      return this.request(uri.toString(), authorization, inputClass);
+    } catch (URISyntaxException e) {
+      log.atError().setMessage("Failed to build URI").addKeyValue("path", path).log();
+      return null;
+    }
   }
 
-  private <T> T request(String uri, String authorization, Class<T> inputClass) {
+  private @Nullable <T> T request(String uri, String authorization, Class<T> inputClass) {
     URI requestUri;
     try {
       requestUri = new URI(BASE_URL + uri);
