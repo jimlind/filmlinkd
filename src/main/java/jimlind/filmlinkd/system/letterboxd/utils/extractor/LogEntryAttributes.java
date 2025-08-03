@@ -52,7 +52,7 @@ public final class LogEntryAttributes {
    */
   public static boolean extractSpoilerStatus(LbLogEntry logEntry) {
     LbReview review = getLbReview(logEntry);
-    return review != null && review.containsSpoilers;
+    return review != null && review.isContainsSpoilers();
   }
 
   /**
@@ -66,7 +66,7 @@ public final class LogEntryAttributes {
     if (review == null) {
       return "";
     }
-    if (review.text.isBlank()) {
+    if (review.getText().isBlank()) {
       return "";
     }
     return review.toString();

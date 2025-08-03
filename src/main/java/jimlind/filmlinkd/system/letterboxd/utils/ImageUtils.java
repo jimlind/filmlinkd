@@ -1,5 +1,6 @@
 package jimlind.filmlinkd.system.letterboxd.utils;
 
+import com.google.gson.Gson;
 import jimlind.filmlinkd.system.letterboxd.model.LbImage;
 import jimlind.filmlinkd.system.letterboxd.model.LbImageSize;
 
@@ -17,11 +18,8 @@ public class ImageUtils {
       return "";
     }
 
-    LbImageSize emptyImage = new LbImageSize();
-    emptyImage.url = "";
-    emptyImage.height = 0;
-    emptyImage.width = 0;
-
+    String json = "{ \"url\": \"\", \"height\": 0, \"width\": 0 }";
+    LbImageSize emptyImage = new Gson().fromJson(json, LbImageSize.class);
     LbImageSize tallestImage =
         image.getSizes().stream()
             .reduce(
