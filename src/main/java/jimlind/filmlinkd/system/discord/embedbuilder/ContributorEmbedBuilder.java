@@ -57,7 +57,8 @@ public class ContributorEmbedBuilder {
       return new ArrayList<>();
     }
 
-    embedBuilder.setTitle(contributor.name, "https://boxd.it/%s".formatted(contributor.id));
+    Object[] titleArgs = {contributor.id};
+    embedBuilder.setTitle(contributor.name, "https://boxd.it/%s".formatted(titleArgs));
 
     List<String> linkStrings = new LinkedList<>();
     for (LbLink link : contributor.getLinks()) {
