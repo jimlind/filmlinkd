@@ -1,6 +1,7 @@
 package jimlind.filmlinkd.runnable;
 
 import com.google.inject.Inject;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,20 +50,15 @@ public class GeneralScraper implements Runnable {
   @Override
   @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
   public void run() {
+    long current = Instant.now().toEpochMilli();
     Message.PublishSource source = Message.PublishSource.Normal;
     List<Map.Entry<String, String>> userPage = generalUserCache.getNextPage();
     for (Map.Entry<String, String> entry : userPage) {
-
       List<String> publishedEntryIdList = new ArrayList<>();
       List<LbLogEntry> logEntryList = logEntriesApi.getRecentForUser(entry.getKey(), 10);
 
-      // TODO:
-      //      // Filter out entries that are less than 3 minutes old
-      //      if (Date.now() - Date.parse(logEntry.whenCreated) < 180000) {
-      //        return false;
-      //      }
-
       logEntryList.stream()
+          .filter(logEntry -> current - Long.parseLong(logEntry.getWhenCreated()) >= 180000)
           .filter(logEntry -> 0 < LidComparer.compare(logEntry.id, entry.getValue()))
           .forEach(
               logEntry -> {
