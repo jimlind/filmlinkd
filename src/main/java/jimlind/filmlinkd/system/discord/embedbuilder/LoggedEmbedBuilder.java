@@ -99,7 +99,7 @@ public class LoggedEmbedBuilder {
           getDiaryDetails(logEntry) != null && getDiaryDetails(logEntry).isRewatch()
               ? " <:r:851135667546488903>"
               : "";
-      String like = logEntry.like ? " <:l:851138401557676073>" : "";
+      String like = logEntry.isLike() ? " <:l:851138401557676073>" : "";
       description.append(stars).append(rewatch).append(like).append('\n');
 
       if (logEntry.review != null) {
@@ -126,18 +126,18 @@ public class LoggedEmbedBuilder {
   }
 
   private String formatReview(LbReview review) {
-    String reviewText = review.text;
+    String reviewText = review.getText();
     if (reviewText.length() > MAX_REVIEW_LENGTH) {
       reviewText = reviewText.substring(0, MAX_REVIEW_LENGTH).trim();
     }
     Document reviewDocument = Jsoup.parseBodyFragment(reviewText);
     Options options = OptionsBuilder.anOptions().withBr("\n").build();
     reviewText = new CopyDown(options).convert(reviewDocument.body().toString());
-    if (review.text.length() > MAX_REVIEW_LENGTH) {
+    if (review.getText().length() > MAX_REVIEW_LENGTH) {
       reviewText += "...";
     }
 
-    reviewText = review.containsSpoilers ? "||" + reviewText + "||" : reviewText;
+    reviewText = review.isContainsSpoilers() ? "||" + reviewText + "||" : reviewText;
     reviewText = reviewText.replaceAll("[\r\n]+", "\n");
 
     return reviewText;

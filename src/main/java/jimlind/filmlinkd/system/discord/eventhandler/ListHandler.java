@@ -57,7 +57,8 @@ public class ListHandler implements Handler {
     }
 
     for (LbListSummary item : listsResponse.getItems()) {
-      if (cleanListName.equals(item.name.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]+", ""))) {
+      if (cleanListName.equals(
+          item.getName().toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]+", ""))) {
         foundList = item;
       }
     }

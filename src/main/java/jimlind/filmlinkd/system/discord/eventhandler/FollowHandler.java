@@ -117,7 +117,7 @@ public class FollowHandler implements Handler {
       // Only add the channel if we know that the log entry has already been posted
       // Including a channel id is a signal to the MessageReceiver to only send to one channel
       if (user != null && LidComparer.compare(logEntry.id, user.getMostRecentPrevious()) <= 0) {
-        message.channelId = channelId;
+        message.setChannelId(channelId);
       }
       this.pubSubManager.publishLogEntry(message);
     }

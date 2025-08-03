@@ -69,12 +69,12 @@ public class UserEmbedBuilder {
       return new ArrayList<>();
     }
 
-    StringBuilder descriptionBuilder = new StringBuilder();
+    StringBuilder descriptionBuilder = new StringBuilder(22);
     if (member.location != null) {
-      descriptionBuilder.append(String.format("***%s***\n", member.location));
+      descriptionBuilder.append("***").append(member.getLocation()).append("***\n");
     }
 
-    if (!member.bio.isBlank()) {
+    if (!member.getBio().isBlank()) {
       descriptionBuilder
           .append(new TextStringBuilder().setHtmlText(member.bio).build(1000))
           .append("\n------------\n");
@@ -98,7 +98,7 @@ public class UserEmbedBuilder {
         String.join("/", pronoun.subjectPronoun, pronoun.objectPronoun, pronoun.possessivePronoun);
     embedBuilder.setTitle(displayName + " " + pronounString);
 
-    embedBuilder.setUrl(String.format("https://boxd.it/%s", member.id));
+    embedBuilder.setUrl("https://boxd.it/" + member.getId());
     embedBuilder.setThumbnail(imageUtils.getTallest(member.avatar));
     embedBuilder.setDescription(
         new DescriptionStringBuilder().setDescriptionText(descriptionBuilder.toString()).build());

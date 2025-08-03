@@ -125,7 +125,7 @@ public class FilmEmbedBuilder {
     if (primaryLanguage != null) {
       metadata.add(primaryLanguage.name);
     }
-    if (film.runTime > 0) {
+    if (film.getRunTime() > 0) {
       metadata.add(new RuntimeStringBuilder().setRuntime(film.getRunTime()).build());
     }
 
