@@ -106,7 +106,8 @@ public class DiaryListEmbedBuilder {
         String.format(
             "Recent Diary Activity from %s",
             new UserStringBuilder().setUsername(member.displayName).build()));
-    embedBuilder.setUrl("https://boxd.it/%s" + member.id);
+    Object[] urlArgs = {member.id};
+    embedBuilder.setUrl("https://boxd.it/%s".formatted(urlArgs));
     embedBuilder.setThumbnail(imageUtils.getTallest(member.avatar));
 
     List<MessageEmbed> embedList = new ArrayList<>();

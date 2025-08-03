@@ -14,7 +14,6 @@ import jimlind.filmlinkd.system.discord.stringbuilder.RuntimeStringBuilder;
 import jimlind.filmlinkd.system.discord.stringbuilder.StarsStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilm;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilmStatisticsCounts;
-import jimlind.filmlinkd.system.letterboxd.model.LbFilmSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LbGenre;
 import jimlind.filmlinkd.system.letterboxd.model.LbLanguage;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
@@ -69,7 +68,8 @@ public class FilmEmbedBuilder {
 
     String releaseYear = film.getReleaseYear() > 0 ? " (" + film.getReleaseYear() + ")" : "";
     embedBuilder.setTitle(film.getName() + releaseYear);
-    embedBuilder.setUrl("https://boxd.it/%s" + film.id);
+    Object[] urlArgs = {film.id};
+    embedBuilder.setUrl("https://boxd.it/%s".formatted(urlArgs));
     String imageUrl = imageUtils.getTallest(film.getPoster());
     embedBuilder.setThumbnail(imageUrl.isBlank() ? null : imageUrl);
 
@@ -80,11 +80,10 @@ public class FilmEmbedBuilder {
     }
 
     // Add rating to description
-    LbFilmSummary summary = extractFilmSummary();
-    if (summary.rating > 0) {
-      String stars = new StarsStringBuilder().setStarCount(summary.rating).build();
+    if (filmCombination.getRating() > 0) {
+      String stars = new StarsStringBuilder().setStarCount(filmCombination.getRating()).build();
       DecimalFormat formatter = new DecimalFormat("0.00");
-      String rating = formatter.format(summary.rating);
+      String rating = formatter.format(filmCombination.getRating());
       descriptionBuilder.append(stars).append(' ').append(rating).append('\n');
     }
 
@@ -150,10 +149,6 @@ public class FilmEmbedBuilder {
         + ":speech_balloon: "
         + new CountStringBuilder().setCount(counts.reviews).build()
         + "\n";
-  }
-
-  private LbFilmSummary extractFilmSummary() {
-    return filmCombination.filmSummary;
   }
 
   private List<LbGenre> extractGenres(LbFilm film) {

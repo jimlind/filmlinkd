@@ -15,6 +15,10 @@ public class CombinedLbFilmModel {
   public LbFilmStatistics filmStatistics;
   public LbFilmSummary filmSummary;
 
+  public float getRating() {
+    return filmSummary.rating;
+  }
+
   public LbFilmStatisticsCounts getStatisticsCounts() {
     return filmStatistics.counts;
   }
