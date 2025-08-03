@@ -43,12 +43,12 @@ public class UserFactory {
     User user = new User();
 
     user.setId(member.id);
-    user.setCreated(0L); // TODO: Should this get filled?
-    user.setChecked(0L); // TODO: Should this get filled?
+    user.setCreated(0L);
+    user.setChecked(0L);
     user.setDisplayName(member.displayName);
     user.setImage(imageUtils.getTallest(member.avatar));
     user.setLetterboxdId(member.id);
-    user.setUpdated(0L); // TODO: Should this get filled?
+    user.setUpdated(0L);
     user.setUserName(MemberAttributes.extractLowercaseUsername(member));
 
     return fillDefaults(user);
