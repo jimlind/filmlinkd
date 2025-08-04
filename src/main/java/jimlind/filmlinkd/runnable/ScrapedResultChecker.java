@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
+import net.dv8tion.jda.api.sharding.ShardManager;
 
 /**
  * This is a scheduled task that checks the ScrapedResultQueue and posts the appropriate messages to
@@ -72,8 +73,9 @@ public class ScrapedResultChecker implements Runnable {
     User user = result.user;
 
     List<MessageEmbed> embedList = diaryEntryEmbedBuilder.setMessage(message).setUser(user).build();
+    ShardManager shardManager = shardManagerStorage.get();
+    JDA shard = (shardManager != null) ? shardManager.getShardById(shardId) : null;
 
-    JDA shard = shardManagerStorage.get().getShardById(shardId);
     if (shard == null) {
       log.atError().setMessage("Unable to Load Shard").addKeyValue("shard", shardId).log();
       return;
