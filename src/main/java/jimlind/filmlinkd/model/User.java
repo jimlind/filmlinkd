@@ -30,7 +30,7 @@ public class User {
   /**
    * Build a predictable ArrayList of channelIds strings from chaotic data in this model.
    *
-   * @return A list of channelIds as strings. The contents are numeric but we don't use these for
+   * @return A list of channelIds as strings. The contents are numeric, but we don't use these for
    *     calculations.
    */
   public List<String> getChannelIdList() {
