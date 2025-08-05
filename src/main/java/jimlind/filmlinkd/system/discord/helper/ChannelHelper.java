@@ -41,6 +41,6 @@ public class ChannelHelper {
       return "";
     }
 
-    return channelList.get(0).getId();
+    return channelList.getFirst().getId();
   }
 }

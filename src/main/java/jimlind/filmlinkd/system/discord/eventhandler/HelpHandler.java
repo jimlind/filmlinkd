@@ -17,6 +17,7 @@ import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.cache.CacheView;
+import org.jetbrains.annotations.Nullable;
 
 /** Handles the /help command to show a help message and allow users to test the bot. */
 @Slf4j
@@ -51,12 +52,12 @@ public class HelpHandler implements Handler {
 
     JDA jda = extractJda(event);
     ShardManager shardManager = extractShardManager(jda);
-    CacheView<Guild> instanceGuildeCache = extractGuildCache(jda);
-    CacheView<Guild> shardedGuildeCache = extractGuildCache(shardManager);
+    CacheView<Guild> instanceGuildCache = extractGuildCache(jda);
+    CacheView<Guild> shardedGuildCache = extractGuildCache(shardManager);
 
     long userCount = firestoreManager.getUserCount();
-    long guildCount = shardManager != null ? shardedGuildeCache.size() : instanceGuildeCache.size();
-    List<MessageEmbed> messageEmbedList = helpEmbedBuilder.create(userCount, guildCount);
+    CacheView<Guild> guild = shardedGuildCache != null ? shardedGuildCache : instanceGuildCache;
+    List<MessageEmbed> messageEmbedList = helpEmbedBuilder.create(userCount, guild.size());
 
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
@@ -88,14 +89,19 @@ public class HelpHandler implements Handler {
     return jda.getGuildCache();
   }
 
+  @Nullable
   private CacheView<Guild> extractGuildCache(ShardManager shardManager) {
-    return shardManager.getGuildCache();
+    if (shardManager != null) {
+      return shardManager.getGuildCache();
+    }
+    return null;
   }
 
   private JDA extractJda(SlashCommandInteractionEvent event) {
     return event.getJDA();
   }
 
+  @Nullable
   private ShardManager extractShardManager(JDA jda) {
     return jda.getShardManager();
   }

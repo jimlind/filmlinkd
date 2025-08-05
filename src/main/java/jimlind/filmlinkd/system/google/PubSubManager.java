@@ -96,14 +96,15 @@ public class PubSubManager {
 
     if (logEntryPublisher != null) {
       if (log.isInfoEnabled()) {
-        log.info("Stopping PubSub Publisher on {}", logEntryPublisher.getTopicNameString());
+        log.info(
+            "Stopping Log Entry PubSub Publisher on {}", logEntryPublisher.getTopicNameString());
       }
       logEntryPublisher.shutdown();
     }
 
     if (commandPublisher != null) {
       if (log.isInfoEnabled()) {
-        log.info("Stopping PubSub Publisher on {}", commandPublisher.getTopicNameString());
+        log.info("Stopping Command PubSub Publisher on {}", commandPublisher.getTopicNameString());
       }
       commandPublisher.shutdown();
     }

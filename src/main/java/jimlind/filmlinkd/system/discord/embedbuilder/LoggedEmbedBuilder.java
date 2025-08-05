@@ -82,9 +82,10 @@ public class LoggedEmbedBuilder {
       String action = "Logged";
       String date = dateUtils.toPattern(logEntry.whenCreated);
 
-      if (logEntry.diaryDetails != null) {
+      LbDiaryDetails diaryDetails = getDiaryDetails(logEntry);
+      if (diaryDetails != null) {
         action = "Watched";
-        date = dateUtils.toPattern(getDiaryDetails(logEntry).diaryDate);
+        date = dateUtils.toPattern(diaryDetails.diaryDate);
       }
 
       if (logEntry.review != null) {
@@ -96,9 +97,7 @@ public class LoggedEmbedBuilder {
 
       String stars = new StarsStringBuilder().setStarCount(logEntry.rating).build();
       String rewatch =
-          getDiaryDetails(logEntry) != null && getDiaryDetails(logEntry).isRewatch()
-              ? " <:r:851135667546488903>"
-              : "";
+          diaryDetails != null && diaryDetails.isRewatch() ? " <:r:851135667546488903>" : "";
       String like = logEntry.isLike() ? " <:l:851138401557676073>" : "";
       description.append(stars).append(rewatch).append(like).append('\n');
 
@@ -107,7 +106,7 @@ public class LoggedEmbedBuilder {
       }
     }
 
-    LbLogEntry firstLogEntry = logEntryList.get(0);
+    LbLogEntry firstLogEntry = logEntryList.getFirst();
     String title =
         String.format(
             "%s's Recent Entries for %s (%s)\n",

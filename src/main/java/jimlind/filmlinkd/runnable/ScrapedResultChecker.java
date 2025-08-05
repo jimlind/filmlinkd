@@ -6,7 +6,7 @@ import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.ScrapedResult;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.ScrapedResultQueue;
-import jimlind.filmlinkd.system.discord.ShardManagerStorage;
+import jimlind.filmlinkd.system.discord.ConnectionManager;
 import jimlind.filmlinkd.system.discord.embedbuilder.DiaryEntryEmbedBuilder;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,6 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
-import net.dv8tion.jda.api.sharding.ShardManager;
 
 /**
  * This is a scheduled task that checks the ScrapedResultQueue and posts the appropriate messages to
@@ -25,10 +24,10 @@ import net.dv8tion.jda.api.sharding.ShardManager;
  */
 @Slf4j
 public class ScrapedResultChecker implements Runnable {
+  private final ConnectionManager connectionManager;
   private final DiaryEntryEmbedBuilder diaryEntryEmbedBuilder;
   private final FirestoreManager firestoreManager;
   private final ScrapedResultQueue scrapedResultQueue;
-  private final ShardManagerStorage shardManagerStorage;
 
   private final int shardId;
   private final int totalShards;
@@ -36,24 +35,24 @@ public class ScrapedResultChecker implements Runnable {
   /**
    * Constructor for this class.
    *
+   * @param connectionManager A class that handles connecting to the Discord shards
    * @param diaryEntryEmbedBuilder A class that builds diaryEntryEmbed objects
    * @param firestoreManager A class that handles FireStore data interactions
    * @param scrapedResultQueue A class that stores results in local memory
-   * @param shardManagerStorage A class that stores shard information
    * @param shardId The shard id to help us know which shard we are running this from
    * @param totalShards The total number of shards in use
    */
   public ScrapedResultChecker(
+      ConnectionManager connectionManager,
       DiaryEntryEmbedBuilder diaryEntryEmbedBuilder,
       FirestoreManager firestoreManager,
       ScrapedResultQueue scrapedResultQueue,
-      ShardManagerStorage shardManagerStorage,
       int shardId,
       int totalShards) {
+    this.connectionManager = connectionManager;
     this.diaryEntryEmbedBuilder = diaryEntryEmbedBuilder;
     this.firestoreManager = firestoreManager;
     this.scrapedResultQueue = scrapedResultQueue;
-    this.shardManagerStorage = shardManagerStorage;
     this.shardId = shardId;
     this.totalShards = totalShards;
   }
@@ -73,8 +72,7 @@ public class ScrapedResultChecker implements Runnable {
     User user = result.user;
 
     List<MessageEmbed> embedList = diaryEntryEmbedBuilder.setMessage(message).setUser(user).build();
-    ShardManager shardManager = shardManagerStorage.get();
-    JDA shard = (shardManager != null) ? shardManager.getShardById(shardId) : null;
+    JDA shard = connectionManager.getShardById(shardId);
 
     if (shard == null) {
       log.atError().setMessage("Unable to Load Shard").addKeyValue("shard", shardId).log();
