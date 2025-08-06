@@ -58,6 +58,7 @@ public class ScrapedResult {
       return channelList;
     }
 
+    // TODO: This used to have a try/catch wrapper
     return getUser().getChannelIdList();
   }
 

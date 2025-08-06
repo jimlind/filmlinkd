@@ -29,6 +29,7 @@ public class UserFactory {
    * @return Data model for user information
    */
   public User createFromSnapshot(QueryDocumentSnapshot snapshot) {
+    // TODO: This used to have a try/catch wrapper
     User user = snapshot.toObject(User.class);
     return fillDefaults(user);
   }

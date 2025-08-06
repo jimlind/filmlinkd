@@ -24,6 +24,7 @@ public class DateUtils {
       return 0L;
     }
 
+    // TODO: This used to have an unchecked try/catch wrapper
     try {
       // Try parsing as LocalDate first
       LocalDate localDate = LocalDate.parse(dateString);

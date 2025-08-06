@@ -80,6 +80,7 @@ public class FirestoreManager {
     String collectionId = appConfig.getFirestoreCollectionId();
     User user = userFactory.createFromMember(member);
 
+    // TODO: This used to have an unchecked try/catch wrapper
     try {
       this.db.collection(collectionId).document(user.id).set(user.toMap()).get();
     } catch (InterruptedException | ExecutionException e) {
@@ -99,6 +100,7 @@ public class FirestoreManager {
     ApiFuture<QuerySnapshot> query =
         this.db.collection(collectionId).whereEqualTo("letterboxdId", userLid).limit(1).get();
 
+    // TODO: This used to have an unchecked try/catch wrapper
     try {
       return query.get().getDocuments().getFirst();
     } catch (InterruptedException | ExecutionException e) {
@@ -114,6 +116,7 @@ public class FirestoreManager {
   public long getUserCount() {
     String collectionId = appConfig.getFirestoreCollectionId();
     ApiFuture<AggregateQuerySnapshot> query = this.db.collection(collectionId).count().get();
+    // TODO: This used to have an unchecked try/catch wrapper
     try {
       return query.get().getCount();
     } catch (InterruptedException | ExecutionException e) {
@@ -134,6 +137,7 @@ public class FirestoreManager {
             .collection(collectionId)
             .whereNotEqualTo("channelList", Collections.emptyList())
             .get();
+    // TODO: This used to have an unchecked try/catch wrapper
     try {
       return query.get().getDocuments();
     } catch (InterruptedException | ExecutionException e) {
@@ -153,6 +157,7 @@ public class FirestoreManager {
     Map<String, String> channelMap = Map.ofEntries(Map.entry("channelId", channelId));
     ApiFuture<QuerySnapshot> query =
         this.db.collection(collectionId).whereArrayContains("channelList", channelMap).get();
+    // TODO: This used to have an unchecked try/catch wrapper
     try {
       return query.get().getDocuments();
     } catch (InterruptedException | ExecutionException e) {

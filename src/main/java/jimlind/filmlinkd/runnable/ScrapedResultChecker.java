@@ -71,6 +71,7 @@ public class ScrapedResultChecker implements Runnable {
     Message message = result.message;
     User user = result.user;
 
+    // TODO: This used to have a try/catch wrapper
     List<MessageEmbed> embedList = diaryEntryEmbedBuilder.setMessage(message).setUser(user).build();
     JDA shard = connectionManager.getShardById(shardId);
 
@@ -99,6 +100,7 @@ public class ScrapedResultChecker implements Runnable {
         continue;
       }
 
+      // TODO: This used to have a try/catch wrapper
       channel
           .sendMessageEmbeds(embedList)
           .queue(m -> sendSuccess(m, result, channel), m -> sendFailure(message, channel));

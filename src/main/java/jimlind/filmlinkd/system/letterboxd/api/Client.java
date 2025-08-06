@@ -69,6 +69,7 @@ public class Client {
     String nonce = String.valueOf(java.util.UUID.randomUUID());
     String now = String.valueOf(Instant.now().getEpochSecond());
 
+    // TODO: Are there other exceptions we should be trying to catch here?
     try {
       URI uri =
           new URIBuilder(BASE_URL + path)
@@ -142,6 +143,7 @@ public class Client {
     String shared = appConfig.getLetterboxdApiShared();
     SecretKeySpec secretKeySpec = new SecretKeySpec(shared.getBytes(), "HmacSHA256");
 
+    // TODO: This used to have an unchecked try/catch wrapper
     try {
       Mac sha256Hmac = Mac.getInstance("HmacSHA256");
       sha256Hmac.init(secretKeySpec);
