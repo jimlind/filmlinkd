@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.runnable.GeneralUserCacheClearer;
 
-/** Schedules the scraper that runs over every users. */
+/** Schedules the scraper that runs over every user. */
 public class GeneralScraperScheduler {
   private final AppConfig appConfig;
   private final jimlind.filmlinkd.runnable.GeneralScraper generalScraper;

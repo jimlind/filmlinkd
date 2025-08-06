@@ -2,7 +2,7 @@ package jimlind.filmlinkd.system.letterboxd.web;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
 import java.util.Locale;
 
 /** Scrapes the Letterboxd website for public member information. */
@@ -19,14 +19,15 @@ public class MemberWeb {
     String url = String.format("https://letterboxd.com/%s/", username.toLowerCase(Locale.ROOT));
 
     try {
-      HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+      URI uri = URI.create(url);
+      HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
       connection.setRequestMethod("GET");
       connection.setConnectTimeout(6000);
       connection.setReadTimeout(6000);
       connection.connect();
 
       return validateResponse(connection);
-    } catch (IOException e) {
+    } catch (IOException | IllegalArgumentException e) {
       return "";
     }
   }

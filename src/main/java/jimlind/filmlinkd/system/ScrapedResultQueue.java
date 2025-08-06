@@ -59,7 +59,7 @@ public class ScrapedResultQueue {
       return null;
     }
 
-    // Indicate the fetch Id is used
+    // Indicate the fetch ID is used
     this.fetchIdList.add(fetchClientId);
 
     // Remove the first message because it's been fetched by all parties

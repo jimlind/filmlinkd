@@ -20,16 +20,16 @@ public class EntryCache {
   /**
    * Sets the value in the cache so we know it was used.
    *
-   * @param key Letterboxd Id that has been used
+   * @param key Letterboxd ID that has been used
    */
   public void set(String key) {
     this.cache.put(key, true);
   }
 
   /**
-   * Indicates that the specific Id for a Letterboxd entry exists in the cache.
+   * Indicates that the specific ID for a Letterboxd entry exists in the cache.
    *
-   * @param key The Letterboxd Id that we are looking for
+   * @param key The Letterboxd ID that we are looking for
    * @return Boolean that indicates if the key was found in the cache.
    */
   public Boolean get(String key) {

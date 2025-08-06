@@ -22,7 +22,7 @@ public final class Admin {
     if (log.isInfoEnabled()) {
       Injector injector = Guice.createInjector(new GuiceModule());
       String apiKey = injector.getInstance(AppConfig.class).getDiscordBotToken();
-      log.info("Client Id: " + apiKey);
+      log.info("Client Id: {}", apiKey);
     }
   }
 }

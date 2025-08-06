@@ -63,8 +63,8 @@ public class GeneralUserCache {
    * Get the recorded diary entry for a user. This is the most recent that we know of. Method will
    * populate the cache from Firestore if it is empty.
    *
-   * @param letterboxedId The User's Letterboxd Id that we want to find a diary entry for.
-   * @return The string for the Letterboxd Id that we think is the most recent diary entry for the
+   * @param letterboxedId The User's Letterboxd ID that we want to find a diary entry for.
+   * @return The string for the Letterboxd ID that we think is the most recent diary entry for the
    *     user.
    */
   public String getEntryId(String letterboxedId) {

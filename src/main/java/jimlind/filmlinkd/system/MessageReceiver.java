@@ -50,7 +50,7 @@ public class MessageReceiver implements com.google.cloud.pubsub.v1.MessageReceiv
     String channelId = getChannelId(messagePayload);
 
     // We are expecting multiple requests to post a diary entry so we attempt to maintain the one
-    // source of truth on the server that sends messages. One mechanism of that is an memory cache.
+    // source of truth on the server that sends messages. One mechanism of that is a memory cache.
     if (entryCache.get(entryLid) && channelId.isBlank()) {
       // If the key is in the cache and channelId isn't provided skip it
       return;

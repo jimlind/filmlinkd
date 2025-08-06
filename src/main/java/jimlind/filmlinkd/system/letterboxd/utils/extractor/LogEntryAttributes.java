@@ -45,7 +45,7 @@ public final class LogEntryAttributes {
   }
 
   /**
-   * Extrct the spoiler status from a log entry.
+   * Extract the spoiler status from a log entry.
    *
    * @param logEntry A Letterboxd log entry
    * @return If the log entry has spoilers
