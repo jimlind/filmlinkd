@@ -3,16 +3,16 @@ package jimlind.filmlinkd.factory;
 import com.google.inject.Inject;
 import jimlind.filmlinkd.runnable.ScrapedResultChecker;
 import jimlind.filmlinkd.system.ScrapedResultQueue;
-import jimlind.filmlinkd.system.discord.ConnectionManager;
+import jimlind.filmlinkd.system.discord.ShardManagerStorage;
 import jimlind.filmlinkd.system.discord.embedbuilder.DiaryEntryEmbedBuilder;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 
 /** A factory for creating instances of the {@link ScrapedResultChecker} model. */
 public class ScrapedResultCheckerFactory {
-  private final ConnectionManager connectionManager;
   private final DiaryEntryEmbedBuilder diaryEntryEmbedBuilder;
   private final FirestoreManager firestoreManager;
   private final ScrapedResultQueue scrapedResultQueue;
+  private final ShardManagerStorage shardManagerStorage;
 
   /**
    * Constructor for {@link ScrapedResultCheckerFactory}.
@@ -23,14 +23,14 @@ public class ScrapedResultCheckerFactory {
    */
   @Inject
   public ScrapedResultCheckerFactory(
-      ConnectionManager connectionManager,
       DiaryEntryEmbedBuilder diaryEntryEmbedBuilder,
       FirestoreManager firestoreManager,
-      ScrapedResultQueue scrapedResultQueue) {
-    this.connectionManager = connectionManager;
+      ScrapedResultQueue scrapedResultQueue,
+      ShardManagerStorage shardManagerStorage) {
     this.diaryEntryEmbedBuilder = diaryEntryEmbedBuilder;
     this.firestoreManager = firestoreManager;
     this.scrapedResultQueue = scrapedResultQueue;
+    this.shardManagerStorage = shardManagerStorage;
   }
 
   /**
@@ -42,10 +42,10 @@ public class ScrapedResultCheckerFactory {
    */
   public ScrapedResultChecker create(int shardId, int totalShards) {
     return new ScrapedResultChecker(
-        connectionManager,
         diaryEntryEmbedBuilder,
         firestoreManager,
         scrapedResultQueue,
+        shardManagerStorage,
         shardId,
         totalShards);
   }

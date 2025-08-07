@@ -3,7 +3,6 @@ package jimlind.filmlinkd.system.discord;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
@@ -36,22 +35,6 @@ public class ConnectionManager {
     ShardManager shardManager =
         DefaultShardManagerBuilder.createLight(token).addEventListeners(eventListener).build();
     shardManagerStorage.set(shardManager);
-  }
-
-  /**
-   * Gets a discord service shard by its id. Due to the number of channels the bot uses it needs to
-   * have a number of shards to process data efficiently.
-   *
-   * @param shardId The id of the shard to get
-   * @return The shard as a JDA object
-   */
-  public @Nullable JDA getShardById(int shardId) {
-    @Nullable ShardManager shardManager = shardManagerStorage.get();
-    if (shardManager != null) {
-      return shardManager.getShardById(shardId);
-    } else {
-      return null;
-    }
   }
 
   /** Disconnects from the Discord service. */
