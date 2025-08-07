@@ -7,6 +7,7 @@ import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.extractor.MemberAttributes;
+import org.jetbrains.annotations.Nullable;
 
 /** A factory for creating instances of the {@link User} model. */
 public class UserFactory {
@@ -28,8 +29,11 @@ public class UserFactory {
    * @param snapshot A document snapshot from Firestore
    * @return Data model for user information
    */
-  public User createFromSnapshot(QueryDocumentSnapshot snapshot) {
-    // TODO: This used to have a try/catch wrapper
+  public @Nullable User createFromSnapshot(@Nullable QueryDocumentSnapshot snapshot) {
+    if (snapshot == null) {
+      return null;
+    }
+
     User user = snapshot.toObject(User.class);
     return fillDefaults(user);
   }

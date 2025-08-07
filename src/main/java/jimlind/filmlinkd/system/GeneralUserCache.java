@@ -139,7 +139,9 @@ public class GeneralUserCache {
     List<QueryDocumentSnapshot> activeUsersList = firestoreManager.getActiveUsers();
     for (QueryDocumentSnapshot snapshot : activeUsersList) {
       User user = this.userFactory.createFromSnapshot(snapshot);
-      userCache.put(user.letterboxdId, user.getMostRecentPrevious());
+      if (user != null) {
+        userCache.put(user.letterboxdId, user.getMostRecentPrevious());
+      }
     }
   }
 }
