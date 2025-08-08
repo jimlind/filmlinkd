@@ -52,7 +52,13 @@ public class Client {
    * @return Returns the datatype as defined by the inputs.
    */
   public @Nullable <T> T get(String path, Class<T> inputClass) {
-    return this.request(path, "", inputClass);
+    try {
+      URI uri = new URIBuilder(BASE_URL + path).build();
+      return this.request(uri, "", inputClass);
+    } catch (URISyntaxException e) {
+      log.atError().setMessage("Failed to build public URI").addKeyValue("path", path).log();
+      return null;
+    }
   }
 
   /**
@@ -79,27 +85,19 @@ public class Client {
               .build();
       String authorization = "Signature " + this.buildSignature("GET", uri.toString());
 
-      return this.request(uri.toString(), authorization, inputClass);
+      return this.request(uri, authorization, inputClass);
     } catch (URISyntaxException e) {
-      log.atError().setMessage("Failed to build URI").addKeyValue("path", path).log();
+      log.atError().setMessage("Failed to build authorized URI").addKeyValue("path", path).log();
       return null;
     }
   }
 
-  private @Nullable <T> T request(String uri, String authorization, Class<T> inputClass) {
-    URI requestUri;
-    try {
-      requestUri = new URI(BASE_URL + uri);
-    } catch (URISyntaxException e) {
-      log.atError().setMessage("Error building URI").addKeyValue(URI_KEY, uri).log();
-      return null;
-    }
-
+  private @Nullable <T> T request(URI uri, String authorization, Class<T> inputClass) {
     HttpRequest request =
         HttpRequest.newBuilder()
             .header("User-Agent", "Filmlinkd - A Letterboxd Discord Bot")
             .header("Authorization", authorization)
-            .uri(requestUri)
+            .uri(uri)
             .timeout(Duration.of(6, SECONDS))
             .GET()
             .build();
