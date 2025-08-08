@@ -63,10 +63,6 @@ public class ScrapedResultFactory {
       return null;
     }
 
-    ScrapedResult scrapedResult = new ScrapedResult();
-    scrapedResult.setMessage(message);
-    scrapedResult.setUser(user);
-
-    return scrapedResult;
+    return new ScrapedResult(message, user);
   }
 }

@@ -2,9 +2,10 @@ package jimlind.filmlinkd.model;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,16 +35,14 @@ public class User {
    *     calculations.
    */
   public List<String> getChannelIdList() {
-    List<String> channelListResults = new ArrayList<>();
-    if (this.channelList == null) {
-      return channelListResults;
+    if (channelList == null) {
+      return Collections.emptyList();
     }
 
-    for (Channel channel : this.channelList) {
-      channelListResults.add(channel.channelId);
-    }
-
-    return channelListResults;
+    return channelList.stream()
+            .map(channel -> channel.channelId)
+            .filter(id -> id != null && !id.isBlank())
+            .collect(Collectors.toList());
   }
 
   /**
