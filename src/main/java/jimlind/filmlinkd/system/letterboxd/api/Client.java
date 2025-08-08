@@ -108,7 +108,7 @@ public class Client {
     try (HttpClient httpClient = HttpClient.newHttpClient()) {
       HttpResponse<String> httpResponse =
           httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-      if (httpResponse.statusCode() < 200 && httpResponse.statusCode() >= 300) {
+      if (httpResponse.statusCode() < 200 || httpResponse.statusCode() >= 300) {
         log.atError().setMessage("Incorrect Response Status Code").addKeyValue(URI_KEY, uri).log();
         return null;
       }
