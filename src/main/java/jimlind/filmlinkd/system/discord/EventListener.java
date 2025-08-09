@@ -1,6 +1,7 @@
 package jimlind.filmlinkd.system.discord;
 
 import com.google.inject.Inject;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -49,6 +50,12 @@ public class EventListener extends ListenerAdapter {
           0,
           1,
           TimeUnit.SECONDS);
+      new CountDownLatch(1).await();
+    } catch (InterruptedException event) {
+      log.atInfo()
+          .setMessage("Scraped Result Checker Interrupted")
+          .addKeyValue("event", event)
+          .log();
     }
   }
 

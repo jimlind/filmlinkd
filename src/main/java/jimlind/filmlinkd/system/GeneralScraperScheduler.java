@@ -1,13 +1,16 @@
 package jimlind.filmlinkd.system;
 
 import com.google.inject.Inject;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.runnable.GeneralUserCacheClearer;
+import lombok.extern.slf4j.Slf4j;
 
 /** Schedules the scraper that runs over every user. */
+@Slf4j
 public class GeneralScraperScheduler {
   private final AppConfig appConfig;
   private final jimlind.filmlinkd.runnable.GeneralScraper generalScraper;
@@ -43,8 +46,12 @@ public class GeneralScraperScheduler {
           generalScraper, 0, appConfig.getScraperGeneralPeriod(), TimeUnit.SECONDS);
       scheduler.scheduleAtFixedRate(
           generalUserCacheClearer, 0, appConfig.getScraperGeneralPeriod(), TimeUnit.HOURS);
+      new CountDownLatch(1).await();
+    } catch (InterruptedException event) {
+      log.atInfo().setMessage("Scraper Runners Interrupted").addKeyValue("event", event).log();
     }
 
+    // TODO:
     //    // Listen for Command PubSub messages posted and upsert appropriate follow outcome data
     //    this.container.resolve('pubSubMessageListener').onCommandMessage((message: any) => {
     //                const returnData = JSON.parse(message.data.toString());
