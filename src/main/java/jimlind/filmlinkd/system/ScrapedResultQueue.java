@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import jimlind.filmlinkd.model.ScrapedResult;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Queue exists so that I can rate limit the amount of processing that happens. If we let every
@@ -44,7 +45,7 @@ public class ScrapedResultQueue {
    * @return Returns null if there is nothing to get was already gotten or if the first attempt will
    *     get the message contents
    */
-  public synchronized ScrapedResult get(Integer fetchClientId, Integer fetchClientTotal) {
+  public @Nullable synchronized ScrapedResult get(Integer fetchClientId, Integer fetchClientTotal) {
     // Check if the specific ID was used for fetching and set it otherwise
     if (this.fetchIdList.contains(fetchClientId)) {
       return null;

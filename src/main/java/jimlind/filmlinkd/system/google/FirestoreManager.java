@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import jimlind.filmlinkd.config.AppConfig;
@@ -103,7 +104,7 @@ public class FirestoreManager {
     // TODO: This used to have an unchecked try/catch wrapper
     try {
       return query.get().getDocuments().getFirst();
-    } catch (InterruptedException | ExecutionException e) {
+    } catch (ExecutionException | InterruptedException | NoSuchElementException e) {
       return null;
     }
   }

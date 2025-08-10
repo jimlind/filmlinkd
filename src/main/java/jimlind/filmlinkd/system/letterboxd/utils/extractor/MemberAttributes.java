@@ -21,6 +21,9 @@ public final class MemberAttributes {
   }
 
   private static String getUsername(LbMember member) {
+    if (member == null || member.getUsername() == null) {
+      return "";
+    }
     return member.getUsername();
   }
 }
