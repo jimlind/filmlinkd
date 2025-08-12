@@ -40,9 +40,9 @@ public class User {
     }
 
     return channelList.stream()
-            .map(channel -> channel.channelId)
-            .filter(id -> id != null && !id.isBlank())
-            .collect(Collectors.toList());
+        .map(channel -> channel.channelId)
+        .filter(id -> id != null && !id.isBlank())
+        .collect(Collectors.toList());
   }
 
   /**
