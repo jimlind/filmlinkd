@@ -2,7 +2,6 @@ package jimlind.filmlinkd;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -37,17 +36,10 @@ public final class Bot {
     // Start the Subscribers and build the Publishers
     injector.getInstance(PubSubManager.class).activate();
 
-    // Schedule Memory Logger
-    try (ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor()) {
-      scheduler.scheduleAtFixedRate(
-          injector.getInstance(StatLogger.class), 0, 30, TimeUnit.MINUTES);
-      new CountDownLatch(1).await();
-    } catch (InterruptedException event) {
-      log.atInfo()
-              .setMessage("Stat Logger Interrupted")
-              .addKeyValue("event", event)
-              .log();
-    }
+    // Schedule Memory Logger (These should run forever so not closing them)
+    @SuppressWarnings("PMD.CloseResource")
+    ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    scheduler.scheduleAtFixedRate(injector.getInstance(StatLogger.class), 0, 30, TimeUnit.MINUTES);
 
     // Register shutdown events
     Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownThread.class));

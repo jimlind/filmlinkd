@@ -1,7 +1,6 @@
 package jimlind.filmlinkd.system;
 
 import com.google.inject.Inject;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -41,15 +40,13 @@ public class GeneralScraperScheduler {
   public void start() {
     generalUserCache.initializeRandomPage();
 
-    try (ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor()) {
-      scheduler.scheduleAtFixedRate(
-          generalScraper, 0, appConfig.getScraperGeneralPeriod(), TimeUnit.SECONDS);
-      scheduler.scheduleAtFixedRate(
-          generalUserCacheClearer, 0, appConfig.getScraperGeneralPeriod(), TimeUnit.HOURS);
-      new CountDownLatch(1).await();
-    } catch (InterruptedException event) {
-      log.atInfo().setMessage("Scraper Runners Interrupted").addKeyValue("event", event).log();
-    }
+    // These should run forever so not closing them
+    @SuppressWarnings("PMD.CloseResource")
+    ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    scheduler.scheduleAtFixedRate(
+        generalScraper, 0, appConfig.getScraperGeneralPeriod(), TimeUnit.SECONDS);
+    scheduler.scheduleAtFixedRate(
+        generalUserCacheClearer, 0, appConfig.getScraperGeneralPeriod(), TimeUnit.HOURS);
 
     // TODO:
     //    // Listen for Command PubSub messages posted and upsert appropriate follow outcome data
