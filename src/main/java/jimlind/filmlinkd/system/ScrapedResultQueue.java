@@ -54,7 +54,6 @@ public class ScrapedResultQueue {
     // Get the first message from the queue
     // Checking length doesn't seem to be a foolproof way to resolve this so wrapping in a try/catch
     ScrapedResult scrapedResult;
-    // TODO: This used to have an unchecked try/catch wrapper
     try {
       scrapedResult = scrapedResultList.getFirst();
     } catch (NoSuchElementException e) {
