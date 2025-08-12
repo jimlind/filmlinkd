@@ -74,6 +74,20 @@ public class DiaryEntryEmbedBuilder {
    *     contains only one embed.
    */
   public List<MessageEmbed> build() {
+    try {
+      return buildInternal();
+    } catch (IllegalArgumentException e) {
+      log.atWarn()
+          .setMessage("Diary Entry Embed build failed")
+          .addKeyValue("message", message)
+          .addKeyValue("user", user)
+          .addKeyValue("exception", e)
+          .log();
+    }
+    return new ArrayList<>();
+  }
+
+  private List<MessageEmbed> buildInternal() {
     if (message == null || user == null) {
       return new ArrayList<>();
     }

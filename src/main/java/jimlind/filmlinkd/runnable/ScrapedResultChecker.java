@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
+import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.sharding.ShardManager;
 
 /**
@@ -69,10 +70,10 @@ public class ScrapedResultChecker implements Runnable {
       return;
     }
 
-    Message message = result.message;
-    User user = result.user;
+    // Extract information from the scraped result object
+    Message message = result.message();
+    User user = result.user();
 
-    // TODO: This used to have a try/catch wrapper
     List<MessageEmbed> embedList = diaryEntryEmbedBuilder.setMessage(message).setUser(user).build();
     ShardManager shardManager = shardManagerStorage.get();
     JDA shard = (shardManager != null) ? shardManager.getShardById(shardId) : null;
@@ -102,10 +103,17 @@ public class ScrapedResultChecker implements Runnable {
         continue;
       }
 
-      // TODO: This used to have a try/catch wrapper
-      channel
-          .sendMessageEmbeds(embedList)
-          .queue(m -> sendSuccess(m, result, channel), m -> sendFailure(message, channel));
+      try {
+        channel
+            .sendMessageEmbeds(embedList)
+            .queue(m -> sendSuccess(m, result, channel), m -> sendFailure(message, channel));
+      } catch (PermissionException e) {
+        log.atWarn()
+            .setMessage(
+                "Attempting to send message from ScrapedResultChecker failed and exception caught")
+            .addKeyValue("exception", e)
+            .log();
+      }
     }
   }
 
@@ -126,7 +134,7 @@ public class ScrapedResultChecker implements Runnable {
     log.atInfo()
         .setMessage("Successfully Sent Message")
         .addKeyValue("channelId", channel.getId())
-        .addKeyValue("message", scrapedResult.getMessage())
+        .addKeyValue("message", scrapedResult.message())
         .addKeyValue("channel", channel)
         .addKeyValue("jdaMessage", jdaMessage)
         .log();
