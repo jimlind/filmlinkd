@@ -8,7 +8,6 @@ import com.google.cloud.firestore.FirestoreOptions;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.inject.Inject;
-import java.nio.channels.OverlappingFileLockException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -151,10 +150,9 @@ public class FirestoreManager {
    */
   public List<QueryDocumentSnapshot> getUserDocumentListByChannelId(String channelId) {
     String collectionId = appConfig.getFirestoreCollectionId();
-    Map<String, String> channelMap = Map.ofEntries(Map.entry("channelId", channelId));
+    Map<String, String> channelMap = channelId != null ? Map.of("channelId", channelId) : Map.of();
     ApiFuture<QuerySnapshot> query =
         this.db.collection(collectionId).whereArrayContains("channelList", channelMap).get();
-    // TODO: This used to have an unchecked try/catch wrapper
     try {
       return query.get().getDocuments();
     } catch (InterruptedException | ExecutionException e) {
@@ -189,12 +187,10 @@ public class FirestoreManager {
     newChannel.setChannelId(channelId);
     user.getChannelList().add(newChannel);
 
-    // Perform the update
-    // TODO: Check what sort of exception I can actually get out of here.
     try {
       DocumentReference reference = getReference(snapshot);
       reference.update(user.toMap());
-    } catch (OverlappingFileLockException e) {
+    } catch (IllegalArgumentException | NullPointerException e) {
       log.atError()
           .setMessage("Unable to Add to Channel List: Update Failed")
           .addKeyValue(USER_KEY, user)
@@ -227,10 +223,9 @@ public class FirestoreManager {
             .filter(channel -> !channel.channelId.equals(channelId))
             .collect(Collectors.toCollection(ArrayList::new)));
 
-    // TODO: Check what sort of exception I can actually get out of here.
     try {
       getReference(snapshot).update(user.toMap());
-    } catch (OverlappingFileLockException e) {
+    } catch (IllegalArgumentException | NullPointerException e) {
       log.atError()
           .setMessage("Unable to Remove from Channel List: Update Failed")
           .addKeyValue(USER_KEY, user)
@@ -261,12 +256,10 @@ public class FirestoreManager {
     user.setImage(imageUtils.getTallest(member.getAvatar()));
     user.setUserName(member.getUsername());
 
-    // Perform the update
-    // TODO: Check what sort of exception I can actually get out of here.
     try {
       DocumentReference reference = getReference(snapshot);
       reference.update(user.toMap());
-    } catch (OverlappingFileLockException e) {
+    } catch (IllegalArgumentException | NullPointerException e) {
       log.atError()
           .setMessage("Unable to Update Display Data: Update Failed")
           .addKeyValue(USER_KEY, user)
@@ -322,12 +315,10 @@ public class FirestoreManager {
     user.setPrevious(updatedPrevious);
     user.setUpdated(Instant.now().toEpochMilli()); // Only used for debugging
 
-    // Perform the update
-    // TODO: Check what sort of exception I can actually get out of here.
     try {
       DocumentReference reference = getReference(snapshot);
       reference.update(user.toMap());
-    } catch (OverlappingFileLockException e) {
+    } catch (IllegalArgumentException | NullPointerException e) {
       log.atError()
           .setMessage("Unable to Update Previous: Update Failed")
           .addKeyValue(USER_KEY, user)
