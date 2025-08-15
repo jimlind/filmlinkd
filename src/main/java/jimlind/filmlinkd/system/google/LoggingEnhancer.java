@@ -6,7 +6,7 @@ import com.google.cloud.logging.LogEntry;
 import com.google.cloud.logging.Payload;
 import com.google.cloud.logging.logback.LoggingEventEnhancer;
 import com.google.gson.Gson;
-import java.nio.channels.OverlappingFileLockException;
+import com.google.gson.JsonParseException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -57,14 +57,16 @@ public class LoggingEnhancer implements LoggingEventEnhancer {
       return input;
     }
 
-    // TODO: Check what sort of exception I can actually get out of here.
     String result;
     try {
       result = new Gson().toJson(input);
-    } catch (OverlappingFileLockException jsonException) {
+    } catch (StackOverflowError | JsonParseException jsonException) {
       try {
         result = input.toString();
-      } catch (OverlappingFileLockException toStringException) {
+      } catch (NullPointerException
+          | StackOverflowError
+          | IllegalStateException
+          | UnsupportedOperationException toStringException) {
         result = toStringException.toString();
       }
     }

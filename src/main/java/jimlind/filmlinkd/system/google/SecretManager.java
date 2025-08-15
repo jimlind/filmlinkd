@@ -17,7 +17,6 @@ public class SecretManager {
   /** The constructor for this class. */
   @Inject
   SecretManager() {
-    // TODO: Check what sort of exception I can actually get out of here.
     try {
       this.client = SecretManagerServiceClient.create();
     } catch (IOException e) {

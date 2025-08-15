@@ -123,7 +123,6 @@ public class PubSubManager {
 
     ByteString data = ByteString.copyFromUtf8(command.toJson());
     PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
-    // TODO: Check what sort of exception I can actually get out of here.
     try {
       commandPublisher.publish(pubsubMessage).get();
     } catch (InterruptedException | ExecutionException e) {
@@ -148,7 +147,6 @@ public class PubSubManager {
 
     ByteString data = ByteString.copyFromUtf8(logEntry.toJson());
     PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
-    // TODO: Check what sort of exception I can actually get out of here.
     try {
       logEntryPublisher.publish(pubsubMessage).get();
     } catch (InterruptedException | ExecutionException e) {
@@ -162,7 +160,6 @@ public class PubSubManager {
 
   private Publisher buildPublisher(String projectId, String topicId) {
     TopicName topicName = TopicName.of(projectId, topicId);
-    // TODO: Check what sort of exception I can actually get out of here.
     try {
       return Publisher.newBuilder(topicName).build();
     } catch (IOException e) {
@@ -180,7 +177,6 @@ public class PubSubManager {
     TopicName topicName = TopicName.of(projectId, topicId);
     SubscriptionName subscriptionName = SubscriptionName.of(projectId, subscriptionId);
 
-    // TODO: Check what sort of exception I can actually get out of here.
     // This client create is designed specifically for a try-with-resources statement
     try (SubscriptionAdminClient client = SubscriptionAdminClient.create()) {
       // If the subscription doesn't exit, create it.
