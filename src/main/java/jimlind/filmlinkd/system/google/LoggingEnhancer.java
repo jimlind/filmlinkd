@@ -63,8 +63,7 @@ public class LoggingEnhancer implements LoggingEventEnhancer {
     } catch (StackOverflowError | JsonParseException jsonException) {
       try {
         result = input.toString();
-      } catch (NullPointerException
-          | StackOverflowError
+      } catch (StackOverflowError
           | IllegalStateException
           | UnsupportedOperationException toStringException) {
         result = toStringException.toString();

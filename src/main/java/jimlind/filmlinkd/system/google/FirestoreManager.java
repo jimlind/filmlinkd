@@ -190,7 +190,7 @@ public class FirestoreManager {
     try {
       DocumentReference reference = getReference(snapshot);
       reference.update(user.toMap());
-    } catch (IllegalArgumentException | NullPointerException e) {
+    } catch (IllegalArgumentException e) {
       log.atError()
           .setMessage("Unable to Add to Channel List: Update Failed")
           .addKeyValue(USER_KEY, user)
@@ -225,7 +225,7 @@ public class FirestoreManager {
 
     try {
       getReference(snapshot).update(user.toMap());
-    } catch (IllegalArgumentException | NullPointerException e) {
+    } catch (IllegalArgumentException e) {
       log.atError()
           .setMessage("Unable to Remove from Channel List: Update Failed")
           .addKeyValue(USER_KEY, user)
@@ -259,7 +259,7 @@ public class FirestoreManager {
     try {
       DocumentReference reference = getReference(snapshot);
       reference.update(user.toMap());
-    } catch (IllegalArgumentException | NullPointerException e) {
+    } catch (IllegalArgumentException e) {
       log.atError()
           .setMessage("Unable to Update Display Data: Update Failed")
           .addKeyValue(USER_KEY, user)
@@ -318,7 +318,7 @@ public class FirestoreManager {
     try {
       DocumentReference reference = getReference(snapshot);
       reference.update(user.toMap());
-    } catch (IllegalArgumentException | NullPointerException e) {
+    } catch (IllegalArgumentException e) {
       log.atError()
           .setMessage("Unable to Update Previous: Update Failed")
           .addKeyValue(USER_KEY, user)
