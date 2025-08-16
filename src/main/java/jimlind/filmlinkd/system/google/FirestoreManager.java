@@ -25,17 +25,6 @@ public class FirestoreManager {
   }
 
   /**
-   * Attempts to remove a channel to the user's data.
-   *
-   * @param userLid User's Letterboxd id
-   * @param channelId Discord Channel id
-   * @return true if the action succeeded and false if any number of failures
-   */
-  public boolean removeUserSubscription(String userLid, String channelId) {
-    return userWriter.removeUserSubscription(userLid, channelId);
-  }
-
-  /**
    * Updates the username, display name, and image based on most recent data from Letterboxd.
    *
    * @param member Letterboxd Member object from API
