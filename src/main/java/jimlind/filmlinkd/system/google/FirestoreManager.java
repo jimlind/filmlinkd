@@ -27,15 +27,6 @@ public class FirestoreManager {
   }
 
   /**
-   * Gives access to the total number of user records in the database.
-   *
-   * @return The total number of user records in the database.
-   */
-  public long getUserCount() {
-    return userReader.getUserCount();
-  }
-
-  /**
    * Gives access to all documents for all active users. This should not be called regularly because
    * it is expensive.
    *

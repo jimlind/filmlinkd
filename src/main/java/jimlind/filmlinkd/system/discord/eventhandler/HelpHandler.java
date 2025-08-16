@@ -6,7 +6,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import jimlind.filmlinkd.system.discord.embedbuilder.HelpEmbedBuilder;
-import jimlind.filmlinkd.system.google.FirestoreManager;
+import jimlind.filmlinkd.system.google.firestore.UserReader;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -23,19 +23,19 @@ import org.jetbrains.annotations.Nullable;
 @Slf4j
 public class HelpHandler implements Handler {
   private static final int MAX_TEST_MESSAGES = 4;
-  private final FirestoreManager firestoreManager;
   private final HelpEmbedBuilder helpEmbedBuilder;
+  private final UserReader userReader;
 
   /**
    * Constructor for this class.
    *
-   * @param firestoreManager Service that handles all Firestore interactions
    * @param helpEmbedBuilder Builds the embed for the /help command
+   * @param userReader Handles all read-only queries for user data from Firestore
    */
   @Inject
-  HelpHandler(FirestoreManager firestoreManager, HelpEmbedBuilder helpEmbedBuilder) {
-    this.firestoreManager = firestoreManager;
+  HelpHandler(HelpEmbedBuilder helpEmbedBuilder, UserReader userReader) {
     this.helpEmbedBuilder = helpEmbedBuilder;
+    this.userReader = userReader;
   }
 
   @Override
@@ -55,7 +55,7 @@ public class HelpHandler implements Handler {
     CacheView<Guild> instanceGuildCache = extractGuildCache(jda);
     CacheView<Guild> shardedGuildCache = extractGuildCache(shardManager);
 
-    long userCount = firestoreManager.getUserCount();
+    long userCount = userReader.getUserCount();
     CacheView<Guild> guild = shardedGuildCache != null ? shardedGuildCache : instanceGuildCache;
     List<MessageEmbed> messageEmbedList = helpEmbedBuilder.create(userCount, guild.size());
 
