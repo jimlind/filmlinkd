@@ -1,12 +1,13 @@
 NEED
-* Revisit all the try/catches I deleted
-* Wire Up Scraper Message Sending Completely
 * Move back to the default database name to take advantage of free tier credits
 * Optimize Entry API to stop parsing earlier (not checking all 10 entries)
 * Create VIP Scraper
-* Ensure that charts are duplicated
+* Ensure that charts/reports are duplicated in google console
 * Post an actual diary entry as the last part of Help:Test
 * Post a permissions status message with Help
+* Retest with multiple server shards
+* Watched and Reviewed text in entries is backwards
+* Keep the scraping limits in place
 
 DONE
 * Delete all existing infrastructure and let terraform build it fresh
@@ -16,3 +17,6 @@ DONE
 * Fix database access
 * Ensure that memory can be reported from VM usage
 * Clear the user list on a timer to rebuild for the scraper
+* Revisit all the try/catches I deleted
+* Wire Up Scraper Message Sending Completely
+* Scraper should receive command message and know that follows are added
