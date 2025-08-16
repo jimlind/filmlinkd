@@ -14,6 +14,7 @@ import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.google.PubSubManager;
+import jimlind.filmlinkd.system.google.firestore.UserReader;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
@@ -35,6 +36,7 @@ public class FollowHandler implements Handler {
   private final MessageFactory messageFactory;
   private final PubSubManager pubSubManager;
   private final UserFactory userFactory;
+  private final UserReader userReader;
   private final UserWriter userWriter;
 
   /**
@@ -49,6 +51,7 @@ public class FollowHandler implements Handler {
    * @param messageFactory Builds the message object that is pushed into the PubSub system
    * @param pubSubManager Handles the PubSub system to accept commands and messages
    * @param userFactory Builds the user object from a Firestore snapshot
+   * @param userReader Handles all read-only queries for user data from Firestore
    * @param userWriter Handles all write operations for user data in Firestore
    */
   @Inject
@@ -62,6 +65,7 @@ public class FollowHandler implements Handler {
       MessageFactory messageFactory,
       PubSubManager pubSubManager,
       UserFactory userFactory,
+      UserReader userReader,
       UserWriter userWriter) {
     this.accountHelper = accountHelper;
     this.channelHelper = channelHelper;
@@ -72,6 +76,7 @@ public class FollowHandler implements Handler {
     this.messageFactory = messageFactory;
     this.pubSubManager = pubSubManager;
     this.userFactory = userFactory;
+    this.userReader = userReader;
     this.userWriter = userWriter;
   }
 
@@ -95,7 +100,7 @@ public class FollowHandler implements Handler {
       return;
     }
 
-    QueryDocumentSnapshot snapshot = firestoreManager.getUserDocument(member.id);
+    QueryDocumentSnapshot snapshot = userReader.getUserDocument(member.id);
     User user = null;
     // Create the user in the database if it doesn't exist
     if (snapshot == null) {

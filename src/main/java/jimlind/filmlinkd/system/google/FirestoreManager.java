@@ -7,7 +7,6 @@ import jimlind.filmlinkd.system.google.firestore.UserReader;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.Nullable;
 
 /** Handles all Firestore communication. Currently, a wrapper for multiple classes. */
 @Slf4j
@@ -25,17 +24,6 @@ public class FirestoreManager {
   FirestoreManager(UserReader userReader, UserWriter userWriter) {
     this.userReader = userReader;
     this.userWriter = userWriter;
-  }
-
-  /**
-   * Attempts to find a user in the database.
-   *
-   * @param userLid The Letterboxd id for the user
-   * @return Returns null if no data available or returns the document snapshot from Firestorm if
-   *     available
-   */
-  public @Nullable QueryDocumentSnapshot getUserDocument(String userLid) {
-    return userReader.getUserDocument(userLid);
   }
 
   /**

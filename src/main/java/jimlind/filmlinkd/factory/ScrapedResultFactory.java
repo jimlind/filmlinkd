@@ -7,25 +7,25 @@ import com.google.pubsub.v1.PubsubMessage;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.ScrapedResult;
 import jimlind.filmlinkd.model.User;
-import jimlind.filmlinkd.system.google.FirestoreManager;
+import jimlind.filmlinkd.system.google.firestore.UserReader;
 import lombok.extern.slf4j.Slf4j;
 
 /** A factory for creating instances of the {@link ScrapedResult} model. */
 @Slf4j
 public class ScrapedResultFactory {
-  private final FirestoreManager firestoreManager;
   private final UserFactory userFactory;
+  private final UserReader userReader;
 
   /**
    * Constructor for the {@link ScrapedResultFactory}.
    *
-   * @param firestoreManager Class that handles all Firestore interactions
    * @param userFactory Factory for creating {@link User} model
+   * @param userReader Class that handles all read-only queries for user data from Firestore
    */
   @Inject
-  public ScrapedResultFactory(FirestoreManager firestoreManager, UserFactory userFactory) {
-    this.firestoreManager = firestoreManager;
+  public ScrapedResultFactory(UserFactory userFactory, UserReader userReader) {
     this.userFactory = userFactory;
+    this.userReader = userReader;
   }
 
   private static Message translateMessage(PubsubMessage pubsubMessage) {
@@ -43,7 +43,7 @@ public class ScrapedResultFactory {
     Message message = translateMessage(pubsubMessage);
 
     // Attempt to get user based on Message
-    QueryDocumentSnapshot snapshot = firestoreManager.getUserDocument(message.getEntryUserLid());
+    QueryDocumentSnapshot snapshot = userReader.getUserDocument(message.getEntryUserLid());
     if (snapshot == null) {
       log.atWarn()
           .setMessage("Invalid User Passed in PubSub Message")
