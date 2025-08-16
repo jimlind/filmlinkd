@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.example</groupId>
     <artifactId>filmlinkd</artifactId>
-    <version>6.0.0-alpha.23</version>
+    <version>6.0.0-alpha.24</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -93,7 +93,8 @@
             <artifactId>logback-classic</artifactId>
             <version>1.5.18</version>
         </dependency>
-        
+
+        <!-- General System Dependencies -->
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
