@@ -31,8 +31,9 @@ public final class Scraper {
     Injector injector = Guice.createInjector(new GuiceModule());
     injector.getInstance(AppConfig.class).setMainClass(Scraper.class.getName());
 
-    // Build the Publishers
+    // Configure the needed publishers and subscribers
     injector.getInstance(PubSubManager.class).buildLogEntryPublisher();
+    injector.getInstance(PubSubManager.class).buildCommandSubscriber();
 
     // Start the Scrapers
     injector.getInstance(GeneralScraperScheduler.class).start();

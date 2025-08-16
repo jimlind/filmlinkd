@@ -46,18 +46,6 @@ public class GeneralScraperScheduler {
     scheduler.scheduleAtFixedRate(
         generalScraper, 0, appConfig.getScraperGeneralPeriod(), TimeUnit.SECONDS);
     scheduler.scheduleAtFixedRate(
-        generalUserCacheClearer, 0, appConfig.getScraperGeneralPeriod(), TimeUnit.HOURS);
-
-    // TODO:
-    //    // Listen for Command PubSub messages posted and upsert appropriate follow outcome data
-    //    this.container.resolve('pubSubMessageListener').onCommandMessage((message: any) => {
-    //                const returnData = JSON.parse(message.data.toString());
-    //      if (returnData.command == 'FOLLOW') {
-    //        message.ack();
-    //                    const subscribedUserList = this.container.resolve('subscribedUserList');
-    //        subscribedUserList.upsert(returnData.user, returnData.entry);
-    //      }
-    //    });
-
+        generalUserCacheClearer, 0, appConfig.getScraperGeneralUserCachePeriod(), TimeUnit.HOURS);
   }
 }
