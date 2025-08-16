@@ -25,18 +25,6 @@ public class FirestoreManager {
   }
 
   /**
-   * Attempts to add a channel to the user's data and ensures that we don't create duplicates.
-   *
-   * @param userLid User's Letterboxd id
-   * @param channelId Discord Channel id
-   * @return true if the action succeeded or the user already had the channel and false if any
-   *     number of failures
-   */
-  public boolean addUserSubscription(String userLid, String channelId) {
-    return userWriter.addUserSubscription(userLid, channelId);
-  }
-
-  /**
    * Attempts to remove a channel to the user's data.
    *
    * @param userLid User's Letterboxd id

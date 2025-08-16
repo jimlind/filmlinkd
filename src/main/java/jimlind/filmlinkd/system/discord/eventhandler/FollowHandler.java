@@ -109,7 +109,7 @@ public class FollowHandler implements Handler {
       user = userFactory.createFromSnapshot(snapshot);
     }
 
-    if (!this.firestoreManager.addUserSubscription(member.id, channelId)) {
+    if (!userWriter.addUserSubscription(member.id, channelId)) {
       event.getHook().sendMessage("Follow Failed").queue();
       return;
     }
