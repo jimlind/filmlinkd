@@ -1,74 +1,30 @@
 package jimlind.filmlinkd.system.google;
 
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.AggregateQuerySnapshot;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.FirestoreOptions;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.cloud.firestore.QuerySnapshot;
 import com.google.inject.Inject;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
-import jimlind.filmlinkd.config.AppConfig;
-import jimlind.filmlinkd.factory.UserFactory;
-import jimlind.filmlinkd.model.User;
+import jimlind.filmlinkd.system.google.firestore.UserReader;
+import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
-import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
-import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/** Handles all Firestore communication. Should probably be split into multiple classes. */
+/** Handles all Firestore communication. Currently, a wrapper for multiple classes. */
 @Slf4j
 public class FirestoreManager {
-  private static final String USER_KEY = "user";
-
-  private final AppConfig appConfig;
-  private final Firestore db;
-  private final ImageUtils imageUtils;
-  private final UserFactory userFactory;
+  private final UserReader userReader;
+  private final UserWriter userWriter;
 
   /**
    * The constructor for this class.
    *
-   * @param appConfig Contains application and environment variables
-   * @param imageUtils Assists in finding optimal Letterboxd images
-   * @param userFactory Creates our universal user model from Letterboxd API data or Firestorm data
+   * @param userReader Handles all read-only queries for user data from Firestore
+   * @param userWriter Handles all write queries for user data from Firestore
    */
   @Inject
-  FirestoreManager(AppConfig appConfig, ImageUtils imageUtils, UserFactory userFactory) {
-    this.appConfig = appConfig;
-    this.imageUtils = imageUtils;
-    this.userFactory = userFactory;
-
-    FirestoreOptions.Builder builder =
-        FirestoreOptions.getDefaultInstance().toBuilder()
-            .setProjectId(appConfig.getGoogleProjectId())
-            .setDatabaseId(this.appConfig.getFirestoreDatabaseId());
-    FirestoreOptions firestoreOptions = builder.build();
-
-    this.db = extractService(firestoreOptions);
-  }
-
-  private static Firestore extractService(FirestoreOptions firestoreOptions) {
-    return firestoreOptions.getService();
-  }
-
-  @NotNull
-  private static DocumentReference getReference(QueryDocumentSnapshot snapshot) {
-    return snapshot.getReference();
-  }
-
-  private static User.Previous getPrevious(User user) {
-    return user.getPrevious();
+  FirestoreManager(UserReader userReader, UserWriter userWriter) {
+    this.userReader = userReader;
+    this.userWriter = userWriter;
   }
 
   /**
@@ -77,14 +33,7 @@ public class FirestoreManager {
    * @param member Letterboxd Member object from API
    */
   public void createUserDocument(LbMember member) {
-    String collectionId = appConfig.getFirestoreCollectionId();
-    User user = userFactory.createFromMember(member);
-
-    try {
-      this.db.collection(collectionId).document(user.id).set(user.toMap()).get();
-    } catch (IllegalArgumentException | InterruptedException | ExecutionException e) {
-      log.atError().setMessage("Unable to set user document").log();
-    }
+    userWriter.createUserDocument(member);
   }
 
   /**
@@ -95,15 +44,7 @@ public class FirestoreManager {
    *     available
    */
   public @Nullable QueryDocumentSnapshot getUserDocument(String userLid) {
-    String collectionId = appConfig.getFirestoreCollectionId();
-    ApiFuture<QuerySnapshot> query =
-        this.db.collection(collectionId).whereEqualTo("letterboxdId", userLid).limit(1).get();
-
-    try {
-      return query.get().getDocuments().getFirst();
-    } catch (ExecutionException | InterruptedException | NoSuchElementException e) {
-      return null;
-    }
+    return userReader.getUserDocument(userLid);
   }
 
   /**
@@ -112,13 +53,7 @@ public class FirestoreManager {
    * @return The total number of user records in the database.
    */
   public long getUserCount() {
-    String collectionId = appConfig.getFirestoreCollectionId();
-    ApiFuture<AggregateQuerySnapshot> query = this.db.collection(collectionId).count().get();
-    try {
-      return query.get().getCount();
-    } catch (InterruptedException | ExecutionException e) {
-      return 0;
-    }
+    return userReader.getUserCount();
   }
 
   /**
@@ -128,17 +63,7 @@ public class FirestoreManager {
    * @return A List of documents for all active users.
    */
   public List<QueryDocumentSnapshot> getActiveUsers() {
-    String collectionId = appConfig.getFirestoreCollectionId();
-    ApiFuture<QuerySnapshot> query =
-        this.db
-            .collection(collectionId)
-            .whereNotEqualTo("channelList", Collections.emptyList())
-            .get();
-    try {
-      return query.get().getDocuments();
-    } catch (InterruptedException | ExecutionException e) {
-      return Collections.emptyList();
-    }
+    return userReader.getActiveUsers();
   }
 
   /**
@@ -149,15 +74,7 @@ public class FirestoreManager {
    * @return A list of all user documents that have the specific channel
    */
   public List<QueryDocumentSnapshot> getUserDocumentListByChannelId(String channelId) {
-    String collectionId = appConfig.getFirestoreCollectionId();
-    Map<String, String> channelMap = channelId != null ? Map.of("channelId", channelId) : Map.of();
-    ApiFuture<QuerySnapshot> query =
-        this.db.collection(collectionId).whereArrayContains("channelList", channelMap).get();
-    try {
-      return query.get().getDocuments();
-    } catch (InterruptedException | ExecutionException e) {
-      return new ArrayList<>();
-    }
+    return userReader.getUserDocumentListByChannelId(channelId);
   }
 
   /**
@@ -169,38 +86,7 @@ public class FirestoreManager {
    *     number of failures
    */
   public boolean addUserSubscription(String userLid, String channelId) {
-    // Create user but also save snapshot to update with
-    QueryDocumentSnapshot snapshot = this.getUserDocument(userLid);
-    User user = this.userFactory.createFromSnapshot(snapshot);
-    if (snapshot == null || user == null) {
-      return false;
-    }
-
-    // If the channel is already subscribed then exit early positively
-    for (String userChannelId : user.getChannelIdList()) {
-      if (userChannelId.equals(channelId)) {
-        return true;
-      }
-    }
-
-    User.Channel newChannel = new User.Channel();
-    newChannel.setChannelId(channelId);
-    user.getChannelList().add(newChannel);
-
-    try {
-      DocumentReference reference = getReference(snapshot);
-      reference.update(user.toMap());
-    } catch (IllegalArgumentException e) {
-      log.atError()
-          .setMessage("Unable to Add to Channel List: Update Failed")
-          .addKeyValue(USER_KEY, user)
-          .addKeyValue("channelId", channelId)
-          .addKeyValue("exception", e)
-          .log();
-      return false;
-    }
-
-    return true;
+    return userWriter.addUserSubscription(userLid, channelId);
   }
 
   /**
@@ -211,31 +97,7 @@ public class FirestoreManager {
    * @return true if the action succeeded and false if any number of failures
    */
   public boolean removeUserSubscription(String userLid, String channelId) {
-    // Create user but also save snapshot to update with
-    QueryDocumentSnapshot snapshot = this.getUserDocument(userLid);
-    User user = this.userFactory.createFromSnapshot(snapshot);
-    if (snapshot == null || user == null) {
-      return false;
-    }
-
-    user.setChannelList(
-        user.getChannelList().stream()
-            .filter(channel -> !channel.channelId.equals(channelId))
-            .collect(Collectors.toCollection(ArrayList::new)));
-
-    try {
-      getReference(snapshot).update(user.toMap());
-    } catch (IllegalArgumentException e) {
-      log.atError()
-          .setMessage("Unable to Remove from Channel List: Update Failed")
-          .addKeyValue(USER_KEY, user)
-          .addKeyValue("channelId", channelId)
-          .addKeyValue("exception", e)
-          .log();
-      return false;
-    }
-
-    return true;
+    return userWriter.removeUserSubscription(userLid, channelId);
   }
 
   /**
@@ -245,29 +107,7 @@ public class FirestoreManager {
    * @return true if the action succeeded and false if any number of failures
    */
   public boolean updateUserDisplayData(LbMember member) {
-    // Create user but also save snapshot to update with
-    QueryDocumentSnapshot snapshot = this.getUserDocument(member.id);
-    User user = this.userFactory.createFromSnapshot(snapshot);
-    if (snapshot == null || user == null) {
-      return false;
-    }
-
-    user.setDisplayName(member.getDisplayName());
-    user.setImage(imageUtils.getTallest(member.getAvatar()));
-    user.setUserName(member.getUsername());
-
-    try {
-      DocumentReference reference = getReference(snapshot);
-      reference.update(user.toMap());
-    } catch (IllegalArgumentException e) {
-      log.atError()
-          .setMessage("Unable to Update Display Data: Update Failed")
-          .addKeyValue(USER_KEY, user)
-          .log();
-      return false;
-    }
-
-    return true;
+    return userWriter.updateUserDisplayData(member);
   }
 
   /**
@@ -281,52 +121,6 @@ public class FirestoreManager {
    */
   public boolean updateUserPrevious(
       String userLid, String diaryLid, long diaryPublishedDate, String diaryUri) {
-
-    // Create user but also save snapshot to update with
-    QueryDocumentSnapshot snapshot = this.getUserDocument(userLid);
-    User user = this.userFactory.createFromSnapshot(snapshot);
-    if (snapshot == null || user == null) {
-      return false;
-    }
-
-    // Default to an empty list, but set it if not null
-    List<String> previousList = new ArrayList<>();
-    User.Previous previous = getPrevious(user);
-    if (previous.getList() != null) {
-      previousList = getPrevious(user).getList();
-    }
-
-    // Nothing to update. Return `true` as if the action succeeded.
-    if (previousList.contains(diaryLid)) {
-      return true;
-    }
-
-    User.Previous updatedPrevious = getPrevious(user);
-    updatedPrevious.setPublished(diaryPublishedDate); // Only used for debugging
-    updatedPrevious.setUri(diaryUri); // Only used for debugging
-
-    // The previous list should be considered the primary source of truth
-    updatedPrevious.setList(LidComparer.buildMostRecentList(previousList, diaryLid, 10));
-
-    // The scraping process uses the previous lid as it's source of truth to determine which
-    // entries are new. Maybe that should be changed eventually.
-    updatedPrevious.setLid(user.getMostRecentPrevious());
-
-    user.setPrevious(updatedPrevious);
-    user.setUpdated(Instant.now().toEpochMilli()); // Only used for debugging
-
-    try {
-      DocumentReference reference = getReference(snapshot);
-      reference.update(user.toMap());
-    } catch (IllegalArgumentException e) {
-      log.atError()
-          .setMessage("Unable to Update Previous: Update Failed")
-          .addKeyValue(USER_KEY, user)
-          .addKeyValue("diaryLid", diaryLid)
-          .log();
-      return false;
-    }
-
-    return true;
+    return userWriter.updateUserPrevious(userLid, diaryLid, diaryPublishedDate, diaryUri);
   }
 }

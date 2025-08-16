@@ -21,6 +21,9 @@ import jimlind.filmlinkd.system.VipScraperScheduler;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.google.PubSubSubscriberListener;
 import jimlind.filmlinkd.system.google.SecretManager;
+import jimlind.filmlinkd.system.google.firestore.FirestoreProvider;
+import jimlind.filmlinkd.system.google.firestore.UserReader;
+import jimlind.filmlinkd.system.google.firestore.UserWriter;
 
 /** Contains all the guts for dependency injection to work. */
 public class GuiceModule extends AbstractModule {
@@ -54,6 +57,9 @@ public class GuiceModule extends AbstractModule {
     // Google System Modules
     bind(SecretManager.class).in(Scopes.SINGLETON);
     bind(FirestoreManager.class).in(Scopes.SINGLETON);
+    bind(FirestoreProvider.class).in(Scopes.SINGLETON);
+    bind(UserReader.class).in(Scopes.SINGLETON);
+    bind(UserWriter.class).in(Scopes.SINGLETON);
 
     // Discord and Letterboxd Dependency Modules
     install(new DiscordModule());

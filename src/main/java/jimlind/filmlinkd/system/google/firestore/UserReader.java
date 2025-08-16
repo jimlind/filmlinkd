@@ -1,0 +1,105 @@
+package jimlind.filmlinkd.system.google.firestore;
+
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.AggregateQuerySnapshot;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
+import com.google.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.concurrent.ExecutionException;
+import jimlind.filmlinkd.config.AppConfig;
+import org.jetbrains.annotations.Nullable;
+
+/** Handles all read-only queries for user data from Firestore. */
+public class UserReader {
+  private final AppConfig appConfig;
+  private final Firestore db;
+
+  /**
+   * The constructor for this class.
+   *
+   * @param appConfig Contains application and environment variables
+   * @param firestoreProvider Wrapper for the Firestore database client
+   */
+  @Inject
+  public UserReader(AppConfig appConfig, FirestoreProvider firestoreProvider) {
+    this.appConfig = appConfig;
+    this.db = firestoreProvider.get();
+  }
+
+  /**
+   * Attempts to find a user document in the database.
+   *
+   * @param userLid The Letterboxd id for the user
+   * @return The document snapshot from Firestore if available, otherwise null
+   */
+  public @Nullable QueryDocumentSnapshot getUserDocument(String userLid) {
+    String collectionId = appConfig.getFirestoreCollectionId();
+    ApiFuture<QuerySnapshot> query =
+        this.db.collection(collectionId).whereEqualTo("letterboxdId", userLid).limit(1).get();
+
+    try {
+      return query.get().getDocuments().getFirst();
+    } catch (ExecutionException | InterruptedException | NoSuchElementException e) {
+      return null;
+    }
+  }
+
+  /**
+   * Gets the total number of user records in the database.
+   *
+   * @return The total number of user records
+   */
+  public long getUserCount() {
+    String collectionId = appConfig.getFirestoreCollectionId();
+    ApiFuture<AggregateQuerySnapshot> query = this.db.collection(collectionId).count().get();
+    try {
+      return query.get().getCount();
+    } catch (InterruptedException | ExecutionException e) {
+      return 0;
+    }
+  }
+
+  /**
+   * Gets all documents for all active users (those subscribed to at least one channel). This can be
+   * an expensive operation.
+   *
+   * @return A List of documents for all active users
+   */
+  public List<QueryDocumentSnapshot> getActiveUsers() {
+    String collectionId = appConfig.getFirestoreCollectionId();
+    ApiFuture<QuerySnapshot> query =
+        this.db
+            .collection(collectionId)
+            .whereNotEqualTo("channelList", Collections.emptyList())
+            .get();
+    try {
+      return query.get().getDocuments();
+    } catch (InterruptedException | ExecutionException e) {
+      return Collections.emptyList();
+    }
+  }
+
+  /**
+   * Gets all user documents for users followed in a specific channel.
+   *
+   * @param channelId The Discord channel id
+   * @return A list of all user documents that have the specific channel
+   */
+  public List<QueryDocumentSnapshot> getUserDocumentListByChannelId(String channelId) {
+    String collectionId = appConfig.getFirestoreCollectionId();
+    Map<String, String> channelMap = channelId != null ? Map.of("channelId", channelId) : Map.of();
+    ApiFuture<QuerySnapshot> query =
+        this.db.collection(collectionId).whereArrayContains("channelList", channelMap).get();
+    try {
+      return query.get().getDocuments();
+    } catch (InterruptedException | ExecutionException e) {
+      return new ArrayList<>();
+    }
+  }
+}
