@@ -14,7 +14,7 @@ public class EntryCache {
 
   /** Constructor for this class. */
   public EntryCache() {
-    this.cache = Caffeine.newBuilder().maximumSize(10_000).build();
+    cache = Caffeine.newBuilder().maximumSize(10_000).build();
   }
 
   /**
@@ -23,7 +23,7 @@ public class EntryCache {
    * @param key Letterboxd ID that has been used
    */
   public void set(String key) {
-    this.cache.put(key, true);
+    cache.put(key, true);
   }
 
   /**
@@ -33,7 +33,6 @@ public class EntryCache {
    * @return Boolean that indicates if the key was found in the cache.
    */
   public Boolean get(String key) {
-    Boolean result = this.cache.getIfPresent(key);
-    return result != null;
+    return cache.getIfPresent(key) != null;
   }
 }
