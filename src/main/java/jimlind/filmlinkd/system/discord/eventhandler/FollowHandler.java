@@ -14,6 +14,7 @@ import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.google.PubSubManager;
+import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
@@ -34,6 +35,7 @@ public class FollowHandler implements Handler {
   private final MessageFactory messageFactory;
   private final PubSubManager pubSubManager;
   private final UserFactory userFactory;
+  private final UserWriter userWriter;
 
   /**
    * Constructor for this class.
@@ -47,6 +49,7 @@ public class FollowHandler implements Handler {
    * @param messageFactory Builds the message object that is pushed into the PubSub system
    * @param pubSubManager Handles the PubSub system to accept commands and messages
    * @param userFactory Builds the user object from a Firestore snapshot
+   * @param userWriter Handles all write operations for user data in Firestore
    */
   @Inject
   public FollowHandler(
@@ -58,7 +61,8 @@ public class FollowHandler implements Handler {
       LogEntriesApi logEntriesApi,
       MessageFactory messageFactory,
       PubSubManager pubSubManager,
-      UserFactory userFactory) {
+      UserFactory userFactory,
+      UserWriter userWriter) {
     this.accountHelper = accountHelper;
     this.channelHelper = channelHelper;
     this.commandFactory = commandFactory;
@@ -68,6 +72,7 @@ public class FollowHandler implements Handler {
     this.messageFactory = messageFactory;
     this.pubSubManager = pubSubManager;
     this.userFactory = userFactory;
+    this.userWriter = userWriter;
   }
 
   private static LbMemberSummary getOwner(LbLogEntry logEntry) {
@@ -94,7 +99,7 @@ public class FollowHandler implements Handler {
     User user = null;
     // Create the user in the database if it doesn't exist
     if (snapshot == null) {
-      firestoreManager.createUserDocument(member);
+      userWriter.createUserDocument(member);
     } else {
       user = userFactory.createFromSnapshot(snapshot);
     }

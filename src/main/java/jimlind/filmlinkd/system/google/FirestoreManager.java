@@ -28,15 +28,6 @@ public class FirestoreManager {
   }
 
   /**
-   * Creates a new user document in Firestore from Letterboxd API data.
-   *
-   * @param member Letterboxd Member object from API
-   */
-  public void createUserDocument(LbMember member) {
-    userWriter.createUserDocument(member);
-  }
-
-  /**
    * Attempts to find a user in the database.
    *
    * @param userLid The Letterboxd id for the user
