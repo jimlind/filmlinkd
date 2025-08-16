@@ -29,7 +29,6 @@ public class UnfollowHandler implements Handler {
   UnfollowHandler(
       AccountHelper accountHelper,
       ChannelHelper channelHelper,
-      FirestoreManager firestoreManager,
       UnfollowEmbedBuilder unfollowEmbedBuilder,
       UserWriter userWriter) {
     this.accountHelper = accountHelper;

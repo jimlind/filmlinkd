@@ -30,7 +30,6 @@ public class FollowHandler implements Handler {
   private final ChannelHelper channelHelper;
   private final CommandFactory commandFactory;
   private final FollowEmbedBuilder followEmbedBuilder;
-  private final FirestoreManager firestoreManager;
   private final LogEntriesApi logEntriesApi;
   private final MessageFactory messageFactory;
   private final PubSubManager pubSubManager;
@@ -45,7 +44,6 @@ public class FollowHandler implements Handler {
    * @param channelHelper Service that parses a channel id from a slash event with options
    * @param commandFactory Builds the command object that is pushed into the PubSub system
    * @param followEmbedBuilder Builds the embed for the /follow command
-   * @param firestoreManager Service that handles all Firestore interactions
    * @param logEntriesApi Fetches log entry data from Letterboxd API
    * @param messageFactory Builds the message object that is pushed into the PubSub system
    * @param pubSubManager Handles the PubSub system to accept commands and messages
@@ -59,7 +57,6 @@ public class FollowHandler implements Handler {
       ChannelHelper channelHelper,
       CommandFactory commandFactory,
       FollowEmbedBuilder followEmbedBuilder,
-      FirestoreManager firestoreManager,
       LogEntriesApi logEntriesApi,
       MessageFactory messageFactory,
       PubSubManager pubSubManager,
@@ -70,7 +67,6 @@ public class FollowHandler implements Handler {
     this.channelHelper = channelHelper;
     this.commandFactory = commandFactory;
     this.followEmbedBuilder = followEmbedBuilder;
-    this.firestoreManager = firestoreManager;
     this.logEntriesApi = logEntriesApi;
     this.messageFactory = messageFactory;
     this.pubSubManager = pubSubManager;
