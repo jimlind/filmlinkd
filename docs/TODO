@@ -1,5 +1,4 @@
 NEED
-* Move back to the default database name to take advantage of free tier credits
 * Optimize Entry API to stop parsing earlier (not checking all 10 entries)
 * Create VIP Scraper
 * Ensure that charts/reports are duplicated in google console
@@ -21,3 +20,4 @@ DONE
 * Revisit all the try/catches I deleted
 * Wire Up Scraper Message Sending Completely
 * Scraper should receive command message and know that follows are added
+* Move back to the default database name to take advantage of free tier credits
