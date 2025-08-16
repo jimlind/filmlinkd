@@ -6,6 +6,7 @@ import jimlind.filmlinkd.system.discord.embedbuilder.UnfollowEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.google.FirestoreManager;
+import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -14,27 +15,28 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 public class UnfollowHandler implements Handler {
   private final AccountHelper accountHelper;
   private final ChannelHelper channelHelper;
-  private final FirestoreManager firestoreManager;
   private final UnfollowEmbedBuilder unfollowEmbedBuilder;
+  private final UserWriter userWriter;
 
   /**
    * Constructor for this class.
    *
    * @param accountHelper Handles translating account names to proper data models
    * @param channelHelper Service that parses a channel id from a slash event with options
-   * @param firestoreManager Service that handles all Firestore interactions
    * @param unfollowEmbedBuilder Builds the embed for the /unfollow command
+   * @param userWriter Handles all write operations for user data in Firestore
    */
   @Inject
   UnfollowHandler(
       AccountHelper accountHelper,
       ChannelHelper channelHelper,
       FirestoreManager firestoreManager,
-      UnfollowEmbedBuilder unfollowEmbedBuilder) {
+      UnfollowEmbedBuilder unfollowEmbedBuilder,
+      UserWriter userWriter) {
     this.accountHelper = accountHelper;
     this.channelHelper = channelHelper;
-    this.firestoreManager = firestoreManager;
     this.unfollowEmbedBuilder = unfollowEmbedBuilder;
+    this.userWriter = userWriter;
   }
 
   @Override
@@ -53,7 +55,7 @@ public class UnfollowHandler implements Handler {
       return;
     }
 
-    if (!firestoreManager.removeUserSubscription(member.id, channelId)) {
+    if (!userWriter.removeUserSubscription(member.id, channelId)) {
       event.getHook().sendMessage("Unfollow Failed").queue();
       return;
     }

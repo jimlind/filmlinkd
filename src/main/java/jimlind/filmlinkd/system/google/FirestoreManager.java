@@ -1,7 +1,6 @@
 package jimlind.filmlinkd.system.google;
 
 import com.google.inject.Inject;
-import jimlind.filmlinkd.system.google.firestore.UserReader;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import lombok.extern.slf4j.Slf4j;
@@ -9,18 +8,15 @@ import lombok.extern.slf4j.Slf4j;
 /** Handles all Firestore communication. Currently, a wrapper for multiple classes. */
 @Slf4j
 public class FirestoreManager {
-  private final UserReader userReader;
   private final UserWriter userWriter;
 
   /**
    * The constructor for this class.
    *
-   * @param userReader Handles all read-only queries for user data from Firestore
    * @param userWriter Handles all write queries for user data from Firestore
    */
   @Inject
-  FirestoreManager(UserReader userReader, UserWriter userWriter) {
-    this.userReader = userReader;
+  FirestoreManager(UserWriter userWriter) {
     this.userWriter = userWriter;
   }
 
