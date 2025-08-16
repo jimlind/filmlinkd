@@ -8,6 +8,7 @@ NEED
 * Retest with multiple server shards
 * Watched and Reviewed text in entries is backwards
 * Keep the scraping limits in place
+* Can we make it compile to a specific location and then get the specific rename, so modules can be compiled at the same time
 
 DONE
 * Delete all existing infrastructure and let terraform build it fresh
