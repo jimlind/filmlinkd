@@ -2,7 +2,6 @@ package jimlind.filmlinkd.system.google;
 
 import com.google.inject.Inject;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
-import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import lombok.extern.slf4j.Slf4j;
 
 /** Handles all Firestore communication. Currently, a wrapper for multiple classes. */
@@ -18,16 +17,6 @@ public class FirestoreManager {
   @Inject
   FirestoreManager(UserWriter userWriter) {
     this.userWriter = userWriter;
-  }
-
-  /**
-   * Updates the username, display name, and image based on most recent data from Letterboxd.
-   *
-   * @param member Letterboxd Member object from API
-   * @return true if the action succeeded and false if any number of failures
-   */
-  public boolean updateUserDisplayData(LbMember member) {
-    return userWriter.updateUserDisplayData(member);
   }
 
   /**

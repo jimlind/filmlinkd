@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import java.util.List;
 import jimlind.filmlinkd.system.discord.embedbuilder.RefreshEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
-import jimlind.filmlinkd.system.google.FirestoreManager;
+import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -12,24 +12,22 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 /** Handles the /refresh command that updates cached user data like name and image. */
 public class RefreshHandler implements Handler {
   private final AccountHelper accountHelper;
-  private final FirestoreManager firestoreManager;
   private final RefreshEmbedBuilder refreshEmbedBuilder;
+  private final UserWriter userWriter;
 
   /**
    * Constructor for this class.
    *
    * @param accountHelper Handles translating account names to proper data models
-   * @param firestoreManager Service that handles all Firestore interactions
    * @param refreshEmbedBuilder Builds the embed for the /refresh command
+   * @param userWriter Handles all write operations for user data in Firestore
    */
   @Inject
   RefreshHandler(
-      AccountHelper accountHelper,
-      FirestoreManager firestoreManager,
-      RefreshEmbedBuilder refreshEmbedBuilder) {
+      AccountHelper accountHelper, RefreshEmbedBuilder refreshEmbedBuilder, UserWriter userWriter) {
     this.accountHelper = accountHelper;
-    this.firestoreManager = firestoreManager;
     this.refreshEmbedBuilder = refreshEmbedBuilder;
+    this.userWriter = userWriter;
   }
 
   @Override
@@ -42,7 +40,7 @@ public class RefreshHandler implements Handler {
       return;
     }
 
-    if (!this.firestoreManager.updateUserDisplayData(member)) {
+    if (!userWriter.updateUserDisplayData(member)) {
       event.getHook().sendMessage("Refresh Failed").queue();
       return;
     }
