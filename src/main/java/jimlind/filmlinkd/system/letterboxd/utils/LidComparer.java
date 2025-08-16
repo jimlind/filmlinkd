@@ -23,14 +23,13 @@ public final class LidComparer {
    * Strings are normally compared lowest to highest [0-9][A-Z][a-z] Letterboxd LIDs are compared
    * lowest to highest [0-9][a-z][A-Z] so we need to swap cases before doing a comparison.
    *
-   * @param letterboxdIdA Any Letterboxd ID (could represent any data model)
-   * @param letterboxdIdB Any Letterboxd ID (could represent any data model)
+   * @param letterboxdIdA Any Letterboxd ID (could represent any Letterboxd data)
+   * @param letterboxdIdB Any Letterboxd ID (could represent any Letterboxd data)
    * @return Indicate which Letterboxd ID comes first
    */
   public static int compare(String letterboxdIdA, String letterboxdIdB) {
-    if (letterboxdIdA == null || letterboxdIdB == null) {
-      return 0;
-    }
+    letterboxdIdA = (letterboxdIdA != null) ? letterboxdIdA : "";
+    letterboxdIdB = (letterboxdIdB != null) ? letterboxdIdB : "";
 
     if (letterboxdIdA.length() != letterboxdIdB.length()) {
       return letterboxdIdA.length() - letterboxdIdB.length();
