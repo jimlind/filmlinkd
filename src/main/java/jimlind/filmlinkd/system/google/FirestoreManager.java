@@ -1,8 +1,6 @@
 package jimlind.filmlinkd.system.google;
 
-import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.inject.Inject;
-import java.util.List;
 import jimlind.filmlinkd.system.google.firestore.UserReader;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
@@ -24,17 +22,6 @@ public class FirestoreManager {
   FirestoreManager(UserReader userReader, UserWriter userWriter) {
     this.userReader = userReader;
     this.userWriter = userWriter;
-  }
-
-  /**
-   * Get all users where the specific channel is available in the list of channels in the user data
-   * record. This should associate with the users that are followed in a channel.
-   *
-   * @param channelId The discord channel id
-   * @return A list of all user documents that have the specific channel
-   */
-  public List<QueryDocumentSnapshot> getUserDocumentListByChannelId(String channelId) {
-    return userReader.getUserDocumentListByChannelId(channelId);
   }
 
   /**

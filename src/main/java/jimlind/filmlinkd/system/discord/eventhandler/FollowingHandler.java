@@ -9,7 +9,7 @@ import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.discord.embedbuilder.FollowingEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
-import jimlind.filmlinkd.system.google.FirestoreManager;
+import jimlind.filmlinkd.system.google.firestore.UserReader;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -17,28 +17,28 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 /** Handles the /following command to show the users followed in the specified channel. */
 public class FollowingHandler implements Handler {
   private final ChannelHelper channelHelper;
-  private final FirestoreManager firestoreManager;
   private final FollowingEmbedBuilder followingEmbedBuilder;
   private final UserFactory userFactory;
+  private final UserReader userReader;
 
   /**
    * Constructor for this class.
    *
    * @param channelHelper Service that parses a channel id from a slash event with options
-   * @param firestoreManager Service that handles all Firestore interactions
    * @param followingEmbedBuilder Builds the embed for the /following command
    * @param userFactory Builds the user object from a Firestore snapshot
+   * @param userReader Handles all read-only queries for user data from Firestore
    */
   @Inject
   FollowingHandler(
       ChannelHelper channelHelper,
-      FirestoreManager firestoreManager,
       FollowingEmbedBuilder followingEmbedBuilder,
-      UserFactory userFactory) {
+      UserFactory userFactory,
+      UserReader userReader) {
     this.channelHelper = channelHelper;
-    this.firestoreManager = firestoreManager;
     this.followingEmbedBuilder = followingEmbedBuilder;
     this.userFactory = userFactory;
+    this.userReader = userReader;
   }
 
   @Override
@@ -51,8 +51,7 @@ public class FollowingHandler implements Handler {
       return;
     }
 
-    List<QueryDocumentSnapshot> documentList =
-        this.firestoreManager.getUserDocumentListByChannelId(channelId);
+    List<QueryDocumentSnapshot> documentList = userReader.getUserDocumentListByChannelId(channelId);
 
     Map<String, User> userMap = new TreeMap<>(LidComparer::compare);
     for (QueryDocumentSnapshot snapshot : documentList) {
