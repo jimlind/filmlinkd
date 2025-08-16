@@ -28,14 +28,14 @@ public final class LidComparer {
    * @return Indicate which Letterboxd ID comes first
    */
   public static int compare(String letterboxdIdA, String letterboxdIdB) {
-    letterboxdIdA = (letterboxdIdA != null) ? letterboxdIdA : "";
-    letterboxdIdB = (letterboxdIdB != null) ? letterboxdIdB : "";
+    String firstValue = (letterboxdIdA != null) ? letterboxdIdA : "";
+    String secondValue = (letterboxdIdB != null) ? letterboxdIdB : "";
 
-    if (letterboxdIdA.length() != letterboxdIdB.length()) {
-      return letterboxdIdA.length() - letterboxdIdB.length();
+    if (firstValue.length() != secondValue.length()) {
+      return firstValue.length() - secondValue.length();
     }
 
-    return swapCase(letterboxdIdA).compareTo(swapCase(letterboxdIdB));
+    return swapCase(firstValue).compareTo(swapCase(secondValue));
   }
 
   /**

@@ -25,15 +25,15 @@ class LidComparerTest {
     }
 
     @Test
-    @DisplayName("should return 0 when first ID is null")
-    void compare_firstNull_returnsZero() {
-      assertEquals(0, LidComparer.compare(null, "abc"));
+    @DisplayName("should return negative when first ID is null and second is not")
+    void compare_firstNull_returnsNegative() {
+      assertTrue(LidComparer.compare(null, "abc") < 0);
     }
 
     @Test
-    @DisplayName("should return 0 when second ID is null")
-    void compare_secondNull_returnsZero() {
-      assertEquals(0, LidComparer.compare("abc", null));
+    @DisplayName("should return positive when second ID is null and first is not")
+    void compare_secondNull_returnsPositive() {
+      assertTrue(LidComparer.compare("abc", null) > 0);
     }
 
     @Test
