@@ -12,6 +12,7 @@ import jimlind.filmlinkd.system.google.PubSubManager;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LbMemberSummary;
+import jimlind.filmlinkd.system.letterboxd.utils.DateUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class GeneralScraper implements Runnable {
-
+  private final DateUtils dateUtils;
   private final GeneralUserCache generalUserCache;
   private final LogEntriesApi logEntriesApi;
   private final MessageFactory messageFactory;
@@ -30,6 +31,7 @@ public class GeneralScraper implements Runnable {
   /**
    * Constructor for this class.
    *
+   * @param dateUtils Utilities to translate Letterboxd date strings to other formats
    * @param generalUserCache Where we store in memory versions records of latest diary entry
    * @param logEntriesApi Fetches log entry data from Letterboxd API
    * @param messageFactory Builds the message object that is pushed into the PubSub system
@@ -37,10 +39,12 @@ public class GeneralScraper implements Runnable {
    */
   @Inject
   public GeneralScraper(
+      DateUtils dateUtils,
       GeneralUserCache generalUserCache,
       LogEntriesApi logEntriesApi,
       MessageFactory messageFactory,
       PubSubManager pubSubManager) {
+    this.dateUtils = dateUtils;
     this.generalUserCache = generalUserCache;
     this.logEntriesApi = logEntriesApi;
     this.messageFactory = messageFactory;
@@ -58,8 +62,12 @@ public class GeneralScraper implements Runnable {
       List<LbLogEntry> logEntryList = logEntriesApi.getRecentForUser(entry.getKey(), 10);
 
       logEntryList.stream()
-          .filter(logEntry -> current - Long.parseLong(logEntry.getWhenCreated()) >= 180000)
-          .filter(logEntry -> 0 < LidComparer.compare(logEntry.id, entry.getValue()))
+          .filter(
+              // Filter out entries that are newer than 3 minutes
+              logEntry -> current - dateUtils.toMilliseconds(logEntry.getWhenCreated()) >= 180000)
+          .filter(
+              // Filter out entries that are not newer than the most recent entry
+              logEntry -> 0 < LidComparer.compare(logEntry.id, entry.getValue()))
           .forEach(
               logEntry -> {
                 Message message = messageFactory.createFromLogEntry(logEntry, source);
@@ -72,6 +80,7 @@ public class GeneralScraper implements Runnable {
           LbMemberSummary owner = getOwner(logEntryList.getFirst());
           log.info("Publishing {}x films from {}", publishedEntryIdList.size(), owner.displayName);
         }
+        // Set the values in the general user cache outside the steam to avoid concurrency issues
         for (String entryId : publishedEntryIdList) {
           generalUserCache.setIfNewer(entry.getKey(), entryId);
         }
