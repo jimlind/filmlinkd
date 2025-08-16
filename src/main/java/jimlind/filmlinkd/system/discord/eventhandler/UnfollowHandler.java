@@ -5,7 +5,6 @@ import java.util.List;
 import jimlind.filmlinkd.system.discord.embedbuilder.UnfollowEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
-import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import net.dv8tion.jda.api.entities.MessageEmbed;

@@ -12,7 +12,6 @@ import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.discord.embedbuilder.FollowEmbedBuilder;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
-import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.google.PubSubManager;
 import jimlind.filmlinkd.system.google.firestore.UserReader;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;

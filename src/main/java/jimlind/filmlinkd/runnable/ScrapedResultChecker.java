@@ -8,7 +8,7 @@ import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.ScrapedResultQueue;
 import jimlind.filmlinkd.system.discord.ShardManagerStorage;
 import jimlind.filmlinkd.system.discord.embedbuilder.DiaryEntryEmbedBuilder;
-import jimlind.filmlinkd.system.google.FirestoreManager;
+import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
@@ -27,9 +27,9 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 @Slf4j
 public class ScrapedResultChecker implements Runnable {
   private final DiaryEntryEmbedBuilder diaryEntryEmbedBuilder;
-  private final FirestoreManager firestoreManager;
   private final ScrapedResultQueue scrapedResultQueue;
   private final ShardManagerStorage shardManagerStorage;
+  private final UserWriter userWriter;
 
   private final int shardId;
   private final int totalShards;
@@ -38,23 +38,23 @@ public class ScrapedResultChecker implements Runnable {
    * Constructor for this class.
    *
    * @param diaryEntryEmbedBuilder A class that builds diaryEntryEmbed objects
-   * @param firestoreManager A class that handles FireStore data interactions
    * @param scrapedResultQueue A class that stores results in local memory
    * @param shardManagerStorage A class that stores shard information
    * @param shardId The shard id to help us know which shard we are running this from
    * @param totalShards The total number of shards in use
+   * @param userWriter Handles all write operations for user data in Firestore
    */
   public ScrapedResultChecker(
       DiaryEntryEmbedBuilder diaryEntryEmbedBuilder,
-      FirestoreManager firestoreManager,
       ScrapedResultQueue scrapedResultQueue,
       ShardManagerStorage shardManagerStorage,
+      UserWriter userWriter,
       int shardId,
       int totalShards) {
     this.diaryEntryEmbedBuilder = diaryEntryEmbedBuilder;
-    this.firestoreManager = firestoreManager;
     this.scrapedResultQueue = scrapedResultQueue;
     this.shardManagerStorage = shardManagerStorage;
+    this.userWriter = userWriter;
     this.shardId = shardId;
     this.totalShards = totalShards;
   }
@@ -146,8 +146,7 @@ public class ScrapedResultChecker implements Runnable {
     // If the entry is new write attempt to write it to the database
     if (entryIsNew) {
       boolean updateSuccess =
-          firestoreManager.updateUserPrevious(
-              entry.userLid, entry.lid, entry.publishedDate, entry.link);
+          userWriter.updateUserPrevious(entry.userLid, entry.lid, entry.publishedDate, entry.link);
 
       if (!updateSuccess) {
         log.atError()

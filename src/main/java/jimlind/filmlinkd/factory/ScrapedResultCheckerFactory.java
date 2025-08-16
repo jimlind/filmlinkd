@@ -5,32 +5,32 @@ import jimlind.filmlinkd.runnable.ScrapedResultChecker;
 import jimlind.filmlinkd.system.ScrapedResultQueue;
 import jimlind.filmlinkd.system.discord.ShardManagerStorage;
 import jimlind.filmlinkd.system.discord.embedbuilder.DiaryEntryEmbedBuilder;
-import jimlind.filmlinkd.system.google.FirestoreManager;
+import jimlind.filmlinkd.system.google.firestore.UserWriter;
 
 /** A factory for creating instances of the {@link ScrapedResultChecker} model. */
 public class ScrapedResultCheckerFactory {
   private final DiaryEntryEmbedBuilder diaryEntryEmbedBuilder;
-  private final FirestoreManager firestoreManager;
   private final ScrapedResultQueue scrapedResultQueue;
   private final ShardManagerStorage shardManagerStorage;
+  private final UserWriter userWriter;
 
   /**
    * Constructor for {@link ScrapedResultCheckerFactory}.
    *
    * @param diaryEntryEmbedBuilder A class that builds diaryEntryEmbed objects
-   * @param firestoreManager A class that handles FireStore data interactions
    * @param scrapedResultQueue A class that stores results in local memory
+   * @param userWriter Handles all write operations for user data in Firestore
    */
   @Inject
   public ScrapedResultCheckerFactory(
       DiaryEntryEmbedBuilder diaryEntryEmbedBuilder,
-      FirestoreManager firestoreManager,
       ScrapedResultQueue scrapedResultQueue,
-      ShardManagerStorage shardManagerStorage) {
+      ShardManagerStorage shardManagerStorage,
+      UserWriter userWriter) {
     this.diaryEntryEmbedBuilder = diaryEntryEmbedBuilder;
-    this.firestoreManager = firestoreManager;
     this.scrapedResultQueue = scrapedResultQueue;
     this.shardManagerStorage = shardManagerStorage;
+    this.userWriter = userWriter;
   }
 
   /**
@@ -43,9 +43,9 @@ public class ScrapedResultCheckerFactory {
   public ScrapedResultChecker create(int shardId, int totalShards) {
     return new ScrapedResultChecker(
         diaryEntryEmbedBuilder,
-        firestoreManager,
         scrapedResultQueue,
         shardManagerStorage,
+        userWriter,
         shardId,
         totalShards);
   }

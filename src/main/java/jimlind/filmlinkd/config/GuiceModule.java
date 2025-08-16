@@ -18,7 +18,6 @@ import jimlind.filmlinkd.system.GeneralUserCache;
 import jimlind.filmlinkd.system.ScrapedResultQueue;
 import jimlind.filmlinkd.system.ShutdownThread;
 import jimlind.filmlinkd.system.VipScraperScheduler;
-import jimlind.filmlinkd.system.google.FirestoreManager;
 import jimlind.filmlinkd.system.google.PubSubSubscriberListener;
 import jimlind.filmlinkd.system.google.SecretManager;
 import jimlind.filmlinkd.system.google.firestore.FirestoreProvider;
@@ -56,7 +55,6 @@ public class GuiceModule extends AbstractModule {
 
     // Google System Modules
     bind(SecretManager.class).in(Scopes.SINGLETON);
-    bind(FirestoreManager.class).in(Scopes.SINGLETON);
     bind(FirestoreProvider.class).in(Scopes.SINGLETON);
     bind(UserReader.class).in(Scopes.SINGLETON);
     bind(UserWriter.class).in(Scopes.SINGLETON);
