@@ -27,16 +27,6 @@ public class FirestoreManager {
   }
 
   /**
-   * Gives access to all documents for all active users. This should not be called regularly because
-   * it is expensive.
-   *
-   * @return A List of documents for all active users.
-   */
-  public List<QueryDocumentSnapshot> getActiveUsers() {
-    return userReader.getActiveUsers();
-  }
-
-  /**
    * Get all users where the specific channel is available in the list of channels in the user data
    * record. This should associate with the users that are followed in a channel.
    *
