@@ -20,7 +20,8 @@ import java.util.concurrent.ExecutionException;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.model.Command;
 import jimlind.filmlinkd.model.Message;
-import jimlind.filmlinkd.system.MessageReceiver;
+import jimlind.filmlinkd.reciever.CommandMessageReceiver;
+import jimlind.filmlinkd.reciever.LogEntryMessageReceiver;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,41 +36,41 @@ public class PubSubManager {
   static final int ACK_DEADLINE_SECONDS = 10;
 
   private final AppConfig appConfig;
-  private final MessageReceiver messageReceiver;
+  private final CommandMessageReceiver commandMessageReceiver;
+  private final LogEntryMessageReceiver logEntryMessageReceiver;
   private final PubSubSubscriberListener pubSubSubscriberListener;
 
-  @Nullable private Publisher logEntryPublisher;
   @Nullable private Publisher commandPublisher;
-  @Nullable private Subscriber logEntrySubscriber;
+  @Nullable private Publisher logEntryPublisher;
   @Nullable private Subscriber commandSubscriber;
+  @Nullable private Subscriber logEntrySubscriber;
 
   /**
    * The constructor for this class.
    *
    * @param appConfig Contains application and environment variables
-   * @param messageReceiver Receives the PubSub message object
+   * @param commandMessageReceiver Receives the PubSub object for command messages
+   * @param logEntryMessageReceiver Receives the PubSub object for logentry messages
    * @param pubSubSubscriberListener Listens for PubSub messages
    */
   @Inject
   PubSubManager(
       AppConfig appConfig,
-      MessageReceiver messageReceiver,
+      CommandMessageReceiver commandMessageReceiver,
+      LogEntryMessageReceiver logEntryMessageReceiver,
       PubSubSubscriberListener pubSubSubscriberListener) {
     this.appConfig = appConfig;
-    this.messageReceiver = messageReceiver;
+    this.commandMessageReceiver = commandMessageReceiver;
+    this.logEntryMessageReceiver = logEntryMessageReceiver;
     this.pubSubSubscriberListener = pubSubSubscriberListener;
   }
 
   /** Builds all the needed publishers and subscribers. */
-  public void activate() {
+  public void buildAll() {
     buildCommandPublisher();
     buildLogEntryPublisher();
-
-    logEntrySubscriber =
-        buildSubscriber(
-            appConfig.getGoogleProjectId(),
-            appConfig.getPubSubLogEntrySubscriptionName(),
-            appConfig.getPubSubLogEntryTopicName());
+    buildCommandSubscriber();
+    buildLogEntrySubscriber();
   }
 
   /** Builds the command publisher. */
@@ -84,14 +85,35 @@ public class PubSubManager {
         buildPublisher(appConfig.getGoogleProjectId(), appConfig.getPubSubLogEntryTopicName());
   }
 
+  /** Builds the command subscriber. */
+  public void buildCommandSubscriber() {
+    String projectId = appConfig.getGoogleProjectId();
+    String subscriptionId = appConfig.getPubSubCommandSubscriptionName();
+    String subscriptionName = SubscriptionName.of(projectId, subscriptionId).toString();
+
+    createSubscriptionClient(projectId, subscriptionId, appConfig.getPubSubCommandTopicName());
+    commandSubscriber = Subscriber.newBuilder(subscriptionName, commandMessageReceiver).build();
+    subscribeListener(commandSubscriber);
+  }
+
+  /** Builds the log entry subscriber. */
+  public void buildLogEntrySubscriber() {
+    String projectId = appConfig.getGoogleProjectId();
+    String subscriptionId = appConfig.getPubSubLogEntrySubscriptionName();
+    String subscriptionName = SubscriptionName.of(projectId, subscriptionId).toString();
+
+    createSubscriptionClient(projectId, subscriptionId, appConfig.getPubSubLogEntryTopicName());
+    logEntrySubscriber = Subscriber.newBuilder(subscriptionName, logEntryMessageReceiver).build();
+    subscribeListener(logEntrySubscriber);
+  }
+
   /** Deactivates the publishers and subscribers if they have been created. */
-  public void deactivate() {
-    if (logEntrySubscriber != null) {
-      log.atInfo()
-          .setMessage("Stopping PubSub Subscriber for Messages on {}")
-          .addArgument(logEntrySubscriber.getSubscriptionNameString())
-          .log();
-      logEntrySubscriber.stopAsync();
+  public void deactivateAll() {
+    if (commandPublisher != null) {
+      if (log.isInfoEnabled()) {
+        log.info("Stopping Command PubSub Publisher on {}", commandPublisher.getTopicNameString());
+      }
+      commandPublisher.shutdown();
     }
 
     if (logEntryPublisher != null) {
@@ -102,11 +124,20 @@ public class PubSubManager {
       logEntryPublisher.shutdown();
     }
 
-    if (commandPublisher != null) {
-      if (log.isInfoEnabled()) {
-        log.info("Stopping Command PubSub Publisher on {}", commandPublisher.getTopicNameString());
-      }
-      commandPublisher.shutdown();
+    if (commandSubscriber != null) {
+      log.atInfo()
+          .setMessage("Stopping PubSub Subscriber for Messages on {}")
+          .addArgument(commandSubscriber.getSubscriptionNameString())
+          .log();
+      commandSubscriber.stopAsync();
+    }
+
+    if (logEntrySubscriber != null) {
+      log.atInfo()
+          .setMessage("Stopping PubSub Subscriber for Messages on {}")
+          .addArgument(logEntrySubscriber.getSubscriptionNameString())
+          .log();
+      logEntrySubscriber.stopAsync();
     }
   }
 
@@ -172,7 +203,7 @@ public class PubSubManager {
     }
   }
 
-  private Subscriber buildSubscriber(String projectId, String subscriptionId, String topicId) {
+  private void createSubscriptionClient(String projectId, String subscriptionId, String topicId) {
     ProjectName projectName = ProjectName.of(projectId);
     TopicName topicName = TopicName.of(projectId, topicId);
     SubscriptionName subscriptionName = SubscriptionName.of(projectId, subscriptionId);
@@ -185,23 +216,12 @@ public class PubSubManager {
       }
     } catch (IOException e) {
       log.atError()
-          .setMessage("Unable to setup connection to the PubSub client")
+          .setMessage("Unable to create SubscriptionAdminClient")
+          .addKeyValue("subscriptionId", subscriptionId)
+          .addKeyValue("topicId", topicId)
           .addKeyValue(EXCEPTION_KEY, e)
           .log();
-      return null;
     }
-
-    // Build a subscriber wired up to a message receivers and event listeners
-    // If we are going to properly expand this to be a method that creates generic subscribers this
-    // will have to be rebuilt.
-    Subscriber subscriber =
-        Subscriber.newBuilder(subscriptionName.toString(), messageReceiver).build();
-    subscriber.addListener(pubSubSubscriberListener, MoreExecutors.directExecutor());
-
-    subscriber.startAsync().awaitRunning();
-    log.info("Starting Listening for Messages on {}", subscriptionName);
-
-    return subscriber;
   }
 
   private void createSubscription(
@@ -221,6 +241,14 @@ public class PubSubManager {
             .setExpirationPolicy(expirationPolicy);
 
     client.createSubscription(builder.build());
+  }
+
+  private void subscribeListener(Subscriber subscriber) {
+    subscriber.addListener(pubSubSubscriberListener, MoreExecutors.directExecutor());
+    subscriber.startAsync().awaitRunning();
+    if (log.isInfoEnabled()) {
+      log.info("Starting Listening for Messages on {}", subscriber.getSubscriptionNameString());
+    }
   }
 
   private boolean hasSubscription(

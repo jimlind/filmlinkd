@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system;
+package jimlind.filmlinkd.reciever;
 
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.inject.Inject;
@@ -8,23 +8,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import jimlind.filmlinkd.factory.ScrapedResultFactory;
 import jimlind.filmlinkd.model.ScrapedResult;
+import jimlind.filmlinkd.system.EntryCache;
+import jimlind.filmlinkd.system.ScrapedResultQueue;
 
-/** The MessageReceiver gets PubSub messages and responds to them appropriately. */
+/** The LogEntryMessageReceiver gets PubSub messages and responds to them appropriately. */
 @Singleton
-public class MessageReceiver implements com.google.cloud.pubsub.v1.MessageReceiver {
+public class LogEntryMessageReceiver implements com.google.cloud.pubsub.v1.MessageReceiver {
   private final EntryCache entryCache;
   private final ScrapedResultFactory scrapedResultFactory;
   private final ScrapedResultQueue scrapedResultQueue;
 
   /**
-   * Constructor for the {@link MessageReceiver}.
+   * Constructor for the {@link LogEntryMessageReceiver}.
    *
    * @param entryCache Where we keep a record of most of recent diary entries
    * @param scrapedResultFactory Factory for creating {@link ScrapedResult} model from message data
    * @param scrapedResultQueue Where we put PubSub events to keep from overwhelming the system
    */
   @Inject
-  public MessageReceiver(
+  public LogEntryMessageReceiver(
       EntryCache entryCache,
       ScrapedResultFactory scrapedResultFactory,
       ScrapedResultQueue scrapedResultQueue) {

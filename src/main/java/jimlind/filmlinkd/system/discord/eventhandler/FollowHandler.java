@@ -115,7 +115,8 @@ public class FollowHandler implements Handler {
       Message.PublishSource source = Message.PublishSource.Follow;
       Message message = messageFactory.createFromLogEntry(logEntry, source);
       // Only add the channel if we know that the log entry has already been posted
-      // Including a channel id is a signal to the MessageReceiver to only send to one channel
+      // Including a channel id is a signal to the LogEntryMessageReceiver to only send to one
+      // channel
       if (user != null && LidComparer.compare(logEntry.id, user.getMostRecentPrevious()) <= 0) {
         message.setChannelId(channelId);
       }

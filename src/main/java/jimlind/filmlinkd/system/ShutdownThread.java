@@ -27,6 +27,6 @@ public class ShutdownThread extends Thread {
   public void run() {
     log.info("Shutting Things Down!");
     discordSystem.stop();
-    pubSubManager.deactivate();
+    pubSubManager.deactivateAll();
   }
 }

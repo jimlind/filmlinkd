@@ -33,8 +33,10 @@ public final class Bot {
     // Start the Discord server
     injector.getInstance(DiscordSystem.class).start();
 
-    // Start the Subscribers and build the Publishers
-    injector.getInstance(PubSubManager.class).activate();
+    // Configure the needed publishers and subscribers
+    injector.getInstance(PubSubManager.class).buildCommandPublisher();
+    injector.getInstance(PubSubManager.class).buildLogEntryPublisher();
+    injector.getInstance(PubSubManager.class).buildLogEntrySubscriber();
 
     // Schedule Memory Logger (These should run forever so not closing them)
     @SuppressWarnings("PMD.CloseResource")
