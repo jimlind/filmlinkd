@@ -48,7 +48,7 @@ public class MessageFactory {
     entry.setUserLid(owner.id);
 
     String reviewText = LogEntryAttributes.extractReviewText(logEntry);
-    entry.setType(reviewText.isEmpty() ? Type.review : Type.watch);
+    entry.setType(reviewText.isEmpty() ? Type.watch : Type.review);
 
     entry.setLink(linkUtils.getLetterboxd(logEntry.links));
     entry.setPublishedDate(dateUtils.toMilliseconds(logEntry.whenCreated));

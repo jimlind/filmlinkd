@@ -69,7 +69,7 @@ public final class LogEntryAttributes {
     if (review.getText().isBlank()) {
       return "";
     }
-    return review.toString();
+    return review.getText();
   }
 
   @Nullable
