@@ -58,6 +58,11 @@ public class GeneralScraper implements Runnable {
     Message.PublishSource source = Message.PublishSource.Normal;
     List<Map.Entry<String, String>> userPage = generalUserCache.getNextPage();
     for (Map.Entry<String, String> entry : userPage) {
+      String entryLetterboxdId = logEntriesApi.getMostRecentEntryLetterboxdId(entry.getKey());
+      if (0 >= LidComparer.compare(entryLetterboxdId, entry.getValue())) {
+        continue;
+      }
+
       List<String> publishedEntryIdList = new ArrayList<>();
       List<LbLogEntry> logEntryList = logEntriesApi.getRecentForUser(entry.getKey(), 10);
 

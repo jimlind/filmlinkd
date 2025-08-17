@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -19,6 +20,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import jimlind.filmlinkd.config.AppConfig;
@@ -44,6 +47,59 @@ public class Client {
   @Inject
   Client(AppConfig appConfig) {
     this.appConfig = appConfig;
+  }
+
+  public String handleAuthorizedStream(String path, Function<InputStream, String> streamProcessor) {
+    URL url;
+    String authorization;
+    try {
+      URI uri =
+          new URIBuilder(BASE_URL + path)
+              .addParameter("apikey", appConfig.getLetterboxdApiKey())
+              .addParameter("nonce", String.valueOf(UUID.randomUUID()))
+              .addParameter("timestamp", String.valueOf(Instant.now().getEpochSecond()))
+              .build();
+      url = uri.toURL();
+      authorization = "Signature " + this.buildSignature("GET", uri.toString());
+    } catch (URISyntaxException | MalformedURLException e) {
+      log.atError()
+          .setMessage("Failed to build URL or Authorization Signature")
+          .addKeyValue("path", path)
+          .addKeyValue("exception", e)
+          .log();
+      return "";
+    }
+
+    HttpURLConnection connection = null;
+    try {
+      connection = (HttpURLConnection) url.openConnection();
+      connection.setRequestMethod("GET");
+      connection.setRequestProperty("Host", url.getHost());
+      connection.setRequestProperty("User-Agent", "Filmlinkd - A Letterboxd Discord Bot");
+      connection.setRequestProperty("Authorization", authorization);
+      connection.setConnectTimeout((int) TimeUnit.SECONDS.toMillis(5));
+      connection.setReadTimeout((int) TimeUnit.SECONDS.toMillis(5));
+
+      if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+        connection.disconnect();
+        return "";
+      }
+
+      try (InputStream inputStream = connection.getInputStream()) {
+        return streamProcessor.apply(inputStream);
+      }
+    } catch (IOException e) {
+      log.atError()
+          .setMessage("Failed to handle HTTP stream")
+          .addKeyValue("path", path)
+          .addKeyValue("exception", e)
+          .log();
+    } finally {
+      if (connection != null) {
+        connection.disconnect();
+      }
+    }
+    return "";
   }
 
   /**
@@ -96,42 +152,6 @@ public class Client {
     }
   }
 
-  public @Nullable InputStream getAuthorizedStream(String path) {
-    HttpURLConnection connection;
-    try {
-      URI uri =
-          new URIBuilder(BASE_URL + path)
-              .addParameter("apikey", appConfig.getLetterboxdApiKey())
-              .addParameter("nonce", String.valueOf(UUID.randomUUID()))
-              .addParameter("timestamp", String.valueOf(Instant.now().getEpochSecond()))
-              .build();
-      String authorization = "Signature " + this.buildSignature("GET", uri.toString());
-
-      URL url = uri.toURL();
-      connection = (HttpURLConnection) url.openConnection();
-      connection.setRequestProperty("Host", url.getHost());
-      connection.setRequestProperty("User-Agent", "Filmlinkd - A Letterboxd Discord Bot");
-      connection.setRequestProperty("Authorization", authorization);
-      connection.setConnectTimeout(2000);
-      connection.setReadTimeout(2000);
-
-      if (connection.getResponseCode() != 200) {
-        connection.disconnect();
-        return null;
-      }
-
-      return connection.getInputStream();
-    } catch (URISyntaxException | IOException e) {
-      log.atError()
-          .setMessage("Failed to create connection and get input stream.")
-          .addKeyValue("path", path)
-          .addKeyValue("exception", e)
-          .log();
-    }
-
-    return null;
-  }
-
   private @Nullable <T> T request(URI uri, String authorization, Class<T> inputClass) {
     HttpRequest request =
         HttpRequest.newBuilder()
@@ -156,7 +176,12 @@ public class Client {
         return null;
       }
     } catch (InterruptedException | IOException e) {
-      log.atError().setMessage("Client Error").addKeyValue(URI_KEY, uri).log();
+      System.out.println(e);
+      log.atError()
+          .setMessage("Client Error")
+          .addKeyValue(URI_KEY, uri)
+          .addKeyValue("exception", e)
+          .log();
       return null;
     }
 
