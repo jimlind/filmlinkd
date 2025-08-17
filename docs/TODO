@@ -4,8 +4,7 @@ NEED
 * Post an actual diary entry as the last part of Help:Test
 * Post a permissions status message with Help
 * Retest with multiple server shards
-* Watched and Reviewed text in entries is backwards
-* Keep the scraping limits in place
+* Keep the same scraping limits in place as current production
 * Can we make it compile to a specific location and then get the specific rename, so modules can be compiled at the same time
 * Can I pass exception as cause of logs and see it in logs?
 
@@ -22,3 +21,4 @@ DONE
 * Scraper should receive command message and know that follows are added
 * Move back to the default database name to take advantage of free tier credits
 * Optimize Entry API to stop parsing earlier (not checking all 10 entries)
+* Watched and Reviewed text in entries is backwards
