@@ -5,8 +5,11 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -15,6 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Locale;
+import java.util.UUID;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import jimlind.filmlinkd.config.AppConfig;
@@ -72,7 +76,7 @@ public class Client {
    */
   public @Nullable <T> T getAuthorized(String path, Class<T> inputClass) {
     String key = appConfig.getLetterboxdApiKey();
-    String nonce = String.valueOf(java.util.UUID.randomUUID());
+    String nonce = String.valueOf(UUID.randomUUID());
     String now = String.valueOf(Instant.now().getEpochSecond());
 
     // TODO: Are there other exceptions we should be trying to catch here?
@@ -90,6 +94,42 @@ public class Client {
       log.atError().setMessage("Failed to build authorized URI").addKeyValue("path", path).log();
       return null;
     }
+  }
+
+  public @Nullable InputStream getAuthorizedStream(String path) {
+    HttpURLConnection connection;
+    try {
+      URI uri =
+          new URIBuilder(BASE_URL + path)
+              .addParameter("apikey", appConfig.getLetterboxdApiKey())
+              .addParameter("nonce", String.valueOf(UUID.randomUUID()))
+              .addParameter("timestamp", String.valueOf(Instant.now().getEpochSecond()))
+              .build();
+      String authorization = "Signature " + this.buildSignature("GET", uri.toString());
+
+      URL url = uri.toURL();
+      connection = (HttpURLConnection) url.openConnection();
+      connection.setRequestProperty("Host", url.getHost());
+      connection.setRequestProperty("User-Agent", "Filmlinkd - A Letterboxd Discord Bot");
+      connection.setRequestProperty("Authorization", authorization);
+      connection.setConnectTimeout(2000);
+      connection.setReadTimeout(2000);
+
+      if (connection.getResponseCode() != 200) {
+        connection.disconnect();
+        return null;
+      }
+
+      return connection.getInputStream();
+    } catch (URISyntaxException | IOException e) {
+      log.atError()
+          .setMessage("Failed to create connection and get input stream.")
+          .addKeyValue("path", path)
+          .addKeyValue("exception", e)
+          .log();
+    }
+
+    return null;
   }
 
   private @Nullable <T> T request(URI uri, String authorization, Class<T> inputClass) {
