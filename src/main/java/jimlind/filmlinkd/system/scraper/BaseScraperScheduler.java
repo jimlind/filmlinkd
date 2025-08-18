@@ -18,12 +18,14 @@ public class BaseScraperScheduler {
 
   /** Method that activates the scrapers so that the Class can be instantiated but inactive. */
   public void start() {
+    // Set up the user cache with an appropriate random starting point before the scrapers start
     userCache.initializeRandomPage();
 
     // These should run forever so not closing them
     @SuppressWarnings("PMD.CloseResource")
     ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     scheduler.scheduleAtFixedRate(scraper, 0, scraperPeriod, TimeUnit.SECONDS);
-    scheduler.scheduleAtFixedRate(userCacheClearer, 0, userCachePeriod, TimeUnit.HOURS);
+    scheduler.scheduleAtFixedRate(
+        userCacheClearer, userCachePeriod, userCachePeriod, TimeUnit.HOURS);
   }
 }
