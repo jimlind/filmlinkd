@@ -1,13 +1,12 @@
-package jimlind.filmlinkd.system;
+package jimlind.filmlinkd.system.scraper;
 
 import com.google.inject.Inject;
+import jimlind.filmlinkd.cache.GeneralUserCache;
 import jimlind.filmlinkd.config.AppConfig;
-import jimlind.filmlinkd.runnable.GeneralScraper;
 import jimlind.filmlinkd.runnable.GeneralUserCacheClearer;
 
 /** Schedules the scraper that runs over VIP users. */
-public class VipScraperScheduler extends GeneralScraperScheduler {
-
+public class VipScraperScheduler extends BaseScraperScheduler {
   /**
    * Constructor for this class.
    *
@@ -22,13 +21,15 @@ public class VipScraperScheduler extends GeneralScraperScheduler {
   @Inject
   public VipScraperScheduler(
       AppConfig appConfig,
-      GeneralScraper generalScraper,
+      jimlind.filmlinkd.runnable.GeneralScraper generalScraper,
       GeneralUserCache generalUserCache,
       GeneralUserCacheClearer generalUserCacheClearer) {
-    super(appConfig, generalScraper, generalUserCache, generalUserCacheClearer);
-  }
+    this.appConfig = appConfig;
+    this.scraper = generalScraper;
+    this.userCache = generalUserCache;
+    this.userCacheClearer = generalUserCacheClearer;
 
-  /** Does nothing. */
-  @Override
-  public void start() {}
+    this.scraperPeriod = appConfig.getScraperGeneralPeriod();
+    this.userCachePeriod = appConfig.getScraperGeneralUserCachePeriod();
+  }
 }
