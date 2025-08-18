@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system;
+package jimlind.filmlinkd.cache;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;

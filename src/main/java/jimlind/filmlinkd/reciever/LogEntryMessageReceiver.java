@@ -6,9 +6,9 @@ import com.google.inject.Singleton;
 import com.google.pubsub.v1.PubsubMessage;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import jimlind.filmlinkd.cache.EntryCache;
 import jimlind.filmlinkd.factory.ScrapedResultFactory;
 import jimlind.filmlinkd.model.ScrapedResult;
-import jimlind.filmlinkd.system.EntryCache;
 import jimlind.filmlinkd.system.ScrapedResultQueue;
 
 /** The LogEntryMessageReceiver gets PubSub messages and responds to them appropriately. */
