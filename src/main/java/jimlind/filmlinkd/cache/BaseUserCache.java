@@ -1,8 +1,6 @@
-package jimlind.filmlinkd.system;
+package jimlind.filmlinkd.cache;
 
 import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -19,16 +17,15 @@ import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
  * as the most recent diary entry. This reduces the need for constant database calls and gives us
  * the ability to paginate as needed.
  */
-@Singleton
-public class GeneralUserCache {
-  private final AppConfig appConfig;
-  private final UserFactory userFactory;
-  private final UserReader userReader;
+public abstract class BaseUserCache {
+  protected final AppConfig appConfig;
+  protected final UserFactory userFactory;
+  protected final UserReader userReader;
   // This is a string/string key value store for user data
   // The key is the user's letterboxd id
   // The value is the last known letterboxd entry id for the user
-  private final Map<String, String> userCache = new HashMap<>();
-  private int paginationIndex;
+  protected Map<String, String> userCache = new HashMap<>();
+  protected int paginationIndex;
 
   /**
    * Constructor for this class.
@@ -37,11 +34,24 @@ public class GeneralUserCache {
    * @param userFactory Factory for creating {@link User} model
    * @param userReader Handles all read-only queries for user data from Firestore
    */
-  @Inject
-  public GeneralUserCache(AppConfig appConfig, UserFactory userFactory, UserReader userReader) {
+  public BaseUserCache(AppConfig appConfig, UserFactory userFactory, UserReader userReader) {
     this.appConfig = appConfig;
     this.userFactory = userFactory;
     this.userReader = userReader;
+  }
+
+  /**
+   * Sets the current index at a random value available in the user cache. Method will populate the
+   * cache from Firestore if it is empty.
+   */
+  public void initializeRandomPage() {
+    if (userCache.isEmpty()) {
+      populateFromFirestore();
+    }
+    if (userCache.isEmpty()) {
+      return;
+    }
+    paginationIndex = new Random().nextInt(0, userCache.size());
   }
 
   /**
@@ -75,31 +85,6 @@ public class GeneralUserCache {
   }
 
   /**
-   * Set the recorded diary entry for a user. This is the most recent that we know of. We will run
-   * it through the LidComparer to ensure that we aren't setting something older.
-   *
-   * @param letterboxedId The User's LetterboxdId that we want to set a diary entry for.
-   * @param entryId The Diary Entry's LetterboxdId that we want to set as the most recent.
-   */
-  public void setIfNewer(String letterboxedId, String entryId) {
-    if (LidComparer.compare(entryId, userCache.get(letterboxedId)) > 0) {
-      userCache.put(letterboxedId, entryId);
-    }
-  }
-
-  /**
-   * Sets the current index at a random value available in the user cache. Method will populate the
-   * cache from Firestore if it is empty.
-   */
-  public void initializeRandomPage() {
-    if (userCache.isEmpty()) {
-      populateFromFirestore();
-    }
-
-    paginationIndex = new Random().nextInt(0, userCache.size());
-  }
-
-  /**
    * Gets the next page of user data. Always increments the pagination index. There is currently no
    * way to get the "current" page as there isn't a use for that. Method will populate the cache
    * from Firestore if it is empty.
@@ -122,6 +107,19 @@ public class GeneralUserCache {
   }
 
   /**
+   * Set the recorded diary entry for a user. This is the most recent that we know of. We will run
+   * it through the LidComparer to ensure that we aren't setting something older.
+   *
+   * @param letterboxedId The User's LetterboxdId that we want to set a diary entry for.
+   * @param entryId The Diary Entry's LetterboxdId that we want to set as the most recent.
+   */
+  public void setIfNewer(String letterboxedId, String entryId) {
+    if (LidComparer.compare(entryId, userCache.get(letterboxedId)) > 0) {
+      userCache.put(letterboxedId, entryId);
+    }
+  }
+
+  /**
    * Clears out the user cache so that we have a forcing function for things to not drift too far
    * from database to local cache.
    */
@@ -134,8 +132,8 @@ public class GeneralUserCache {
     return userCache.entrySet().stream().skip(index).limit(pageSize).toList();
   }
 
-  private void populateFromFirestore() {
-    List<QueryDocumentSnapshot> activeUsersList = userReader.getActiveUsers();
+  protected void populateFromFirestore() {
+    List<QueryDocumentSnapshot> activeUsersList = getUserList();
     for (QueryDocumentSnapshot snapshot : activeUsersList) {
       User user = this.userFactory.createFromSnapshot(snapshot);
       if (user != null) {
@@ -143,4 +141,6 @@ public class GeneralUserCache {
       }
     }
   }
+
+  protected abstract List<QueryDocumentSnapshot> getUserList();
 }
