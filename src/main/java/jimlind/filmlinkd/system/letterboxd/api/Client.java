@@ -77,8 +77,8 @@ public class Client {
       connection.setRequestProperty("Host", url.getHost());
       connection.setRequestProperty("User-Agent", "Filmlinkd - A Letterboxd Discord Bot");
       connection.setRequestProperty("Authorization", authorization);
-      connection.setConnectTimeout((int) TimeUnit.SECONDS.toMillis(5));
-      connection.setReadTimeout((int) TimeUnit.SECONDS.toMillis(5));
+      connection.setConnectTimeout((int) TimeUnit.SECONDS.toMillis(15));
+      connection.setReadTimeout((int) TimeUnit.SECONDS.toMillis(15));
 
       if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
         connection.disconnect();
