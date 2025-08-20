@@ -23,4 +23,5 @@ public class AppConstants {
   public static final String PROP_KEY_SCRAPER_GENERAL_USER_CACHE_PERIOD =
       "scraperGeneralUserCachePeriod";
   public static final String PROP_KEY_SCRAPER_VIP_PERIOD = "scraperVipPeriod";
+  public static final String PROP_KEY_SCRAPER_VIP_USER_CACHE_PERIOD = "scraperVipUserCachePeriod";
 }

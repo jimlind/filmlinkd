@@ -30,6 +30,7 @@ public class AppConfig {
   @Getter private final int scraperGeneralPeriod;
   @Getter private final int scraperGeneralUserCachePeriod;
   @Getter private final int scraperVipPeriod;
+  @Getter private final int scraperVipUserCachePeriod;
   @Getter @Setter private String mainClass;
 
   @Inject
@@ -76,6 +77,9 @@ public class AppConfig {
             envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_GENERAL_USER_CACHE_PERIOD));
     scraperVipPeriod =
         Integer.parseInt(envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_VIP_PERIOD));
+    scraperVipUserCachePeriod =
+        Integer.parseInt(
+            envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_VIP_USER_CACHE_PERIOD));
 
     // Load Secrets via names in environment properties
     discordBotToken =
