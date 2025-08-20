@@ -1,7 +1,7 @@
 package jimlind.filmlinkd.runnable;
 
 import com.google.inject.Inject;
-import jimlind.filmlinkd.cache.GeneralUserCache;
+import jimlind.filmlinkd.cache.VipUserCache;
 import jimlind.filmlinkd.factory.MessageFactory;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.system.google.PubSubManager;
@@ -9,10 +9,10 @@ import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.utils.DateUtils;
 
 /**
- * Scrapes the next page from the GeneralUserCache publishes a message in PubSub with the source set
- * to "normal" to notify the other systems.
+ * Scrapes the next page from the VipUserCache publishes a message in PubSub with the source set to
+ * "vip" to notify the other systems.
  */
-public class GeneralScraper extends BaseScraper {
+public class VipScraper extends BaseScraper {
   /**
    * Constructor for this class.
    *
@@ -23,13 +23,13 @@ public class GeneralScraper extends BaseScraper {
    * @param pubSubManager Handles the PubSub system to accept commands and messages
    */
   @Inject
-  public GeneralScraper(
+  public VipScraper(
       DateUtils dateUtils,
-      GeneralUserCache userCache,
+      VipUserCache userCache,
       LogEntriesApi logEntriesApi,
       MessageFactory messageFactory,
       PubSubManager pubSubManager) {
     super(dateUtils, userCache, logEntriesApi, messageFactory, pubSubManager);
-    this.source = Message.PublishSource.Normal;
+    this.source = Message.PublishSource.VIP;
   }
 }
