@@ -132,6 +132,7 @@ public abstract class BaseUserCache {
     return userCache.entrySet().stream().skip(index).limit(pageSize).toList();
   }
 
+  /** Fills the userCache variable from documents from firestore retrieved via getUserList. */
   protected void populateFromFirestore() {
     List<QueryDocumentSnapshot> activeUsersList = getUserList();
     for (QueryDocumentSnapshot snapshot : activeUsersList) {
@@ -142,5 +143,11 @@ public abstract class BaseUserCache {
     }
   }
 
+  /**
+   * Get the User list from Firestore. This is the primary differentiator between General and Vip
+   * user caches.
+   *
+   * @return List of documents from firestore.
+   */
   protected abstract List<QueryDocumentSnapshot> getUserList();
 }

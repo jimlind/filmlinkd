@@ -49,6 +49,15 @@ public class Client {
     this.appConfig = appConfig;
   }
 
+  /**
+   * Builds an authorized URL from the input path and applies the streamProcessor method on the
+   * stream.
+   *
+   * @param path The path portion of the URI for a letterboxd api call.
+   * @param streamProcessor A function that is applied to the input stream from the http response.
+   * @return A string coming from the streamProcess handling stream. Empty string if there is any
+   *     error on the stream.
+   */
   public String handleAuthorizedStream(String path, Function<InputStream, String> streamProcessor) {
     URL url;
     String authorization;

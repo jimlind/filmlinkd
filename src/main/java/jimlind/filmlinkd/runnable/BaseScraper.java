@@ -93,6 +93,12 @@ public class BaseScraper implements Runnable {
     }
   }
 
+  /**
+   * A way to access the owner of a log entry object allowing looser coupling.
+   *
+   * @param logEntry The log entry letterboxd object
+   * @return The owner of the log entry as letterboxd object
+   */
   protected LbMemberSummary getOwner(LbLogEntry logEntry) {
     return logEntry.owner;
   }
