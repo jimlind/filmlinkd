@@ -21,7 +21,7 @@ public class FirestoreProvider implements Provider<Firestore> {
     FirestoreOptions.Builder builder =
         FirestoreOptions.getDefaultInstance().toBuilder()
             .setProjectId(appConfig.getGoogleProjectId())
-            .setDatabaseId(appConfig.getFirestoreDatabaseId());
+            .setDatabaseId(appConfig.getFirestoreUserDatabaseId());
     FirestoreOptions firestoreOptions = builder.build();
     db = extractService(firestoreOptions);
   }

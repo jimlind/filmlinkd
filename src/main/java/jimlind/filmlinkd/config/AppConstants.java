@@ -5,7 +5,8 @@ public class AppConstants {
   public static final String PROP_KEY_APPLICATION_NAME = "app.name";
   public static final String PROP_KEY_APPLICATION_VERSION = "app.version";
   public static final String PROP_KEY_GOOGLE_PROJECT_ID = "google.cloudProjectId";
-  public static final String PROP_KEY_FIRESTORE_DATABASE_ID = "google.fireeStoreDatabaseId";
+  public static final String PROP_KEY_FIRESTORE_USER_DATABASE_ID =
+      "google.fireeStoreUserDatabaseId";
   public static final String PROP_KEY_LETTERBOXD_API_KEY_SECRET_NAME =
       "letterboxd.apiKeySecretName";
   public static final String PROP_KEY_LETTERBOXD_API_SHARED_SECRET_NAME =
