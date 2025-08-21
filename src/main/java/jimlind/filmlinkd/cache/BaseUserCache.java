@@ -9,7 +9,6 @@ import java.util.Random;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.model.User;
-import jimlind.filmlinkd.system.google.firestore.UserReader;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 
 /**
@@ -20,7 +19,6 @@ import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 public abstract class BaseUserCache {
   protected final AppConfig appConfig;
   protected final UserFactory userFactory;
-  protected final UserReader userReader;
   // This is a string/string key value store for user data
   // The key is the user's letterboxd id
   // The value is the last known letterboxd entry id for the user
@@ -32,12 +30,10 @@ public abstract class BaseUserCache {
    *
    * @param appConfig Holds all the configs that determine how the system run
    * @param userFactory Factory for creating {@link User} model
-   * @param userReader Handles all read-only queries for user data from Firestore
    */
-  public BaseUserCache(AppConfig appConfig, UserFactory userFactory, UserReader userReader) {
+  public BaseUserCache(AppConfig appConfig, UserFactory userFactory) {
     this.appConfig = appConfig;
     this.userFactory = userFactory;
-    this.userReader = userReader;
   }
 
   /**

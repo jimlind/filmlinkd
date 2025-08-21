@@ -12,6 +12,8 @@ import jimlind.filmlinkd.system.google.firestore.UserReader;
 /** The General User Cache contains all active users. */
 @Singleton
 public class GeneralUserCache extends BaseUserCache {
+  private final UserReader userReader;
+
   /**
    * Constructor for this class.
    *
@@ -21,7 +23,8 @@ public class GeneralUserCache extends BaseUserCache {
    */
   @Inject
   public GeneralUserCache(AppConfig appConfig, UserFactory userFactory, UserReader userReader) {
-    super(appConfig, userFactory, userReader);
+    super(appConfig, userFactory);
+    this.userReader = userReader;
   }
 
   @Override
