@@ -10,6 +10,7 @@ import jimlind.filmlinkd.config.modules.LetterboxdModule;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.factory.ScrapedResultCheckerFactory;
 import jimlind.filmlinkd.factory.UserFactory;
+import jimlind.filmlinkd.factory.VipFactory;
 import jimlind.filmlinkd.reciever.CommandMessageReceiver;
 import jimlind.filmlinkd.reciever.LogEntryMessageReceiver;
 import jimlind.filmlinkd.runnable.GeneralScraper;
@@ -24,6 +25,7 @@ import jimlind.filmlinkd.system.google.SecretManager;
 import jimlind.filmlinkd.system.google.firestore.FirestoreProvider;
 import jimlind.filmlinkd.system.google.firestore.UserReader;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
+import jimlind.filmlinkd.system.google.firestore.VipReader;
 import jimlind.filmlinkd.system.scraper.GeneralScraperScheduler;
 import jimlind.filmlinkd.system.scraper.VipScraperScheduler;
 
@@ -41,6 +43,7 @@ public class GuiceModule extends AbstractModule {
     bind(EmbedBuilderFactory.class).in(Scopes.SINGLETON);
     bind(ScrapedResultCheckerFactory.class).in(Scopes.SINGLETON);
     bind(UserFactory.class).in(Scopes.SINGLETON);
+    bind(VipFactory.class).in(Scopes.SINGLETON);
 
     // Receivers
     bind(CommandMessageReceiver.class).in(Scopes.SINGLETON);
@@ -66,6 +69,7 @@ public class GuiceModule extends AbstractModule {
     bind(FirestoreProvider.class).in(Scopes.SINGLETON);
     bind(UserReader.class).in(Scopes.SINGLETON);
     bind(UserWriter.class).in(Scopes.SINGLETON);
+    bind(VipReader.class).in(Scopes.SINGLETON);
 
     // Discord and Letterboxd Dependency Modules
     install(new DiscordModule());

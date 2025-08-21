@@ -92,10 +92,26 @@ public class UserReader {
    * @return A list of all user documents that have the specific channel
    */
   public List<QueryDocumentSnapshot> getUserDocumentListByChannelId(String channelId) {
+    List<String> channelIdList = List.of(channelId);
+    return getUserDocumentListByChannelIdList(channelIdList);
+  }
+
+  /**
+   * Gets all user documents for users followed in a list of channel.
+   *
+   * @param channelIdList A list of Discord channel id
+   * @return A list of all user documents that have the specific channel
+   */
+  public List<QueryDocumentSnapshot> getUserDocumentListByChannelIdList(
+      List<String> channelIdList) {
     String collectionId = appConfig.getFirestoreUserCollectionId();
-    Map<String, String> channelMap = channelId != null ? Map.of("channelId", channelId) : Map.of();
+    List<Map<String, String>> channelMapList =
+        channelIdList.stream()
+            .filter(channelId -> channelId != null && !channelId.isBlank())
+            .map(channelId -> Map.of("channelId", channelId))
+            .toList();
     ApiFuture<QuerySnapshot> query =
-        this.db.collection(collectionId).whereArrayContains("channelList", channelMap).get();
+        this.db.collection(collectionId).whereArrayContainsAny("channelList", channelMapList).get();
     try {
       return query.get().getDocuments();
     } catch (InterruptedException | ExecutionException e) {
