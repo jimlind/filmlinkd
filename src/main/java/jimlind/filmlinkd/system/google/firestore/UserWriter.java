@@ -67,7 +67,7 @@ public class UserWriter {
    * @param member Letterboxd Member object from API
    */
   public void createUserDocument(LbMember member) {
-    String collectionId = appConfig.getFirestoreCollectionId();
+    String collectionId = appConfig.getFirestoreUserCollectionId();
     User user = userFactory.createFromMember(member);
 
     try {

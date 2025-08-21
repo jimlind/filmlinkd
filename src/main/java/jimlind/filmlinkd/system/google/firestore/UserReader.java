@@ -39,7 +39,7 @@ public class UserReader {
    * @return The document snapshot from Firestore if available, otherwise null
    */
   public @Nullable QueryDocumentSnapshot getUserDocument(String userLid) {
-    String collectionId = appConfig.getFirestoreCollectionId();
+    String collectionId = appConfig.getFirestoreUserCollectionId();
     ApiFuture<QuerySnapshot> query =
         this.db.collection(collectionId).whereEqualTo("letterboxdId", userLid).limit(1).get();
 
@@ -56,7 +56,7 @@ public class UserReader {
    * @return The total number of user records
    */
   public long getUserCount() {
-    String collectionId = appConfig.getFirestoreCollectionId();
+    String collectionId = appConfig.getFirestoreUserCollectionId();
     ApiFuture<AggregateQuerySnapshot> query = this.db.collection(collectionId).count().get();
     try {
       return query.get().getCount();
@@ -72,7 +72,7 @@ public class UserReader {
    * @return A List of documents for all active users
    */
   public List<QueryDocumentSnapshot> getActiveUsers() {
-    String collectionId = appConfig.getFirestoreCollectionId();
+    String collectionId = appConfig.getFirestoreUserCollectionId();
     ApiFuture<QuerySnapshot> query =
         this.db
             .collection(collectionId)
@@ -92,7 +92,7 @@ public class UserReader {
    * @return A list of all user documents that have the specific channel
    */
   public List<QueryDocumentSnapshot> getUserDocumentListByChannelId(String channelId) {
-    String collectionId = appConfig.getFirestoreCollectionId();
+    String collectionId = appConfig.getFirestoreUserCollectionId();
     Map<String, String> channelMap = channelId != null ? Map.of("channelId", channelId) : Map.of();
     ApiFuture<QuerySnapshot> query =
         this.db.collection(collectionId).whereArrayContains("channelList", channelMap).get();

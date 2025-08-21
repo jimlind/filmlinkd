@@ -17,8 +17,9 @@ public class AppConfig {
   @Getter private final String applicationVersion;
   @Getter private final String discordApplicationId;
   @Getter private final String discordBotToken;
-  @Getter private final String firestoreUserDatabaseId;
-  @Getter private final String firestoreCollectionId;
+  @Getter private final String firestoreDatabaseId;
+  @Getter private final String firestoreUserCollectionId;
+  @Getter private final String firestoreVipCollectionId;
   @Getter private final String googleProjectId;
   @Getter private final String letterboxdApiKey;
   @Getter private final String letterboxdApiShared;
@@ -41,8 +42,7 @@ public class AppConfig {
     // Load application properties directly
     applicationName = appProperties.getProperty(AppConstants.PROP_KEY_APPLICATION_NAME);
     applicationVersion = appProperties.getProperty(AppConstants.PROP_KEY_APPLICATION_VERSION);
-    firestoreUserDatabaseId =
-        appProperties.getProperty(AppConstants.PROP_KEY_FIRESTORE_USER_DATABASE_ID);
+    firestoreDatabaseId = appProperties.getProperty(AppConstants.PROP_KEY_FIRESTORE_DATABASE_ID);
     googleProjectId = appProperties.getProperty(AppConstants.PROP_KEY_GOOGLE_PROJECT_ID);
 
     // Load Secrets via names in application properties
@@ -61,8 +61,10 @@ public class AppConfig {
 
     // Load environment properties directly
     discordApplicationId = envProperties.getProperty(AppConstants.PROP_KEY_DISCORD_APPLICATION_ID);
-    firestoreCollectionId =
-        envProperties.getProperty(AppConstants.PROP_KEY_FIRESTORE_COLLECTION_ID);
+    firestoreUserCollectionId =
+        envProperties.getProperty(AppConstants.PROP_KEY_FIRESTORE_USER_COLLECTION_ID);
+    firestoreVipCollectionId =
+        envProperties.getProperty(AppConstants.PROP_KEY_FIRESTORE_VIP_COLLECTION_ID);
     pubSubCommandSubscriptionName =
         envProperties.getProperty(AppConstants.PROP_KEY_COMMAND_SUBSCRIPTION_NAME);
     pubSubCommandTopicName = envProperties.getProperty(AppConstants.PROP_KEY_COMMAND_TOPIC_NAME);
