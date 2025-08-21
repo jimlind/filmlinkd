@@ -1,5 +1,4 @@
 NEED
-* Create VIP Scraper
 * Ensure that charts/reports are duplicated in google console
 * Post an actual diary entry as the last part of Help:Test
 * Post a permissions status message with Help
@@ -22,3 +21,4 @@ DONE
 * Move back to the default database name to take advantage of free tier credits
 * Optimize Entry API to stop parsing earlier (not checking all 10 entries)
 * Watched and Reviewed text in entries is backwards
+* Create VIP Scraper
