@@ -150,7 +150,7 @@ public class HelpEmbedBuilder {
         String imageMessage =
             """
           This is a embed message with an image.
-          This concludes this test of the Emergency Broadcast System.""";
+          Next you should see an embed with a diary entry.""";
         embedBuilder.setDescription(
             descriptionStringBuilder.setDescriptionText(imageMessage).build());
         embedBuilder.setThumbnail("https://jimlind.github.io/filmlinkd/images/filmlinkd-100.png");

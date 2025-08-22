@@ -1,5 +1,4 @@
 NEED
-* Post an actual diary entry as the last part of Help:Test
 * Post a permissions status message with Help
 * Retest with multiple server shards
 * Keep the same scraping limits in place as current production
@@ -22,3 +21,4 @@ DONE
 * Watched and Reviewed text in entries is backwards
 * Create VIP Scraper
 * Ensure that charts/reports are duplicated in google console
+* Post an actual diary entry as the last part of Help:Test

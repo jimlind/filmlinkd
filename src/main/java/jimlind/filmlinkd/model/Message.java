@@ -51,6 +51,7 @@ public class Message {
     Normal,
     VIP,
     Follow,
+    Help,
   }
 
   /** All the data needed for a diary entry. */

@@ -5,8 +5,13 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import jimlind.filmlinkd.factory.MessageFactory;
+import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.system.discord.embedbuilder.HelpEmbedBuilder;
+import jimlind.filmlinkd.system.google.PubSubManager;
 import jimlind.filmlinkd.system.google.firestore.UserReader;
+import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
+import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -24,17 +29,31 @@ import org.jetbrains.annotations.Nullable;
 public class HelpHandler implements Handler {
   private static final int MAX_TEST_MESSAGES = 4;
   private final HelpEmbedBuilder helpEmbedBuilder;
+  private final LogEntriesApi logEntriesApi;
+  private final MessageFactory messageFactory;
+  private final PubSubManager pubSubManager;
   private final UserReader userReader;
 
   /**
    * Constructor for this class.
    *
    * @param helpEmbedBuilder Builds the embed for the /help command
+   * @param logEntriesApi Fetches log entry data from Letterboxd API
+   * @param messageFactory Builds the message object that is pushed into the PubSub system
+   * @param pubSubManager Handles the PubSub system to accept commands and messages
    * @param userReader Handles all read-only queries for user data from Firestore
    */
   @Inject
-  HelpHandler(HelpEmbedBuilder helpEmbedBuilder, UserReader userReader) {
+  HelpHandler(
+      HelpEmbedBuilder helpEmbedBuilder,
+      LogEntriesApi logEntriesApi,
+      MessageFactory messageFactory,
+      PubSubManager pubSubManager,
+      UserReader userReader) {
     this.helpEmbedBuilder = helpEmbedBuilder;
+    this.logEntriesApi = logEntriesApi;
+    this.messageFactory = messageFactory;
+    this.pubSubManager = pubSubManager;
     this.userReader = userReader;
   }
 
@@ -63,26 +82,33 @@ public class HelpHandler implements Handler {
   }
 
   private void queueAdditionalTestMessages(MessageChannel channel) {
-    try (ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1)) {
-      final int[] count = {0};
-      Runnable task =
-          () -> {
-            try {
-              channel.sendMessageEmbeds(helpEmbedBuilder.createTestMessage(count[0])).queue();
-            } catch (PermissionException e) {
-              log.atInfo()
-                  .setMessage("Unable to send test message")
-                  .addKeyValue("channel", channel)
-                  .addKeyValue("exception", e)
-                  .log();
-            }
-            if (count[0] >= MAX_TEST_MESSAGES) {
-              scheduler.shutdown();
-            }
-            count[0]++;
-          };
-      scheduler.scheduleAtFixedRate(task, 1, 1, TimeUnit.SECONDS);
-    }
+    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    final int[] count = {0};
+    Runnable task =
+        () -> {
+          try {
+            channel.sendMessageEmbeds(helpEmbedBuilder.createTestMessage(count[0])).queue();
+          } catch (PermissionException e) {
+            log.atInfo()
+                .setMessage("Unable to send test message")
+                .addKeyValue("channel", channel)
+                .addKeyValue("exception", e)
+                .log();
+          }
+          if (count[0] >= MAX_TEST_MESSAGES) {
+            scheduler.shutdown();
+            sendSingleDiaryEntry(channel.getId());
+          }
+          count[0]++;
+        };
+    scheduler.scheduleAtFixedRate(task, 2, 1, TimeUnit.SECONDS);
+  }
+
+  private void sendSingleDiaryEntry(String channelId) {
+    LbLogEntry logEntry = this.logEntriesApi.getRecentForUser("1e4Ab", 1).getFirst();
+    Message message = messageFactory.createFromLogEntry(logEntry, Message.PublishSource.Help);
+    message.setChannelId(channelId);
+    pubSubManager.publishLogEntry(message);
   }
 
   private CacheView<Guild> extractGuildCache(JDA jda) {
