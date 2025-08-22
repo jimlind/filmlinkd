@@ -83,7 +83,12 @@ public class BaseScraper implements Runnable {
       if (!publishedEntryIdList.isEmpty()) {
         if (log.isInfoEnabled()) {
           LbMemberSummary owner = getOwner(logEntryList.getFirst());
-          log.info("Publishing {}x films from {}", publishedEntryIdList.size(), owner.displayName);
+          log.atInfo()
+              .setMessage("Publishing {}x films from {}")
+              .addArgument(publishedEntryIdList.size())
+              .addArgument(owner.displayName)
+              .addKeyValue("source", source)
+              .log();
         }
         // Set the values in the general user cache outside the steam to avoid concurrency issues
         for (String entryId : publishedEntryIdList) {
