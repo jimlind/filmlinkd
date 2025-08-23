@@ -1,5 +1,4 @@
 NEED
-* Can you DM the bot?
 * Move data to the v6 database.
 
 DONE
@@ -23,3 +22,4 @@ DONE
 * Retest with multiple server shards
 * Keep the same scraping limits in place as current production
 * Can I pass exception as cause of logs and see it in logs?
+* Can you DM the bot?

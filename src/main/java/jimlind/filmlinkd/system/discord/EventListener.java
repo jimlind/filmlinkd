@@ -8,6 +8,7 @@ import jimlind.filmlinkd.factory.ScrapedResultCheckerFactory;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -54,6 +55,11 @@ public class EventListener extends ListenerAdapter {
 
   @Override
   public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    if (event.getChannel().getType() == ChannelType.PRIVATE) {
+      event.reply("Filmlinkd Does Not Support Direct Messages").queue();
+      return;
+    }
+
     boolean processSuccess = this.slashCommandManager.process(event);
     if (processSuccess) {
       log.atInfo()
