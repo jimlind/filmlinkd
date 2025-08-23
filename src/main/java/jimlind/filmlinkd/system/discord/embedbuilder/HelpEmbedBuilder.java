@@ -41,10 +41,18 @@ public class HelpEmbedBuilder {
    *
    * @param userCount Total number of accounts being tracked
    * @param guildCount Total number of servers installed on
+   * @param viewChannelEnabled Can the bot view the channel used for the command
+   * @param sendMessageEnabled Can the bot send messages in the channel used for the command
+   * @param embedLinkEnabled Can the bot embed links in the channel used for the command
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
-  public List<MessageEmbed> create(long userCount, long guildCount) {
+  public List<MessageEmbed> create(
+      long userCount,
+      long guildCount,
+      boolean viewChannelEnabled,
+      boolean sendMessageEnabled,
+      boolean embedLinkEnabled) {
     EmbedBuilder embedBuilder = embedBuilderFactory.create();
 
     // Set title
@@ -76,6 +84,16 @@ public class HelpEmbedBuilder {
     embedBuilder.addField("/logged account film-name", "Shows a user's entries for a film", false);
     embedBuilder.addField("/roulette", "Shows random film information", false);
     embedBuilder.addField("/user account", "Shows a users's information", false);
+
+    // Set fields for permissions data
+    String viewStatus = viewChannelEnabled ? "✅" : "❌";
+    String sendStatus = sendMessageEnabled ? "✅" : "❌";
+    String embedStatus = embedLinkEnabled ? "✅" : "❌";
+    String permissions =
+        String.format(
+            "``` %s View channel\n %s Send message in channel/thread\n %s Embed link```",
+            viewStatus, sendStatus, embedStatus);
+    embedBuilder.addField(":gear:️ Permissions", permissions, false);
 
     // Set fields for support links
     embedBuilder.addField(

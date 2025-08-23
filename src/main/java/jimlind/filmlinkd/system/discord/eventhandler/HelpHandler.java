@@ -14,8 +14,11 @@ import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.exceptions.PermissionException;
@@ -76,7 +79,24 @@ public class HelpHandler implements Handler {
 
     long userCount = userReader.getUserCount();
     CacheView<Guild> guild = shardedGuildCache != null ? shardedGuildCache : instanceGuildCache;
-    List<MessageEmbed> messageEmbedList = helpEmbedBuilder.create(userCount, guild.size());
+
+    boolean viewChannelEnabled = false;
+    boolean sendMessageEnabled = false;
+    boolean embedLinkEnabled = false;
+
+    if (event.getGuild() != null) {
+      Member member = event.getGuild().getSelfMember();
+      GuildMessageChannel channel = event.getChannel().asGuildMessageChannel();
+      viewChannelEnabled = member.hasPermission(channel, Permission.VIEW_CHANNEL);
+      sendMessageEnabled =
+          channel.getType().isThread()
+              ? member.hasPermission(channel, Permission.MESSAGE_SEND_IN_THREADS)
+              : member.hasPermission(channel, Permission.MESSAGE_SEND);
+      embedLinkEnabled = member.hasPermission(channel, Permission.MESSAGE_EMBED_LINKS);
+    }
+    List<MessageEmbed> messageEmbedList =
+        helpEmbedBuilder.create(
+            userCount, guild.size(), viewChannelEnabled, sendMessageEnabled, embedLinkEnabled);
 
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
