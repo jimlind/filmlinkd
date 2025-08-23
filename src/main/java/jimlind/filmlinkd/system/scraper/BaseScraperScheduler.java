@@ -24,8 +24,8 @@ public class BaseScraperScheduler {
     // These should run forever so not closing them
     @SuppressWarnings("PMD.CloseResource")
     ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    scheduler.scheduleAtFixedRate(scraper, 0, scraperPeriod, TimeUnit.SECONDS);
-    scheduler.scheduleAtFixedRate(
+    scheduler.scheduleWithFixedDelay(scraper, 0, scraperPeriod, TimeUnit.SECONDS);
+    scheduler.scheduleWithFixedDelay(
         userCacheClearer, userCachePeriod, userCachePeriod, TimeUnit.HOURS);
   }
 }
