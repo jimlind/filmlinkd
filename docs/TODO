@@ -1,9 +1,8 @@
 NEED
-* Post a permissions status message with Help
-* Retest with multiple server shards
-* Keep the same scraping limits in place as current production
 * Can we make it compile to a specific location and then get the specific rename, so modules can be compiled at the same time
 * Can I pass exception as cause of logs and see it in logs?
+* Can you DM the bot?
+* Move data to the v6 database.
 
 DONE
 * Delete all existing infrastructure and let terraform build it fresh
@@ -22,3 +21,6 @@ DONE
 * Create VIP Scraper
 * Ensure that charts/reports are duplicated in google console
 * Post an actual diary entry as the last part of Help:Test
+* Post a permissions status message with Help
+* Retest with multiple server shards
+* Keep the same scraping limits in place as current production
