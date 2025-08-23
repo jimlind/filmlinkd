@@ -110,7 +110,7 @@ public class UserWriter {
           .setMessage("Unable to Add to Channel List: Update Failed")
           .addKeyValue(USER_KEY, user)
           .addKeyValue("channelId", channelId)
-          .addKeyValue("exception", e)
+          .setCause(e)
           .log();
       return false;
     }
@@ -145,7 +145,7 @@ public class UserWriter {
           .setMessage("Unable to Remove from Channel List: Update Failed")
           .addKeyValue(USER_KEY, user)
           .addKeyValue("channelId", channelId)
-          .addKeyValue("exception", e)
+          .setCause(e)
           .log();
       return false;
     }

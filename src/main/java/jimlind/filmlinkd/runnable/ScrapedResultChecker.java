@@ -111,7 +111,7 @@ public class ScrapedResultChecker implements Runnable {
         log.atWarn()
             .setMessage(
                 "Attempting to send message from ScrapedResultChecker failed and exception caught")
-            .addKeyValue("exception", e)
+            .setCause(e)
             .log();
       }
     }

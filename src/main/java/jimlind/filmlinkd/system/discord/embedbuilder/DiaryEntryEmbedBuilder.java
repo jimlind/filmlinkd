@@ -81,7 +81,7 @@ public class DiaryEntryEmbedBuilder {
           .setMessage("Diary Entry Embed build failed")
           .addKeyValue("message", message)
           .addKeyValue("user", user)
-          .addKeyValue("exception", e)
+          .setCause(e)
           .log();
     }
     return new ArrayList<>();

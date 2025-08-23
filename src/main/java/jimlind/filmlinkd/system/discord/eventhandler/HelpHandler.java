@@ -112,7 +112,7 @@ public class HelpHandler implements Handler {
             log.atInfo()
                 .setMessage("Unable to send test message")
                 .addKeyValue("channel", channel)
-                .addKeyValue("exception", e)
+                .setCause(e)
                 .log();
           }
           if (count[0] >= MAX_TEST_MESSAGES) {

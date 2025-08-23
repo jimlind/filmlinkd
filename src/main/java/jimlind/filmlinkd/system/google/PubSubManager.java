@@ -29,8 +29,6 @@ import org.jetbrains.annotations.Nullable;
 @Singleton
 @Slf4j
 public class PubSubManager {
-  public static final String EXCEPTION_KEY = "exception";
-
   static final int RETENTION_SECONDS = 43200; // 12 Hours
   static final int EXPIRATION_SECONDS = 86400; // 24 Hours
   static final int ACK_DEADLINE_SECONDS = 10;
@@ -160,7 +158,7 @@ public class PubSubManager {
       log.atWarn()
           .setMessage("Unable to Publish command")
           .addKeyValue("command", command)
-          .addKeyValue(EXCEPTION_KEY, e)
+          .setCause(e)
           .log();
     }
   }
@@ -184,7 +182,7 @@ public class PubSubManager {
       log.atWarn()
           .setMessage("Unable to Publish logEntry")
           .addKeyValue("logEntry", logEntry)
-          .addKeyValue(EXCEPTION_KEY, e)
+          .setCause(e)
           .log();
     }
   }
@@ -197,7 +195,7 @@ public class PubSubManager {
       log.atError()
           .setMessage("Unable to build Publisher {}")
           .addArgument(topicId)
-          .addKeyValue(EXCEPTION_KEY, e)
+          .setCause(e)
           .log();
       return null;
     }
@@ -219,7 +217,7 @@ public class PubSubManager {
           .setMessage("Unable to create SubscriptionAdminClient")
           .addKeyValue("subscriptionId", subscriptionId)
           .addKeyValue("topicId", topicId)
-          .addKeyValue(EXCEPTION_KEY, e)
+          .setCause(e)
           .log();
     }
   }

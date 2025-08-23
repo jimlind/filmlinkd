@@ -74,7 +74,7 @@ public class Client {
       log.atError()
           .setMessage("Failed to build URL or Authorization Signature")
           .addKeyValue("path", path)
-          .addKeyValue("exception", e)
+          .setCause(e)
           .log();
       return "";
     }
@@ -101,7 +101,7 @@ public class Client {
       log.atError()
           .setMessage("Failed to handle HTTP stream")
           .addKeyValue("path", path)
-          .addKeyValue("exception", e)
+          .setCause(e)
           .log();
     } finally {
       if (connection != null) {
@@ -185,12 +185,7 @@ public class Client {
         return null;
       }
     } catch (InterruptedException | IOException e) {
-      System.out.println(e);
-      log.atError()
-          .setMessage("Client Error")
-          .addKeyValue(URI_KEY, uri)
-          .addKeyValue("exception", e)
-          .log();
+      log.atError().setMessage("Client Error").addKeyValue(URI_KEY, uri).setCause(e).log();
       return null;
     }
 

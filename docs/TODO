@@ -1,6 +1,4 @@
 NEED
-* Can we make it compile to a specific location and then get the specific rename, so modules can be compiled at the same time
-* Can I pass exception as cause of logs and see it in logs?
 * Can you DM the bot?
 * Move data to the v6 database.
 
@@ -24,3 +22,4 @@ DONE
 * Post a permissions status message with Help
 * Retest with multiple server shards
 * Keep the same scraping limits in place as current production
+* Can I pass exception as cause of logs and see it in logs?

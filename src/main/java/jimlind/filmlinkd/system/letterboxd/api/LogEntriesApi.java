@@ -78,7 +78,7 @@ public class LogEntriesApi {
           } catch (IOException e) {
             log.atInfo()
                 .setMessage("Failed to get most recent entry id from stream.")
-                .addKeyValue("exception", e)
+                .setCause(e)
                 .log();
           }
           return "";

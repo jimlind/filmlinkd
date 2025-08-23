@@ -1,6 +1,7 @@
 package jimlind.filmlinkd.system.google;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.LoggerContextVO;
 import com.google.cloud.logging.LogEntry;
 import com.google.cloud.logging.Payload;
@@ -8,6 +9,7 @@ import com.google.cloud.logging.logback.LoggingEventEnhancer;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +42,14 @@ public class LoggingEnhancer implements LoggingEventEnhancer {
         metadata.put(pair.key, limitLength(parseValue(pair.value)));
       }
       map.put("metadata", metadata);
+    }
+
+    IThrowableProxy throwable = loggingEvent.getThrowableProxy();
+    if (throwable != null) {
+      Map<String, String> cause = new HashMap<>();
+      cause.put("message", throwable.getMessage());
+      cause.put("trace", Arrays.toString(throwable.getStackTraceElementProxyArray()));
+      map.put("cause", cause);
     }
 
     Payload.JsonPayload payload = logEntryBuilder.build().getPayload();
