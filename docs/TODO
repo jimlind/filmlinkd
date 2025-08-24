@@ -1,4 +1,5 @@
 NEED
+* Why are all footers caleb_v's footer?
 * Move data to the v6 database.
 
 DONE
@@ -23,3 +24,24 @@ DONE
 * Keep the same scraping limits in place as current production
 * Can I pass exception as cause of logs and see it in logs?
 * Can you DM the bot?
+
+DATA TRANSFER PROCESS
+* Shut down original Filmlinkd VMs
+* Open Cloud Shell (could do this in the terminal, but naw)
+* > gsutil mb -l us gs://filmlinkd-export-bucket-us/
+   Databases are in different regions so we need keep the bucket in the broad "US" region.
+* Give both service-849234463174@gcp-sa-firestore.iam.gserviceaccount.com and
+   service-888325130733@gcp-sa-firestore.iam.gserviceaccount.com the "Firestore Service Agent" and "Storage Object Admin"
+   roles. It's a bit overkill, but save us later.
+* > gcloud firestore export gs://filmlinkd-export-bucket-us --project=letterboxd-bot
+   This command should finish in a couple seconds
+* > gcloud config set project filmlinkd
+* > gcloud firestore import gs://filmlinkd-export-bucket-us/2025-08-23T13:25:54_83989 --project=filmlinkd
+   This will overwrite any existing data
+   Use the real timestamp
+
+GET PROJECT NUMBERS
+gcloud projects describe filmlinkd --format="value(projectNumber)"
+849234463174
+gcloud projects describe letterboxd-bot --format="value(projectNumber)"
+888325130733
