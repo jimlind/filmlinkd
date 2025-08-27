@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.discord.embedbuilder;
+package jimlind.filmlinkd.discord.factory;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;

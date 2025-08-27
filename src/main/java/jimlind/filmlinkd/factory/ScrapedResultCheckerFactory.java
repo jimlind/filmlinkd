@@ -1,10 +1,10 @@
 package jimlind.filmlinkd.factory;
 
 import com.google.inject.Inject;
+import jimlind.filmlinkd.discord.factory.DiaryEntryEmbedFactory;
 import jimlind.filmlinkd.runnable.ScrapedResultChecker;
 import jimlind.filmlinkd.system.ScrapedResultQueue;
 import jimlind.filmlinkd.system.discord.ShardManagerStorage;
-import jimlind.filmlinkd.system.discord.embedbuilder.DiaryEntryEmbedFactory;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
 
 /** A factory for creating instances of the {@link ScrapedResultChecker} model. */
