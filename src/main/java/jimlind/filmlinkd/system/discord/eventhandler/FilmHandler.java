@@ -3,7 +3,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 import com.google.inject.Inject;
 import java.util.List;
 import jimlind.filmlinkd.model.CombinedLbFilmModel;
-import jimlind.filmlinkd.system.discord.embedbuilder.FilmEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.FilmEmbedFactory;
 import jimlind.filmlinkd.system.letterboxd.api.FilmApi;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -13,18 +13,18 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 public class FilmHandler implements Handler {
 
   private final FilmApi filmApi;
-  private final FilmEmbedBuilder filmEmbedBuilder;
+  private final FilmEmbedFactory filmEmbedFactory;
 
   /**
    * Constructor for this class.
    *
    * @param filmApi Fetches film data from Letterboxd API
-   * @param filmEmbedBuilder Builds the embed for the /film command
+   * @param filmEmbedFactory Builds the embed for the /film command
    */
   @Inject
-  FilmHandler(FilmApi filmApi, FilmEmbedBuilder filmEmbedBuilder) {
+  FilmHandler(FilmApi filmApi, FilmEmbedFactory filmEmbedFactory) {
     this.filmApi = filmApi;
-    this.filmEmbedBuilder = filmEmbedBuilder;
+    this.filmEmbedFactory = filmEmbedFactory;
   }
 
   @Override
@@ -41,7 +41,7 @@ public class FilmHandler implements Handler {
     }
 
     List<MessageEmbed> messageEmbedList =
-        filmEmbedBuilder.setFilmCombination(combinedLbFilmModel).build();
+        filmEmbedFactory.setFilmCombination(combinedLbFilmModel).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

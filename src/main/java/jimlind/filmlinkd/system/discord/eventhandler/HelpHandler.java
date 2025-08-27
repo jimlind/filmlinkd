@@ -7,7 +7,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import jimlind.filmlinkd.factory.MessageFactory;
 import jimlind.filmlinkd.model.Message;
-import jimlind.filmlinkd.system.discord.embedbuilder.HelpEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.HelpEmbedFactory;
 import jimlind.filmlinkd.system.google.PubSubManager;
 import jimlind.filmlinkd.system.google.firestore.UserReader;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 @Slf4j
 public class HelpHandler implements Handler {
   private static final int MAX_TEST_MESSAGES = 4;
-  private final HelpEmbedBuilder helpEmbedBuilder;
+  private final HelpEmbedFactory helpEmbedFactory;
   private final LogEntriesApi logEntriesApi;
   private final MessageFactory messageFactory;
   private final PubSubManager pubSubManager;
@@ -40,7 +40,7 @@ public class HelpHandler implements Handler {
   /**
    * Constructor for this class.
    *
-   * @param helpEmbedBuilder Builds the embed for the /help command
+   * @param helpEmbedFactory Builds the embed for the /help command
    * @param logEntriesApi Fetches log entry data from Letterboxd API
    * @param messageFactory Builds the message object that is pushed into the PubSub system
    * @param pubSubManager Handles the PubSub system to accept commands and messages
@@ -48,12 +48,12 @@ public class HelpHandler implements Handler {
    */
   @Inject
   HelpHandler(
-      HelpEmbedBuilder helpEmbedBuilder,
+      HelpEmbedFactory helpEmbedFactory,
       LogEntriesApi logEntriesApi,
       MessageFactory messageFactory,
       PubSubManager pubSubManager,
       UserReader userReader) {
-    this.helpEmbedBuilder = helpEmbedBuilder;
+    this.helpEmbedFactory = helpEmbedFactory;
     this.logEntriesApi = logEntriesApi;
     this.messageFactory = messageFactory;
     this.pubSubManager = pubSubManager;
@@ -67,7 +67,7 @@ public class HelpHandler implements Handler {
     OptionMapping optionMapping = event.getInteraction().getOption("test");
     boolean testStatus = optionMapping != null && optionMapping.getAsBoolean();
     if (testStatus) {
-      event.getHook().sendMessageEmbeds(helpEmbedBuilder.createTestMessage()).queue();
+      event.getHook().sendMessageEmbeds(helpEmbedFactory.createTestMessage()).queue();
       this.queueAdditionalTestMessages(event.getMessageChannel());
       return;
     }
@@ -95,7 +95,7 @@ public class HelpHandler implements Handler {
       embedLinkEnabled = member.hasPermission(channel, Permission.MESSAGE_EMBED_LINKS);
     }
     List<MessageEmbed> messageEmbedList =
-        helpEmbedBuilder.create(
+        helpEmbedFactory.create(
             userCount, guild.size(), viewChannelEnabled, sendMessageEnabled, embedLinkEnabled);
 
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
@@ -107,7 +107,7 @@ public class HelpHandler implements Handler {
     Runnable task =
         () -> {
           try {
-            channel.sendMessageEmbeds(helpEmbedBuilder.createTestMessage(count[0])).queue();
+            channel.sendMessageEmbeds(helpEmbedFactory.createTestMessage(count[0])).queue();
           } catch (PermissionException e) {
             log.atInfo()
                 .setMessage("Unable to send test message")

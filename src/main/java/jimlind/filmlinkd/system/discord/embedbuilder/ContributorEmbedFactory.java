@@ -16,7 +16,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 /** Builds a Discord embed to display information about a contributor. */
-public class ContributorEmbedBuilder {
+public class ContributorEmbedFactory {
   private final EmbedBuilder embedBuilder;
   private LbContributor contributor;
 
@@ -26,7 +26,7 @@ public class ContributorEmbedBuilder {
    * @param embedBuilderFactory A factory for creating instances of the {@link EmbedBuilder} model
    */
   @Inject
-  public ContributorEmbedBuilder(EmbedBuilderFactory embedBuilderFactory) {
+  public ContributorEmbedFactory(EmbedBuilderFactory embedBuilderFactory) {
     embedBuilder = embedBuilderFactory.create();
   }
 
@@ -41,7 +41,7 @@ public class ContributorEmbedBuilder {
    * @param contributor Contributor model from Letterboxd API
    * @return This class for chaining
    */
-  public ContributorEmbedBuilder setContributor(LbContributor contributor) {
+  public ContributorEmbedFactory setContributor(LbContributor contributor) {
     this.contributor = contributor;
     return this;
   }

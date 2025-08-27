@@ -9,7 +9,7 @@ import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.model.Command;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.User;
-import jimlind.filmlinkd.system.discord.embedbuilder.FollowEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.FollowEmbedFactory;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.google.PubSubManager;
@@ -29,7 +29,7 @@ public class FollowHandler implements Handler {
   private final AccountHelper accountHelper;
   private final ChannelHelper channelHelper;
   private final CommandFactory commandFactory;
-  private final FollowEmbedBuilder followEmbedBuilder;
+  private final FollowEmbedFactory followEmbedFactory;
   private final LogEntriesApi logEntriesApi;
   private final MessageFactory messageFactory;
   private final PubSubManager pubSubManager;
@@ -43,7 +43,7 @@ public class FollowHandler implements Handler {
    * @param accountHelper Handles translating account names to proper data models
    * @param channelHelper Service that parses a channel id from a slash event with options
    * @param commandFactory Builds the command object that is pushed into the PubSub system
-   * @param followEmbedBuilder Builds the embed for the /follow command
+   * @param followEmbedFactory Builds the embed for the /follow command
    * @param logEntriesApi Fetches log entry data from Letterboxd API
    * @param messageFactory Builds the message object that is pushed into the PubSub system
    * @param pubSubManager Handles the PubSub system to accept commands and messages
@@ -56,7 +56,7 @@ public class FollowHandler implements Handler {
       AccountHelper accountHelper,
       ChannelHelper channelHelper,
       CommandFactory commandFactory,
-      FollowEmbedBuilder followEmbedBuilder,
+      FollowEmbedFactory followEmbedFactory,
       LogEntriesApi logEntriesApi,
       MessageFactory messageFactory,
       PubSubManager pubSubManager,
@@ -66,7 +66,7 @@ public class FollowHandler implements Handler {
     this.accountHelper = accountHelper;
     this.channelHelper = channelHelper;
     this.commandFactory = commandFactory;
-    this.followEmbedBuilder = followEmbedBuilder;
+    this.followEmbedFactory = followEmbedFactory;
     this.logEntriesApi = logEntriesApi;
     this.messageFactory = messageFactory;
     this.pubSubManager = pubSubManager;
@@ -128,7 +128,7 @@ public class FollowHandler implements Handler {
       this.pubSubManager.publishLogEntry(message);
     }
 
-    List<MessageEmbed> messageEmbedList = followEmbedBuilder.setMember(member).build();
+    List<MessageEmbed> messageEmbedList = followEmbedFactory.setMember(member).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

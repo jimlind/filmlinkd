@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 /** Builds a Discord embed to display the result of an unfollow request. */
-public class UnfollowEmbedBuilder {
+public class UnfollowEmbedFactory {
   private final DescriptionStringBuilder descriptionStringBuilder;
   private final EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
@@ -28,7 +28,7 @@ public class UnfollowEmbedBuilder {
    * @param userStringBuilder Builds the user's name string formatting to properly escape characters
    */
   @Inject
-  public UnfollowEmbedBuilder(
+  public UnfollowEmbedFactory(
       DescriptionStringBuilder descriptionStringBuilder,
       EmbedBuilderFactory embedBuilderFactory,
       ImageUtils imageUtils,
@@ -45,7 +45,7 @@ public class UnfollowEmbedBuilder {
    * @param member Member model from Letterboxd API
    * @return This class for chaining
    */
-  public UnfollowEmbedBuilder setMember(LbMember member) {
+  public UnfollowEmbedFactory setMember(LbMember member) {
     this.member = member;
     return this;
   }

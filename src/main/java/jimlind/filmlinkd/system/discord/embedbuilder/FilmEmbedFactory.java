@@ -21,7 +21,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 /** Builds a Discord embed to display information about a film. */
-public class FilmEmbedBuilder {
+public class FilmEmbedFactory {
   private final EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
   private CombinedLbFilmModel filmCombination;
@@ -33,7 +33,7 @@ public class FilmEmbedBuilder {
    * @param imageUtils Assists in finding optimal Letterboxd images
    */
   @Inject
-  FilmEmbedBuilder(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
+  FilmEmbedFactory(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
     embedBuilder = embedBuilderFactory.create();
     this.imageUtils = imageUtils;
   }
@@ -48,7 +48,7 @@ public class FilmEmbedBuilder {
    * @param filmCombination Film model created from multiple Letterboxd API calls
    * @return This class for chaining
    */
-  public FilmEmbedBuilder setFilmCombination(CombinedLbFilmModel filmCombination) {
+  public FilmEmbedFactory setFilmCombination(CombinedLbFilmModel filmCombination) {
     this.filmCombination = filmCombination;
     return this;
   }

@@ -18,7 +18,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 /** Builds a Discord embed to display information about a user. */
-public class UserEmbedBuilder {
+public class UserEmbedFactory {
   private final EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
   private LbMember member;
@@ -31,7 +31,7 @@ public class UserEmbedBuilder {
    * @param imageUtils Assists in finding optimal Letterboxd images
    */
   @Inject
-  public UserEmbedBuilder(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
+  public UserEmbedFactory(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
     this.imageUtils = imageUtils;
     embedBuilder = embedBuilderFactory.create();
   }
@@ -42,7 +42,7 @@ public class UserEmbedBuilder {
    * @param member Member model from Letterboxd API
    * @return This class for chaining
    */
-  public UserEmbedBuilder setMember(LbMember member) {
+  public UserEmbedFactory setMember(LbMember member) {
     this.member = member;
     return this;
   }
@@ -53,7 +53,7 @@ public class UserEmbedBuilder {
    * @param memberStatistics Member statistics model from Letterboxd API
    * @return This class for chaining
    */
-  public UserEmbedBuilder setMemberStatistics(LbMemberStatistics memberStatistics) {
+  public UserEmbedFactory setMemberStatistics(LbMemberStatistics memberStatistics) {
     this.memberStatistics = memberStatistics;
     return this;
   }

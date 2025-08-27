@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 /** Builds a Discord embed to display information about a list of diary entries. */
-public class DiaryListEmbedBuilder {
+public class DiaryListEmbedFactory {
   private final EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
 
@@ -29,7 +29,7 @@ public class DiaryListEmbedBuilder {
    * @param imageUtils Assists in finding optimal Letterboxd images
    */
   @Inject
-  public DiaryListEmbedBuilder(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
+  public DiaryListEmbedFactory(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
     embedBuilder = embedBuilderFactory.create();
     this.imageUtils = imageUtils;
   }
@@ -44,7 +44,7 @@ public class DiaryListEmbedBuilder {
    * @param member Member model from Letterboxd API
    * @return This class for chaining
    */
-  public DiaryListEmbedBuilder setMember(LbMember member) {
+  public DiaryListEmbedFactory setMember(LbMember member) {
     this.member = member;
     return this;
   }
@@ -55,7 +55,7 @@ public class DiaryListEmbedBuilder {
    * @param logEntryList Log Entry list from Letterboxd API
    * @return This class for chaining
    */
-  public DiaryListEmbedBuilder setLogEntryList(List<LbLogEntry> logEntryList) {
+  public DiaryListEmbedFactory setLogEntryList(List<LbLogEntry> logEntryList) {
     this.logEntryList = logEntryList;
     return this;
   }

@@ -24,7 +24,7 @@ import org.jsoup.nodes.Document;
 
 /** Builds a Discord embed to display information about a specific diary entry. */
 @Slf4j
-public class DiaryEntryEmbedBuilder {
+public class DiaryEntryEmbedFactory {
   private static final int REVIEW_TEXT_MAX_LENGTH = 400;
   private final EmbedBuilder embedBuilder;
   private final StarsStringBuilder starsStringBuilder;
@@ -38,7 +38,7 @@ public class DiaryEntryEmbedBuilder {
    * @param starsStringBuilder Builds the stars emoji string
    */
   @Inject
-  public DiaryEntryEmbedBuilder(
+  public DiaryEntryEmbedFactory(
       EmbedBuilderFactory embedBuilderFactory, StarsStringBuilder starsStringBuilder) {
     this.starsStringBuilder = starsStringBuilder;
     embedBuilder = embedBuilderFactory.create();
@@ -51,7 +51,7 @@ public class DiaryEntryEmbedBuilder {
    *     from the PubSub listener
    * @return This class for chaining
    */
-  public DiaryEntryEmbedBuilder setMessage(Message message) {
+  public DiaryEntryEmbedFactory setMessage(Message message) {
     this.message = message;
     return this;
   }
@@ -62,7 +62,7 @@ public class DiaryEntryEmbedBuilder {
    * @param user User model containing important data to display about the user
    * @return This class for chaining
    */
-  public DiaryEntryEmbedBuilder setUser(User user) {
+  public DiaryEntryEmbedFactory setUser(User user) {
     this.user = user;
     return this;
   }

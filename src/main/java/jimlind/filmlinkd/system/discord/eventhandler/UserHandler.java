@@ -2,7 +2,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
 import java.util.List;
-import jimlind.filmlinkd.system.discord.embedbuilder.UserEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.UserEmbedFactory;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.letterboxd.api.MemberStatisticsApi;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
@@ -14,23 +14,23 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 public class UserHandler implements Handler {
   private final AccountHelper accountHelper;
   private final MemberStatisticsApi memberStatisticsApi;
-  private final UserEmbedBuilder userEmbedBuilder;
+  private final UserEmbedFactory userEmbedFactory;
 
   /**
    * Constructor for this class.
    *
    * @param accountHelper Handles translating account names to proper data models
    * @param memberStatisticsApi Fetches member statistics data from Letterboxd API
-   * @param userEmbedBuilder Builds the embed for the /user command
+   * @param userEmbedFactory Builds the embed for the /user command
    */
   @Inject
   UserHandler(
       AccountHelper accountHelper,
       MemberStatisticsApi memberStatisticsApi,
-      UserEmbedBuilder userEmbedBuilder) {
+      UserEmbedFactory userEmbedFactory) {
     this.accountHelper = accountHelper;
     this.memberStatisticsApi = memberStatisticsApi;
-    this.userEmbedBuilder = userEmbedBuilder;
+    this.userEmbedFactory = userEmbedFactory;
   }
 
   @Override
@@ -50,7 +50,7 @@ public class UserHandler implements Handler {
     }
 
     List<MessageEmbed> messageEmbedList =
-        this.userEmbedBuilder.setMember(member).setMemberStatistics(memberStatistics).build();
+        this.userEmbedFactory.setMember(member).setMemberStatistics(memberStatistics).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

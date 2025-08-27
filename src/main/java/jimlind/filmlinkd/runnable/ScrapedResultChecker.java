@@ -7,7 +7,7 @@ import jimlind.filmlinkd.model.ScrapedResult;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.ScrapedResultQueue;
 import jimlind.filmlinkd.system.discord.ShardManagerStorage;
-import jimlind.filmlinkd.system.discord.embedbuilder.DiaryEntryEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.DiaryEntryEmbedFactory;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -26,7 +26,7 @@ import net.dv8tion.jda.api.sharding.ShardManager;
  */
 @Slf4j
 public class ScrapedResultChecker implements Runnable {
-  private final DiaryEntryEmbedBuilder diaryEntryEmbedBuilder;
+  private final DiaryEntryEmbedFactory diaryEntryEmbedFactory;
   private final ScrapedResultQueue scrapedResultQueue;
   private final ShardManagerStorage shardManagerStorage;
   private final UserWriter userWriter;
@@ -37,7 +37,7 @@ public class ScrapedResultChecker implements Runnable {
   /**
    * Constructor for this class.
    *
-   * @param diaryEntryEmbedBuilder A class that builds diaryEntryEmbed objects
+   * @param diaryEntryEmbedFactory A class that builds diaryEntryEmbed objects
    * @param scrapedResultQueue A class that stores results in local memory
    * @param shardManagerStorage A class that stores shard information
    * @param shardId The shard id to help us know which shard we are running this from
@@ -45,13 +45,13 @@ public class ScrapedResultChecker implements Runnable {
    * @param userWriter Handles all write operations for user data in Firestore
    */
   public ScrapedResultChecker(
-      DiaryEntryEmbedBuilder diaryEntryEmbedBuilder,
+      DiaryEntryEmbedFactory diaryEntryEmbedFactory,
       ScrapedResultQueue scrapedResultQueue,
       ShardManagerStorage shardManagerStorage,
       UserWriter userWriter,
       int shardId,
       int totalShards) {
-    this.diaryEntryEmbedBuilder = diaryEntryEmbedBuilder;
+    this.diaryEntryEmbedFactory = diaryEntryEmbedFactory;
     this.scrapedResultQueue = scrapedResultQueue;
     this.shardManagerStorage = shardManagerStorage;
     this.userWriter = userWriter;
@@ -74,7 +74,7 @@ public class ScrapedResultChecker implements Runnable {
     Message message = result.message();
     User user = result.user();
 
-    List<MessageEmbed> embedList = diaryEntryEmbedBuilder.setMessage(message).setUser(user).build();
+    List<MessageEmbed> embedList = diaryEntryEmbedFactory.setMessage(message).setUser(user).build();
     ShardManager shardManager = shardManagerStorage.get();
     JDA shard = (shardManager != null) ? shardManager.getShardById(shardId) : null;
 

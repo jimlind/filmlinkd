@@ -23,7 +23,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 /** Builds a Discord embed to display information about what a user has logged. */
-public class LoggedEmbedBuilder {
+public class LoggedEmbedFactory {
   private static final int MAX_REVIEW_LENGTH = 200;
   private final DateUtils dateUtils;
   private final EmbedBuilder embedBuilder;
@@ -38,7 +38,7 @@ public class LoggedEmbedBuilder {
    * @param imageUtils Assists in finding optimal Letterboxd images
    */
   @Inject
-  public LoggedEmbedBuilder(
+  public LoggedEmbedFactory(
       DateUtils dateUtils, EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
     this.dateUtils = dateUtils;
     this.imageUtils = imageUtils;
@@ -64,7 +64,7 @@ public class LoggedEmbedBuilder {
    * @param logEntryList Log Entry list from Letterboxd API
    * @return This class for chaining
    */
-  public LoggedEmbedBuilder setLogEntryList(List<LbLogEntry> logEntryList) {
+  public LoggedEmbedFactory setLogEntryList(List<LbLogEntry> logEntryList) {
     this.logEntryList = logEntryList;
     return this;
   }

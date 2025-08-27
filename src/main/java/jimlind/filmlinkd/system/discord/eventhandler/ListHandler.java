@@ -3,7 +3,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.Locale;
-import jimlind.filmlinkd.system.discord.embedbuilder.ListEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.ListEmbedFactory;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.letterboxd.api.ListApi;
 import jimlind.filmlinkd.system.letterboxd.model.LbListSummary;
@@ -18,20 +18,20 @@ public class ListHandler implements Handler {
 
   private final AccountHelper accountHelper;
   private final ListApi listApi;
-  private final ListEmbedBuilder listEmbedBuilder;
+  private final ListEmbedFactory listEmbedFactory;
 
   /**
    * Constructor for this class.
    *
    * @param accountHelper Handles translating account names to proper data models
    * @param listApi Fetches list data from Letterboxd API
-   * @param listEmbedBuilder Builds the embed for the /list command
+   * @param listEmbedFactory Builds the embed for the /list command
    */
   @Inject
-  ListHandler(AccountHelper accountHelper, ListApi listApi, ListEmbedBuilder listEmbedBuilder) {
+  ListHandler(AccountHelper accountHelper, ListApi listApi, ListEmbedFactory listEmbedFactory) {
     this.accountHelper = accountHelper;
     this.listApi = listApi;
-    this.listEmbedBuilder = listEmbedBuilder;
+    this.listEmbedFactory = listEmbedFactory;
   }
 
   @Override
@@ -68,7 +68,7 @@ public class ListHandler implements Handler {
       return;
     }
 
-    List<MessageEmbed> messageEmbedList = listEmbedBuilder.setListSummary(foundList).build();
+    List<MessageEmbed> messageEmbedList = listEmbedFactory.setListSummary(foundList).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

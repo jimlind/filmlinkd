@@ -2,7 +2,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
 import java.util.List;
-import jimlind.filmlinkd.system.discord.embedbuilder.ContributorEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.ContributorEmbedFactory;
 import jimlind.filmlinkd.system.letterboxd.api.ContributorApi;
 import jimlind.filmlinkd.system.letterboxd.model.LbContributor;
 import jimlind.filmlinkd.system.letterboxd.model.LbSearchResponse;
@@ -14,19 +14,19 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 public class ContributorHandler implements Handler {
 
   private final ContributorApi contributorApi;
-  private final ContributorEmbedBuilder contributorEmbedBuilder;
+  private final ContributorEmbedFactory contributorEmbedFactory;
 
   /**
    * Constructor for this class.
    *
    * @param contributorApi Fetches contributor data from Letterboxd API
-   * @param contributorEmbedBuilder Builds the embed for the /contributor command
+   * @param contributorEmbedFactory Builds the embed for the /contributor command
    */
   @Inject
   ContributorHandler(
-      ContributorApi contributorApi, ContributorEmbedBuilder contributorEmbedBuilder) {
+      ContributorApi contributorApi, ContributorEmbedFactory contributorEmbedFactory) {
     this.contributorApi = contributorApi;
-    this.contributorEmbedBuilder = contributorEmbedBuilder;
+    this.contributorEmbedFactory = contributorEmbedFactory;
   }
 
   @Override
@@ -44,7 +44,7 @@ public class ContributorHandler implements Handler {
 
     LbContributor contributor = searchResponse.getItems().getFirst().contributor;
     List<MessageEmbed> messageEmbedList =
-        contributorEmbedBuilder.setContributor(contributor).build();
+        contributorEmbedFactory.setContributor(contributor).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

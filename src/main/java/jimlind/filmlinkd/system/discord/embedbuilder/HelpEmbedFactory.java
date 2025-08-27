@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
  * as the other Builders because there is a pretty wide variety of content to send. It could be
  * written similarly to the other Builders if it makes sense.
  */
-public class HelpEmbedBuilder {
+public class HelpEmbedFactory {
   private final AppConfig appConfig;
   private final DescriptionStringBuilder descriptionStringBuilder;
   private final EmbedBuilderFactory embedBuilderFactory;
@@ -27,7 +27,7 @@ public class HelpEmbedBuilder {
    * @param embedBuilderFactory A factory for creating instances of the {@link EmbedBuilder} model
    */
   @Inject
-  HelpEmbedBuilder(
+  HelpEmbedFactory(
       AppConfig appConfig,
       DescriptionStringBuilder descriptionStringBuilder,
       EmbedBuilderFactory embedBuilderFactory) {

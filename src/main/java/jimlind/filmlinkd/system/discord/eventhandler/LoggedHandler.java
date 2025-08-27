@@ -2,7 +2,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
 import java.util.List;
-import jimlind.filmlinkd.system.discord.embedbuilder.LoggedEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.LoggedEmbedFactory;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.letterboxd.api.FilmApi;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
@@ -18,7 +18,7 @@ public class LoggedHandler implements Handler {
   private final AccountHelper accountHelper;
   private final FilmApi filmApi;
   private final LogEntriesApi logEntriesApi;
-  private final LoggedEmbedBuilder loggedEmbedBuilder;
+  private final LoggedEmbedFactory loggedEmbedFactory;
 
   /**
    * Constructor for this class.
@@ -26,18 +26,18 @@ public class LoggedHandler implements Handler {
    * @param accountHelper Handles translating account names to proper data models
    * @param filmApi Fetches film data from Letterboxd API
    * @param logEntriesApi Fetches user entry data from Letterboxd API
-   * @param loggedEmbedBuilder Builds the embed for the /logged command
+   * @param loggedEmbedFactory Builds the embed for the /logged command
    */
   @Inject
   LoggedHandler(
       AccountHelper accountHelper,
       FilmApi filmApi,
       LogEntriesApi logEntriesApi,
-      LoggedEmbedBuilder loggedEmbedBuilder) {
+      LoggedEmbedFactory loggedEmbedFactory) {
     this.accountHelper = accountHelper;
     this.filmApi = filmApi;
     this.logEntriesApi = logEntriesApi;
-    this.loggedEmbedBuilder = loggedEmbedBuilder;
+    this.loggedEmbedFactory = loggedEmbedFactory;
   }
 
   @Override
@@ -61,7 +61,7 @@ public class LoggedHandler implements Handler {
       return;
     }
 
-    List<MessageEmbed> messageEmbedList = loggedEmbedBuilder.setLogEntryList(logEntryList).build();
+    List<MessageEmbed> messageEmbedList = loggedEmbedFactory.setLogEntryList(logEntryList).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

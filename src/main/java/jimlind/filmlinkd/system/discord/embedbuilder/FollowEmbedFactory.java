@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 /** Builds a Discord embed to display the result of a follow request. */
-public class FollowEmbedBuilder {
+public class FollowEmbedFactory {
   private final DescriptionStringBuilder descriptionStringBuilder;
   private final EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
@@ -28,7 +28,7 @@ public class FollowEmbedBuilder {
    * @param userStringBuilder Builds the user's name string formatting to properly escape characters
    */
   @Inject
-  public FollowEmbedBuilder(
+  public FollowEmbedFactory(
       DescriptionStringBuilder descriptionStringBuilder,
       EmbedBuilderFactory embedBuilderFactory,
       ImageUtils imageUtils,
@@ -45,7 +45,7 @@ public class FollowEmbedBuilder {
    * @param member Member model from Letterboxd API
    * @return This class for chaining
    */
-  public FollowEmbedBuilder setMember(LbMember member) {
+  public FollowEmbedFactory setMember(LbMember member) {
     this.member = member;
     return this;
   }

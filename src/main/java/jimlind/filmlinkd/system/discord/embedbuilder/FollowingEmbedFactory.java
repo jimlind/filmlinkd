@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 /** Builds a Discord embed to display information about all users following. */
-public class FollowingEmbedBuilder {
+public class FollowingEmbedFactory {
   private final EmbedBuilderFactory embedBuilderFactory;
   private Map<String, User> userMap = new TreeMap<>();
 
@@ -23,7 +23,7 @@ public class FollowingEmbedBuilder {
    * @param embedBuilderFactory A factory for creating instances of the {@link EmbedBuilder} model
    */
   @Inject
-  FollowingEmbedBuilder(EmbedBuilderFactory embedBuilderFactory) {
+  FollowingEmbedFactory(EmbedBuilderFactory embedBuilderFactory) {
     this.embedBuilderFactory = embedBuilderFactory;
   }
 
@@ -33,7 +33,7 @@ public class FollowingEmbedBuilder {
    * @param userMap Map fetched from the database containing username and display name
    * @return This class for chaining
    */
-  public FollowingEmbedBuilder setUserMap(Map<String, User> userMap) {
+  public FollowingEmbedFactory setUserMap(Map<String, User> userMap) {
     this.userMap = userMap;
     return this;
   }

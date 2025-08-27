@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.model.User;
-import jimlind.filmlinkd.system.discord.embedbuilder.FollowingEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.FollowingEmbedFactory;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.google.firestore.UserReader;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
@@ -17,7 +17,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 /** Handles the /following command to show the users followed in the specified channel. */
 public class FollowingHandler implements Handler {
   private final ChannelHelper channelHelper;
-  private final FollowingEmbedBuilder followingEmbedBuilder;
+  private final FollowingEmbedFactory followingEmbedFactory;
   private final UserFactory userFactory;
   private final UserReader userReader;
 
@@ -25,18 +25,18 @@ public class FollowingHandler implements Handler {
    * Constructor for this class.
    *
    * @param channelHelper Service that parses a channel id from a slash event with options
-   * @param followingEmbedBuilder Builds the embed for the /following command
+   * @param followingEmbedFactory Builds the embed for the /following command
    * @param userFactory Builds the user object from a Firestore snapshot
    * @param userReader Handles all read-only queries for user data from Firestore
    */
   @Inject
   FollowingHandler(
       ChannelHelper channelHelper,
-      FollowingEmbedBuilder followingEmbedBuilder,
+      FollowingEmbedFactory followingEmbedFactory,
       UserFactory userFactory,
       UserReader userReader) {
     this.channelHelper = channelHelper;
-    this.followingEmbedBuilder = followingEmbedBuilder;
+    this.followingEmbedFactory = followingEmbedFactory;
     this.userFactory = userFactory;
     this.userReader = userReader;
   }
@@ -61,7 +61,7 @@ public class FollowingHandler implements Handler {
       }
     }
 
-    List<MessageEmbed> messageEmbedList = followingEmbedBuilder.setUserMap(userMap).build();
+    List<MessageEmbed> messageEmbedList = followingEmbedFactory.setUserMap(userMap).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

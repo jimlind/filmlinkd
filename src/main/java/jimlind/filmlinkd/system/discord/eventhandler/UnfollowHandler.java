@@ -2,7 +2,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
 import java.util.List;
-import jimlind.filmlinkd.system.discord.embedbuilder.UnfollowEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.UnfollowEmbedFactory;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 public class UnfollowHandler implements Handler {
   private final AccountHelper accountHelper;
   private final ChannelHelper channelHelper;
-  private final UnfollowEmbedBuilder unfollowEmbedBuilder;
+  private final UnfollowEmbedFactory unfollowEmbedFactory;
   private final UserWriter userWriter;
 
   /**
@@ -22,18 +22,18 @@ public class UnfollowHandler implements Handler {
    *
    * @param accountHelper Handles translating account names to proper data models
    * @param channelHelper Service that parses a channel id from a slash event with options
-   * @param unfollowEmbedBuilder Builds the embed for the /unfollow command
+   * @param unfollowEmbedFactory Builds the embed for the /unfollow command
    * @param userWriter Handles all write operations for user data in Firestore
    */
   @Inject
   UnfollowHandler(
       AccountHelper accountHelper,
       ChannelHelper channelHelper,
-      UnfollowEmbedBuilder unfollowEmbedBuilder,
+      UnfollowEmbedFactory unfollowEmbedFactory,
       UserWriter userWriter) {
     this.accountHelper = accountHelper;
     this.channelHelper = channelHelper;
-    this.unfollowEmbedBuilder = unfollowEmbedBuilder;
+    this.unfollowEmbedFactory = unfollowEmbedFactory;
     this.userWriter = userWriter;
   }
 
@@ -58,7 +58,7 @@ public class UnfollowHandler implements Handler {
       return;
     }
 
-    List<MessageEmbed> messageEmbedList = unfollowEmbedBuilder.setMember(member).build();
+    List<MessageEmbed> messageEmbedList = unfollowEmbedFactory.setMember(member).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

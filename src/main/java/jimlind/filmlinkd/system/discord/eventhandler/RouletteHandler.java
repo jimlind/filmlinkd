@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import java.security.SecureRandom;
 import java.util.List;
 import jimlind.filmlinkd.model.CombinedLbFilmModel;
-import jimlind.filmlinkd.system.discord.embedbuilder.FilmEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.FilmEmbedFactory;
 import jimlind.filmlinkd.system.letterboxd.api.FilmApi;
 import jimlind.filmlinkd.system.letterboxd.web.LetterboxdIdWeb;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -17,21 +17,21 @@ public class RouletteHandler implements Handler {
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
   private final FilmApi filmApi;
-  private final FilmEmbedBuilder filmEmbedBuilder;
+  private final FilmEmbedFactory filmEmbedFactory;
   private final LetterboxdIdWeb letterboxdIdWeb;
 
   /**
    * Constructor for this class.
    *
    * @param filmApi Fetches film data from Letterboxd API
-   * @param filmEmbedBuilder Builds the embed for the /filmEmbed command
+   * @param filmEmbedFactory Builds the embed for the /filmEmbed command
    * @param letterboxdIdWeb Class that translates a Letterboxd id to another piece of data
    */
   @Inject
   RouletteHandler(
-      FilmApi filmApi, FilmEmbedBuilder filmEmbedBuilder, LetterboxdIdWeb letterboxdIdWeb) {
+      FilmApi filmApi, FilmEmbedFactory filmEmbedFactory, LetterboxdIdWeb letterboxdIdWeb) {
     this.filmApi = filmApi;
-    this.filmEmbedBuilder = filmEmbedBuilder;
+    this.filmEmbedFactory = filmEmbedFactory;
     this.letterboxdIdWeb = letterboxdIdWeb;
   }
 
@@ -47,7 +47,7 @@ public class RouletteHandler implements Handler {
     }
 
     List<MessageEmbed> messageEmbedList =
-        filmEmbedBuilder.setFilmCombination(combinedLbFilmModel).build();
+        filmEmbedFactory.setFilmCombination(combinedLbFilmModel).build();
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 

@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 /** Builds a Discord embed to display result of a refresh request. */
-public class RefreshEmbedBuilder {
+public class RefreshEmbedFactory {
   private final DescriptionStringBuilder descriptionStringBuilder;
   private final net.dv8tion.jda.api.EmbedBuilder embedBuilder;
   private final ImageUtils imageUtils;
@@ -28,7 +28,7 @@ public class RefreshEmbedBuilder {
    * @param userStringBuilder Builds the user's name string formatting to properly escape characters
    */
   @Inject
-  public RefreshEmbedBuilder(
+  public RefreshEmbedFactory(
       DescriptionStringBuilder descriptionStringBuilder,
       EmbedBuilderFactory embedBuilderFactory,
       ImageUtils imageUtils,
@@ -45,7 +45,7 @@ public class RefreshEmbedBuilder {
    * @param member Member model from Letterboxd API
    * @return This class for chaining
    */
-  public RefreshEmbedBuilder setMember(LbMember member) {
+  public RefreshEmbedFactory setMember(LbMember member) {
     this.member = member;
     return this;
   }

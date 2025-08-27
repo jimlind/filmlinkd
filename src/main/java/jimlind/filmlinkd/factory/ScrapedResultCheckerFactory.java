@@ -4,12 +4,12 @@ import com.google.inject.Inject;
 import jimlind.filmlinkd.runnable.ScrapedResultChecker;
 import jimlind.filmlinkd.system.ScrapedResultQueue;
 import jimlind.filmlinkd.system.discord.ShardManagerStorage;
-import jimlind.filmlinkd.system.discord.embedbuilder.DiaryEntryEmbedBuilder;
+import jimlind.filmlinkd.system.discord.embedbuilder.DiaryEntryEmbedFactory;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
 
 /** A factory for creating instances of the {@link ScrapedResultChecker} model. */
 public class ScrapedResultCheckerFactory {
-  private final DiaryEntryEmbedBuilder diaryEntryEmbedBuilder;
+  private final DiaryEntryEmbedFactory diaryEntryEmbedFactory;
   private final ScrapedResultQueue scrapedResultQueue;
   private final ShardManagerStorage shardManagerStorage;
   private final UserWriter userWriter;
@@ -17,17 +17,17 @@ public class ScrapedResultCheckerFactory {
   /**
    * Constructor for {@link ScrapedResultCheckerFactory}.
    *
-   * @param diaryEntryEmbedBuilder A class that builds diaryEntryEmbed objects
+   * @param diaryEntryEmbedFactory A class that builds diaryEntryEmbed objects
    * @param scrapedResultQueue A class that stores results in local memory
    * @param userWriter Handles all write operations for user data in Firestore
    */
   @Inject
   public ScrapedResultCheckerFactory(
-      DiaryEntryEmbedBuilder diaryEntryEmbedBuilder,
+      DiaryEntryEmbedFactory diaryEntryEmbedFactory,
       ScrapedResultQueue scrapedResultQueue,
       ShardManagerStorage shardManagerStorage,
       UserWriter userWriter) {
-    this.diaryEntryEmbedBuilder = diaryEntryEmbedBuilder;
+    this.diaryEntryEmbedFactory = diaryEntryEmbedFactory;
     this.scrapedResultQueue = scrapedResultQueue;
     this.shardManagerStorage = shardManagerStorage;
     this.userWriter = userWriter;
@@ -42,7 +42,7 @@ public class ScrapedResultCheckerFactory {
    */
   public ScrapedResultChecker create(int shardId, int totalShards) {
     return new ScrapedResultChecker(
-        diaryEntryEmbedBuilder,
+        diaryEntryEmbedFactory,
         scrapedResultQueue,
         shardManagerStorage,
         userWriter,
