@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.discord.factory;
+package jimlind.filmlinkd.discord.embed.factory;
 
 import com.google.inject.Inject;
 import io.github.furstenheim.CopyDown;
@@ -18,9 +18,8 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 /** Builds a Discord embed to display information about users list. */
 public class ListEmbedFactory {
-  private final EmbedBuilder embedBuilder;
+  private final EmbedBuilderFactory embedBuilderFactory;
   private final ImageUtils imageUtils;
-  private LbListSummary listSummary;
 
   /**
    * Constructor for this class.
@@ -30,7 +29,7 @@ public class ListEmbedFactory {
    */
   @Inject
   ListEmbedFactory(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
-    embedBuilder = embedBuilderFactory.create();
+    this.embedBuilderFactory = embedBuilderFactory;
     this.imageUtils = imageUtils;
   }
 
@@ -38,27 +37,19 @@ public class ListEmbedFactory {
     return summary.getFilm();
   }
 
-  /**
-   * Setter for the listSummary attribute.
-   *
-   * @param listSummary ListSummary model from Letterboxd API
-   * @return This class for chaining
-   */
-  public ListEmbedFactory setListSummary(LbListSummary listSummary) {
-    this.listSummary = listSummary;
-    return this;
+  private static LbMemberSummary getOwner(LbListSummary listSummary) {
+    return listSummary.getOwner();
   }
 
   /**
    * Builds the embed.
    *
+   * @param listSummary ListSummary model from Letterboxd API
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
-  public List<MessageEmbed> build() {
-    if (listSummary == null) {
-      return new ArrayList<>();
-    }
+  public List<MessageEmbed> create(LbListSummary listSummary) {
+    EmbedBuilder embedBuilder = embedBuilderFactory.create();
 
     embedBuilder.setTitle(listSummary.name);
     embedBuilder.setUrl("https://boxd.it/" + listSummary.getId());
@@ -69,7 +60,9 @@ public class ListEmbedFactory {
         new StringBuilder(
             String.format(
                 "**List of %s films curated by [%s](https://boxd.it/%s)**\n\n",
-                listSummary.filmCount, getOwner().displayName, getOwner().id));
+                listSummary.filmCount,
+                getOwner(listSummary).displayName,
+                getOwner(listSummary).id));
 
     Options options = OptionsBuilder.anOptions().withBr("\n").build();
     String listDescription = new CopyDown(options).convert(listSummary.description);
@@ -91,9 +84,5 @@ public class ListEmbedFactory {
     embedList.add(embedBuilder.build());
 
     return embedList;
-  }
-
-  private LbMemberSummary getOwner() {
-    return listSummary.getOwner();
   }
 }

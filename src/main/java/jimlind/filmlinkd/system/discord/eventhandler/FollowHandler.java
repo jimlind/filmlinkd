@@ -3,7 +3,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.inject.Inject;
 import java.util.List;
-import jimlind.filmlinkd.discord.factory.FollowEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.FollowEmbedFactory;
 import jimlind.filmlinkd.factory.CommandFactory;
 import jimlind.filmlinkd.factory.MessageFactory;
 import jimlind.filmlinkd.factory.UserFactory;
@@ -128,7 +128,7 @@ public class FollowHandler implements Handler {
       this.pubSubManager.publishLogEntry(message);
     }
 
-    List<MessageEmbed> messageEmbedList = followEmbedFactory.setMember(member).build();
+    List<MessageEmbed> messageEmbedList = followEmbedFactory.create(member);
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

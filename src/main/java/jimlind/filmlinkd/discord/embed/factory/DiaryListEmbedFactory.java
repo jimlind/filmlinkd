@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.discord.factory;
+package jimlind.filmlinkd.discord.embed.factory;
 
 import com.google.inject.Inject;
 import java.util.ArrayList;
@@ -16,11 +16,8 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 /** Builds a Discord embed to display information about a list of diary entries. */
 public class DiaryListEmbedFactory {
-  private final EmbedBuilder embedBuilder;
+  private final EmbedBuilderFactory embedBuilderFactory;
   private final ImageUtils imageUtils;
-
-  private LbMember member;
-  private List<LbLogEntry> logEntryList = new ArrayList<>();
 
   /**
    * Constructor for this class.
@@ -30,7 +27,7 @@ public class DiaryListEmbedFactory {
    */
   @Inject
   public DiaryListEmbedFactory(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
-    embedBuilder = embedBuilderFactory.create();
+    this.embedBuilderFactory = embedBuilderFactory;
     this.imageUtils = imageUtils;
   }
 
@@ -38,39 +35,21 @@ public class DiaryListEmbedFactory {
     return logEntry.getFilm();
   }
 
-  /**
-   * Setter for the member attribute.
-   *
-   * @param member Member model from Letterboxd API
-   * @return This class for chaining
-   */
-  public DiaryListEmbedFactory setMember(LbMember member) {
-    this.member = member;
-    return this;
-  }
-
-  /**
-   * Setter for the logEntryList attribute.
-   *
-   * @param logEntryList Log Entry list from Letterboxd API
-   * @return This class for chaining
-   */
-  public DiaryListEmbedFactory setLogEntryList(List<LbLogEntry> logEntryList) {
-    this.logEntryList = logEntryList;
-    return this;
+  private static LbDiaryDetails extractDiaryDetails(LbLogEntry logEntry) {
+    return logEntry.getDiaryDetails();
   }
 
   /**
    * Builds the embed.
    *
+   * @param member Member model from Letterboxd API
+   * @param logEntryList Log Entry list from Letterboxd API
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
   @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-  public List<MessageEmbed> build() {
-    if (member == null) {
-      return new ArrayList<>();
-    }
+  public List<MessageEmbed> create(LbMember member, List<LbLogEntry> logEntryList) {
+    EmbedBuilder embedBuilder = embedBuilderFactory.create();
 
     List<String> entryList = new ArrayList<>();
     for (LbLogEntry logEntry : logEntryList) {
@@ -114,9 +93,5 @@ public class DiaryListEmbedFactory {
     embedList.add(embedBuilder.build());
 
     return embedList;
-  }
-
-  private LbDiaryDetails extractDiaryDetails(LbLogEntry logEntry) {
-    return logEntry.getDiaryDetails();
   }
 }

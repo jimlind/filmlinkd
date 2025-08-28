@@ -2,7 +2,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
 import java.util.List;
-import jimlind.filmlinkd.discord.factory.ContributorEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.ContributorEmbedFactory;
 import jimlind.filmlinkd.system.letterboxd.api.ContributorApi;
 import jimlind.filmlinkd.system.letterboxd.model.LbContributor;
 import jimlind.filmlinkd.system.letterboxd.model.LbSearchResponse;
@@ -43,8 +43,7 @@ public class ContributorHandler implements Handler {
     }
 
     LbContributor contributor = searchResponse.getItems().getFirst().contributor;
-    List<MessageEmbed> messageEmbedList =
-        contributorEmbedFactory.setContributor(contributor).build();
+    List<MessageEmbed> messageEmbedList = contributorEmbedFactory.create(contributor);
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

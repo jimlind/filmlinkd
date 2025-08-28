@@ -2,7 +2,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
 import java.util.List;
-import jimlind.filmlinkd.discord.factory.UnfollowEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.UnfollowEmbedFactory;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
@@ -58,7 +58,7 @@ public class UnfollowHandler implements Handler {
       return;
     }
 
-    List<MessageEmbed> messageEmbedList = unfollowEmbedFactory.setMember(member).build();
+    List<MessageEmbed> messageEmbedList = unfollowEmbedFactory.create(member);
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

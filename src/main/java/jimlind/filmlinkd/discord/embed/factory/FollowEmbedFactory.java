@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.discord.factory;
+package jimlind.filmlinkd.discord.embed.factory;
 
 import com.google.inject.Inject;
 import java.util.ArrayList;
@@ -11,13 +11,12 @@ import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-/** Builds a Discord embed to display the result of an unfollow request. */
-public class UnfollowEmbedFactory {
+/** Builds a Discord embed to display the result of a follow request. */
+public class FollowEmbedFactory {
   private final DescriptionStringBuilder descriptionStringBuilder;
-  private final EmbedBuilder embedBuilder;
+  private final EmbedBuilderFactory embedBuilderFactory;
   private final ImageUtils imageUtils;
   private final UserStringBuilder userStringBuilder;
-  private LbMember member;
 
   /**
    * Constructor for this class.
@@ -28,43 +27,32 @@ public class UnfollowEmbedFactory {
    * @param userStringBuilder Builds the user's name string formatting to properly escape characters
    */
   @Inject
-  public UnfollowEmbedFactory(
+  public FollowEmbedFactory(
       DescriptionStringBuilder descriptionStringBuilder,
       EmbedBuilderFactory embedBuilderFactory,
       ImageUtils imageUtils,
       UserStringBuilder userStringBuilder) {
     this.descriptionStringBuilder = descriptionStringBuilder;
+    this.embedBuilderFactory = embedBuilderFactory;
     this.imageUtils = imageUtils;
     this.userStringBuilder = userStringBuilder;
-    embedBuilder = embedBuilderFactory.create();
-  }
-
-  /**
-   * Setter for the member attribute.
-   *
-   * @param member Member model from Letterboxd API
-   * @return This class for chaining
-   */
-  public UnfollowEmbedFactory setMember(LbMember member) {
-    this.member = member;
-    return this;
   }
 
   /**
    * Builds the embed.
    *
+   * @param member Member model from Letterboxd API
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
-  public List<MessageEmbed> build() {
-    if (member == null) {
-      return new ArrayList<>();
-    }
+  public List<MessageEmbed> create(LbMember member) {
+    EmbedBuilder embedBuilder = embedBuilderFactory.create();
 
     String userName = userStringBuilder.setUsername(member.username).build();
     String description =
-        String.format(
-            "I unfollowed %s (%s).\nNo hard feelings I hope.", member.displayName, userName);
+        String.format("I am now following %s (%s).\n", member.displayName, userName);
+    description += "I'll try to post their most recent entry in the appropriate channel.";
+
     embedBuilder.setDescription(descriptionStringBuilder.setDescriptionText(description).build());
     embedBuilder.setThumbnail(imageUtils.getTallest(member.avatar));
 

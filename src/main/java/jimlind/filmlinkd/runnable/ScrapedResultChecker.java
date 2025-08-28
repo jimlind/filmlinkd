@@ -2,7 +2,7 @@ package jimlind.filmlinkd.runnable;
 
 import java.time.Instant;
 import java.util.List;
-import jimlind.filmlinkd.discord.factory.DiaryEntryEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.DiaryEntryEmbedFactory;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.ScrapedResult;
 import jimlind.filmlinkd.model.User;
@@ -74,7 +74,7 @@ public class ScrapedResultChecker implements Runnable {
     Message message = result.message();
     User user = result.user();
 
-    List<MessageEmbed> embedList = diaryEntryEmbedFactory.setMessage(message).setUser(user).build();
+    List<MessageEmbed> embedList = diaryEntryEmbedFactory.create(message, user);
     ShardManager shardManager = shardManagerStorage.get();
     JDA shard = (shardManager != null) ? shardManager.getShardById(shardId) : null;
 

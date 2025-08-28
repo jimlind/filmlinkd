@@ -2,7 +2,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
 import java.util.List;
-import jimlind.filmlinkd.discord.factory.RefreshEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.RefreshEmbedFactory;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
@@ -45,7 +45,7 @@ public class RefreshHandler implements Handler {
       return;
     }
 
-    List<MessageEmbed> messageEmbedList = refreshEmbedFactory.setMember(member).build();
+    List<MessageEmbed> messageEmbedList = refreshEmbedFactory.create(member);
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

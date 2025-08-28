@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import jimlind.filmlinkd.discord.factory.HelpEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.HelpEmbedFactory;
 import jimlind.filmlinkd.factory.MessageFactory;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.system.google.PubSubManager;

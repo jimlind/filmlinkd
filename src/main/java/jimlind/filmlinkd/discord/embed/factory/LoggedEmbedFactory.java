@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.discord.factory;
+package jimlind.filmlinkd.discord.embed.factory;
 
 import com.google.inject.Inject;
 import io.github.furstenheim.CopyDown;
@@ -26,9 +26,8 @@ import org.jsoup.nodes.Document;
 public class LoggedEmbedFactory {
   private static final int MAX_REVIEW_LENGTH = 200;
   private final DateUtils dateUtils;
-  private final EmbedBuilder embedBuilder;
+  private final EmbedBuilderFactory embedBuilderFactory;
   private final ImageUtils imageUtils;
-  private List<LbLogEntry> logEntryList = new ArrayList<>();
 
   /**
    * Constructor for this class.
@@ -41,8 +40,8 @@ public class LoggedEmbedFactory {
   public LoggedEmbedFactory(
       DateUtils dateUtils, EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
     this.dateUtils = dateUtils;
+    this.embedBuilderFactory = embedBuilderFactory;
     this.imageUtils = imageUtils;
-    embedBuilder = embedBuilderFactory.create();
   }
 
   @Nullable
@@ -59,24 +58,15 @@ public class LoggedEmbedFactory {
   }
 
   /**
-   * Setter for the logEntryList attribute.
-   *
-   * @param logEntryList Log Entry list from Letterboxd API
-   * @return This class for chaining
-   */
-  public LoggedEmbedFactory setLogEntryList(List<LbLogEntry> logEntryList) {
-    this.logEntryList = logEntryList;
-    return this;
-  }
-
-  /**
    * Builds the embed.
    *
+   * @param logEntryList Log Entry list from Letterboxd API
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
   @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-  public List<MessageEmbed> build() {
+  public List<MessageEmbed> create(List<LbLogEntry> logEntryList) {
+    EmbedBuilder embedBuilder = embedBuilderFactory.create();
     StringBuilder description = new StringBuilder();
     for (LbLogEntry logEntry : logEntryList) {
       String action = "Logged";

@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.discord.factory;
+package jimlind.filmlinkd.discord.embed.factory;
 
 import com.google.inject.Inject;
 import java.util.ArrayList;
@@ -19,10 +19,8 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 /** Builds a Discord embed to display information about a user. */
 public class UserEmbedFactory {
-  private final EmbedBuilder embedBuilder;
+  private final EmbedBuilderFactory embedBuilderFactory;
   private final ImageUtils imageUtils;
-  private LbMember member;
-  private LbMemberStatistics memberStatistics;
 
   /**
    * Constructor for this class.
@@ -32,42 +30,28 @@ public class UserEmbedFactory {
    */
   @Inject
   public UserEmbedFactory(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
+    this.embedBuilderFactory = embedBuilderFactory;
     this.imageUtils = imageUtils;
-    embedBuilder = embedBuilderFactory.create();
   }
 
-  /**
-   * Setter for the member attribute.
-   *
-   * @param member Member model from Letterboxd API
-   * @return This class for chaining
-   */
-  public UserEmbedFactory setMember(LbMember member) {
-    this.member = member;
-    return this;
+  private static LbPronoun getPronoun(LbMember member) {
+    return member.getPronoun();
   }
 
-  /**
-   * Setter for the memberStatistics attribute.
-   *
-   * @param memberStatistics Member statistics model from Letterboxd API
-   * @return This class for chaining
-   */
-  public UserEmbedFactory setMemberStatistics(LbMemberStatistics memberStatistics) {
-    this.memberStatistics = memberStatistics;
-    return this;
+  private static LbMemberStatisticsCounts getCounts(LbMemberStatistics memberStatistics) {
+    return memberStatistics.getCounts();
   }
 
   /**
    * Builds the embed.
    *
+   * @param member Member model from Letterboxd API
+   * @param memberStatistics Member statistics model from Letterboxd API
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
-  public List<MessageEmbed> build() {
-    if (member == null || memberStatistics == null) {
-      return new ArrayList<>();
-    }
+  public List<MessageEmbed> create(LbMember member, LbMemberStatistics memberStatistics) {
+    EmbedBuilder embedBuilder = embedBuilderFactory.create();
 
     StringBuilder descriptionBuilder = new StringBuilder(22);
     if (member.location != null) {
@@ -90,10 +74,11 @@ public class UserEmbedFactory {
         .append(
             String.format(
                 "Logged films: %s total | %s this year",
-                getCounts().getWatches(), getCounts().getFilmsInDiaryThisYear()));
+                getCounts(memberStatistics).getWatches(),
+                getCounts(memberStatistics).getFilmsInDiaryThisYear()));
 
     String displayName = new UserStringBuilder().setUsername(member.displayName).build();
-    LbPronoun pronoun = getPronoun();
+    LbPronoun pronoun = getPronoun(member);
     String pronounString =
         String.join("/", pronoun.subjectPronoun, pronoun.objectPronoun, pronoun.possessivePronoun);
     embedBuilder.setTitle(displayName + " " + pronounString);
@@ -107,13 +92,5 @@ public class UserEmbedFactory {
     embedList.add(embedBuilder.build());
 
     return embedList;
-  }
-
-  private LbPronoun getPronoun() {
-    return member.getPronoun();
-  }
-
-  private LbMemberStatisticsCounts getCounts() {
-    return memberStatistics.getCounts();
   }
 }

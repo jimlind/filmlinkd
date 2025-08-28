@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.discord.factory;
+package jimlind.filmlinkd.discord.embed.factory;
 
 import com.google.inject.Inject;
 import java.text.DecimalFormat;
@@ -22,9 +22,8 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 /** Builds a Discord embed to display information about a film. */
 public class FilmEmbedFactory {
-  private final EmbedBuilder embedBuilder;
+  private final EmbedBuilderFactory embedBuilderFactory;
   private final ImageUtils imageUtils;
-  private CombinedLbFilmModel filmCombination;
 
   /**
    * Constructor for this class.
@@ -34,7 +33,7 @@ public class FilmEmbedFactory {
    */
   @Inject
   FilmEmbedFactory(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
-    embedBuilder = embedBuilderFactory.create();
+    this.embedBuilderFactory = embedBuilderFactory;
     this.imageUtils = imageUtils;
   }
 
@@ -42,29 +41,28 @@ public class FilmEmbedFactory {
     return filmCombination.getStatisticsCounts();
   }
 
-  /**
-   * Setter for the filmCombination attribute.
-   *
-   * @param filmCombination Film model created from multiple Letterboxd API calls
-   * @return This class for chaining
-   */
-  public FilmEmbedFactory setFilmCombination(CombinedLbFilmModel filmCombination) {
-    this.filmCombination = filmCombination;
-    return this;
+  private static List<LbGenre> extractGenres(LbFilm film) {
+    return film.genres;
+  }
+
+  private static LbLanguage extractPrimaryLanguage(LbFilm film) {
+    return film.primaryLanguage;
+  }
+
+  private static LbFilm extractFilm(CombinedLbFilmModel filmCombination) {
+    return filmCombination.getFilm();
   }
 
   /**
    * Builds the embed.
    *
+   * @param filmCombination Film model created from multiple Letterboxd API calls
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
-  public List<MessageEmbed> build() {
-    if (filmCombination == null) {
-      return new ArrayList<>();
-    }
-
-    LbFilm film = getFilm();
+  public List<MessageEmbed> create(CombinedLbFilmModel filmCombination) {
+    EmbedBuilder embedBuilder = embedBuilderFactory.create();
+    LbFilm film = extractFilm(filmCombination);
 
     String releaseYear = film.getReleaseYear() > 0 ? " (" + film.getReleaseYear() + ")" : "";
     embedBuilder.setTitle(film.getName() + releaseYear);
@@ -107,10 +105,6 @@ public class FilmEmbedFactory {
     return embedList;
   }
 
-  private LbFilm getFilm() {
-    return filmCombination.getFilm();
-  }
-
   private String createGenre(LbFilm film) {
     List<LbGenre> genres = extractGenres(film);
     if (!genres.isEmpty()) {
@@ -149,13 +143,5 @@ public class FilmEmbedFactory {
         + ":speech_balloon: "
         + new CountStringBuilder().setCount(counts.reviews).build()
         + "\n";
-  }
-
-  private List<LbGenre> extractGenres(LbFilm film) {
-    return film.genres;
-  }
-
-  private LbLanguage extractPrimaryLanguage(LbFilm film) {
-    return film.primaryLanguage;
   }
 }

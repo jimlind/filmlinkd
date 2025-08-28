@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import jimlind.filmlinkd.discord.factory.FollowingEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.FollowingEmbedFactory;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
@@ -61,7 +61,7 @@ public class FollowingHandler implements Handler {
       }
     }
 
-    List<MessageEmbed> messageEmbedList = followingEmbedFactory.setUserMap(userMap).build();
+    List<MessageEmbed> messageEmbedList = followingEmbedFactory.create(userMap);
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

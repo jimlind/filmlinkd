@@ -2,18 +2,18 @@ package jimlind.filmlinkd.config.modules.discord;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
-import jimlind.filmlinkd.discord.factory.ContributorEmbedFactory;
-import jimlind.filmlinkd.discord.factory.DiaryEntryEmbedFactory;
-import jimlind.filmlinkd.discord.factory.DiaryListEmbedFactory;
-import jimlind.filmlinkd.discord.factory.FilmEmbedFactory;
-import jimlind.filmlinkd.discord.factory.FollowEmbedFactory;
-import jimlind.filmlinkd.discord.factory.FollowingEmbedFactory;
-import jimlind.filmlinkd.discord.factory.HelpEmbedFactory;
-import jimlind.filmlinkd.discord.factory.ListEmbedFactory;
-import jimlind.filmlinkd.discord.factory.LoggedEmbedFactory;
-import jimlind.filmlinkd.discord.factory.RefreshEmbedFactory;
-import jimlind.filmlinkd.discord.factory.UnfollowEmbedFactory;
-import jimlind.filmlinkd.discord.factory.UserEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.ContributorEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.DiaryEntryEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.DiaryListEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.FilmEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.FollowEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.FollowingEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.HelpEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.ListEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.LoggedEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.RefreshEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.UnfollowEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.UserEmbedFactory;
 
 /** Discord Embed Builder modules for dependency injection. */
 public class EmbedFactoryModule extends AbstractModule {

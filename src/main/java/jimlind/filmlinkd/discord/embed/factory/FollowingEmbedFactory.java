@@ -1,10 +1,9 @@
-package jimlind.filmlinkd.discord.factory;
+package jimlind.filmlinkd.discord.embed.factory;
 
 import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
@@ -15,7 +14,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 /** Builds a Discord embed to display information about all users following. */
 public class FollowingEmbedFactory {
   private final EmbedBuilderFactory embedBuilderFactory;
-  private Map<String, User> userMap = new TreeMap<>();
 
   /**
    * Constructor for this class.
@@ -28,24 +26,14 @@ public class FollowingEmbedFactory {
   }
 
   /**
-   * Setter for the userMap attribute.
-   *
-   * @param userMap Map fetched from the database containing username and display name
-   * @return This class for chaining
-   */
-  public FollowingEmbedFactory setUserMap(Map<String, User> userMap) {
-    this.userMap = userMap;
-    return this;
-  }
-
-  /**
    * Builds the embed.
    *
+   * @param userMap Map fetched from the database containing username and display name
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains as many embed objects as are needed to contain all users.
    */
   @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-  public List<MessageEmbed> build() {
+  public List<MessageEmbed> create(Map<String, User> userMap) {
     List<MessageEmbed> embedList = new ArrayList<>();
 
     String description =

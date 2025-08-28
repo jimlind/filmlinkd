@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.discord.factory;
+package jimlind.filmlinkd.discord.embed.factory;
 
 import com.google.inject.Inject;
 import io.github.furstenheim.CopyDown;
@@ -18,7 +18,6 @@ import jimlind.filmlinkd.system.discord.stringbuilder.StarsStringBuilder;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -26,10 +25,8 @@ import org.jsoup.nodes.Document;
 @Slf4j
 public class DiaryEntryEmbedFactory {
   private static final int REVIEW_TEXT_MAX_LENGTH = 400;
-  private final EmbedBuilder embedBuilder;
+  private final EmbedBuilderFactory embedBuilderFactory;
   private final StarsStringBuilder starsStringBuilder;
-  @Nullable private Message message;
-  @Nullable private User user;
 
   /**
    * Constructor for this class.
@@ -40,42 +37,31 @@ public class DiaryEntryEmbedFactory {
   @Inject
   public DiaryEntryEmbedFactory(
       EmbedBuilderFactory embedBuilderFactory, StarsStringBuilder starsStringBuilder) {
+    this.embedBuilderFactory = embedBuilderFactory;
     this.starsStringBuilder = starsStringBuilder;
-    embedBuilder = embedBuilderFactory.create();
   }
 
-  /**
-   * Setter for the message attribute.
-   *
-   * @param message Message model here contains the data for a new diary entry usually retrieved
-   *     from the PubSub listener
-   * @return This class for chaining
-   */
-  public DiaryEntryEmbedFactory setMessage(Message message) {
-    this.message = message;
-    return this;
+  private static String extractImage(Message.Entry entry) {
+    return entry.getImage();
   }
 
-  /**
-   * Setter for the user attribute.
-   *
-   * @param user User model containing important data to display about the user
-   * @return This class for chaining
-   */
-  public DiaryEntryEmbedFactory setUser(User user) {
-    this.user = user;
-    return this;
+  private static String extractLink(Message.Entry entry) {
+    return entry.getLink();
   }
 
   /**
    * Builds the embed.
    *
+   * @param message Message model here contains the data for a new diary entry usually retrieved
+   *     from the PubSub listener
+   * @param user User model containing important data to display about the user
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
-  public List<MessageEmbed> build() {
+  public List<MessageEmbed> create(Message message, User user) {
+
     try {
-      return buildInternal();
+      return createInternal(message, user);
     } catch (IllegalArgumentException e) {
       log.atWarn()
           .setMessage("Diary Entry Embed build failed")
@@ -87,10 +73,8 @@ public class DiaryEntryEmbedFactory {
     return new ArrayList<>();
   }
 
-  private List<MessageEmbed> buildInternal() {
-    if (message == null || user == null) {
-      return new ArrayList<>();
-    }
+  private List<MessageEmbed> createInternal(Message message, User user) {
+    EmbedBuilder embedBuilder = embedBuilderFactory.create();
 
     Message.Entry entry = message.getEntry();
     String authorTitle = createAuthorTitle(entry, user);
@@ -177,13 +161,5 @@ public class DiaryEntryEmbedFactory {
     reviewText = reviewText.replaceAll("[\r\n]+", "\n");
 
     return reviewText;
-  }
-
-  private String extractImage(Message.Entry entry) {
-    return entry.getImage();
-  }
-
-  private String extractLink(Message.Entry entry) {
-    return entry.getLink();
   }
 }

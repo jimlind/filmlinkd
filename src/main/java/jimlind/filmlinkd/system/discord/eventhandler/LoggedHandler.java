@@ -2,7 +2,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
 import java.util.List;
-import jimlind.filmlinkd.discord.factory.LoggedEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.LoggedEmbedFactory;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.letterboxd.api.FilmApi;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
@@ -61,7 +61,7 @@ public class LoggedHandler implements Handler {
       return;
     }
 
-    List<MessageEmbed> messageEmbedList = loggedEmbedFactory.setLogEntryList(logEntryList).build();
+    List<MessageEmbed> messageEmbedList = loggedEmbedFactory.create(logEntryList);
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }

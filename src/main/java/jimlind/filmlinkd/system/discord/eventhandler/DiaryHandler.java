@@ -2,7 +2,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
 import java.util.List;
-import jimlind.filmlinkd.discord.factory.DiaryListEmbedFactory;
+import jimlind.filmlinkd.discord.embed.factory.DiaryListEmbedFactory;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
@@ -49,8 +49,7 @@ public class DiaryHandler implements Handler {
       return;
     }
 
-    List<MessageEmbed> messageEmbedList =
-        diaryListEmbedFactory.setMember(member).setLogEntryList(logEntryList).build();
+    List<MessageEmbed> messageEmbedList = diaryListEmbedFactory.create(member, logEntryList);
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
 }
