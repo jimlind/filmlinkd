@@ -1,5 +1,4 @@
 NEED
-* Why are all footers caleb_v's footer?
 * Fix all the sniffs and lints
 * Move data to the v6 database.
 
@@ -25,6 +24,7 @@ DONE
 * Keep the same scraping limits in place as current production
 * Can I pass exception as cause of logs and see it in logs?
 * Can you DM the bot?
+* Fix footer data carrying over oddly.
 
 DATA TRANSFER PROCESS
 * Shut down original Filmlinkd VMs
