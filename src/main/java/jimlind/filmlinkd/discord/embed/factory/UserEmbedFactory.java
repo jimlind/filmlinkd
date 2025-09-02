@@ -51,8 +51,6 @@ public class UserEmbedFactory {
    *     contains only one embed.
    */
   public List<MessageEmbed> create(LbMember member, LbMemberStatistics memberStatistics) {
-    EmbedBuilder embedBuilder = embedBuilderFactory.create();
-
     StringBuilder descriptionBuilder = new StringBuilder(22);
     if (member.location != null) {
       descriptionBuilder.append("***").append(member.getLocation()).append("***\n");
@@ -81,6 +79,8 @@ public class UserEmbedFactory {
     LbPronoun pronoun = getPronoun(member);
     String pronounString =
         String.join("/", pronoun.subjectPronoun, pronoun.objectPronoun, pronoun.possessivePronoun);
+
+    EmbedBuilder embedBuilder = embedBuilderFactory.create();
     embedBuilder.setTitle(displayName + " " + pronounString);
 
     embedBuilder.setUrl("https://boxd.it/" + member.getId());
