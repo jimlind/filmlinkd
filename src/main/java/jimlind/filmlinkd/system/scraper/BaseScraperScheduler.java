@@ -8,6 +8,7 @@ import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.runnable.BaseScraper;
 import jimlind.filmlinkd.runnable.BaseUserCacheClearer;
 
+/** Constructor for this class. */
 public class BaseScraperScheduler {
   protected AppConfig appConfig;
   protected BaseScraper scraper;

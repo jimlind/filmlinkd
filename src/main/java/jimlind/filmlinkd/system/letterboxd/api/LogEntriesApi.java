@@ -59,6 +59,13 @@ public class LogEntriesApi {
     return logEntriesResponse.items;
   }
 
+  /**
+   * Gets the id for the most recent diary entry for a user. Uses a stream to ensure it only
+   * processes the smallest amount of information as possible.
+   *
+   * @param userId The Letterboxd user id
+   * @return The Letterboxd ID or an empty string if nothing found
+   */
   public String getMostRecentEntryLetterboxdId(String userId) {
     String uriTemplate = "log-entries/?member=%s&memberRelationship=%s&perPage=1";
     String logEntriesPath = String.format(uriTemplate, userId, "Owner");

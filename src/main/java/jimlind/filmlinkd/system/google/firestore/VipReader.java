@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import jimlind.filmlinkd.config.AppConfig;
 
+/** Handles all read-only queries for vip data from Firestore. */
 public class VipReader {
   private final AppConfig appConfig;
   private final Firestore db;
