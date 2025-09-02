@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -28,6 +29,22 @@ public class EventListener extends ListenerAdapter {
       SlashCommandManager slashCommandManager) {
     this.scrapedResultCheckerFactory = scrapedResultCheckerFactory;
     this.slashCommandManager = slashCommandManager;
+  }
+
+  private static CacheView<Guild> extractGuildCache(JDA jda) {
+    return jda.getGuildCache();
+  }
+
+  private static JDA extractJda(ReadyEvent event) {
+    return event.getJDA();
+  }
+
+  private static JDA.ShardInfo extractShardInfo(JDA jda) {
+    return jda.getShardInfo();
+  }
+
+  private static ChannelType extractType(MessageChannelUnion channel) {
+    return channel.getType();
   }
 
   @Override
@@ -55,7 +72,7 @@ public class EventListener extends ListenerAdapter {
 
   @Override
   public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-    if (event.getChannel().getType() == ChannelType.PRIVATE) {
+    if (extractType(event.getChannel()) == ChannelType.PRIVATE) {
       event.reply("Filmlinkd Does Not Support Direct Messages").queue();
       return;
     }
@@ -72,17 +89,5 @@ public class EventListener extends ListenerAdapter {
           .addKeyValue("event", event.getName())
           .log();
     }
-  }
-
-  private CacheView<Guild> extractGuildCache(JDA jda) {
-    return jda.getGuildCache();
-  }
-
-  private JDA extractJda(ReadyEvent event) {
-    return event.getJDA();
-  }
-
-  private JDA.ShardInfo extractShardInfo(JDA jda) {
-    return jda.getShardInfo();
   }
 }
