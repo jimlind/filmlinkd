@@ -116,7 +116,7 @@ public class HelpEmbedFactory {
    *     contains only one embed.
    */
   public List<MessageEmbed> createTestMessage() {
-    return this.createTestMessage(-1);
+    return this.createTestMessage(0);
   }
 
   /**
@@ -131,6 +131,16 @@ public class HelpEmbedFactory {
 
     switch (step) {
       case 0:
+        String introductionText =
+            """
+              This is the first of a series of test messages.
+              If you can see this you know that basic command edit embeds work. If you don't see \
+              any of the following messages your permissions need to be updated as documented.
+              Next you should see a basic embed message.""";
+        embedBuilder.setDescription(
+            descriptionStringBuilder.setDescriptionText(introductionText).build());
+        break;
+      case 1:
         String basicMessage =
             """
           This is a basic embed message.
@@ -138,7 +148,7 @@ public class HelpEmbedFactory {
         embedBuilder.setDescription(
             descriptionStringBuilder.setDescriptionText(basicMessage).build());
         break;
-      case 1:
+      case 2:
         String simpleEmojiMessage =
             """
           This is a embed message with simple emoji
@@ -147,7 +157,7 @@ public class HelpEmbedFactory {
         embedBuilder.setDescription(
             descriptionStringBuilder.setDescriptionText(simpleEmojiMessage).build());
         break;
-      case 2:
+      case 3:
         String customEmojiMessage =
             """
           This is a embed message with custom emoji
@@ -156,7 +166,7 @@ public class HelpEmbedFactory {
         embedBuilder.setDescription(
             descriptionStringBuilder.setDescriptionText(customEmojiMessage).build());
         break;
-      case 3:
+      case 4:
         String formattedMessage =
             """
           This is a embed message *with* **formatted** ***text***.
@@ -164,7 +174,7 @@ public class HelpEmbedFactory {
         embedBuilder.setDescription(
             descriptionStringBuilder.setDescriptionText(formattedMessage).build());
         break;
-      case 4:
+      case 5:
         String imageMessage =
             """
           This is a embed message with an image.
@@ -172,16 +182,6 @@ public class HelpEmbedFactory {
         embedBuilder.setDescription(
             descriptionStringBuilder.setDescriptionText(imageMessage).build());
         embedBuilder.setThumbnail("https://jimlind.github.io/filmlinkd/images/filmlinkd-100.png");
-        break;
-      default:
-        String introductionText =
-            """
-          This is the first of a series of test messages.
-          If you can see this you know that basic command edit embeds work. If you don't see \
-          any of the following messages your permissions need to be updated as documented.
-          Next you should see a basic embed message.""";
-        embedBuilder.setDescription(
-            descriptionStringBuilder.setDescriptionText(introductionText).build());
         break;
     }
 
