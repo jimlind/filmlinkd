@@ -183,6 +183,10 @@ public class HelpEmbedFactory {
             descriptionStringBuilder.setDescriptionText(imageMessage).build());
         embedBuilder.setThumbnail("https://jimlind.github.io/filmlinkd/images/filmlinkd-100.png");
         break;
+      default:
+        // This shouldn't happen but just in case
+        embedBuilder.setDescription("Illegal State");
+        break;
     }
 
     List<MessageEmbed> collection = new ArrayList<>();
