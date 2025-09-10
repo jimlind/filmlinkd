@@ -1,20 +1,17 @@
 package jimlind.filmlinkd.system.discord.eventhandler;
 
-import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.inject.Inject;
 import java.util.List;
 import jimlind.filmlinkd.discord.embed.factory.FollowEmbedFactory;
 import jimlind.filmlinkd.factory.CommandFactory;
 import jimlind.filmlinkd.factory.MessageFactory;
-import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.model.Command;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.User;
+import jimlind.filmlinkd.system.UserCoordinator;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.google.PubSubManager;
-import jimlind.filmlinkd.system.google.firestore.UserReader;
-import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
@@ -33,9 +30,7 @@ public class FollowHandler implements Handler {
   private final LogEntriesApi logEntriesApi;
   private final MessageFactory messageFactory;
   private final PubSubManager pubSubManager;
-  private final UserFactory userFactory;
-  private final UserReader userReader;
-  private final UserWriter userWriter;
+  private final UserCoordinator userCoordinator;
 
   /**
    * Constructor for this class.
@@ -47,9 +42,7 @@ public class FollowHandler implements Handler {
    * @param logEntriesApi Fetches log entry data from Letterboxd API
    * @param messageFactory Builds the message object that is pushed into the PubSub system
    * @param pubSubManager Handles the PubSub system to accept commands and messages
-   * @param userFactory Builds the user object from a Firestore snapshot
-   * @param userReader Handles all read-only queries for user data from Firestore
-   * @param userWriter Handles all write operations for user data in Firestore
+   * @param userCoordinator Handles the interactions with the user model
    */
   @Inject
   public FollowHandler(
@@ -60,9 +53,7 @@ public class FollowHandler implements Handler {
       LogEntriesApi logEntriesApi,
       MessageFactory messageFactory,
       PubSubManager pubSubManager,
-      UserFactory userFactory,
-      UserReader userReader,
-      UserWriter userWriter) {
+      UserCoordinator userCoordinator) {
     this.accountHelper = accountHelper;
     this.channelHelper = channelHelper;
     this.commandFactory = commandFactory;
@@ -70,9 +61,7 @@ public class FollowHandler implements Handler {
     this.logEntriesApi = logEntriesApi;
     this.messageFactory = messageFactory;
     this.pubSubManager = pubSubManager;
-    this.userFactory = userFactory;
-    this.userReader = userReader;
-    this.userWriter = userWriter;
+    this.userCoordinator = userCoordinator;
   }
 
   private static LbMemberSummary getOwner(LbLogEntry logEntry) {
@@ -95,16 +84,8 @@ public class FollowHandler implements Handler {
       return;
     }
 
-    QueryDocumentSnapshot snapshot = userReader.getUserDocument(member.id);
-    User user = null;
-    // Create the user in the database if it doesn't exist
-    if (snapshot == null) {
-      userWriter.createUserDocument(member);
-    } else {
-      user = userFactory.createFromSnapshot(snapshot);
-    }
-
-    if (!userWriter.addUserSubscription(member.id, channelId)) {
+    User user = userCoordinator.follow(member, channelId);
+    if (user == null) {
       event.getHook().sendMessage("Follow Failed").queue();
       return;
     }
@@ -119,10 +100,11 @@ public class FollowHandler implements Handler {
 
       Message.PublishSource source = Message.PublishSource.Follow;
       Message message = messageFactory.createFromLogEntry(logEntry, source);
-      // Only add the channel if we know that the log entry has already been posted
-      // Including a channel id is a signal to the LogEntryMessageReceiver to only send to one
-      // channel
-      if (user != null && LidComparer.compare(logEntry.id, user.getMostRecentPrevious()) <= 0) {
+
+      // If most recent previous entry is the same or older than the entry here
+      if (LidComparer.compare(logEntry.id, user.getMostRecentPrevious()) <= 0) {
+        // Include a channel id as a signal to the LogEntryMessageReceiver to only announce to that
+        // one channel and not make a global announcement
         message.setChannelId(channelId);
       }
       this.pubSubManager.publishLogEntry(message);
