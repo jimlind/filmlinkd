@@ -27,6 +27,10 @@ public class LoggingEnhancer implements LoggingEventEnhancer {
     return loggingEvent.getLoggerContextVO();
   }
 
+  private static IThrowableProxy extractThrowableProxy(ILoggingEvent loggingEvent) {
+    return loggingEvent.getThrowableProxy();
+  }
+
   @Override
   public void enhanceLogEntry(LogEntry.Builder logEntryBuilder, ILoggingEvent loggingEvent) {
     Map<String, Object> map = new HashMap<>();
@@ -44,7 +48,7 @@ public class LoggingEnhancer implements LoggingEventEnhancer {
       map.put("metadata", metadata);
     }
 
-    IThrowableProxy throwable = loggingEvent.getThrowableProxy();
+    IThrowableProxy throwable = extractThrowableProxy(loggingEvent);
     if (throwable != null) {
       Map<String, String> cause = new HashMap<>();
       cause.put("message", throwable.getMessage());
