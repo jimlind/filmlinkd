@@ -65,8 +65,9 @@ public class UserWriter {
    * Creates a new user document in Firestore from Letterboxd API data.
    *
    * @param member Letterboxd Member object from API
+   * @return a fully populated user model
    */
-  public void createUserDocument(LbMember member) {
+  public User createUserDocument(LbMember member) {
     String collectionId = appConfig.getFirestoreUserCollectionId();
     User user = userFactory.createFromMember(member);
 
@@ -75,6 +76,8 @@ public class UserWriter {
     } catch (IllegalArgumentException | InterruptedException | ExecutionException e) {
       log.atError().setMessage("Unable to set user document").log();
     }
+
+    return user;
   }
 
   /**
