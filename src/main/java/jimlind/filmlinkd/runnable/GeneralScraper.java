@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import jimlind.filmlinkd.cache.GeneralUserCache;
 import jimlind.filmlinkd.factory.MessageFactory;
 import jimlind.filmlinkd.model.Message;
-import jimlind.filmlinkd.system.google.PubSubManager;
+import jimlind.filmlinkd.system.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.utils.DateUtils;
 

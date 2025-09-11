@@ -11,7 +11,7 @@ import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.UserCoordinator;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
-import jimlind.filmlinkd.system.google.PubSubManager;
+import jimlind.filmlinkd.system.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;

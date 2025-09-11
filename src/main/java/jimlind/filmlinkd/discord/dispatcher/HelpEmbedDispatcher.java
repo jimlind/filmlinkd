@@ -5,7 +5,7 @@ import jimlind.filmlinkd.core.scheduling.TimedTaskRunner;
 import jimlind.filmlinkd.discord.embed.factory.HelpEmbedFactory;
 import jimlind.filmlinkd.factory.MessageFactory;
 import jimlind.filmlinkd.model.Message;
-import jimlind.filmlinkd.system.google.PubSubManager;
+import jimlind.filmlinkd.system.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import lombok.extern.slf4j.Slf4j;

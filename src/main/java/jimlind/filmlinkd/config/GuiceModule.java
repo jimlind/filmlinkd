@@ -20,12 +20,15 @@ import jimlind.filmlinkd.runnable.VipScraper;
 import jimlind.filmlinkd.runnable.VipUserCacheClearer;
 import jimlind.filmlinkd.system.ScrapedResultQueue;
 import jimlind.filmlinkd.system.ShutdownThread;
-import jimlind.filmlinkd.system.google.PubSubSubscriberListener;
 import jimlind.filmlinkd.system.google.SecretManager;
 import jimlind.filmlinkd.system.google.firestore.FirestoreProvider;
 import jimlind.filmlinkd.system.google.firestore.UserReader;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import jimlind.filmlinkd.system.google.firestore.VipReader;
+import jimlind.filmlinkd.system.google.pubsub.PubSubManager;
+import jimlind.filmlinkd.system.google.pubsub.PublisherCreator;
+import jimlind.filmlinkd.system.google.pubsub.SubscriberListener;
+import jimlind.filmlinkd.system.google.pubsub.SubscriptionCreator;
 import jimlind.filmlinkd.system.scraper.GeneralScraperScheduler;
 import jimlind.filmlinkd.system.scraper.VipScraperScheduler;
 
@@ -51,7 +54,6 @@ public class GuiceModule extends AbstractModule {
 
     // General System Modules
     bind(EntryCache.class).in(Scopes.SINGLETON);
-    bind(PubSubSubscriberListener.class).in(Scopes.SINGLETON);
     bind(StatLogger.class).in(Scopes.SINGLETON);
 
     // Scraper Related Modules
@@ -70,6 +72,12 @@ public class GuiceModule extends AbstractModule {
     bind(UserReader.class).in(Scopes.SINGLETON);
     bind(UserWriter.class).in(Scopes.SINGLETON);
     bind(VipReader.class).in(Scopes.SINGLETON);
+
+    // Google PubSub Modules
+    bind(PublisherCreator.class).in(Scopes.SINGLETON);
+    bind(PubSubManager.class).in(Scopes.SINGLETON);
+    bind(SubscriberListener.class).in(Scopes.SINGLETON);
+    bind(SubscriptionCreator.class).in(Scopes.SINGLETON);
 
     // Discord and Letterboxd Dependency Modules
     install(new DiscordModule());

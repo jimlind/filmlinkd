@@ -9,7 +9,7 @@ import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.config.GuiceModule;
 import jimlind.filmlinkd.runnable.StatLogger;
 import jimlind.filmlinkd.system.ShutdownThread;
-import jimlind.filmlinkd.system.google.PubSubManager;
+import jimlind.filmlinkd.system.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.system.scraper.GeneralScraperScheduler;
 import jimlind.filmlinkd.system.scraper.VipScraperScheduler;
 import lombok.extern.slf4j.Slf4j;

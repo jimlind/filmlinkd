@@ -10,7 +10,7 @@ import jimlind.filmlinkd.config.GuiceModule;
 import jimlind.filmlinkd.runnable.StatLogger;
 import jimlind.filmlinkd.system.DiscordSystem;
 import jimlind.filmlinkd.system.ShutdownThread;
-import jimlind.filmlinkd.system.google.PubSubManager;
+import jimlind.filmlinkd.system.google.pubsub.PubSubManager;
 import lombok.extern.slf4j.Slf4j;
 
 /** The main entry point for the bot application. */

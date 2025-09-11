@@ -1,21 +1,13 @@
-package jimlind.filmlinkd.system.google;
+package jimlind.filmlinkd.system.google.pubsub;
 
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.cloud.pubsub.v1.Subscriber;
-import com.google.cloud.pubsub.v1.SubscriptionAdminClient;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.protobuf.ByteString;
-import com.google.protobuf.Duration;
-import com.google.pubsub.v1.ExpirationPolicy;
-import com.google.pubsub.v1.ProjectName;
 import com.google.pubsub.v1.PubsubMessage;
-import com.google.pubsub.v1.Subscription;
 import com.google.pubsub.v1.SubscriptionName;
-import com.google.pubsub.v1.TopicName;
-import java.io.IOException;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.model.Command;
@@ -29,14 +21,13 @@ import org.jetbrains.annotations.Nullable;
 @Singleton
 @Slf4j
 public class PubSubManager {
-  static final int RETENTION_SECONDS = 43200; // 12 Hours
-  static final int EXPIRATION_SECONDS = 86400; // 24 Hours
-  static final int ACK_DEADLINE_SECONDS = 10;
 
   private final AppConfig appConfig;
   private final CommandMessageReceiver commandMessageReceiver;
   private final LogEntryMessageReceiver logEntryMessageReceiver;
-  private final PubSubSubscriberListener pubSubSubscriberListener;
+  private final PublisherCreator publisherCreator;
+  private final SubscriberListener subscriberListener;
+  private final SubscriptionCreator subscriptionCreator;
 
   @Nullable private Publisher commandPublisher;
   @Nullable private Publisher logEntryPublisher;
@@ -49,18 +40,24 @@ public class PubSubManager {
    * @param appConfig Contains application and environment variables
    * @param commandMessageReceiver Receives the PubSub object for command messages
    * @param logEntryMessageReceiver Receives the PubSub object for logentry messages
-   * @param pubSubSubscriberListener Listens for PubSub messages
+   * @param publisherCreator Creates publishers for PubSub
+   * @param subscriberListener Listens for PubSub messages
+   * @param subscriptionCreator Creates subscriptions if they do not exist
    */
   @Inject
   PubSubManager(
       AppConfig appConfig,
       CommandMessageReceiver commandMessageReceiver,
       LogEntryMessageReceiver logEntryMessageReceiver,
-      PubSubSubscriberListener pubSubSubscriberListener) {
+      PublisherCreator publisherCreator,
+      SubscriberListener subscriberListener,
+      SubscriptionCreator subscriptionCreator) {
     this.appConfig = appConfig;
     this.commandMessageReceiver = commandMessageReceiver;
     this.logEntryMessageReceiver = logEntryMessageReceiver;
-    this.pubSubSubscriberListener = pubSubSubscriberListener;
+    this.publisherCreator = publisherCreator;
+    this.subscriberListener = subscriberListener;
+    this.subscriptionCreator = subscriptionCreator;
   }
 
   /** Builds all the needed publishers and subscribers. */
@@ -73,23 +70,22 @@ public class PubSubManager {
 
   /** Builds the command publisher. */
   public void buildCommandPublisher() {
-    commandPublisher =
-        buildPublisher(appConfig.getGoogleProjectId(), appConfig.getPubSubCommandTopicName());
+    commandPublisher = publisherCreator.create(appConfig.getPubSubCommandTopicName());
   }
 
   /** Builds the log entry publisher. */
   public void buildLogEntryPublisher() {
-    logEntryPublisher =
-        buildPublisher(appConfig.getGoogleProjectId(), appConfig.getPubSubLogEntryTopicName());
+    logEntryPublisher = publisherCreator.create(appConfig.getPubSubLogEntryTopicName());
   }
 
   /** Builds the command subscriber. */
   public void buildCommandSubscriber() {
     String projectId = appConfig.getGoogleProjectId();
     String subscriptionId = appConfig.getPubSubCommandSubscriptionName();
+    String topicId = appConfig.getPubSubCommandTopicName();
     String subscriptionName = SubscriptionName.of(projectId, subscriptionId).toString();
 
-    createSubscriptionClient(projectId, subscriptionId, appConfig.getPubSubCommandTopicName());
+    subscriptionCreator.createSubscriptionIfNotExist(subscriptionId, topicId);
     commandSubscriber = Subscriber.newBuilder(subscriptionName, commandMessageReceiver).build();
     subscribeListener(commandSubscriber);
   }
@@ -98,9 +94,10 @@ public class PubSubManager {
   public void buildLogEntrySubscriber() {
     String projectId = appConfig.getGoogleProjectId();
     String subscriptionId = appConfig.getPubSubLogEntrySubscriptionName();
+    String topicId = appConfig.getPubSubLogEntryTopicName();
     String subscriptionName = SubscriptionName.of(projectId, subscriptionId).toString();
 
-    createSubscriptionClient(projectId, subscriptionId, appConfig.getPubSubLogEntryTopicName());
+    subscriptionCreator.createSubscriptionIfNotExist(subscriptionId, topicId);
     logEntrySubscriber = Subscriber.newBuilder(subscriptionName, logEntryMessageReceiver).build();
     subscribeListener(logEntrySubscriber);
   }
@@ -187,76 +184,11 @@ public class PubSubManager {
     }
   }
 
-  private Publisher buildPublisher(String projectId, String topicId) {
-    TopicName topicName = TopicName.of(projectId, topicId);
-    try {
-      return Publisher.newBuilder(topicName).build();
-    } catch (IOException e) {
-      log.atError()
-          .setMessage("Unable to build Publisher {}")
-          .addArgument(topicId)
-          .setCause(e)
-          .log();
-      return null;
-    }
-  }
-
-  private void createSubscriptionClient(String projectId, String subscriptionId, String topicId) {
-    ProjectName projectName = ProjectName.of(projectId);
-    TopicName topicName = TopicName.of(projectId, topicId);
-    SubscriptionName subscriptionName = SubscriptionName.of(projectId, subscriptionId);
-
-    // This client create is designed specifically for a try-with-resources statement
-    try (SubscriptionAdminClient client = SubscriptionAdminClient.create()) {
-      // If the subscription doesn't exit, create it.
-      if (!hasSubscription(client, projectName, subscriptionName)) {
-        createSubscription(client, subscriptionName, topicName);
-      }
-    } catch (IOException e) {
-      log.atError()
-          .setMessage("Unable to create SubscriptionAdminClient")
-          .addKeyValue("subscriptionId", subscriptionId)
-          .addKeyValue("topicId", topicId)
-          .setCause(e)
-          .log();
-    }
-  }
-
-  private void createSubscription(
-      SubscriptionAdminClient client, SubscriptionName subscriptionName, TopicName topicName) {
-    // Setup duration and expirations
-    Duration retentionDuration = Duration.newBuilder().setSeconds(RETENTION_SECONDS).build();
-    Duration expirationDuration = Duration.newBuilder().setSeconds(EXPIRATION_SECONDS).build();
-    ExpirationPolicy expirationPolicy =
-        ExpirationPolicy.newBuilder().setTtl(expirationDuration).build();
-
-    Subscription.Builder builder =
-        Subscription.newBuilder()
-            .setName(subscriptionName.toString())
-            .setTopic(topicName.toString())
-            .setAckDeadlineSeconds(ACK_DEADLINE_SECONDS)
-            .setMessageRetentionDuration(retentionDuration)
-            .setExpirationPolicy(expirationPolicy);
-
-    client.createSubscription(builder.build());
-  }
-
   private void subscribeListener(Subscriber subscriber) {
-    subscriber.addListener(pubSubSubscriberListener, MoreExecutors.directExecutor());
+    subscriber.addListener(subscriberListener, MoreExecutors.directExecutor());
     subscriber.startAsync().awaitRunning();
     if (log.isInfoEnabled()) {
       log.info("Starting Listening for Messages on {}", subscriber.getSubscriptionNameString());
     }
-  }
-
-  private boolean hasSubscription(
-      SubscriptionAdminClient client, ProjectName projectName, SubscriptionName subscriptionName) {
-    String project = projectName.toString();
-    for (Subscription subscription : client.listSubscriptions(project).iterateAll()) {
-      if (Objects.equals(subscription.getName(), subscriptionName.toString())) {
-        return true;
-      }
-    }
-    return false;
   }
 }
