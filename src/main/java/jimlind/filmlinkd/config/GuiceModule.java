@@ -6,6 +6,7 @@ import jimlind.filmlinkd.cache.EntryCache;
 import jimlind.filmlinkd.cache.GeneralUserCache;
 import jimlind.filmlinkd.cache.VipUserCache;
 import jimlind.filmlinkd.config.modules.DiscordModule;
+import jimlind.filmlinkd.config.modules.GoogleModule;
 import jimlind.filmlinkd.config.modules.LetterboxdModule;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.factory.ScrapedResultCheckerFactory;
@@ -20,15 +21,6 @@ import jimlind.filmlinkd.runnable.VipScraper;
 import jimlind.filmlinkd.runnable.VipUserCacheClearer;
 import jimlind.filmlinkd.system.ScrapedResultQueue;
 import jimlind.filmlinkd.system.ShutdownThread;
-import jimlind.filmlinkd.system.google.SecretManager;
-import jimlind.filmlinkd.system.google.firestore.FirestoreProvider;
-import jimlind.filmlinkd.system.google.firestore.UserReader;
-import jimlind.filmlinkd.system.google.firestore.UserWriter;
-import jimlind.filmlinkd.system.google.firestore.VipReader;
-import jimlind.filmlinkd.system.google.pubsub.PubSubManager;
-import jimlind.filmlinkd.system.google.pubsub.PublisherCreator;
-import jimlind.filmlinkd.system.google.pubsub.SubscriberListener;
-import jimlind.filmlinkd.system.google.pubsub.SubscriptionCreator;
 import jimlind.filmlinkd.system.scraper.GeneralScraperScheduler;
 import jimlind.filmlinkd.system.scraper.VipScraperScheduler;
 
@@ -66,21 +58,10 @@ public class GuiceModule extends AbstractModule {
     bind(VipUserCache.class).in(Scopes.SINGLETON);
     bind(VipUserCacheClearer.class).in(Scopes.SINGLETON);
 
-    // Google System Modules
-    bind(SecretManager.class).in(Scopes.SINGLETON);
-    bind(FirestoreProvider.class).in(Scopes.SINGLETON);
-    bind(UserReader.class).in(Scopes.SINGLETON);
-    bind(UserWriter.class).in(Scopes.SINGLETON);
-    bind(VipReader.class).in(Scopes.SINGLETON);
-
-    // Google PubSub Modules
-    bind(PublisherCreator.class).in(Scopes.SINGLETON);
-    bind(PubSubManager.class).in(Scopes.SINGLETON);
-    bind(SubscriberListener.class).in(Scopes.SINGLETON);
-    bind(SubscriptionCreator.class).in(Scopes.SINGLETON);
-
-    // Discord and Letterboxd Dependency Modules
+    // Discord, Google, and Letterboxd Dependency Modules
     install(new DiscordModule());
+    install(new GoogleModule());
+
     install(new LetterboxdModule());
   }
 }
