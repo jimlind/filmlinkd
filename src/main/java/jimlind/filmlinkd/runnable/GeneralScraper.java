@@ -3,7 +3,7 @@ package jimlind.filmlinkd.runnable;
 import com.google.inject.Inject;
 import jimlind.filmlinkd.cache.GeneralUserCache;
 import jimlind.filmlinkd.factory.MessageFactory;
-import jimlind.filmlinkd.model.Message;
+import jimlind.filmlinkd.model.Message.PublishSource;
 import jimlind.filmlinkd.system.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.utils.DateUtils;
@@ -30,6 +30,6 @@ public class GeneralScraper extends BaseScraper {
       MessageFactory messageFactory,
       PubSubManager pubSubManager) {
     super(dateUtils, userCache, logEntriesApi, messageFactory, pubSubManager);
-    this.source = Message.PublishSource.Normal;
+    this.source = PublishSource.Normal;
   }
 }
