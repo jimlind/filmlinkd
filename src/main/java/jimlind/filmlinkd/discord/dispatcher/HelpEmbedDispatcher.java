@@ -12,6 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 
+/**
+ * Executes the timed help embed tasks in a way that appropriately uses the TimedTaskRunner base to
+ * ensure that things are closed when not needed.
+ */
 @Slf4j
 public class HelpEmbedDispatcher extends TimedTaskRunner {
   private static final int MAX_TEST_MESSAGES = 5;
@@ -27,6 +31,8 @@ public class HelpEmbedDispatcher extends TimedTaskRunner {
   private int count = 1;
 
   /**
+   * Constructor for this class.
+   *
    * @param helpEmbedFactory Builds the embed for the /help command
    * @param logEntriesApi Fetches log entry data from Letterboxd API
    * @param messageFactory Builds the message object that is pushed into the PubSub system
@@ -66,7 +72,6 @@ public class HelpEmbedDispatcher extends TimedTaskRunner {
     }
 
     try {
-      System.out.println(count);
       messageChannel.sendMessageEmbeds(helpEmbedFactory.createTestMessage(count)).queue();
     } catch (IllegalStateException | PermissionException e) {
       log.atInfo()

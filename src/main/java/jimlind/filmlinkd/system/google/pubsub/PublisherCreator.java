@@ -8,16 +8,28 @@ import java.io.IOException;
 import jimlind.filmlinkd.config.AppConfig;
 import lombok.extern.slf4j.Slf4j;
 
+/** Creates a PubSub publisher. */
 @Singleton
 @Slf4j
 public class PublisherCreator {
   private final AppConfig appConfig;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param appConfig Contains application and environment variables
+   */
   @Inject
   public PublisherCreator(AppConfig appConfig) {
     this.appConfig = appConfig;
   }
 
+  /**
+   * Creates a publisher.
+   *
+   * @param topicId The name of the topic to build a publisher for
+   * @return The build publisher
+   */
   public Publisher create(String topicId) {
     TopicName topicName = TopicName.of(appConfig.getGoogleProjectId(), topicId);
     try {

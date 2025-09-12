@@ -24,6 +24,11 @@ public class SubscriptionCreator {
 
   private final AppConfig appConfig;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param appConfig Contains application and environment variables
+   */
   @Inject
   public SubscriptionCreator(AppConfig appConfig) {
     this.appConfig = appConfig;

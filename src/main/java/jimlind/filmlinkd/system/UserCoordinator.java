@@ -9,6 +9,7 @@ import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import org.jetbrains.annotations.Nullable;
 
+/** Coordinates user actions that would otherwise require multiple method calls. */
 public class UserCoordinator {
   private final UserFactory userFactory;
   private final UserReader userReader;
@@ -28,6 +29,14 @@ public class UserCoordinator {
     this.userWriter = userWriter;
   }
 
+  /**
+   * Update or create a user record adding the channel as a new subscription. Creates the user
+   * record if it does not exist.
+   *
+   * @param member member
+   * @param channelId channelid
+   * @return user The created user or null if update failed
+   */
   @Nullable
   public User follow(LbMember member, String channelId) {
     QueryDocumentSnapshot snapshot = userReader.getUserDocument(member.id);
