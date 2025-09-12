@@ -37,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 public class Client {
   static final String BASE_URL = "https://api.letterboxd.com/api/v0/";
   private static final String URI_KEY = "uri";
+  private static final String PATH_KEY = "path";
   private final AppConfig appConfig;
 
   /**
@@ -73,7 +74,7 @@ public class Client {
     } catch (URISyntaxException | MalformedURLException e) {
       log.atError()
           .setMessage("Failed to build URL or Authorization Signature")
-          .addKeyValue("path", path)
+          .addKeyValue(PATH_KEY, path)
           .setCause(e)
           .log();
       return "";
@@ -100,7 +101,7 @@ public class Client {
     } catch (IOException e) {
       log.atError()
           .setMessage("Failed to handle HTTP stream")
-          .addKeyValue("path", path)
+          .addKeyValue(PATH_KEY, path)
           .setCause(e)
           .log();
     } finally {
@@ -125,7 +126,7 @@ public class Client {
       URI uri = new URIBuilder(BASE_URL + path).build();
       return this.request(uri, "", inputClass);
     } catch (URISyntaxException e) {
-      log.atError().setMessage("Failed to build public URI").addKeyValue("path", path).log();
+      log.atError().setMessage("Failed to build public URI").addKeyValue(PATH_KEY, path).log();
       return null;
     }
   }
@@ -156,7 +157,7 @@ public class Client {
 
       return this.request(uri, authorization, inputClass);
     } catch (URISyntaxException e) {
-      log.atError().setMessage("Failed to build authorized URI").addKeyValue("path", path).log();
+      log.atError().setMessage("Failed to build authorized URI").addKeyValue(PATH_KEY, path).log();
       return null;
     }
   }
