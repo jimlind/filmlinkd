@@ -75,12 +75,14 @@ public class LogEntriesApi {
           try {
             int data;
             StringBuilder responseString = new StringBuilder();
-            while ((data = stream.read()) != -1) {
+            data = stream.read();
+            while (data != -1) {
               responseString.append((char) data);
               String value = getString(responseString.toString());
               if (value != null && !value.isBlank()) {
                 return value;
               }
+              data = stream.read();
             }
           } catch (IOException e) {
             log.atInfo()
