@@ -5,6 +5,7 @@ import com.google.inject.Scopes;
 import jimlind.filmlinkd.config.modules.discord.DiscordEventHandlerModule;
 import jimlind.filmlinkd.config.modules.discord.DiscordStringBuilderModule;
 import jimlind.filmlinkd.config.modules.discord.EmbedFactoryModule;
+import jimlind.filmlinkd.discord.dispatcher.HelpEmbedDispatcher;
 import jimlind.filmlinkd.system.DiscordSystem;
 import jimlind.filmlinkd.system.discord.ConnectionManager;
 import jimlind.filmlinkd.system.discord.EventListener;
@@ -23,6 +24,9 @@ public class DiscordModule extends AbstractModule {
     bind(EventListener.class).in(Scopes.SINGLETON);
     bind(ShardManagerStorage.class).in(Scopes.SINGLETON);
     bind(SlashCommandManager.class).in(Scopes.SINGLETON);
+
+    // Dispatchers
+    bind(HelpEmbedDispatcher.class).in(Scopes.NO_SCOPE);
 
     // Helpers
     bind(AccountHelper.class).in(Scopes.SINGLETON);

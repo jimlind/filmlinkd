@@ -1,6 +1,7 @@
 package jimlind.filmlinkd.system.discord.eventhandler;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import java.util.List;
 import jimlind.filmlinkd.discord.dispatcher.HelpEmbedDispatcher;
 import jimlind.filmlinkd.discord.embed.factory.HelpEmbedFactory;
@@ -23,23 +24,20 @@ import org.jetbrains.annotations.Nullable;
 @Slf4j
 public class HelpHandler implements Handler {
   private final HelpEmbedFactory helpEmbedFactory;
-  private final HelpEmbedDispatcher helpEmbedDispatcher;
+  private final Injector injector;
   private final UserReader userReader;
 
   /**
    * Constructor for this class.
    *
    * @param helpEmbedFactory Builds the embed for the /help command
-   * @param helpEmbedDispatcher Handles sending the test help embeds as timed events
+   * @param injector Guice injector allowing creation of new instances at will
    * @param userReader Handles all read-only queries for user data from Firestore
    */
   @Inject
-  HelpHandler(
-      HelpEmbedFactory helpEmbedFactory,
-      HelpEmbedDispatcher helpEmbedDispatcher,
-      UserReader userReader) {
+  HelpHandler(HelpEmbedFactory helpEmbedFactory, Injector injector, UserReader userReader) {
     this.helpEmbedFactory = helpEmbedFactory;
-    this.helpEmbedDispatcher = helpEmbedDispatcher;
+    this.injector = injector;
     this.userReader = userReader;
   }
 
@@ -55,8 +53,11 @@ public class HelpHandler implements Handler {
     boolean testStatus = optionMapping != null && optionMapping.getAsBoolean();
     if (testStatus) {
       event.getHook().sendMessageEmbeds(helpEmbedFactory.createTestMessage()).queue();
+
+      HelpEmbedDispatcher helpEmbedDispatcher = injector.getInstance(HelpEmbedDispatcher.class);
       helpEmbedDispatcher.configure(event.getMessageChannel());
       helpEmbedDispatcher.start();
+
       return;
     }
 

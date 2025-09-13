@@ -63,14 +63,6 @@ public class HelpEmbedDispatcher extends TimedTaskRunner {
     this.messageChannel = messageChannel;
   }
 
-  /** Starts the HelpEmbedDispatcher ensuring we start at the first test message. */
-  @Override
-  public void start() {
-    // TODO: If this isn't run as a singleton can I remove this?
-    count = 1;
-    super.start();
-  }
-
   @Override
   protected void runTask() {
     if (messageChannel == null) {

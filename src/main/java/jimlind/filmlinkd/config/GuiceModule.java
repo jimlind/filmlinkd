@@ -61,7 +61,6 @@ public class GuiceModule extends AbstractModule {
     // Discord, Google, and Letterboxd Dependency Modules
     install(new DiscordModule());
     install(new GoogleModule());
-
     install(new LetterboxdModule());
   }
 }
