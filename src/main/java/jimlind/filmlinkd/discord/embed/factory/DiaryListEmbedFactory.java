@@ -3,9 +3,9 @@ package jimlind.filmlinkd.discord.embed.factory;
 import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import jimlind.filmlinkd.core.string.DisplayNameFormatter;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.StarsStringBuilder;
-import jimlind.filmlinkd.system.discord.stringbuilder.UserStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LbDiaryDetails;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilmSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
@@ -81,10 +81,8 @@ public class DiaryListEmbedFactory {
     String out = String.join("\n", entryList);
     embedBuilder.setDescription(out);
 
-    embedBuilder.setTitle(
-        String.format(
-            "Recent Diary Activity from %s",
-            new UserStringBuilder().setUsername(member.displayName).build()));
+    String displayName = DisplayNameFormatter.format(member.displayName);
+    embedBuilder.setTitle(String.format("Recent Diary Activity from %s", displayName));
     Object[] urlArgs = {member.getId()};
     embedBuilder.setUrl("https://boxd.it/%s".formatted(urlArgs));
     embedBuilder.setThumbnail(imageUtils.getTallest(member.avatar));

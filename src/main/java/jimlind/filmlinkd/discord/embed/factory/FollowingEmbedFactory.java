@@ -4,10 +4,10 @@ import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import jimlind.filmlinkd.core.string.UsernameFormatter;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
-import jimlind.filmlinkd.system.discord.stringbuilder.UserStringBuilder;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -48,9 +48,7 @@ public class FollowingEmbedFactory {
       String userDisplay =
           String.format(
               "• %s [%s](https://boxd.it/%s)\n",
-              new UserStringBuilder().setUsername(user.userName).build(),
-              user.letterboxdId,
-              user.letterboxdId);
+              UsernameFormatter.format(user.userName), user.letterboxdId, user.letterboxdId);
 
       // Instead of checking the string length against what's known in the EmbedDescription it is
       // slightly more accurate to try setting EmbedDescription and reacting when the length

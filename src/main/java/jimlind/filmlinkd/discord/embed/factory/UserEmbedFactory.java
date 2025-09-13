@@ -4,10 +4,10 @@ import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import jimlind.filmlinkd.core.string.DisplayNameFormatter;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
 import jimlind.filmlinkd.system.discord.stringbuilder.TextStringBuilder;
-import jimlind.filmlinkd.system.discord.stringbuilder.UserStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilmSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.model.LbMemberStatistics;
@@ -75,13 +75,13 @@ public class UserEmbedFactory {
                 getCounts(memberStatistics).getWatches(),
                 getCounts(memberStatistics).getFilmsInDiaryThisYear()));
 
-    String displayName = new UserStringBuilder().setUsername(member.displayName).build();
+    String displayName = DisplayNameFormatter.format(member.displayName);
     LbPronoun pronoun = getPronoun(member);
     String pronounString =
         String.join("/", pronoun.subjectPronoun, pronoun.objectPronoun, pronoun.possessivePronoun);
 
     EmbedBuilder embedBuilder = embedBuilderFactory.create();
-    embedBuilder.setTitle(displayName + " " + pronounString);
+    embedBuilder.setTitle(displayName + " (" + pronounString + ")");
 
     embedBuilder.setUrl("https://boxd.it/" + member.getId());
     embedBuilder.setThumbnail(imageUtils.getTallest(member.avatar));
