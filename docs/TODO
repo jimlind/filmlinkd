@@ -1,5 +1,4 @@
 NEED
-* Fix all the sniffs and lints
 * Move data to the v6 database.
 
 DONE
@@ -25,6 +24,7 @@ DONE
 * Can I pass exception as cause of logs and see it in logs?
 * Can you DM the bot?
 * Fix footer data carrying over oddly.
+* Fix all the sniffs and lints
 
 DATA TRANSFER PROCESS
 * Shut down original Filmlinkd VMs
