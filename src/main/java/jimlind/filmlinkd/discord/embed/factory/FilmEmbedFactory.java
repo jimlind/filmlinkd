@@ -74,7 +74,7 @@ public class FilmEmbedFactory {
     StringBuilder descriptionBuilder = new StringBuilder();
     // Add tagline to description
     if (film.tagline != null) {
-      descriptionBuilder.append("**").append(film.tagline).append("**");
+      descriptionBuilder.append("**").append(film.tagline).append("**\n");
     }
 
     // Add rating to description
