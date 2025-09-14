@@ -3,6 +3,7 @@ package jimlind.filmlinkd.system.discord.eventhandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 /** Interface defining how a class should handle a slash command. */
+@FunctionalInterface
 public interface Handler {
   String NO_RESULTS_FOUND = "No Results Found";
   String NO_CHANNEL_FOUND = "No Channel Found";
