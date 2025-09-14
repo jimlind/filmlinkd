@@ -5,12 +5,12 @@ import com.google.inject.Scopes;
 import jimlind.filmlinkd.config.modules.discord.DiscordEventHandlerModule;
 import jimlind.filmlinkd.config.modules.discord.DiscordStringBuilderModule;
 import jimlind.filmlinkd.config.modules.discord.EmbedFactoryModule;
+import jimlind.filmlinkd.discord.ConnectionManager;
+import jimlind.filmlinkd.discord.EventListener;
+import jimlind.filmlinkd.discord.ShardManagerStorage;
+import jimlind.filmlinkd.discord.SlashCommandManager;
 import jimlind.filmlinkd.discord.dispatcher.HelpEmbedDispatcher;
 import jimlind.filmlinkd.system.DiscordSystem;
-import jimlind.filmlinkd.system.discord.ConnectionManager;
-import jimlind.filmlinkd.system.discord.EventListener;
-import jimlind.filmlinkd.system.discord.ShardManagerStorage;
-import jimlind.filmlinkd.system.discord.SlashCommandManager;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 

@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.discord;
+package jimlind.filmlinkd.discord;
 
 import com.google.inject.Inject;
 import java.util.concurrent.Executors;

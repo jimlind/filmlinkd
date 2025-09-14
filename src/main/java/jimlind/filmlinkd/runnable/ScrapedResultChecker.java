@@ -2,12 +2,12 @@ package jimlind.filmlinkd.runnable;
 
 import java.time.Instant;
 import java.util.List;
+import jimlind.filmlinkd.discord.ShardManagerStorage;
 import jimlind.filmlinkd.discord.embed.factory.DiaryEntryEmbedFactory;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.ScrapedResult;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.ScrapedResultQueue;
-import jimlind.filmlinkd.system.discord.ShardManagerStorage;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;

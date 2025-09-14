@@ -1,7 +1,7 @@
 package jimlind.filmlinkd.system;
 
 import com.google.inject.Inject;
-import jimlind.filmlinkd.system.discord.ConnectionManager;
+import jimlind.filmlinkd.discord.ConnectionManager;
 
 /**
  * Serves as the primary interface for Discord systems. This is really just a dumb wrapper now. I'm
