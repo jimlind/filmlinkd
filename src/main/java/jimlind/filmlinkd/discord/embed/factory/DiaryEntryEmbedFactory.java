@@ -1,9 +1,6 @@
 package jimlind.filmlinkd.discord.embed.factory;
 
 import com.google.inject.Inject;
-import io.github.furstenheim.CopyDown;
-import io.github.furstenheim.Options;
-import io.github.furstenheim.OptionsBuilder;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -11,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import jimlind.filmlinkd.core.string.ReviewFormatter;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.User;
@@ -18,8 +16,6 @@ import jimlind.filmlinkd.system.discord.stringbuilder.StarsStringBuilder;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 /** Builds a Discord embed to display information about a specific diary entry. */
 @Slf4j
@@ -59,7 +55,6 @@ public class DiaryEntryEmbedFactory {
    *     contains only one embed.
    */
   public List<MessageEmbed> create(Message message, User user) {
-
     try {
       return createInternal(message, user);
     } catch (IllegalArgumentException e) {
@@ -145,19 +140,11 @@ public class DiaryEntryEmbedFactory {
   }
 
   private String createReviewText(Message.Entry entry) {
-    String reviewText = entry.getReview();
-    if (reviewText.length() > REVIEW_TEXT_MAX_LENGTH) {
-      reviewText = reviewText.substring(0, REVIEW_TEXT_MAX_LENGTH).trim();
-    }
-    Document reviewDocument = Jsoup.parseBodyFragment(reviewText);
-    Options options = OptionsBuilder.anOptions().withBr("\n").build();
-    reviewText = new CopyDown(options).convert(reviewDocument.body().toString());
-    if (entry.getReview().length() > REVIEW_TEXT_MAX_LENGTH) {
-      reviewText += "...";
-    }
+    String reviewText = ReviewFormatter.format(entry.getReview());
 
-    // Format Review Title and Review Text as EmbedDescription
+    // Add spoiler formatting if necessary
     reviewText = entry.isContainsSpoilers() ? "||" + reviewText + "||" : reviewText;
+    // Reduce multiple newline characters to single newline
     reviewText = reviewText.replaceAll("[\r\n]+", "\n");
 
     return reviewText;
