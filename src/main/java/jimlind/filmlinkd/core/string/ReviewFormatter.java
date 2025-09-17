@@ -11,6 +11,8 @@ import org.jsoup.nodes.Document;
 /** Utility class for formatting full text of reviews. */
 public final class ReviewFormatter {
   private static final int REVIEW_TEXT_MAX_LENGTH = 400;
+  private static final char OPENING_HTML_BRACKET = '<';
+  private static final char CLOSING_HTML_BRACKET = '>';
 
   /** Private constructor to prevent instantiation of utility class. */
   private ReviewFormatter() {}
@@ -18,16 +20,17 @@ public final class ReviewFormatter {
   /**
    * Formats the username for use in Discord, which uses a Markdown-like syntax.
    *
-   * @param review The review text as fully formatted HTML string.
+   * @param input The review text as fully formatted HTML string.
    * @return A formatted review in Markdown.
    */
-  public static String format(String review) {
-    if (review == null) {
+  public static String format(String input) {
+    if (input == null) {
       return "";
     }
 
     // Truncate the review if it's too long.
-    boolean truncateText = review.length() > REVIEW_TEXT_MAX_LENGTH;
+    boolean truncateText = input.length() > REVIEW_TEXT_MAX_LENGTH;
+    String review = input;
     if (truncateText) {
       review = review.substring(0, REVIEW_TEXT_MAX_LENGTH).trim();
     }
@@ -37,8 +40,6 @@ public final class ReviewFormatter {
     Document reviewDocument = Jsoup.parseBodyFragment(review);
     Options options = OptionsBuilder.anOptions().withBr("\n").build();
     String markdownReview = new CopyDown(options).convert(reviewDocument.body().toString());
-
-    System.out.println(markdownReview);
 
     if (truncateText) {
       markdownReview += "...";
@@ -58,24 +59,25 @@ public final class ReviewFormatter {
   public static String truncateClosingHtmlTag(String input) {
     // Remove the trailing closing tag. This technically creates an invalid HTML string but the
     // parsing later with jsoup will make sure that tags are properly closed.
+    String review = input;
     if (input.endsWith(">")) {
-      input = input.substring(0, input.length() - 1);
+      review = input.substring(0, input.length() - 1);
     }
 
     // Loop over all characters backwards
-    for (int i = input.length() - 1; i >= 0; i--) {
-      char currentChar = input.charAt(i);
+    for (int i = review.length() - 1; i >= 0; i--) {
+      char currentChar = review.charAt(i);
       // If we ever hit a closing bracket now we assume it is a well-formed HTML string
-      if (currentChar == '>') {
+      if (currentChar == CLOSING_HTML_BRACKET) {
         break;
       }
       // If we hit an opening bracket (since we haven't hit a closing bracket above) we assume it is
       // a poorly formatted HTML string and chop it up
-      if (currentChar == '<') {
-        return input.substring(0, i);
+      if (currentChar == OPENING_HTML_BRACKET) {
+        return review.substring(0, i);
       }
     }
 
-    return input;
+    return review;
   }
 }
