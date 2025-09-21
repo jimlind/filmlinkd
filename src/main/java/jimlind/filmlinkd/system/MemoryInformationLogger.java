@@ -55,8 +55,6 @@ public class MemoryInformationLogger {
   }
 
   public void run() {
-    System.out.println("RUN!");
-
     if (!log.isInfoEnabled()) {
       return;
     }
