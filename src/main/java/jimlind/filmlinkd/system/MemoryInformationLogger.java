@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.runnable;
+package jimlind.filmlinkd.system;
 
 import com.google.inject.Inject;
 import java.lang.management.ClassLoadingMXBean;
@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
  * most predictable for me.
  */
 @Slf4j
-public class StatLogger implements Runnable {
+public class MemoryInformationLogger {
   private static final String TOTAL_LOADED_KEY = "total-loaded";
   private static final String USED_KEY = "used";
   private static final String COMMITTED_KEY = "committed";
@@ -39,20 +39,29 @@ public class StatLogger implements Runnable {
    * @param appConfig Contains application and environment variables
    */
   @Inject
-  public StatLogger(AppConfig appConfig) {
+  public MemoryInformationLogger(AppConfig appConfig) {
     this.appConfig = appConfig;
     classLoadingBean = ManagementFactory.getClassLoadingMXBean();
     memoryBean = ManagementFactory.getMemoryMXBean();
     threadBean = ManagementFactory.getThreadMXBean();
   }
 
-  @Override
+  private static MemoryUsage getNonHeapMemoryUsage(MemoryMXBean memoryBean) {
+    return memoryBean.getNonHeapMemoryUsage();
+  }
+
+  private static MemoryUsage getHeapMemoryUsage(MemoryMXBean memoryBean) {
+    return memoryBean.getHeapMemoryUsage();
+  }
+
   public void run() {
+    System.out.println("RUN!");
+
     if (!log.isInfoEnabled()) {
       return;
     }
 
-    MemoryUsage heapUsage = getHeapMemoryUsage();
+    MemoryUsage heapUsage = getHeapMemoryUsage(memoryBean);
     log.atInfo()
         .setMessage("JVM Heap Statistics (MB)")
         .addKeyValue(USED_KEY, (double) heapUsage.getUsed() / MEGABYTE)
@@ -61,7 +70,7 @@ public class StatLogger implements Runnable {
         .addKeyValue(MAIN_CLASS_KEY, appConfig.getMainClass())
         .log();
 
-    MemoryUsage nonHeapUsage = getNonHeapMemoryUsage();
+    MemoryUsage nonHeapUsage = getNonHeapMemoryUsage(memoryBean);
     log.atInfo()
         .setMessage("JVM Non-Heap Statistics (MB)")
         .addKeyValue(USED_KEY, (double) nonHeapUsage.getUsed() / MEGABYTE)
@@ -86,13 +95,5 @@ public class StatLogger implements Runnable {
         .addKeyValue(UNLOADED_KEY, classLoadingBean.getUnloadedClassCount())
         .addKeyValue(MAIN_CLASS_KEY, appConfig.getMainClass())
         .log();
-  }
-
-  private MemoryUsage getNonHeapMemoryUsage() {
-    return memoryBean.getNonHeapMemoryUsage();
-  }
-
-  private MemoryUsage getHeapMemoryUsage() {
-    return memoryBean.getHeapMemoryUsage();
   }
 }
