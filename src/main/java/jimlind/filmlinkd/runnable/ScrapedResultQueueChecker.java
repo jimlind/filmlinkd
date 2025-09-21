@@ -25,7 +25,7 @@ import net.dv8tion.jda.api.sharding.ShardManager;
  * listener instead.
  */
 @Slf4j
-public class ScrapedResultChecker implements Runnable {
+public class ScrapedResultQueueChecker implements Runnable {
   private final DiaryEntryEmbedFactory diaryEntryEmbedFactory;
   private final ScrapedResultQueue scrapedResultQueue;
   private final ShardManagerStorage shardManagerStorage;
@@ -44,7 +44,7 @@ public class ScrapedResultChecker implements Runnable {
    * @param totalShards The total number of shards in use
    * @param userWriter Handles all write operations for user data in Firestore
    */
-  public ScrapedResultChecker(
+  public ScrapedResultQueueChecker(
       DiaryEntryEmbedFactory diaryEntryEmbedFactory,
       ScrapedResultQueue scrapedResultQueue,
       ShardManagerStorage shardManagerStorage,
@@ -110,7 +110,7 @@ public class ScrapedResultChecker implements Runnable {
       } catch (PermissionException e) {
         log.atWarn()
             .setMessage(
-                "Attempting to send message from ScrapedResultChecker failed and exception caught")
+                "Attempting to send message from ScrapedResultQueueChecker failed and exception caught")
             .setCause(e)
             .log();
       }
