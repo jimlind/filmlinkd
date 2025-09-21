@@ -16,9 +16,9 @@ import jimlind.filmlinkd.reciever.CommandMessageReceiver;
 import jimlind.filmlinkd.reciever.LogEntryMessageReceiver;
 import jimlind.filmlinkd.runnable.GeneralScraper;
 import jimlind.filmlinkd.runnable.GeneralUserCacheClearer;
-import jimlind.filmlinkd.runnable.StatLogger;
 import jimlind.filmlinkd.runnable.VipScraper;
 import jimlind.filmlinkd.runnable.VipUserCacheClearer;
+import jimlind.filmlinkd.system.MemoryInformationLogger;
 import jimlind.filmlinkd.system.ScrapedResultQueue;
 import jimlind.filmlinkd.system.ShutdownThread;
 import jimlind.filmlinkd.system.scraper.GeneralScraperScheduler;
@@ -46,7 +46,7 @@ public class GuiceModule extends AbstractModule {
 
     // General System Modules
     bind(EntryCache.class).in(Scopes.SINGLETON);
-    bind(StatLogger.class).in(Scopes.SINGLETON);
+    bind(MemoryInformationLogger.class).in(Scopes.SINGLETON);
 
     // Scraper Related Modules
     bind(GeneralScraperScheduler.class).in(Scopes.SINGLETON);
