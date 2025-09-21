@@ -54,6 +54,7 @@ public class MemoryInformationLogger {
     return memoryBean.getHeapMemoryUsage();
   }
 
+  /** Execution path for this logger. Gathers memory information at the moment and logs it. */
   public void run() {
     if (!log.isInfoEnabled()) {
       return;
