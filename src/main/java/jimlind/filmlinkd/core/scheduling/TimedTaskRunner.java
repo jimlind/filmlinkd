@@ -13,8 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class TimedTaskRunner {
   private final ScheduledExecutorService scheduler;
-  private final int initialDelaySeconds;
-  private final int intervalSeconds;
+  private final long initialDelaySeconds;
+  private final long intervalSeconds;
   private ScheduledFuture<?> scheduledFuture;
 
   /**
@@ -23,7 +23,7 @@ public abstract class TimedTaskRunner {
    * @param initialDelaySeconds Number of seconds before first task is executed
    * @param intervalSeconds Number of seconds in between task execution
    */
-  public TimedTaskRunner(int initialDelaySeconds, int intervalSeconds) {
+  public TimedTaskRunner(long initialDelaySeconds, long intervalSeconds) {
     this.scheduler = Executors.newSingleThreadScheduledExecutor();
     this.initialDelaySeconds = initialDelaySeconds;
     this.intervalSeconds = intervalSeconds;
@@ -39,6 +39,10 @@ public abstract class TimedTaskRunner {
 
   /** Starts the SingleThreadScheduledExecutor. */
   public void start() {
+    if (intervalSeconds <= 0) {
+      throw new IllegalArgumentException("Interval must be positive: " + intervalSeconds);
+    }
+
     scheduledFuture =
         scheduler.scheduleAtFixedRate(
             () -> {
