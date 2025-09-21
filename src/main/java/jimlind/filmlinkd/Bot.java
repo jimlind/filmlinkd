@@ -2,14 +2,11 @@ package jimlind.filmlinkd;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.config.GuiceModule;
-import jimlind.filmlinkd.runnable.StatLogger;
 import jimlind.filmlinkd.system.DiscordSystem;
 import jimlind.filmlinkd.system.ShutdownThread;
+import jimlind.filmlinkd.system.dispatcher.StatLogDispatcher;
 import jimlind.filmlinkd.system.google.pubsub.PubSubManager;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,10 +35,8 @@ public final class Bot {
     injector.getInstance(PubSubManager.class).buildLogEntryPublisher();
     injector.getInstance(PubSubManager.class).buildLogEntrySubscriber();
 
-    // Schedule Memory Logger (These should run forever so not closing them)
-    @SuppressWarnings("PMD.CloseResource")
-    ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    scheduler.scheduleAtFixedRate(injector.getInstance(StatLogger.class), 0, 30, TimeUnit.MINUTES);
+    // Schedule system statistic logger
+    injector.getInstance(StatLogDispatcher.class).start();
 
     // Register shutdown events
     Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownThread.class));
