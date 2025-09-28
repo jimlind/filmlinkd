@@ -42,16 +42,22 @@ public record ScrapedResult(Message message, User user) {
    * @return A list of channel ids as strings
    */
   public List<String> getChannelList() {
-    List<String> channelList = new ArrayList<>();
     String previous = user.getMostRecentPrevious();
     boolean isNewerThanKnown = LidComparer.compare(previous, message.getEntry().getLid()) < 0;
 
-    if (message.hasChannelOverride() && !isNewerThanKnown) {
-      channelList.add(message.channelId);
-      return channelList;
+    // Only send this message to one channel if it would otherwise post duplicates
+    if (message.getChannelId() != null && message.hasChannelOverride() && !isNewerThanKnown) {
+      return List.of(message.getChannelId());
     }
 
-    return user.getChannelIdList();
+    // Get all channels for a user
+    List<String> channelList = new ArrayList<>(user.getChannelIdList());
+    // Add the specified channel if it is not in the list.
+    if (message.getChannelId() != null && !channelList.contains(message.getChannelId())) {
+      channelList.add(message.getChannelId());
+    }
+
+    return channelList;
   }
 
   /**
