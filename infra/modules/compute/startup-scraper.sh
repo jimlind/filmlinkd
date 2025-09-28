@@ -14,6 +14,7 @@ export HOME=/home/appuser
 docker-credential-gcr configure-docker
 
 # Run the scraper container in development mode
+docker pull ghcr.io/jimlind/filmlinkd/scraper-image:latest
 docker run \
   --name=$CONTAINER_NAME \
   --restart=always \
