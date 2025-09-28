@@ -108,11 +108,9 @@ public class ScrapedResultQueueChecker implements Runnable {
             .sendMessageEmbeds(embedList)
             .queue(m -> sendSuccess(m, result, channel), m -> sendFailure(message, channel));
       } catch (PermissionException e) {
-        log.atWarn()
-            .setMessage(
-                "Attempting to send message from ScrapedResultQueueChecker failed and exception caught")
-            .setCause(e)
-            .log();
+        String logMessage =
+            "Attempting to send message from ScrapedResultQueueChecker failed and exception caught";
+        log.atWarn().setMessage(logMessage).setCause(e).log();
       }
     }
   }

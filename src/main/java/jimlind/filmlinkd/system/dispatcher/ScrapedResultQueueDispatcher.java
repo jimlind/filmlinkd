@@ -10,6 +10,10 @@ import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Executes the timed scraped result queue checking tasks in a way that appropriately uses the
+ * TimedTaskRunner base to ensure that things could be closed when not needed.
+ */
 @Slf4j
 public class ScrapedResultQueueDispatcher extends TimedTaskRunner {
   private static final int INITIAL_DELAY_SECONDS = 0;
