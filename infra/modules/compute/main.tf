@@ -16,7 +16,6 @@ resource "google_compute_instance" "bot-instance" {
     name         = "filmlinkd-bot"
   }
 
-
   boot_disk {
     initialize_params {
       image = "cos-cloud/cos-stable"
@@ -25,20 +24,10 @@ resource "google_compute_instance" "bot-instance" {
     }
   }
 
-  # Something is required to load containers.
-  # This is not an official API and subject to change at any time.
-  # We shouldn't trust it, so the cloudbuild job repeats the process.
   metadata = {
     google-monitoring-enabled = "true"
-    gce-container-declaration = <<-EOF
-      spec:
-        containers:
-          - name: filmlinkd
-            image: "ghcr.io/jimlind/filmlinkd/bot-image:latest"
-        restartPolicy: Always
-    EOF
   }
-  metadata_startup_script = file("${path.module}/startup.sh")
+  metadata_startup_script = file("${path.module}/startup-bot.sh")
 
   service_account {
     email  = "compute-runner@filmlinkd.iam.gserviceaccount.com"
@@ -69,20 +58,10 @@ resource "google_compute_instance" "scraper-instance" {
     }
   }
 
-  # Something is required to load containers.
-  # This is not an official API and subject to change at any time.
-  # We shouldn't trust it, so the cloudbuild job repeats the process.
   metadata = {
     google-monitoring-enabled = "true"
-    gce-container-declaration = <<-EOF
-      spec:
-        containers:
-          - name: filmlinkd
-            image: "ghcr.io/jimlind/filmlinkd/scraper-image:latest"
-        restartPolicy: Always
-    EOF
   }
-  metadata_startup_script = file("${path.module}/startup.sh")
+  metadata_startup_script = file("${path.module}/startup-scraper.sh")
 
   service_account {
     email  = "compute-runner@filmlinkd.iam.gserviceaccount.com"
