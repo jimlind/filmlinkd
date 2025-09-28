@@ -2,6 +2,7 @@ package jimlind.filmlinkd;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import java.util.Optional;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.config.GuiceModule;
 import jimlind.filmlinkd.system.DiscordSystem;
@@ -21,7 +22,8 @@ public final class Bot {
    * @param args Command line arguments (not used).
    */
   public static void main(String[] args) {
-    log.info("Starting the Bot Class");
+    String env = Optional.ofNullable(System.getenv("FILMLINKD_ENVIRONMENT")).orElse("UNSET");
+    log.atInfo().setMessage("Starting the Bot Class (Environment: {})").addArgument(env).log();
 
     // Create the Injector
     Injector injector = Guice.createInjector(new GuiceModule());
