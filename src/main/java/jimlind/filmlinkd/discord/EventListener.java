@@ -1,7 +1,7 @@
 package jimlind.filmlinkd.discord;
 
 import com.google.inject.Inject;
-import jimlind.filmlinkd.discord.dispatcher.ScrapedResultQueueDispatcher;
+import jimlind.filmlinkd.system.dispatcher.ScrapedResultQueueDispatcher;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;

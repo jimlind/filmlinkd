@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.discord.dispatcher;
+package jimlind.filmlinkd.system.dispatcher;
 
 import com.google.inject.Inject;
 import jimlind.filmlinkd.core.scheduling.TimedTaskRunner;
