@@ -12,24 +12,6 @@ steps:
         tofu destroy -auto-approve
         tofu apply -auto-approve
 
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: gcloud
-    args:
-      - compute
-      - instances
-      - update-container
-      - bot
-      - --zone=us-central1-a
-
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: gcloud
-    args:
-      - compute
-      - instances
-      - update-container
-      - scraper
-      - --zone=us-central1-a
-
   - name: "ghcr.io/opentofu/opentofu:latest"
     entrypoint: "sh"
     args:
