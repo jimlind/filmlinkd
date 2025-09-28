@@ -9,7 +9,6 @@ import jimlind.filmlinkd.config.modules.DiscordModule;
 import jimlind.filmlinkd.config.modules.GoogleModule;
 import jimlind.filmlinkd.config.modules.LetterboxdModule;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
-import jimlind.filmlinkd.factory.ScrapedResultCheckerFactory;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.factory.VipFactory;
 import jimlind.filmlinkd.reciever.CommandMessageReceiver;
@@ -36,7 +35,6 @@ public class GuiceModule extends AbstractModule {
 
     // Factories
     bind(EmbedBuilderFactory.class).in(Scopes.SINGLETON);
-    bind(ScrapedResultCheckerFactory.class).in(Scopes.SINGLETON);
     bind(UserFactory.class).in(Scopes.SINGLETON);
     bind(VipFactory.class).in(Scopes.SINGLETON);
 
