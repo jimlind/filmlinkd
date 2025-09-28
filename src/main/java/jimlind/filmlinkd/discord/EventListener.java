@@ -1,10 +1,7 @@
 package jimlind.filmlinkd.discord;
 
 import com.google.inject.Inject;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import jimlind.filmlinkd.factory.ScrapedResultCheckerFactory;
+import jimlind.filmlinkd.discord.dispatcher.ScrapedResultQueueDispatcher;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -20,14 +17,14 @@ import org.jetbrains.annotations.NotNull;
 /** Custom listener for Discord events. On Ready and Slash Commands are needed here. */
 @Slf4j
 public class EventListener extends ListenerAdapter {
-  private final ScrapedResultCheckerFactory scrapedResultCheckerFactory;
+  private final ScrapedResultQueueDispatcher scrapedResultQueueDispatcher;
   private final SlashCommandManager slashCommandManager;
 
   @Inject
   EventListener(
-      ScrapedResultCheckerFactory scrapedResultCheckerFactory,
+      ScrapedResultQueueDispatcher scrapedResultQueueDispatcher,
       SlashCommandManager slashCommandManager) {
-    this.scrapedResultCheckerFactory = scrapedResultCheckerFactory;
+    this.scrapedResultQueueDispatcher = scrapedResultQueueDispatcher;
     this.slashCommandManager = slashCommandManager;
   }
 
@@ -61,13 +58,8 @@ public class EventListener extends ListenerAdapter {
     }
 
     int shardId = extractShardInfo(jda).getShardId();
-    @SuppressWarnings("PMD.CloseResource")
-    ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    scheduler.scheduleAtFixedRate(
-        scrapedResultCheckerFactory.create(shardId, manager.getShardsTotal()),
-        0,
-        1,
-        TimeUnit.SECONDS);
+    scrapedResultQueueDispatcher.configure(shardId, manager.getShardsTotal());
+    scrapedResultQueueDispatcher.start();
   }
 
   @Override
