@@ -38,8 +38,7 @@ resource "google_compute_instance" "bot-instance" {
         restartPolicy: Always
     EOF
   }
-  # This probably doesn't actually work. :(
-  metadata_startup_script = "echo FILMLINKD_ENVIRONMENT=PRODUCTION >> /etc/profile"
+  metadata_startup_script = file("${path.module}/startup.sh")
 
   service_account {
     email  = "compute-runner@filmlinkd.iam.gserviceaccount.com"
@@ -83,8 +82,7 @@ resource "google_compute_instance" "scraper-instance" {
         restartPolicy: Always
     EOF
   }
-  # This probably doesn't actually work. :(
-  metadata_startup_script = "echo FILMLINKD_ENVIRONMENT=PRODUCTION >> /etc/profile"
+  metadata_startup_script = file("${path.module}/startup.sh")
 
   service_account {
     email  = "compute-runner@filmlinkd.iam.gserviceaccount.com"
