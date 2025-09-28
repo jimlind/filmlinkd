@@ -9,7 +9,7 @@ resource "google_compute_instance" "bot-instance" {
   machine_type = "e2-micro"
   # I might be able to use "e2-custom-small-4096" as a machine type but there is no documentation
   # supporting this. Only a text block on the console.
-  zone         = "us-central1-a"
+  zone = "us-central1-a"
 
   labels = {
     container-vm = "filmlinkd-bot"
@@ -38,9 +38,10 @@ resource "google_compute_instance" "bot-instance" {
         restartPolicy: Always
     EOF
   }
+  metadata_startup_script = "echo FILMLINKD_ENVIRONMENT=PRODUCTION >> /etc/profile"
 
   service_account {
-    email = "compute-runner@filmlinkd.iam.gserviceaccount.com"
+    email  = "compute-runner@filmlinkd.iam.gserviceaccount.com"
     scopes = ["https://www.googleapis.com/auth/cloud-platform"]
   }
 
@@ -81,9 +82,10 @@ resource "google_compute_instance" "scraper-instance" {
         restartPolicy: Always
     EOF
   }
+  metadata_startup_script = "echo FILMLINKD_ENVIRONMENT=PRODUCTION >> /etc/profile"
 
   service_account {
-    email = "compute-runner@filmlinkd.iam.gserviceaccount.com"
+    email  = "compute-runner@filmlinkd.iam.gserviceaccount.com"
     scopes = ["https://www.googleapis.com/auth/cloud-platform"]
   }
 
