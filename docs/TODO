@@ -1,5 +1,6 @@
 NEED
-* Move data to the v6 database.
+* Migrate how containers are setup -- https://cloud.google.com/compute/docs/containers/migrate-containers
+* Setup Environment Variables in Terraform for the Containers.
 
 DONE
 * Delete all existing infrastructure and let terraform build it fresh
@@ -25,6 +26,7 @@ DONE
 * Can you DM the bot?
 * Fix footer data carrying over oddly.
 * Fix all the sniffs and lints
+* Move data to the v6 database.
 
 DATA TRANSFER PROCESS
 * Shut down original Filmlinkd VMs
@@ -40,6 +42,8 @@ DATA TRANSFER PROCESS
 * > gcloud firestore import gs://filmlinkd-export-bucket-us/2025-08-23T13:25:54_83989 --project=filmlinkd
    This will overwrite any existing data
    Use the real timestamp
+
+> gcloud firestore import gs://filmlinkd-v6-export-bucket-us/2025-09-28T13:40:53_24974 --project=filmlinkd
 
 GET PROJECT NUMBERS
 gcloud projects describe filmlinkd --format="value(projectNumber)"
