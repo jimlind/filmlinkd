@@ -4,7 +4,7 @@ provider "google" {
   zone    = "us-central1-a"
 }
 
-resource "google_compute_instance" "bot-instance" {
+resource "google_compute_instance" "bot-vm" {
   name         = "bot"
   machine_type = "e2-micro"
   # I might be able to use "e2-custom-small-4096" as a machine type but there is no documentation
@@ -39,7 +39,7 @@ resource "google_compute_instance" "bot-instance" {
   }
 }
 
-resource "google_compute_instance" "scraper-instance" {
+resource "google_compute_instance" "scraper-vm" {
   name         = "scraper"
   machine_type = "e2-micro"
   zone         = "us-central1-a"
