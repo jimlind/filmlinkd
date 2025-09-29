@@ -1,5 +1,4 @@
 NEED
-* Migrate how containers are setup -- https://cloud.google.com/compute/docs/containers/migrate-containers
 * Setup Environment Variables in Terraform for the Containers.
 
 DONE
@@ -27,6 +26,7 @@ DONE
 * Fix footer data carrying over oddly.
 * Fix all the sniffs and lints
 * Move data to the v6 database.
+* Migrate how containers are setup -- https://cloud.google.com/compute/docs/containers/migrate-containers
 
 DATA TRANSFER PROCESS
 * Shut down original Filmlinkd VMs
