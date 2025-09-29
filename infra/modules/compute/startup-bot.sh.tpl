@@ -8,15 +8,16 @@ docker rm $CONTAINER_NAME || true
 echo "Booting up VM..."
 echo "Hostname: $(hostname)"
 echo "Date: $(date)"
+echo "Environment: ${environment}"
 
 # Configure docker with credentials for gcr.io and pkg.dev
 export HOME=/home/appuser
 docker-credential-gcr configure-docker
 
-# Run the bot container in development mode
+Run the scraper container using the environment variable
 docker pull ghcr.io/jimlind/filmlinkd/bot-image:latest
 docker run \
   --name=$CONTAINER_NAME \
   --restart=always \
-  -e FILMLINKD_ENVIRONMENT=DEVELOPMENT \
+  -e FILMLINKD_ENVIRONMENT=${environment} \
   ghcr.io/jimlind/filmlinkd/bot-image:latest

@@ -3,8 +3,3 @@ variable "environment" {
   type        = string
   default     = "DEVELOPMENT"
 }
-
-variable "subnet_self_link" {
-  description = "The self_link of the subnet to use."
-  type        = string
-}

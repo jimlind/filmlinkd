@@ -27,7 +27,9 @@ resource "google_compute_instance" "bot-vm" {
   metadata = {
     google-monitoring-enabled = "true"
   }
-  metadata_startup_script = file("${path.module}/startup-bot.sh")
+  metadata_startup_script = templatefile("${path.module}/startup-bot.sh.tpl", {
+    environment = var.environment
+  })
 
   service_account {
     email  = "compute-runner@filmlinkd.iam.gserviceaccount.com"
@@ -61,7 +63,9 @@ resource "google_compute_instance" "scraper-vm" {
   metadata = {
     google-monitoring-enabled = "true"
   }
-  metadata_startup_script = file("${path.module}/startup-scraper.sh")
+  metadata_startup_script = templatefile("${path.module}/startup-scraper.sh.tpl", {
+    environment = var.environment
+  })
 
   service_account {
     email  = "compute-runner@filmlinkd.iam.gserviceaccount.com"

@@ -10,7 +10,7 @@ steps:
         cd infra/compute
         tofu init
         tofu destroy -auto-approve
-        tofu apply -auto-approve
+        tofu apply -auto-approve -var="environment=${_ENVIRONMENT}"
 
   - name: "ghcr.io/opentofu/opentofu:latest"
     entrypoint: "sh"
@@ -19,5 +19,8 @@ steps:
       - |
         cd infra/data
         tofu init
-        tofu apply -auto-approve
+        tofu apply -auto-approve -var="environment=${_ENVIRONMENT}"
     allowFailure: true
+
+substitutions:
+  _ENVIRONMENT: DEVELOPMENT # default value

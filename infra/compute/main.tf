@@ -10,6 +10,7 @@ module "network" {
 module "compute" {
   source           = "../modules/compute"
   subnet_self_link = module.network.subnet_self_link
+  environment      = var.environment
 }
 
 module "cloudnat" {
