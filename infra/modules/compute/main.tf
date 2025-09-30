@@ -6,7 +6,8 @@ provider "google" {
 
 resource "google_compute_instance" "bot-vm" {
   name         = "bot"
-  machine_type = "e2-micro"
+  machine_type = "e2-medium"
+  # When running something only for development using "e2-micro" as a machine type covers plenty.
   # I might be able to use "e2-custom-small-4096" as a machine type but there is no documentation
   # supporting this. Only a text block on the console.
   zone = "us-central1-a"
@@ -43,8 +44,10 @@ resource "google_compute_instance" "bot-vm" {
 
 resource "google_compute_instance" "scraper-vm" {
   name         = "scraper"
-  machine_type = "e2-micro"
-  zone         = "us-central1-a"
+  machine_type = "e2-medium"
+  # When running something only for development using "e2-micro" as a machine type covers plenty.
+  # I can likely use the micro for production as well but need to do so carefully.
+  zone = "us-central1-a"
 
   labels = {
     container-vm = "filmlinkd-scraper"
