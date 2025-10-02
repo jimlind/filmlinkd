@@ -1,6 +1,7 @@
 package jimlind.filmlinkd.discord;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import jimlind.filmlinkd.system.dispatcher.ScrapedResultQueueDispatcher;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -17,14 +18,12 @@ import org.jetbrains.annotations.NotNull;
 /** Custom listener for Discord events. On Ready and Slash Commands are needed here. */
 @Slf4j
 public class EventListener extends ListenerAdapter {
-  private final ScrapedResultQueueDispatcher scrapedResultQueueDispatcher;
+  private final Injector injector;
   private final SlashCommandManager slashCommandManager;
 
   @Inject
-  EventListener(
-      ScrapedResultQueueDispatcher scrapedResultQueueDispatcher,
-      SlashCommandManager slashCommandManager) {
-    this.scrapedResultQueueDispatcher = scrapedResultQueueDispatcher;
+  EventListener(Injector injector, SlashCommandManager slashCommandManager) {
+    this.injector = injector;
     this.slashCommandManager = slashCommandManager;
   }
 
@@ -58,6 +57,9 @@ public class EventListener extends ListenerAdapter {
     }
 
     int shardId = extractShardInfo(jda).getShardId();
+
+    ScrapedResultQueueDispatcher scrapedResultQueueDispatcher =
+        injector.getInstance(ScrapedResultQueueDispatcher.class);
     scrapedResultQueueDispatcher.configure(shardId, manager.getShardsTotal());
     scrapedResultQueueDispatcher.start();
   }
