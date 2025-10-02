@@ -12,6 +12,13 @@ see what happens with the new loggers.
 
 Also possible that it has to do with sharding? Maybe but the way things were logged make me think that isn't the case.
 
+Starting Listening for Messages on projects/filmlinkd/subscriptions/filmlinkd-log-entry-subscription
+Publishing to projects/filmlinkd/topics/filmlinkd-log-entry-topic
+
+Possible that the queue runner is a a singleton and only one instance is ever run. So the checking for multiple shards
+doesn't happen properly. Also worth documenting that the queue makes shards work without over architecting the pubsub
+listener to support multiple shards and creative acks
+
 DONE
 * Delete all existing infrastructure and let terraform build it fresh
 * Use STANDARD network tier
