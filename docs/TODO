@@ -1,5 +1,5 @@
 NEED
-* Put new version in production fully
+
 
 DONE
 * Delete all existing infrastructure and let terraform build it fresh
@@ -29,6 +29,7 @@ DONE
 * Migrate how containers are setup -- https://cloud.google.com/compute/docs/containers/migrate-containers
 * Setup Environment Variables in Terraform for the Containers.
 * Get /help test:True to work in production
+* Put new version in production fully
 
 DATA TRANSFER PROCESS
 * Shut down original Filmlinkd VMs
@@ -46,8 +47,6 @@ DATA TRANSFER PROCESS
    Use the real timestamp
 
 > gcloud firestore import gs://filmlinkd-v6-export-bucket-us/2025-09-28T13:40:53_24974 --project=filmlinkd
-> gcloud firestore import gs://filmlinkd-v6-export-bucket-us/2025-09-29T23:10:15_52274 --project=filmlinkd
-
 
 GET PROJECT NUMBERS
 gcloud projects describe filmlinkd --format="value(projectNumber)"
