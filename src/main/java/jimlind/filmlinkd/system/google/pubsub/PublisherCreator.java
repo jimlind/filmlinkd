@@ -32,7 +32,6 @@ public class PublisherCreator {
    */
   public Publisher create(String topicId) {
     TopicName topicName = TopicName.of(appConfig.getGoogleProjectId(), topicId);
-    log.atInfo().setMessage("Creating Publisher for {}").addArgument(topicId).log();
     try {
       return Publisher.newBuilder(topicName).build();
     } catch (IOException e) {

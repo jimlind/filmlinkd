@@ -150,11 +150,6 @@ public class PubSubManager {
     ByteString data = ByteString.copyFromUtf8(command.toJson());
     PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
     try {
-      log.atInfo()
-          .setMessage("Publishing to {}")
-          .addArgument(commandPublisher.getTopicNameString())
-          .addKeyValue("data", data)
-          .log();
       commandPublisher.publish(pubsubMessage).get();
     } catch (InterruptedException | ExecutionException e) {
       log.atWarn()
@@ -179,11 +174,6 @@ public class PubSubManager {
     ByteString data = ByteString.copyFromUtf8(logEntry.toJson());
     PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
     try {
-      log.atInfo()
-          .setMessage("Publishing to {}")
-          .addArgument(logEntryPublisher.getTopicNameString())
-          .addKeyValue("data", data)
-          .log();
       logEntryPublisher.publish(pubsubMessage).get();
     } catch (InterruptedException | ExecutionException e) {
       log.atWarn()
