@@ -19,7 +19,7 @@ resource "google_compute_instance" "this" {
   metadata = {
     google-monitoring-enabled = "true"
   }
-  metadata_startup_script = templatefile(var.startup_script_template, {
+  metadata_startup_script = templatefile("${path.module}/${var.startup_script_template}", {
     environment = var.environment
   })
 

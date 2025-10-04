@@ -14,7 +14,7 @@ module "bot-development" {
   name                    = "bot-development"
   label                   = "filmlinkd-bot-development"
   machine_type            = "e2-micro"
-  startup_script_template = "${path.module}/startup-bot.sh.tpl"
+  startup_script_template = "startup-bot.sh.tpl"
   subnet_self_link        = module.network.subnet_self_link
 }
 
@@ -24,7 +24,7 @@ module "scraper-development" {
   name                    = "scraper-development"
   label                   = "filmlinkd-scraper-development"
   machine_type            = "e2-micro"
-  startup_script_template = "${path.module}/startup-bot.sh.tpl"
+  startup_script_template = "startup-bot.sh.tpl"
   subnet_self_link        = module.network.subnet_self_link
 }
 
@@ -35,7 +35,7 @@ module "bot-production" {
   name                    = "bot-production"
   label                   = "filmlinkd-bot"
   machine_type            = "e2-medium"
-  startup_script_template = "${path.module}/startup-scraper.sh.tpl"
+  startup_script_template = "startup-scraper.sh.tpl"
   subnet_self_link        = module.network.subnet_self_link
 }
 
@@ -45,7 +45,7 @@ module "scraper-production" {
   name                    = "scraper-production"
   label                   = "filmlinkd-scraper"
   machine_type            = "e2-medium"
-  startup_script_template = "${path.module}/startup-scraper.sh.tpl"
+  startup_script_template = "startup-scraper.sh.tpl"
   subnet_self_link        = module.network.subnet_self_link
 }
 
