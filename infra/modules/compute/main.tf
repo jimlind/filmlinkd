@@ -18,6 +18,7 @@ resource "google_compute_instance" "this" {
 
   metadata = {
     google-monitoring-enabled = "true"
+    last_restart_timestamp    = timestamp()
   }
   metadata_startup_script = templatefile("${path.module}/${var.startup_script_template}", {
     environment = var.environment
