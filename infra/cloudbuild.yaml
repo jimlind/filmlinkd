@@ -9,8 +9,6 @@ steps:
       - |
         cd infra/compute
         tofu init
-        tofu state rm module.compute.google_compute_instance.bot-vm
-        tofu state rm module.compute.google_compute_instance.scraper-vm
         tofu destroy -auto-approve
         tofu apply -auto-approve
 
