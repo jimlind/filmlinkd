@@ -7,10 +7,46 @@ module "network" {
   source = "../modules/network"
 }
 
-module "compute" {
-  source           = "../modules/compute"
-  subnet_self_link = module.network.subnet_self_link
-  environment      = var.environment
+# Development Computer Modules
+module "bot-development" {
+  source                  = "../modules/compute"
+  environment             = "DEVELOPMENT"
+  name                    = "bot-development"
+  label                   = "filmlinkd-bot-development"
+  machine_type            = "e2-micro"
+  startup_script_template = "${path.module}/startup-bot.sh.tpl"
+  subnet_self_link        = module.network.subnet_self_link
+}
+
+module "scraper-development" {
+  source                  = "../modules/compute"
+  environment             = "DEVELOPMENT"
+  name                    = "scraper-development"
+  label                   = "filmlinkd-scraper-development"
+  machine_type            = "e2-micro"
+  startup_script_template = "${path.module}/startup-bot.sh.tpl"
+  subnet_self_link        = module.network.subnet_self_link
+}
+
+# Production Computer Modules
+module "bot-production" {
+  source                  = "../modules/compute"
+  environment             = "PRODUCTION"
+  name                    = "bot-production"
+  label                   = "filmlinkd-bot"
+  machine_type            = "e2-medium"
+  startup_script_template = "${path.module}/startup-scraper.sh.tpl"
+  subnet_self_link        = module.network.subnet_self_link
+}
+
+module "scraper-production" {
+  source                  = "../modules/compute"
+  environment             = "PRODUCTION"
+  name                    = "scraper-production"
+  label                   = "filmlinkd-scraper"
+  machine_type            = "e2-medium"
+  startup_script_template = "${path.module}/startup-scraper.sh.tpl"
+  subnet_self_link        = module.network.subnet_self_link
 }
 
 module "cloudnat" {

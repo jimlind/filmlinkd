@@ -1,5 +1,8 @@
 NEED
-
+* Scraper Timeouts are Overwhelming the Logs
+* Investigate some of the 10x posts - They feel inaccurate - Might be people who are followed in channels without
+  permissions so they never get posted? Might need to do some house cleaning.
+* Nerf the /follow command - People are using it to get posts faster not understanding the override.
 
 DONE
 * Delete all existing infrastructure and let terraform build it fresh
@@ -30,6 +33,8 @@ DONE
 * Setup Environment Variables in Terraform for the Containers.
 * Get /help test:True to work in production
 * Put new version in production fully
+* Solve problem with VIP scraping (it was data formatting)
+* Create DEVELOPMENT and PRODUCTION environments
 
 DATA TRANSFER PROCESS
 * Shut down original Filmlinkd VMs
