@@ -35,7 +35,7 @@ module "bot-production" {
   name                    = "bot-production"
   label                   = "filmlinkd-bot"
   machine_type            = "e2-medium"
-  startup_script_template = "startup-scraper.sh.tpl"
+  startup_script_template = "startup-bot.sh.tpl"
   subnet_self_link        = module.network.subnet_self_link
 }
 
