@@ -8,10 +8,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.http.HttpClient;
+import java.net.http.HttpConnectTimeoutException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.security.InvalidKeyException;
@@ -98,6 +100,12 @@ public class Client {
       try (InputStream inputStream = connection.getInputStream()) {
         return streamProcessor.apply(inputStream);
       }
+    } catch (SocketTimeoutException ignore) {
+      // Timeouts are expected. Don't log the exception to avoid noise but do log the path.
+      log.atError()
+          .setMessage("Timeout: Authorized HTTP stream timed out")
+          .addKeyValue(PATH_KEY, path)
+          .log();
     } catch (IOException e) {
       log.atError()
           .setMessage("Failed to handle HTTP stream")
@@ -185,6 +193,13 @@ public class Client {
         log.atError().setMessage("Response Body is Blank").addKeyValue(URI_KEY, uri).log();
         return null;
       }
+    } catch (HttpConnectTimeoutException ignore) {
+      // Timeouts are expected. Don't log the exception to avoid noise but do log the path.
+      log.atError()
+          .setMessage("Timeout: HttpClient request timed out")
+          .addKeyValue(URI_KEY, uri)
+          .log();
+      return null;
     } catch (InterruptedException | IOException e) {
       log.atError().setMessage("Client Error").addKeyValue(URI_KEY, uri).setCause(e).log();
       return null;

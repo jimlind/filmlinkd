@@ -93,13 +93,17 @@ public class ScrapedResultQueueChecker implements Runnable {
       }
 
       // Not having proper permissions is more normal than it should be so we ignore the
-      // possible issue and don't log anything
+      // possible issue and log a message to use for purging dead channels later.
       Member self = channel.getGuild().getSelfMember();
       if (!self.hasPermission(
           channel,
           Permission.VIEW_CHANNEL,
           Permission.MESSAGE_SEND,
           Permission.MESSAGE_EMBED_LINKS)) {
+        log.atInfo()
+            .setMessage("Insufficient permissions for sending message found.")
+            .addKeyValue("channel", channel)
+            .log();
         continue;
       }
 
