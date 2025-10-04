@@ -16,9 +16,6 @@ module "bot-development" {
   machine_type            = "e2-micro"
   startup_script_template = "${path.module}/startup-bot.sh.tpl"
   subnet_self_link        = module.network.subnet_self_link
-  providers = {
-    google = google
-  }
 }
 
 module "scraper-development" {
@@ -29,9 +26,6 @@ module "scraper-development" {
   machine_type            = "e2-micro"
   startup_script_template = "${path.module}/startup-bot.sh.tpl"
   subnet_self_link        = module.network.subnet_self_link
-  providers = {
-    google = google
-  }
 }
 
 # Production Computer Modules
@@ -43,9 +37,6 @@ module "bot-production" {
   machine_type            = "e2-medium"
   startup_script_template = "${path.module}/startup-scraper.sh.tpl"
   subnet_self_link        = module.network.subnet_self_link
-  providers = {
-    google = google
-  }
 }
 
 module "scraper-production" {
@@ -56,9 +47,6 @@ module "scraper-production" {
   machine_type            = "e2-medium"
   startup_script_template = "${path.module}/startup-scraper.sh.tpl"
   subnet_self_link        = module.network.subnet_self_link
-  providers = {
-    google = google
-  }
 }
 
 module "cloudnat" {
