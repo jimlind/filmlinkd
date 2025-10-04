@@ -9,6 +9,7 @@ echo "Booting up VM..."
 echo "Hostname: $(hostname)"
 echo "Date: $(date)"
 echo "Environment: ${environment}"
+echo "Timestamp: ${timestamp}"
 
 # Configure docker with credentials for gcr.io and pkg.dev
 export HOME=/home/appuser
