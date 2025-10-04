@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.discord.eventhandler;
+package jimlind.filmlinkd.discord.event.handler;
 
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.inject.Inject;
