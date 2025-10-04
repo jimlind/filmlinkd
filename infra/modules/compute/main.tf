@@ -1,9 +1,3 @@
-provider "google" {
-  project = "filmlinkd"
-  region  = "us-central1"
-  zone    = "us-central1-a"
-}
-
 resource "google_compute_instance" "this" {
   name         = var.name
   machine_type = var.machine_type
