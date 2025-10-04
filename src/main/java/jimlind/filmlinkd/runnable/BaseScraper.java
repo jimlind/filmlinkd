@@ -84,9 +84,11 @@ public class BaseScraper implements Runnable {
         if (log.isInfoEnabled()) {
           LbMemberSummary owner = getOwner(logEntryList.getFirst());
           log.atInfo()
-              .setMessage("Publishing {}x films from {}")
+              .setMessage("Publishing {}x films from {} ( {} : {} )")
               .addArgument(publishedEntryIdList.size())
               .addArgument(owner.displayName)
+              .addArgument(owner.id)
+              .addArgument(owner.username)
               .addKeyValue("source", source)
               .log();
         }
