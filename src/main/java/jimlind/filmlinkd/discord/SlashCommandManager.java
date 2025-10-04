@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import java.util.Locale;
 import javax.annotation.Nullable;
-import jimlind.filmlinkd.system.discord.eventhandler.Handler;
+import jimlind.filmlinkd.discord.event.handler.Handler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 /** Handles all slash commands. The process command here transfers logic to appropriate handler. */
@@ -42,8 +42,7 @@ public class SlashCommandManager {
   private @Nullable Handler getHandlerFromEventName(String name) {
     String fragment =
         name.substring(0, 1).toUpperCase(Locale.ROOT) + name.substring(1).toLowerCase(Locale.ROOT);
-    String className =
-        String.format("jimlind.filmlinkd.system.discord.eventhandler.%sHandler", fragment);
+    String className = String.format("jimlind.filmlinkd.discord.event.handler.%sHandler", fragment);
 
     try {
       Class<?> clazz = Class.forName(className);
