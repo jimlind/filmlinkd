@@ -19,8 +19,8 @@ import net.dv8tion.jda.api.exceptions.PermissionException;
 @Slf4j
 public class HelpEmbedDispatcher extends TimedTaskRunner {
   private static final int MAX_TEST_MESSAGES = 5;
-  private static final int INITIAL_DELAY_SECONDS = 2;
-  private static final int INTERVAL_SECONDS = 1;
+  private static final int INITIAL_DELAY_MILLISECONDS = 2000;
+  private static final int INTERVAL_MILLISECONDS = 1000;
 
   private final HelpEmbedFactory helpEmbedFactory;
   private final LogEntriesApi logEntriesApi;
@@ -44,7 +44,7 @@ public class HelpEmbedDispatcher extends TimedTaskRunner {
       LogEntriesApi logEntriesApi,
       MessageFactory messageFactory,
       PubSubManager pubSubManager) {
-    super(INITIAL_DELAY_SECONDS, INTERVAL_SECONDS);
+    super(INITIAL_DELAY_MILLISECONDS, INTERVAL_MILLISECONDS);
 
     this.helpEmbedFactory = helpEmbedFactory;
     this.logEntriesApi = logEntriesApi;

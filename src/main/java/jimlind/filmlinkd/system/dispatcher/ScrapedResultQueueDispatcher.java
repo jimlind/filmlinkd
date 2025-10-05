@@ -16,8 +16,8 @@ import org.jetbrains.annotations.Nullable;
  */
 @Slf4j
 public class ScrapedResultQueueDispatcher extends TimedTaskRunner {
-  private static final int INITIAL_DELAY_SECONDS = 0;
-  private static final int INTERVAL_SECONDS = 1;
+  private static final int INITIAL_DELAY_MILLISECONDS = 0;
+  private static final int INTERVAL_MILLISECONDS = 100;
 
   private final DiaryEntryEmbedFactory diaryEntryEmbedFactory;
   private final ScrapedResultQueue scrapedResultQueue;
@@ -40,7 +40,7 @@ public class ScrapedResultQueueDispatcher extends TimedTaskRunner {
       ScrapedResultQueue scrapedResultQueue,
       ShardManagerStorage shardManagerStorage,
       UserWriter userWriter) {
-    super(INITIAL_DELAY_SECONDS, INTERVAL_SECONDS);
+    super(INITIAL_DELAY_MILLISECONDS, INTERVAL_MILLISECONDS);
 
     this.diaryEntryEmbedFactory = diaryEntryEmbedFactory;
     this.scrapedResultQueue = scrapedResultQueue;

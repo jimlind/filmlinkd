@@ -13,20 +13,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class TimedTaskRunner {
   private final ScheduledExecutorService scheduler;
-  private final long initialDelaySeconds;
-  private final long intervalSeconds;
+  private final long initialDelayMilliseconds;
+  private final long intervalMilliseconds;
   private ScheduledFuture<?> scheduledFuture;
 
   /**
    * Constructor for this class.
    *
-   * @param initialDelaySeconds Number of seconds before first task is executed
-   * @param intervalSeconds Number of seconds in between task execution
+   * @param initialDelayMilliseconds Number of milliseconds before first task is executed
+   * @param intervalMilliseconds Number of milliseconds in between task execution
    */
-  public TimedTaskRunner(long initialDelaySeconds, long intervalSeconds) {
+  public TimedTaskRunner(long initialDelayMilliseconds, long intervalMilliseconds) {
     this.scheduler = Executors.newSingleThreadScheduledExecutor();
-    this.initialDelaySeconds = initialDelaySeconds;
-    this.intervalSeconds = intervalSeconds;
+    this.initialDelayMilliseconds = initialDelayMilliseconds;
+    this.intervalMilliseconds = intervalMilliseconds;
   }
 
   /** Task to actually run. Needs to be implemented. */
@@ -39,8 +39,8 @@ public abstract class TimedTaskRunner {
 
   /** Starts the SingleThreadScheduledExecutor. */
   public void start() {
-    if (intervalSeconds <= 0) {
-      throw new IllegalArgumentException("Interval must be positive: " + intervalSeconds);
+    if (intervalMilliseconds <= 0) {
+      throw new IllegalArgumentException("Interval must be positive: " + intervalMilliseconds);
     }
 
     scheduledFuture =
@@ -51,9 +51,9 @@ public abstract class TimedTaskRunner {
                 stop();
               }
             },
-            initialDelaySeconds,
-            intervalSeconds,
-            TimeUnit.SECONDS);
+            initialDelayMilliseconds,
+            intervalMilliseconds,
+            TimeUnit.MILLISECONDS);
   }
 
   /** Stops the SingleThreadScheduledExecutor. */

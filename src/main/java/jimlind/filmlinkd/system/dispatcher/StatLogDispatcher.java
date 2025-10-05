@@ -9,8 +9,8 @@ import jimlind.filmlinkd.system.MemoryInformationLogger;
  * to ensure that things could be closed when not needed.
  */
 public class StatLogDispatcher extends TimedTaskRunner {
-  private static final long INITIAL_DELAY_SECONDS = 0;
-  private static final long INTERVAL_SECONDS = 30;
+  private static final long INITIAL_DELAY_MILLISECONDS = 0;
+  private static final long INTERVAL_MILLISECONDS = 30000; // 30 seconds
 
   private final MemoryInformationLogger memoryInformationLogger;
 
@@ -21,7 +21,7 @@ public class StatLogDispatcher extends TimedTaskRunner {
    */
   @Inject
   public StatLogDispatcher(MemoryInformationLogger memoryInformationLogger) {
-    super(INITIAL_DELAY_SECONDS, INTERVAL_SECONDS);
+    super(INITIAL_DELAY_MILLISECONDS, INTERVAL_MILLISECONDS);
 
     this.memoryInformationLogger = memoryInformationLogger;
   }
