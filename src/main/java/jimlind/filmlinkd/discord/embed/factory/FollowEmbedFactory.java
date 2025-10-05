@@ -48,7 +48,8 @@ public class FollowEmbedFactory {
     String userName = UsernameFormatter.format(member.username);
     String displayName = DisplayNameFormatter.format(member.displayName);
     String description = String.format("I am now following %s (%s).\n", displayName, userName);
-    description += "I'll try to post their most recent entry in the appropriate channel.";
+    description +=
+        "New diary entries will be displayed here when they are available. Please be patient.";
 
     embedBuilder.setDescription(descriptionStringBuilder.setDescriptionText(description).build());
     embedBuilder.setThumbnail(imageUtils.getTallest(member.avatar));

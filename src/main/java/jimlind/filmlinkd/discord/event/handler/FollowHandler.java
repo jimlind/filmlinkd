@@ -4,9 +4,7 @@ import com.google.inject.Inject;
 import java.util.List;
 import jimlind.filmlinkd.discord.embed.factory.FollowEmbedFactory;
 import jimlind.filmlinkd.factory.CommandFactory;
-import jimlind.filmlinkd.factory.MessageFactory;
 import jimlind.filmlinkd.model.Command;
-import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.UserCoordinator;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
@@ -27,7 +25,6 @@ public class FollowHandler implements Handler {
   private final CommandFactory commandFactory;
   private final FollowEmbedFactory followEmbedFactory;
   private final LogEntriesApi logEntriesApi;
-  private final MessageFactory messageFactory;
   private final PubSubManager pubSubManager;
   private final UserCoordinator userCoordinator;
 
@@ -39,7 +36,6 @@ public class FollowHandler implements Handler {
    * @param commandFactory Builds the command object that is pushed into the PubSub system
    * @param followEmbedFactory Builds the embed for the /follow command
    * @param logEntriesApi Fetches log entry data from Letterboxd API
-   * @param messageFactory Builds the message object that is pushed into the PubSub system
    * @param pubSubManager Handles the PubSub system to accept commands and messages
    * @param userCoordinator Handles the interactions with the user model
    */
@@ -50,7 +46,6 @@ public class FollowHandler implements Handler {
       CommandFactory commandFactory,
       FollowEmbedFactory followEmbedFactory,
       LogEntriesApi logEntriesApi,
-      MessageFactory messageFactory,
       PubSubManager pubSubManager,
       UserCoordinator userCoordinator) {
     this.accountHelper = accountHelper;
@@ -58,7 +53,6 @@ public class FollowHandler implements Handler {
     this.commandFactory = commandFactory;
     this.followEmbedFactory = followEmbedFactory;
     this.logEntriesApi = logEntriesApi;
-    this.messageFactory = messageFactory;
     this.pubSubManager = pubSubManager;
     this.userCoordinator = userCoordinator;
   }
@@ -96,12 +90,6 @@ public class FollowHandler implements Handler {
       Command command =
           commandFactory.create(Command.Type.FOLLOW, getOwner(logEntry).id, logEntry.id);
       this.pubSubManager.publishCommand(command);
-
-      Message.PublishSource source = Message.PublishSource.Follow;
-      Message message = messageFactory.createFromLogEntry(logEntry, source);
-      message.setChannelId(channelId);
-      
-      this.pubSubManager.publishLogEntry(message);
     }
 
     List<MessageEmbed> messageEmbedList = followEmbedFactory.create(member);

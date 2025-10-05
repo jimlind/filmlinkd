@@ -1,7 +1,7 @@
 NEED
 * Investigate some of the 10x posts - They feel inaccurate - Might be people who are followed in channels without
   permissions so they never get posted? Might need to do some house cleaning.
-* Nerf the /follow command - People are using it to get posts faster not understanding the override.
+* Write the most recent lid to the user database when followed if something doesn't already exist - so 10x posts don't come from the scraper
 * Follow up on the "Insufficient permissions" messages. Find a way to store the data that can be more easily queried
 
 DONE
@@ -37,6 +37,9 @@ DONE
 * Create DEVELOPMENT and PRODUCTION environments
 * Scraper Timeouts are Overwhelming the Logs
 * Log when messages don't post so a process can be created to clean up dead channels if posts don't work for X days
+* Nerf the /follow command - People are using it to get posts faster not understanding the override.
+* Don't post the most recent diary entry on follow command
+
 
 DATA TRANSFER PROCESS
 * Shut down original Filmlinkd VMs
