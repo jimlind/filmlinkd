@@ -10,10 +10,7 @@ import jimlind.filmlinkd.system.UserCoordinator;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.google.pubsub.PubSubManager;
-import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
-import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
-import jimlind.filmlinkd.system.letterboxd.model.LbMemberSummary;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -24,7 +21,6 @@ public class FollowHandler implements Handler {
   private final ChannelHelper channelHelper;
   private final CommandFactory commandFactory;
   private final FollowEmbedFactory followEmbedFactory;
-  private final LogEntriesApi logEntriesApi;
   private final PubSubManager pubSubManager;
   private final UserCoordinator userCoordinator;
 
@@ -35,7 +31,6 @@ public class FollowHandler implements Handler {
    * @param channelHelper Service that parses a channel id from a slash event with options
    * @param commandFactory Builds the command object that is pushed into the PubSub system
    * @param followEmbedFactory Builds the embed for the /follow command
-   * @param logEntriesApi Fetches log entry data from Letterboxd API
    * @param pubSubManager Handles the PubSub system to accept commands and messages
    * @param userCoordinator Handles the interactions with the user model
    */
@@ -45,53 +40,46 @@ public class FollowHandler implements Handler {
       ChannelHelper channelHelper,
       CommandFactory commandFactory,
       FollowEmbedFactory followEmbedFactory,
-      LogEntriesApi logEntriesApi,
       PubSubManager pubSubManager,
       UserCoordinator userCoordinator) {
     this.accountHelper = accountHelper;
     this.channelHelper = channelHelper;
     this.commandFactory = commandFactory;
     this.followEmbedFactory = followEmbedFactory;
-    this.logEntriesApi = logEntriesApi;
     this.pubSubManager = pubSubManager;
     this.userCoordinator = userCoordinator;
-  }
-
-  private static LbMemberSummary getOwner(LbLogEntry logEntry) {
-    return logEntry.getOwner();
   }
 
   @Override
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
 
+    // Exit early if no account was found.
     LbMember member = accountHelper.getMember(event);
     if (member == null) {
       event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
       return;
     }
 
+    // Exit early if no channel was found.
     String channelId = channelHelper.getChannelId(event);
     if (channelId.isBlank()) {
       event.getHook().sendMessage(NO_CHANNEL_FOUND).queue();
       return;
     }
 
+    // Exit early if database transaction failed.
     User user = userCoordinator.follow(member, channelId);
     if (user == null) {
       event.getHook().sendMessage("Follow Failed").queue();
       return;
     }
 
-    List<LbLogEntry> logEntryList = this.logEntriesApi.getRecentForUser(member.id, 1);
-    if (logEntryList.size() == EXPECTED_SINGLE_RESULT) {
-      LbLogEntry logEntry = logEntryList.getFirst();
+    // Publish command so scraper knows that a new user should be included.
+    Command command = commandFactory.create(Command.Type.FOLLOW, member.id, "0");
+    this.pubSubManager.publishCommand(command);
 
-      Command command =
-          commandFactory.create(Command.Type.FOLLOW, getOwner(logEntry).id, logEntry.id);
-      this.pubSubManager.publishCommand(command);
-    }
-
+    // Build the message and reply to the deferred command in Discord.
     List<MessageEmbed> messageEmbedList = followEmbedFactory.create(member);
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
   }
