@@ -16,7 +16,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 /** Handles the /follow command to follow a user and show new diary entries in specified channel. */
 public class FollowHandler implements Handler {
-  private static final int EXPECTED_SINGLE_RESULT = 1;
   private final AccountHelper accountHelper;
   private final ChannelHelper channelHelper;
   private final CommandFactory commandFactory;

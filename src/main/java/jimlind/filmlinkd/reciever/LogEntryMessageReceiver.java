@@ -56,7 +56,9 @@ public class LogEntryMessageReceiver implements com.google.cloud.pubsub.v1.Messa
     // (when the channel id is blank) by caching processed IDs.
     if (channelId.isBlank()) {
       // Exit early if entry is in the cache
-      if (entryCache.get(entryLid)) return;
+      if (entryCache.get(entryLid)) {
+        return;
+      }
       // Assume that write will succeed so write to cache. If it actually doesn't succeed then it'll
       // get tried again some later time, but this is designed to limit duplicates from scrape
       // events.
