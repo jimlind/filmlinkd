@@ -9,12 +9,14 @@ import jimlind.filmlinkd.config.modules.DiscordModule;
 import jimlind.filmlinkd.config.modules.GoogleModule;
 import jimlind.filmlinkd.config.modules.LetterboxdModule;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
+import jimlind.filmlinkd.factory.ScraperCoordinatorFactory;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.factory.VipFactory;
 import jimlind.filmlinkd.reciever.CommandMessageReceiver;
 import jimlind.filmlinkd.reciever.LogEntryMessageReceiver;
 import jimlind.filmlinkd.runnable.GeneralScraper;
 import jimlind.filmlinkd.runnable.GeneralUserCacheClearer;
+import jimlind.filmlinkd.runnable.ScraperCoordinator;
 import jimlind.filmlinkd.runnable.VipScraper;
 import jimlind.filmlinkd.runnable.VipUserCacheClearer;
 import jimlind.filmlinkd.system.MemoryInformationLogger;
@@ -37,6 +39,7 @@ public class GuiceModule extends AbstractModule {
 
     // Factories
     bind(EmbedBuilderFactory.class).in(Scopes.SINGLETON);
+    bind(ScraperCoordinatorFactory.class).in(Scopes.SINGLETON);
     bind(UserFactory.class).in(Scopes.SINGLETON);
     bind(VipFactory.class).in(Scopes.SINGLETON);
 
@@ -57,6 +60,7 @@ public class GuiceModule extends AbstractModule {
     bind(GeneralScraper.class).in(Scopes.SINGLETON);
     bind(GeneralUserCache.class).in(Scopes.SINGLETON);
     bind(GeneralUserCacheClearer.class).in(Scopes.SINGLETON);
+    bind(ScraperCoordinator.class).in(Scopes.NO_SCOPE);
     bind(VipScraperScheduler.class).in(Scopes.SINGLETON);
     bind(VipScraper.class).in(Scopes.SINGLETON);
     bind(VipUserCache.class).in(Scopes.SINGLETON);
