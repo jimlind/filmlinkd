@@ -1,9 +1,12 @@
 package jimlind.filmlinkd.runnable;
 
 import com.google.inject.Inject;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 import jimlind.filmlinkd.cache.BaseUserCache;
+import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.factory.ScraperCoordinatorFactory;
 import jimlind.filmlinkd.model.Message;
 import lombok.extern.slf4j.Slf4j;
@@ -14,34 +17,44 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class BaseScraper implements Runnable {
+  protected AppConfig appConfig;
   protected BaseUserCache userCache;
   protected ScraperCoordinatorFactory scraperCoordinatorFactory;
 
+  protected int concurrentClientLimit;
   protected Message.PublishSource source;
 
   /**
    * Constructor for this class.
    *
+   * @param appConfig Application configuration
    * @param userCache Where we store in memory versions records of latest diary entry
    * @param scraperCoordinatorFactory Handles the creation of ScraperCoordinator tasks
    */
   @Inject
-  public BaseScraper(BaseUserCache userCache, ScraperCoordinatorFactory scraperCoordinatorFactory) {
+  public BaseScraper(
+      AppConfig appConfig,
+      BaseUserCache userCache,
+      ScraperCoordinatorFactory scraperCoordinatorFactory) {
+    this.appConfig = appConfig;
     this.userCache = userCache;
     this.scraperCoordinatorFactory = scraperCoordinatorFactory;
   }
 
   @Override
   public void run() {
-    List<Map.Entry<String, String>> userPage = userCache.getNextPage();
-    for (Map.Entry<String, String> entry : userPage) {
-      String userLetterboxdId = entry.getKey();
-      String diaryEntryLetterboxdId = entry.getValue();
+    Semaphore semaphore = new Semaphore(concurrentClientLimit);
+    try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
+      for (Map.Entry<String, String> entry : userCache.getNextPage()) {
+        String userLid = entry.getKey();
+        String diaryEntryLid = entry.getValue();
 
-      Runnable task =
-          scraperCoordinatorFactory.create(
-              userCache, userLetterboxdId, diaryEntryLetterboxdId, source);
-      Thread.startVirtualThread(task);
+        Runnable task =
+            scraperCoordinatorFactory.create(semaphore, userCache, userLid, diaryEntryLid, source);
+        executor.submit(task);
+      }
+
+      executor.shutdown();
     }
   }
 }

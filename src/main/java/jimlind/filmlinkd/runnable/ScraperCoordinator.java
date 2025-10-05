@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 import jimlind.filmlinkd.cache.BaseUserCache;
 import jimlind.filmlinkd.factory.MessageFactory;
 import jimlind.filmlinkd.model.Message;
@@ -25,6 +26,7 @@ public class ScraperCoordinator implements Runnable {
   private final MessageFactory messageFactory;
   private final PubSubManager pubSubManager;
 
+  private Semaphore semaphore;
   private BaseUserCache userCache;
   private String userLetterboxdId = "";
   private String diaryEntryLetterboxdId = "";
@@ -56,6 +58,17 @@ public class ScraperCoordinator implements Runnable {
 
   @Override
   public void run() {
+    try {
+      semaphore.acquire();
+      scrape();
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+    } finally {
+      semaphore.release();
+    }
+  }
+
+  public void scrape() {
     // Current timestamp
     long current = Instant.now().toEpochMilli();
 

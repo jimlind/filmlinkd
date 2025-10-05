@@ -2,6 +2,7 @@ package jimlind.filmlinkd.factory;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import java.util.concurrent.Semaphore;
 import jimlind.filmlinkd.cache.BaseUserCache;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.runnable.ScraperCoordinator;
@@ -18,6 +19,7 @@ public class ScraperCoordinatorFactory {
   /**
    * Creates and initializes a new ScraperCoordinator object.
    *
+   * @param semaphore Used to limit the number of concurrent tasks
    * @param userCache Where we store in memory versions records of latest diary entry
    * @param userLetterboxdId A user's Letterboxd ID
    * @param diaryEntryLetterboxdId A user's Letterboxd ID of last known diary entry
@@ -25,11 +27,13 @@ public class ScraperCoordinatorFactory {
    * @return A new, populated {@link ScraperCoordinator} object.
    */
   public Runnable create(
+      Semaphore semaphore,
       BaseUserCache userCache,
       String userLetterboxdId,
       String diaryEntryLetterboxdId,
       Message.PublishSource source) {
     ScraperCoordinator scraperCoordinator = injector.getInstance(ScraperCoordinator.class);
+    scraperCoordinator.setSemaphore(semaphore);
     scraperCoordinator.setUserCache(userCache);
     scraperCoordinator.setUserLetterboxdId(userLetterboxdId);
     scraperCoordinator.setDiaryEntryLetterboxdId(diaryEntryLetterboxdId);
