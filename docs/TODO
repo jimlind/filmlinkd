@@ -2,6 +2,7 @@ NEED
 * Investigate some of the 10x posts - They feel inaccurate - Might be people who are followed in channels without
   permissions so they never get posted? Might need to do some house cleaning.
 * Write the most recent lid to the user database when followed if something doesn't already exist - so 10x posts don't come from the scraper
+* Write a passive aggressive message when users attempt to follow again
 * Follow up on the "Insufficient permissions" messages. Find a way to store the data that can be more easily queried
 
 DONE
