@@ -63,8 +63,11 @@ public class BaseScraper implements Runnable {
         continue;
       }
 
+      // If the LID for the entry is 1 character (or less) that users has not successfully been
+      // posted from previously so limit the count to 1 entry.
+      int count = entry.getValue().length() <= 1 ? 1 : 10;
+      List<LbLogEntry> logEntryList = logEntriesApi.getRecentForUser(entry.getKey(), count);
       List<String> publishedEntryIdList = new ArrayList<>();
-      List<LbLogEntry> logEntryList = logEntriesApi.getRecentForUser(entry.getKey(), 10);
 
       logEntryList.stream()
           .filter(
