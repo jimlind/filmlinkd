@@ -68,6 +68,10 @@ public class ScraperCoordinator implements Runnable {
     }
   }
 
+  /**
+   * The method that actually does the scraping. Split into convenience so it can be wrapped with a
+   * try/catch
+   */
   public void scrape() {
     // Current timestamp
     long current = Instant.now().toEpochMilli();
