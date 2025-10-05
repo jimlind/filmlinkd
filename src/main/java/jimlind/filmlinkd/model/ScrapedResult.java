@@ -1,8 +1,6 @@
 package jimlind.filmlinkd.model;
 
-import java.util.ArrayList;
 import java.util.List;
-import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 
 /**
  * Model representing a ScrapeResult that happens when the scraper announces a new scraped entry.
@@ -36,28 +34,17 @@ public record ScrapedResult(Message message, User user) {
   }
 
   /**
-   * Gets the list of channels to send a scraped result to. Get all channels if the entry is brand
-   * new. If it isn't brand new, and it has a channel override set, use that channel instead.
+   * Gets the list of channels to send a scraped result to. Gets a list of the one override channel
+   * if it exists or else get the full list of channels from the user object.
    *
    * @return A list of channel ids as strings
    */
   public List<String> getChannelList() {
-    String previous = user.getMostRecentPrevious();
-    boolean isNewerThanKnown = LidComparer.compare(previous, message.getEntry().getLid()) < 0;
-
-    // Only send this message to one channel if it would otherwise post duplicates
-    if (message.getChannelId() != null && message.hasChannelOverride() && !isNewerThanKnown) {
+    if (message.hasChannelOverride()) {
       return List.of(message.getChannelId());
     }
 
-    // Get all channels for a user
-    List<String> channelList = new ArrayList<>(user.getChannelIdList());
-    // Add the specified channel if it is not in the list.
-    if (message.getChannelId() != null && !channelList.contains(message.getChannelId())) {
-      channelList.add(message.getChannelId());
-    }
-
-    return channelList;
+    return user.getChannelIdList();
   }
 
   /**

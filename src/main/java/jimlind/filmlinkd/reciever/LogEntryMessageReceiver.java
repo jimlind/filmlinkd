@@ -52,14 +52,14 @@ public class LogEntryMessageReceiver implements com.google.cloud.pubsub.v1.Messa
     String channelId = getChannelId(messagePayload);
 
     // We are expecting multiple requests to post a diary entry so we attempt to maintain the one
-    // source of truth on the server that sends messages. One mechanism of that is a memory cache.
-    if (entryCache.get(entryLid) && channelId.isBlank()) {
-      // If the key is in the cache and channelId isn't provided skip it
-      return;
-    } else {
+    // source of truth in a centralized cache in memory. Avoid duplicate diary entries from scraping
+    // (when the channel id is blank) by caching processed IDs.
+    if (channelId.isBlank()) {
+      // Exit early if entry is in the cache
+      if (entryCache.get(entryLid)) return;
       // Assume that write will succeed so write to cache. If it actually doesn't succeed then it'll
       // get tried again some later time, but this is designed to limit duplicates from scrape
-      // events
+      // events.
       entryCache.set(entryLid);
     }
 

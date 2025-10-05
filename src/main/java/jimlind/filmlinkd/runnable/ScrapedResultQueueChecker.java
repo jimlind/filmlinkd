@@ -110,7 +110,8 @@ public class ScrapedResultQueueChecker implements Runnable {
       try {
         channel
             .sendMessageEmbeds(embedList)
-            .queue(m -> sendSuccess(m, result, channel), m -> sendFailure(message, channel));
+            .queue(
+                m -> sendSuccess(m, message, result, channel), t -> sendFailure(message, channel));
       } catch (PermissionException e) {
         String logMessage =
             "Attempting to send message from ScrapedResultQueueChecker failed and exception caught";
@@ -121,6 +122,7 @@ public class ScrapedResultQueueChecker implements Runnable {
 
   private void sendSuccess(
       net.dv8tion.jda.api.entities.Message jdaMessage,
+      Message message,
       ScrapedResult scrapedResult,
       GuildMessageChannel channel) {
     Message.Entry entry = getEntry(scrapedResult);
@@ -140,6 +142,11 @@ public class ScrapedResultQueueChecker implements Runnable {
         .addKeyValue("channel", channel)
         .addKeyValue("jdaMessage", jdaMessage)
         .log();
+
+    // Exit early if message came with an override as we don't want to write to the database
+    if (message.hasChannelOverride()) {
+      return;
+    }
 
     List<String> previousList = scrapedResult.getPreviousList();
     boolean entryIsNew =

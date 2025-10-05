@@ -16,7 +16,6 @@ import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.model.LbMemberSummary;
-import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -100,13 +99,8 @@ public class FollowHandler implements Handler {
 
       Message.PublishSource source = Message.PublishSource.Follow;
       Message message = messageFactory.createFromLogEntry(logEntry, source);
-
-      // If most recent previous entry is the same or older than the entry here
-      if (LidComparer.compare(logEntry.id, user.getMostRecentPrevious()) <= 0) {
-        // Include a channel id as a signal to the LogEntryMessageReceiver to only announce to that
-        // one channel and not make a global announcement
-        message.setChannelId(channelId);
-      }
+      message.setChannelId(channelId);
+      
       this.pubSubManager.publishLogEntry(message);
     }
 

@@ -12,6 +12,10 @@ public class Message {
   public Entry entry;
   @Nullable public String channelId;
 
+  public String getChannelId() {
+    return hasChannelOverride() ? channelId : "";
+  }
+
   /**
    * A channel override means that we want to publish to one specific channel and not publish to all
    * channels that the user is followed in.
