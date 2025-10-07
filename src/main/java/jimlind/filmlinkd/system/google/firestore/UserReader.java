@@ -86,6 +86,31 @@ public class UserReader {
   }
 
   /**
+   * Gets a page of documents for active users (those subscribed to at least one channel).
+   *
+   * @param pageSize Number of documents to fetch
+   * @param pageIndex Zero-based page index (e.g., 0 for first page, 1 for second)
+   * @return A List of documents for the current page
+   */
+  public List<QueryDocumentSnapshot> getActiveUsersPage(int pageSize, int pageIndex) {
+    String collectionId = appConfig.getFirestoreUserCollectionId();
+    ApiFuture<QuerySnapshot> query =
+        this.db
+            .collection(collectionId)
+            .whereNotEqualTo("channelList", Collections.emptyList())
+            .orderBy("created")
+            .offset(pageSize * pageIndex)
+            .limit(pageSize)
+            .get();
+
+    try {
+      return query.get().getDocuments();
+    } catch (InterruptedException | ExecutionException e) {
+      return Collections.emptyList();
+    }
+  }
+
+  /**
    * Gets all user documents for users followed in a specific channel.
    *
    * @param channelId The Discord channel id

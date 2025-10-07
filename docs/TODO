@@ -5,6 +5,7 @@ NEED
 * Write a passive aggressive message when users attempt to follow again
 * Follow up on the "Insufficient permissions" messages. Find a way to store the data that can be more easily queried
 * Check on how much bandwidth changed from scraper changes
+* Backfill created field. That's actually going to be helpful when paginating every record
 
 DONE
 * Delete all existing infrastructure and let terraform build it fresh
