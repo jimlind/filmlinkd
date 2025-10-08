@@ -80,6 +80,11 @@ public class LogEntriesApi {
               responseString.append((char) data);
               String value = getString(responseString.toString());
               if (value != null && !value.isBlank()) {
+                log.atInfo()
+                    .setMessage("Most recent log entry id found for user")
+                    .addKeyValue("userId", userId)
+                    .addKeyValue("mostRecentEntryLid", value)
+                    .log();
                 return value;
               }
               data = stream.read();
