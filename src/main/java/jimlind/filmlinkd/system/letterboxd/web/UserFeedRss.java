@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,26 +39,31 @@ public class UserFeedRss {
       return "";
     }
 
+    try (InputStream inputStream = connection.getInputStream()) {
+      return extractFilm(inputStream);
+    } catch (IOException | ArrayIndexOutOfBoundsException e) {
+      return "";
+    }
+  }
+
+  private String extractFilm(InputStream inputStream) throws IOException {
     byte[] buffer = new byte[1024 * 4]; // 4KB
-    int bytesRead;
     int totalBytes = 0;
     byte[] fullContent = new byte[1024 * 16]; // 16KB
     Pattern pattern = Pattern.compile("https://letterboxd\\.com/[\\w-]+/film/[^<]+");
 
-    try (InputStream inputStream = connection.getInputStream()) {
-      while ((bytesRead = inputStream.read(buffer)) != -1) {
-        System.arraycopy(buffer, 0, fullContent, totalBytes, bytesRead);
-        totalBytes += bytesRead;
+    int bytesRead = inputStream.read(buffer);
+    while (bytesRead != -1) {
+      System.arraycopy(buffer, 0, fullContent, totalBytes, bytesRead);
+      totalBytes += bytesRead;
 
-        String fullText = new String(fullContent, 0, totalBytes, StandardCharsets.UTF_8);
-        Matcher matcher = pattern.matcher(fullText);
-        if (matcher.find()) {
-          return matcher.group();
-        }
+      String fullText = StandardCharsets.UTF_8.decode(ByteBuffer.wrap(fullContent)).toString();
+      Matcher matcher = pattern.matcher(fullText);
+      if (matcher.find()) {
+        return matcher.group();
       }
 
-    } catch (IOException | ArrayIndexOutOfBoundsException e) {
-      return "";
+      bytesRead = inputStream.read(buffer);
     }
 
     return "";
