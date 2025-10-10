@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserFeedRss {
   /**
-   * URL link attribute of a first diary item in a user's RSS feed
+   * Get the full URL of the first diary item in a user's RSS feed.
    *
    * @param letterboxdId A Letterboxd ID for a user
    * @return The Letterboxd ID associated with the diary entry.
