@@ -47,10 +47,12 @@ public class UserFeedRss {
   }
 
   private String extractFilm(InputStream inputStream) throws IOException {
-    byte[] buffer = new byte[1024 * 4]; // 4KB
+    byte[] buffer = new byte[1024 * 40]; // 4KB
+    byte[] fullContent = new byte[1024 * 160]; // 16KB
     int totalBytes = 0;
-    byte[] fullContent = new byte[1024 * 16]; // 16KB
-    Pattern pattern = Pattern.compile("https://letterboxd\\.com/[\\w-]+/film/[^<]+");
+
+    String regex = "(http.+letterboxd\\.com/.+/film/.+)</link>.+?letterboxd-(review|watch)-\\d+";
+    Pattern pattern = Pattern.compile(regex);
 
     int bytesRead = inputStream.read(buffer);
     while (bytesRead != -1) {
@@ -60,7 +62,7 @@ public class UserFeedRss {
       String fullText = StandardCharsets.UTF_8.decode(ByteBuffer.wrap(fullContent)).toString();
       Matcher matcher = pattern.matcher(fullText);
       if (matcher.find()) {
-        return matcher.group();
+        return matcher.group(1);
       }
 
       bytesRead = inputStream.read(buffer);
