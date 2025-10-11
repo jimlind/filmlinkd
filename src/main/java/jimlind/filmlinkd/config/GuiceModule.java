@@ -12,7 +12,7 @@ import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.factory.VipFactory;
 import jimlind.filmlinkd.reciever.CommandMessageReceiver;
 import jimlind.filmlinkd.reciever.LogEntryMessageReceiver;
-import jimlind.filmlinkd.runnable.ScraperCoordinator;
+import jimlind.filmlinkd.scraper.ScraperCoordinator;
 import jimlind.filmlinkd.scraper.cache.GeneralUserCache;
 import jimlind.filmlinkd.scraper.cache.VipUserCache;
 import jimlind.filmlinkd.scraper.cache.clearer.GeneralUserCacheClearer;

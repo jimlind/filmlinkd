@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.runnable;
+package jimlind.filmlinkd.scraper;
 
 import com.google.inject.Inject;
 import java.time.Instant;
