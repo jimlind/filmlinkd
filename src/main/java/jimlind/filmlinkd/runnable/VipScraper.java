@@ -26,5 +26,6 @@ public class VipScraper extends BaseScraper {
     super(appConfig, userCache, scraperCoordinatorFactory);
     this.concurrentClientLimit = appConfig.getScraperVipConcurrentLimit();
     this.source = PublishSource.VIP;
+    this.scrapeEntryWithRss = true;
   }
 }

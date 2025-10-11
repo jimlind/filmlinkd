@@ -14,6 +14,8 @@ import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LbMemberSummary;
 import jimlind.filmlinkd.system.letterboxd.utils.DateUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
+import jimlind.filmlinkd.system.letterboxd.web.LogEntryWeb;
+import jimlind.filmlinkd.system.letterboxd.web.UserFeedRss;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,14 +25,17 @@ import lombok.extern.slf4j.Slf4j;
 public class ScraperCoordinator implements Runnable {
   private final DateUtils dateUtils;
   private final LogEntriesApi logEntriesApi;
+  private final LogEntryWeb logEntryWeb;
   private final MessageFactory messageFactory;
   private final PubSubManager pubSubManager;
+  private final UserFeedRss userFeedRss;
 
   private Semaphore semaphore;
   private BaseUserCache userCache;
   private String userLetterboxdId = "";
   private String diaryEntryLetterboxdId = "";
   private Message.PublishSource source;
+  private boolean scrapeEntryWithRss = false;
 
   /**
    * Constructor for this class.
@@ -44,12 +49,16 @@ public class ScraperCoordinator implements Runnable {
   ScraperCoordinator(
       DateUtils dateUtils,
       LogEntriesApi logEntriesApi,
+      LogEntryWeb logEntryWeb,
       MessageFactory messageFactory,
-      PubSubManager pubSubManager) {
+      PubSubManager pubSubManager,
+      UserFeedRss userFeedRss) {
     this.dateUtils = dateUtils;
     this.logEntriesApi = logEntriesApi;
+    this.logEntryWeb = logEntryWeb;
     this.messageFactory = messageFactory;
     this.pubSubManager = pubSubManager;
+    this.userFeedRss = userFeedRss;
   }
 
   private static LbMemberSummary getOwner(LbLogEntry logEntry) {
@@ -77,7 +86,18 @@ public class ScraperCoordinator implements Runnable {
     long current = Instant.now().toEpochMilli();
 
     // If the most recent diary entry is the same as the input then exit early.
-    String mostRecentEntryLid = logEntriesApi.getMostRecentEntryLetterboxdId(userLetterboxdId);
+    String mostRecentEntryLid;
+    if (scrapeEntryWithRss) {
+      String uri = userFeedRss.getMostRecentDiaryLinkFromLid(userLetterboxdId);
+      System.out.println("uri " + uri);
+      mostRecentEntryLid = logEntryWeb.getLidFromLogEntryPath(uri);
+    } else {
+      mostRecentEntryLid = logEntriesApi.getMostRecentEntryLetterboxdId(userLetterboxdId);
+    }
+
+    System.out.println("user " + userLetterboxdId);
+    System.out.println("entry " + mostRecentEntryLid);
+
     if (0 >= LidComparer.compare(mostRecentEntryLid, diaryEntryLetterboxdId)) {
       return;
     }

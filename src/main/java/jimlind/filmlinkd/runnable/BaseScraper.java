@@ -23,6 +23,7 @@ public class BaseScraper implements Runnable {
 
   protected int concurrentClientLimit;
   protected Message.PublishSource source;
+  protected boolean scrapeEntryWithRss = false;
 
   /**
    * Constructor for this class.
@@ -50,7 +51,8 @@ public class BaseScraper implements Runnable {
         String diaryEntryLid = entry.getValue();
 
         Runnable task =
-            scraperCoordinatorFactory.create(semaphore, userCache, userLid, diaryEntryLid, source);
+            scraperCoordinatorFactory.create(
+                semaphore, userCache, userLid, diaryEntryLid, source, scrapeEntryWithRss);
         executor.submit(task);
       }
 
