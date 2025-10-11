@@ -35,7 +35,7 @@ public class ScraperCoordinator implements Runnable {
   private String userLetterboxdId = "";
   private String diaryEntryLetterboxdId = "";
   private Message.PublishSource source;
-  private boolean scrapeEntryWithRss = false;
+  private boolean scrapeEntryWithRss;
 
   /**
    * Constructor for this class.
@@ -89,14 +89,13 @@ public class ScraperCoordinator implements Runnable {
     String mostRecentEntryLid;
     if (scrapeEntryWithRss) {
       String uri = userFeedRss.getMostRecentDiaryLinkFromLid(userLetterboxdId);
-      System.out.println("uri " + uri);
+      if (uri.isBlank()) {
+        return;
+      }
       mostRecentEntryLid = logEntryWeb.getLidFromLogEntryPath(uri);
     } else {
       mostRecentEntryLid = logEntriesApi.getMostRecentEntryLetterboxdId(userLetterboxdId);
     }
-
-    System.out.println("user " + userLetterboxdId);
-    System.out.println("entry " + mostRecentEntryLid);
 
     if (0 >= LidComparer.compare(mostRecentEntryLid, diaryEntryLetterboxdId)) {
       return;

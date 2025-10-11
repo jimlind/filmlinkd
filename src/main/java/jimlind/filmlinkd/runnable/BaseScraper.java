@@ -23,7 +23,7 @@ public class BaseScraper implements Runnable {
 
   protected int concurrentClientLimit;
   protected Message.PublishSource source;
-  protected boolean scrapeEntryWithRss = false;
+  protected boolean scrapeEntryWithRss;
 
   /**
    * Constructor for this class.
