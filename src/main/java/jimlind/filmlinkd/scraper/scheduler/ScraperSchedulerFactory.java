@@ -3,11 +3,11 @@ package jimlind.filmlinkd.scraper.scheduler;
 import com.google.inject.Inject;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.runnable.GeneralScraper;
-import jimlind.filmlinkd.runnable.GeneralUserCacheClearer;
 import jimlind.filmlinkd.runnable.VipScraper;
-import jimlind.filmlinkd.runnable.VipUserCacheClearer;
 import jimlind.filmlinkd.scraper.cache.GeneralUserCache;
 import jimlind.filmlinkd.scraper.cache.VipUserCache;
+import jimlind.filmlinkd.scraper.cache.clearer.GeneralUserCacheClearer;
+import jimlind.filmlinkd.scraper.cache.clearer.VipUserCacheClearer;
 
 public class ScraperSchedulerFactory {
   private final AppConfig appConfig;

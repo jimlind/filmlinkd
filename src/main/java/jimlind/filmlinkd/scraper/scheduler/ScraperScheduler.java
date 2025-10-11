@@ -4,8 +4,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import jimlind.filmlinkd.runnable.BaseScraper;
-import jimlind.filmlinkd.runnable.BaseUserCacheClearer;
 import jimlind.filmlinkd.scraper.cache.BaseUserCache;
+import jimlind.filmlinkd.scraper.cache.clearer.BaseUserCacheClearer;
 
 /** Schedules the scheduler that runs over every user. */
 public class ScraperScheduler {

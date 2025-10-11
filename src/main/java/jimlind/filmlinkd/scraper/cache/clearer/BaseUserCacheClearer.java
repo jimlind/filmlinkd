@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.runnable;
+package jimlind.filmlinkd.scraper.cache.clearer;
 
 import jimlind.filmlinkd.scraper.cache.BaseUserCache;
 
