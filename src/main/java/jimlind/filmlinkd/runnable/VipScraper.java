@@ -1,10 +1,10 @@
 package jimlind.filmlinkd.runnable;
 
 import com.google.inject.Inject;
-import jimlind.filmlinkd.cache.VipUserCache;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.factory.ScraperCoordinatorFactory;
 import jimlind.filmlinkd.model.Message.PublishSource;
+import jimlind.filmlinkd.scraper.cache.VipUserCache;
 
 /**
  * Scrapes the next page from the VipUserCache publishes a message in PubSub with the source set to

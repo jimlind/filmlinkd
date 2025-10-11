@@ -3,9 +3,9 @@ package jimlind.filmlinkd.factory;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import java.util.concurrent.Semaphore;
-import jimlind.filmlinkd.cache.BaseUserCache;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.runnable.ScraperCoordinator;
+import jimlind.filmlinkd.scraper.cache.BaseUserCache;
 
 /** A factory for creating instances of the {@link ScraperCoordinator} model. */
 public class ScraperCoordinatorFactory {

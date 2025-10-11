@@ -5,11 +5,10 @@ import com.google.inject.Injector;
 import java.util.Optional;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.config.GuiceModule;
+import jimlind.filmlinkd.scraper.scheduler.ScraperSchedulerFactory;
 import jimlind.filmlinkd.system.ShutdownThread;
 import jimlind.filmlinkd.system.dispatcher.StatLogDispatcher;
 import jimlind.filmlinkd.system.google.pubsub.PubSubManager;
-import jimlind.filmlinkd.system.scraper.GeneralScraperScheduler;
-import jimlind.filmlinkd.system.scraper.VipScraperScheduler;
 import lombok.extern.slf4j.Slf4j;
 
 /** The main entry point for the scraper application. */
@@ -35,8 +34,9 @@ public final class Scraper {
     injector.getInstance(PubSubManager.class).buildCommandSubscriber();
 
     // Start the Scrapers
-    injector.getInstance(GeneralScraperScheduler.class).start();
-    injector.getInstance(VipScraperScheduler.class).start();
+    ScraperSchedulerFactory schedulerFactory = injector.getInstance(ScraperSchedulerFactory.class);
+    schedulerFactory.create(false).start();
+    schedulerFactory.create(true).start();
 
     // Schedule system statistic logger
     injector.getInstance(StatLogDispatcher.class).start();

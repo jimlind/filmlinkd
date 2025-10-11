@@ -1,7 +1,7 @@
 package jimlind.filmlinkd.runnable;
 
 import com.google.inject.Inject;
-import jimlind.filmlinkd.cache.VipUserCache;
+import jimlind.filmlinkd.scraper.cache.VipUserCache;
 
 /** Runnable to clear the General User Cache. */
 public class VipUserCacheClearer extends BaseUserCacheClearer {

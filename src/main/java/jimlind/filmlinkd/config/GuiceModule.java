@@ -3,8 +3,6 @@ package jimlind.filmlinkd.config;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import jimlind.filmlinkd.cache.EntryCache;
-import jimlind.filmlinkd.cache.GeneralUserCache;
-import jimlind.filmlinkd.cache.VipUserCache;
 import jimlind.filmlinkd.config.modules.DiscordModule;
 import jimlind.filmlinkd.config.modules.GoogleModule;
 import jimlind.filmlinkd.config.modules.LetterboxdModule;
@@ -19,13 +17,14 @@ import jimlind.filmlinkd.runnable.GeneralUserCacheClearer;
 import jimlind.filmlinkd.runnable.ScraperCoordinator;
 import jimlind.filmlinkd.runnable.VipScraper;
 import jimlind.filmlinkd.runnable.VipUserCacheClearer;
+import jimlind.filmlinkd.scraper.cache.GeneralUserCache;
+import jimlind.filmlinkd.scraper.cache.VipUserCache;
+import jimlind.filmlinkd.scraper.scheduler.ScraperSchedulerFactory;
 import jimlind.filmlinkd.system.MemoryInformationLogger;
 import jimlind.filmlinkd.system.ScrapedResultQueue;
 import jimlind.filmlinkd.system.ShutdownThread;
 import jimlind.filmlinkd.system.dispatcher.ScrapedResultQueueDispatcher;
 import jimlind.filmlinkd.system.dispatcher.StatLogDispatcher;
-import jimlind.filmlinkd.system.scraper.GeneralScraperScheduler;
-import jimlind.filmlinkd.system.scraper.VipScraperScheduler;
 
 /** Contains all the guts for dependency injection to work. */
 public class GuiceModule extends AbstractModule {
@@ -56,12 +55,11 @@ public class GuiceModule extends AbstractModule {
     bind(StatLogDispatcher.class).in(Scopes.SINGLETON);
 
     // Scraper Related Modules
-    bind(GeneralScraperScheduler.class).in(Scopes.SINGLETON);
+    bind(ScraperSchedulerFactory.class).in(Scopes.SINGLETON);
     bind(GeneralScraper.class).in(Scopes.SINGLETON);
     bind(GeneralUserCache.class).in(Scopes.SINGLETON);
     bind(GeneralUserCacheClearer.class).in(Scopes.SINGLETON);
     bind(ScraperCoordinator.class).in(Scopes.NO_SCOPE);
-    bind(VipScraperScheduler.class).in(Scopes.SINGLETON);
     bind(VipScraper.class).in(Scopes.SINGLETON);
     bind(VipUserCache.class).in(Scopes.SINGLETON);
     bind(VipUserCacheClearer.class).in(Scopes.SINGLETON);

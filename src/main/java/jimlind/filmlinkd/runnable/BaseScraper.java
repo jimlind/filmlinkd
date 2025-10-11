@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
-import jimlind.filmlinkd.cache.BaseUserCache;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.factory.ScraperCoordinatorFactory;
 import jimlind.filmlinkd.model.Message;
+import jimlind.filmlinkd.scraper.cache.BaseUserCache;
 import lombok.extern.slf4j.Slf4j;
 
 /**

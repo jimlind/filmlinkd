@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.cache;
+package jimlind.filmlinkd.scraper.cache;
 
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.inject.Inject;

@@ -1,6 +1,6 @@
 package jimlind.filmlinkd.runnable;
 
-import jimlind.filmlinkd.cache.BaseUserCache;
+import jimlind.filmlinkd.scraper.cache.BaseUserCache;
 
 /**
  * Runnable to clear the User Cache. It's good practice to clear this cache every so often to ensure
