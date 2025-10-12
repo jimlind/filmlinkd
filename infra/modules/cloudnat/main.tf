@@ -15,4 +15,8 @@ resource "google_compute_router_nat" "compute_router_nat" {
     enable = true
     filter = "ERRORS_ONLY"
   }
+
+  enable_dynamic_port_allocation = true
+  min_ports_per_vm               = 64
+  max_ports_per_vm               = 65536
 }
