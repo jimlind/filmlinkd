@@ -9,6 +9,7 @@ import jimlind.filmlinkd.scraper.cache.clearer.VipUserCacheClearer;
 import jimlind.filmlinkd.scraper.runner.GeneralScraper;
 import jimlind.filmlinkd.scraper.runner.VipScraper;
 
+/** A factory for creating instances of the {@link ScraperScheduler} model. */
 public class ScraperSchedulerFactory {
   private final AppConfig appConfig;
   private final GeneralScraper generalScraper;
@@ -47,6 +48,13 @@ public class ScraperSchedulerFactory {
     this.vipUserCacheClearer = vipUserCacheClearer;
   }
 
+  /**
+   * Creates a scraper scheduler. Using the factory pattern because the general and vip versions of
+   * the scraper are very similar.
+   *
+   * @param isVip Create a VIP scraper scheduler if set to true
+   * @return A scraper scheduler
+   */
   public ScraperScheduler create(boolean isVip) {
     if (isVip) {
       return new ScraperScheduler(
