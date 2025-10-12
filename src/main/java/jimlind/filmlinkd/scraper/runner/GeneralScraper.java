@@ -2,8 +2,8 @@ package jimlind.filmlinkd.scraper.runner;
 
 import com.google.inject.Inject;
 import jimlind.filmlinkd.config.AppConfig;
-import jimlind.filmlinkd.factory.ScraperCoordinatorFactory;
 import jimlind.filmlinkd.model.Message.PublishSource;
+import jimlind.filmlinkd.scraper.ScraperCoordinatorFactory;
 import jimlind.filmlinkd.scraper.cache.GeneralUserCache;
 
 /**
