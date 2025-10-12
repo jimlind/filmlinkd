@@ -93,12 +93,9 @@ public class ScraperCoordinator implements Runnable {
         return;
       }
       mostRecentEntryLid = logEntryWeb.getLidFromLogEntryPath(uri);
-    } else {
-      mostRecentEntryLid = logEntriesApi.getMostRecentEntryLetterboxdId(userLetterboxdId);
-    }
-
-    if (0 >= LidComparer.compare(mostRecentEntryLid, diaryEntryLetterboxdId)) {
-      return;
+      if (0 >= LidComparer.compare(mostRecentEntryLid, diaryEntryLetterboxdId)) {
+        return;
+      }
     }
 
     // If the LID for the entry is 1 character (or less) that users has not successfully been
