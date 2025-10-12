@@ -176,7 +176,7 @@ public class Client {
             .header("User-Agent", "Filmlinkd - A Letterboxd Discord Bot")
             .header("Authorization", authorization)
             .uri(uri)
-            .timeout(Duration.of(6, SECONDS))
+            .timeout(Duration.of(10, SECONDS))
             .GET()
             .build();
 
