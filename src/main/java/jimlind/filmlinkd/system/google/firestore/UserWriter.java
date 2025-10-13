@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.model.User;
@@ -148,6 +149,39 @@ public class UserWriter {
           .setMessage("Unable to Remove from Channel List: Update Failed")
           .addKeyValue(USER_KEY, user)
           .addKeyValue("channelId", channelId)
+          .setCause(e)
+          .log();
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Removes a channel subscription from a user's document.
+   *
+   * @param userLid User's Letterboxd id
+   * @return true if the action succeeded; false on failure
+   */
+  public boolean archiveAllUserSubscriptions(String userLid) {
+    // Create user but also save snapshot to update with
+    QueryDocumentSnapshot snapshot = userReader.getUserDocument(userLid);
+    User user = userFactory.createFromSnapshot(snapshot);
+    if (snapshot == null || user == null) {
+      return false;
+    }
+
+    Stream<User.Channel> channelStream = user.getChannelList().stream();
+    Stream<User.Channel> archivedChannelStream = user.getArchivedChannelList().stream();
+    user.setArchivedChannelList(Stream.concat(channelStream, archivedChannelStream).toList());
+    user.setChannelList(List.of());
+
+    try {
+      getReference(snapshot).update(user.toMap());
+    } catch (IllegalArgumentException e) {
+      log.atError()
+          .setMessage("Unable to archive user's channel list: Update failed")
+          .addKeyValue(USER_KEY, user)
           .setCause(e)
           .log();
       return false;
