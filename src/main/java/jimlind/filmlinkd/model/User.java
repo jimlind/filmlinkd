@@ -25,6 +25,7 @@ public class User {
   public String userName;
 
   public List<Channel> channelList;
+  public List<Channel> archivedChannelList;
   public Previous previous;
   public Footer footer;
 

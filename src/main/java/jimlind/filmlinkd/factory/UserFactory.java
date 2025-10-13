@@ -80,6 +80,11 @@ public class UserFactory {
       user.setChannelList(new ArrayList<>());
     }
 
+    // If archivedChannelList data isn't set in user model set some defaults
+    if (user.archivedChannelList == null) {
+      user.setArchivedChannelList(new ArrayList<>());
+    }
+
     return user;
   }
 }
