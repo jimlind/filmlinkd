@@ -26,6 +26,5 @@ public class GeneralScraper extends BaseScraper {
     super(appConfig, userCache, scraperCoordinatorFactory);
     this.concurrentClientLimit = appConfig.getScraperGeneralConcurrentLimit();
     this.source = PublishSource.Normal;
-    this.scrapeEntryWithRss = true;
   }
 }

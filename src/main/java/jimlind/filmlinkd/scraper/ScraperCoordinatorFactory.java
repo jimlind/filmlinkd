@@ -23,7 +23,6 @@ public class ScraperCoordinatorFactory {
    * @param userLetterboxdId A user's Letterboxd ID
    * @param diaryEntryLetterboxdId A user's Letterboxd ID of last known diary entry
    * @param source Where the new diary entry comes from.
-   * @param scrapeEntryWithRss Indicate if we should use RSS or API instead
    * @return A new, populated {@link ScraperCoordinator} object.
    */
   public Runnable create(
@@ -31,15 +30,13 @@ public class ScraperCoordinatorFactory {
       BaseUserCache userCache,
       String userLetterboxdId,
       String diaryEntryLetterboxdId,
-      Message.PublishSource source,
-      boolean scrapeEntryWithRss) {
+      Message.PublishSource source) {
     ScraperCoordinator scraperCoordinator = injector.getInstance(ScraperCoordinator.class);
     scraperCoordinator.setSemaphore(semaphore);
     scraperCoordinator.setUserCache(userCache);
     scraperCoordinator.setUserLetterboxdId(userLetterboxdId);
     scraperCoordinator.setDiaryEntryLetterboxdId(diaryEntryLetterboxdId);
     scraperCoordinator.setSource(source);
-    scraperCoordinator.setScrapeEntryWithRss(scrapeEntryWithRss);
 
     return scraperCoordinator;
   }

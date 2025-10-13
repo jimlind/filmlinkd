@@ -14,8 +14,6 @@ import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LbMemberSummary;
 import jimlind.filmlinkd.system.letterboxd.utils.DateUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
-import jimlind.filmlinkd.system.letterboxd.web.LogEntryWeb;
-import jimlind.filmlinkd.system.letterboxd.web.UserFeedRss;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,17 +23,14 @@ import lombok.extern.slf4j.Slf4j;
 public class ScraperCoordinator implements Runnable {
   private final DateUtils dateUtils;
   private final LogEntriesApi logEntriesApi;
-  private final LogEntryWeb logEntryWeb;
   private final MessageFactory messageFactory;
   private final PubSubManager pubSubManager;
-  private final UserFeedRss userFeedRss;
 
   private Semaphore semaphore;
   private BaseUserCache userCache;
   private String userLetterboxdId = "";
   private String diaryEntryLetterboxdId = "";
   private Message.PublishSource source;
-  private boolean scrapeEntryWithRss;
 
   /**
    * Constructor for this class.
@@ -49,16 +44,12 @@ public class ScraperCoordinator implements Runnable {
   ScraperCoordinator(
       DateUtils dateUtils,
       LogEntriesApi logEntriesApi,
-      LogEntryWeb logEntryWeb,
       MessageFactory messageFactory,
-      PubSubManager pubSubManager,
-      UserFeedRss userFeedRss) {
+      PubSubManager pubSubManager) {
     this.dateUtils = dateUtils;
     this.logEntriesApi = logEntriesApi;
-    this.logEntryWeb = logEntryWeb;
     this.messageFactory = messageFactory;
     this.pubSubManager = pubSubManager;
-    this.userFeedRss = userFeedRss;
   }
 
   private static LbMemberSummary getOwner(LbLogEntry logEntry) {
@@ -82,20 +73,10 @@ public class ScraperCoordinator implements Runnable {
    * try/catch
    */
   public void scrape() {
-    // Current timestamp
-    long current = Instant.now().toEpochMilli();
-
     // If the most recent diary entry is the same as the input then exit early.
-    String mostRecentEntryLid;
-    if (scrapeEntryWithRss) {
-      String uri = userFeedRss.getMostRecentDiaryLinkFromLid(userLetterboxdId);
-      if (uri.isBlank()) {
-        return;
-      }
-      mostRecentEntryLid = logEntryWeb.getLidFromLogEntryPath(uri);
-      if (0 >= LidComparer.compare(mostRecentEntryLid, diaryEntryLetterboxdId)) {
-        return;
-      }
+    String mostRecentEntryLid = logEntriesApi.getMostRecentEntryLetterboxdId(userLetterboxdId);
+    if (0 >= LidComparer.compare(mostRecentEntryLid, diaryEntryLetterboxdId)) {
+      return;
     }
 
     // If the LID for the entry is 1 character (or less) that users has not successfully been
@@ -104,6 +85,7 @@ public class ScraperCoordinator implements Runnable {
     List<LbLogEntry> logEntryList = logEntriesApi.getRecentForUser(userLetterboxdId, count);
     List<String> publishedEntryIdList = new ArrayList<>();
 
+    long current = Instant.now().toEpochMilli();
     logEntryList.stream()
         .filter(
             // Filter out entries that are newer than 3 minutes
