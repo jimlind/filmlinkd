@@ -28,11 +28,11 @@ public class CleanUsers {
     this.userWriter = userWriter;
   }
 
-  public void run() {
+  public void run(String pageValue) {
     PrintWriter out = new PrintWriter(System.out, true);
 
     boolean usersExist = true;
-    int usersPage = 0;
+    int usersPage = pageValue == null ? 0 : Integer.parseInt(pageValue);
     String[] spinner = {"|", "/", "-", "\\"};
 
     while (usersExist) {

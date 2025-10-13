@@ -45,7 +45,8 @@ public final class Admin {
       CommandLine commandLine = commandLineParser.parse(options, args);
       String commandValue = commandLine.getOptionValue("command");
       if (commandValue.equals("clean-users")) {
-        injector.getInstance(CleanUsers.class).run();
+        String pageValue = commandLine.getOptionValue("page");
+        injector.getInstance(CleanUsers.class).run(pageValue);
       }
     } catch (ParseException e) {
       logger.severe("Error parsing command line: " + e.getMessage());
