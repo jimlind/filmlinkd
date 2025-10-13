@@ -3,11 +3,15 @@ package jimlind.filmlinkd;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import java.util.logging.Logger;
-import jimlind.filmlinkd.config.AppConfig;
+import jimlind.filmlinkd.admin.CleanUsers;
 import jimlind.filmlinkd.config.GuiceModule;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
 /** The main entry point for the admin application. */
 @Slf4j
@@ -23,76 +27,28 @@ public final class Admin {
    */
   public static void main(String[] args) {
     Options options = new Options();
-    //    String[] spinner = {"|", "/", "-", "\\"};
 
     String commandDescription = "Command to run: clean-users, clean-channels, refresh-users";
-    Option command = new Option("c", "command", true, commandDescription);
-    command.setRequired(true);
+    Option commandOption = new Option("c", "command", true, commandDescription);
+    commandOption.setRequired(true);
 
     String pageDescription = "Page to start on when running large data sets";
-    Option page = new Option("p", "page", true, pageDescription);
+    Option pageOption = new Option("p", "page", true, pageDescription);
 
-    options.addOption(command);
-    options.addOption(page);
+    options.addOption(commandOption);
+    options.addOption(pageOption);
 
     Injector injector = Guice.createInjector(new GuiceModule());
-    //    UserFactory userFactory = injector.getInstance(UserFactory.class);
 
-    /*
     try {
-      CommandLineParser parser = new DefaultParser();
-      CommandLine cmd = parser.parse(options, args);
-      String cmdName = cmd.getOptionValue("command");
-      if (cmdName.equals("clean-users")) {
-        boolean usersExist = true;
-        int usersPage = 0;
-
-        while (usersExist) {
-          UserReader userReader = injector.getInstance(UserReader.class);
-          List<QueryDocumentSnapshot> userList = userReader.getActiveUsersPage(20, usersPage++);
-          if (userList.isEmpty()) {
-            usersExist = false;
-          }
-
-          int i = 1;
-          System.out.println("New Group of Users *");
-
-          for (QueryDocumentSnapshot snapshot : userList) {
-            System.out.print("\b" + spinner[i++ % spinner.length]);
-
-            User user = userFactory.createFromSnapshot(snapshot);
-            if (user != null) {
-              try {
-                String url = String.format("https://boxd.it/%s", user.getLetterboxdId());
-                URI uri = URI.create(url);
-                HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
-                connection.setRequestMethod("GET");
-                connection.setConnectTimeout(6000);
-                connection.setReadTimeout(6000);
-                connection.connect();
-
-                int responseCode = connection.getResponseCode();
-                if (responseCode == 404) {
-                  System.out.println("User Not Found: " + user.getUserName());
-                } else {
-                  System.out.print("\b" + spinner[i % spinner.length]);
-                }
-
-              } catch (IOException e) {
-                throw new RuntimeException(e);
-              }
-            }
-          }
-        }
+      CommandLineParser commandLineParser = new DefaultParser();
+      CommandLine commandLine = commandLineParser.parse(options, args);
+      String commandValue = commandLine.getOptionValue("command");
+      if (commandValue.equals("clean-users")) {
+        injector.getInstance(CleanUsers.class).run();
       }
     } catch (ParseException e) {
       logger.severe("Error parsing command line: " + e.getMessage());
-    }
-    */
-
-    if (log.isInfoEnabled()) {
-      String apiKey = injector.getInstance(AppConfig.class).getDiscordBotToken();
-      logger.info("Client Id:" + apiKey);
     }
   }
 }
