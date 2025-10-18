@@ -3,6 +3,7 @@ package jimlind.filmlinkd;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import java.util.logging.Logger;
+import jimlind.filmlinkd.admin.CleanChannels;
 import jimlind.filmlinkd.admin.CleanUsers;
 import jimlind.filmlinkd.config.GuiceModule;
 import lombok.extern.slf4j.Slf4j;
@@ -44,9 +45,13 @@ public final class Admin {
       CommandLineParser commandLineParser = new DefaultParser();
       CommandLine commandLine = commandLineParser.parse(options, args);
       String commandValue = commandLine.getOptionValue("command");
+      String pageValue = commandLine.getOptionValue("page");
+
       if (commandValue.equals("clean-users")) {
-        String pageValue = commandLine.getOptionValue("page");
         injector.getInstance(CleanUsers.class).run(pageValue);
+      }
+      if (commandValue.equals("clean-channels")) {
+        injector.getInstance(CleanChannels.class).run();
       }
     } catch (ParseException e) {
       logger.severe("Error parsing command line: " + e.getMessage());
