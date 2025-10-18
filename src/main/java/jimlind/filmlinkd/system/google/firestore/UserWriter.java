@@ -161,6 +161,45 @@ public class UserWriter {
    * Removes a channel subscription from a user's document.
    *
    * @param userLid User's Letterboxd id
+   * @param channelId Discord Channel id
+   * @return true if the action succeeded; false on failure
+   */
+  public boolean archiveUserSubscription(String userLid, String channelId) {
+    // Create user but also save snapshot to update with
+    QueryDocumentSnapshot snapshot = userReader.getUserDocument(userLid);
+    User user = userFactory.createFromSnapshot(snapshot);
+    if (snapshot == null || user == null) {
+      return false;
+    }
+
+    user.setChannelList(
+        user.getChannelList().stream()
+            .filter(channel -> !channel.channelId.equals(channelId))
+            .collect(Collectors.toCollection(ArrayList::new)));
+
+    User.Channel channelModel = new User.Channel();
+    channelModel.setChannelId(channelId);
+    Stream<User.Channel> channelModelStream = Stream.of(channelModel);
+    Stream<User.Channel> archivedChannelStream = user.getArchivedChannelList().stream();
+    user.setArchivedChannelList(Stream.concat(archivedChannelStream, channelModelStream).toList());
+
+    try {
+      getReference(snapshot).update(user.toMap());
+    } catch (IllegalArgumentException e) {
+      log.atError()
+          .setMessage("Unable to archive user's channel: Update failed")
+          .addKeyValue(USER_KEY, user)
+          .setCause(e)
+          .log();
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Removes all channel subscriptions from a user's document.
+   *
+   * @param userLid User's Letterboxd id
    * @return true if the action succeeded; false on failure
    */
   public boolean archiveAllUserSubscriptions(String userLid) {
