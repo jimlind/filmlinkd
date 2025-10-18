@@ -34,7 +34,7 @@ public class CleanUsers {
     this.userWriter = userWriter;
   }
 
-  private static HttpURLConnection getHttpURLConnection(User user) throws IOException {
+  private static HttpURLConnection getHttpUrlConnection(User user) throws IOException {
     String url = String.format("https://boxd.it/%s", user.getLetterboxdId());
     URI uri = URI.create(url);
     HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
@@ -69,7 +69,7 @@ public class CleanUsers {
           User user = userFactory.createFromSnapshot(snapshot);
           if (user != null) {
             try {
-              HttpURLConnection connection = getHttpURLConnection(user);
+              HttpURLConnection connection = getHttpUrlConnection(user);
               processOutput(connection, out, user, i++);
             } catch (IOException e) {
               out.println("!");

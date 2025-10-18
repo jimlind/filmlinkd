@@ -6,11 +6,17 @@ import java.util.Iterator;
 import java.util.List;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 
 /** Filter out channels that have wrong permissions. */
 public class WrongPermissionsFilter {
+
+  private static ChannelType extractType(GuildChannel channel) {
+    return channel.getType();
+  }
+
   /**
    * Returns the list of channels that have wrong permissions.
    *
@@ -30,7 +36,7 @@ public class WrongPermissionsFilter {
           Member member = channel.getGuild().getSelfMember();
           boolean viewChannelEnabled = member.hasPermission(channel, Permission.VIEW_CHANNEL);
           boolean sendMessageEnabled =
-              channel.getType().isThread()
+              extractType(channel).isThread()
                   ? member.hasPermission(channel, Permission.MESSAGE_SEND_IN_THREADS)
                   : member.hasPermission(channel, Permission.MESSAGE_SEND);
           boolean embedLinkEnabled = member.hasPermission(channel, Permission.MESSAGE_EMBED_LINKS);
@@ -43,7 +49,7 @@ public class WrongPermissionsFilter {
         try {
           Thread.sleep(2000);
         } catch (InterruptedException ignore) {
-          // Do nothing
+          return List.of();
         }
       }
       return wrongPermissionsChannels;

@@ -35,7 +35,7 @@ public class WrongTypeFilter {
         try {
           Thread.sleep(2000);
         } catch (InterruptedException ignore) {
-          // Do nothing
+          return List.of();
         }
       }
       return wrongTypeChannels;
