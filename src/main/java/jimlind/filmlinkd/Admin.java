@@ -2,6 +2,7 @@ package jimlind.filmlinkd;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import jimlind.filmlinkd.admin.CleanChannels;
 import jimlind.filmlinkd.admin.CleanUsers;
@@ -17,6 +18,8 @@ import org.apache.commons.cli.ParseException;
 /** The main entry point for the admin application. */
 @Slf4j
 public final class Admin {
+  public static final String CLEAN_USERS = "clean-users";
+  public static final String CLEAN_CHANNELS = "clean-channels";
   private static final Logger logger = Logger.getLogger(Admin.class.getName());
 
   private Admin() {}
@@ -47,14 +50,16 @@ public final class Admin {
       String commandValue = commandLine.getOptionValue("command");
       String pageValue = commandLine.getOptionValue("page");
 
-      if (commandValue.equals("clean-users")) {
+      if (CLEAN_USERS.equals(commandValue)) {
         injector.getInstance(CleanUsers.class).run(pageValue);
       }
-      if (commandValue.equals("clean-channels")) {
+      if (CLEAN_CHANNELS.equals(commandValue)) {
         injector.getInstance(CleanChannels.class).run();
       }
     } catch (ParseException e) {
-      logger.severe("Error parsing command line: " + e.getMessage());
+      if (logger.isLoggable(Level.SEVERE)) {
+        logger.severe("Error parsing command line: " + e.getMessage());
+      }
     }
   }
 }
