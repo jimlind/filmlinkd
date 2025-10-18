@@ -34,60 +34,70 @@ public class CleanUsers {
     this.userWriter = userWriter;
   }
 
+  private static HttpURLConnection getHttpURLConnection(User user) throws IOException {
+    String url = String.format("https://boxd.it/%s", user.getLetterboxdId());
+    URI uri = URI.create(url);
+    HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
+    connection.setRequestMethod("GET");
+    connection.setConnectTimeout(6000);
+    connection.setReadTimeout(6000);
+    connection.connect();
+    return connection;
+  }
+
   /**
    * If a user is no longer available archive all the channels they were following.
    *
    * @param pageValue Allow the command to start on a specific page.
    */
   public void run(String pageValue) {
-    PrintWriter out = new PrintWriter(System.out, true);
+    try (PrintWriter out = new PrintWriter(System.out, true)) {
+      boolean usersExist = true;
+      int usersPage = pageValue == null ? 0 : Integer.parseInt(pageValue);
 
-    boolean usersExist = true;
-    int usersPage = pageValue == null ? 0 : Integer.parseInt(pageValue);
-    String[] spinner = {"|", "/", "-", "\\"};
+      while (usersExist) {
+        out.print("Reading page " + usersPage + " of users...\n* ");
+        List<QueryDocumentSnapshot> userList =
+            userReader.getActiveUsersPage(PAGE_SIZE, usersPage++);
+        if (userList.isEmpty()) {
+          out.println("DONE!");
+          usersExist = false;
+        }
 
-    while (usersExist) {
-      out.print("Reading page " + usersPage + " of users...\n* ");
-      List<QueryDocumentSnapshot> userList = userReader.getActiveUsersPage(PAGE_SIZE, usersPage++);
-      if (userList.isEmpty()) {
-        out.println("DONE!");
-        usersExist = false;
-      }
-
-      int i = 1;
-      for (QueryDocumentSnapshot snapshot : userList) {
-        User user = userFactory.createFromSnapshot(snapshot);
-        if (user != null) {
-          try {
-            String url = String.format("https://boxd.it/%s", user.getLetterboxdId());
-            URI uri = URI.create(url);
-            HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
-            connection.setRequestMethod("GET");
-            connection.setConnectTimeout(6000);
-            connection.setReadTimeout(6000);
-            connection.connect();
-
-            int responseCode = connection.getResponseCode();
-            String letterboxdType = connection.getHeaderField("x-letterboxd-type");
-
-            if (responseCode == 404 || !"Member".equals(letterboxdType)) {
-              out.print("Archiving channels for user: " + user.getUserName() + "\n*");
-              boolean result = userWriter.archiveAllUserSubscriptions(user.getLetterboxdId());
-              if (!result) {
-                out.print("Archiving failed: " + user.getUserName() + "\n*");
-              }
-            } else {
-              out.print("\r\r" + spinner[i % spinner.length] + " ");
+        int i = 1;
+        for (QueryDocumentSnapshot snapshot : userList) {
+          User user = userFactory.createFromSnapshot(snapshot);
+          if (user != null) {
+            try {
+              HttpURLConnection connection = getHttpURLConnection(user);
+              processOutput(connection, out, user, i++);
+            } catch (IOException e) {
+              out.println("!");
               out.flush();
-              i++;
             }
-          } catch (IOException e) {
-            out.println("!");
-            out.flush();
           }
         }
+        out.println(" -- ");
+        out.flush();
       }
-      out.println(" -- ");
+    }
+  }
+
+  private void processOutput(HttpURLConnection connection, PrintWriter out, User user, int i)
+      throws IOException {
+    String[] spinner = {"|", "/", "-", "\\"};
+
+    int responseCode = connection.getResponseCode();
+    String letterboxdType = connection.getHeaderField("x-letterboxd-type");
+
+    if (responseCode == 404 || !"Member".equals(letterboxdType)) {
+      out.print("Archiving channels for user: " + user.getUserName() + "\n*");
+      boolean result = userWriter.archiveAllUserSubscriptions(user.getLetterboxdId());
+      if (!result) {
+        out.print("Archiving failed: " + user.getUserName() + "\n*");
+      }
+    } else {
+      out.print("\r\r" + spinner[i % spinner.length] + " ");
       out.flush();
     }
   }

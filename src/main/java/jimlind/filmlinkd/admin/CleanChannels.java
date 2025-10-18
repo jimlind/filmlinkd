@@ -7,6 +7,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 import jimlind.filmlinkd.admin.channels.Archiver;
 import jimlind.filmlinkd.admin.channels.LogFileWriter;
@@ -86,7 +87,7 @@ public class CleanChannels {
         channelIdList.add(channel.getChannelId());
       }
     }
-    TreeSet<String> sortedUnique = new TreeSet<>(Comparator.comparing(BigInteger::new));
+    Set<String> sortedUnique = new TreeSet<>(Comparator.comparing(BigInteger::new));
     sortedUnique.addAll(channelIdList);
     sortedChannelIdList = new ArrayList<>(sortedUnique);
 
@@ -103,63 +104,74 @@ public class CleanChannels {
    * this temporary admin file.
    */
   public void processData() {
-    PrintWriter out = new PrintWriter(System.out, true);
-    String[] spinner = {"|", "/", "-", "\\"};
-    int progress = 0;
+    try (PrintWriter out = new PrintWriter(System.out, true)) {
+      String[] spinner = {"|", "/", "-", "\\"};
+      int progress = 0;
 
-    List<String> nullChannelList = nullFilter.filter(globalShardManager, sortedChannelIdList);
-    out.print("Archiving null channels...\n* ");
-    out.flush();
-    for (String channelId : nullChannelList) {
-      out.print("\r\r" + spinner[progress % spinner.length] + " ");
+      List<String> nullChannelList = nullFilter.filter(globalShardManager, sortedChannelIdList);
+      out.print("Archiving null channels...\n* ");
       out.flush();
-      logFileWriter.write(channelId, "null-channel", timestamp);
-      archiver.archive(channelId);
-      progress++;
-    }
-    out.println("\n");
-    out.flush();
-
-    sortedChannelIdList.removeAll(nullChannelList);
-    List<String> wrongTypeChannelList =
-        wrongTypeFilter.filter(globalShardManager, sortedChannelIdList);
-    out.print("Archiving wrong type channels...\n* ");
-    out.flush();
-    for (String channelId : wrongTypeChannelList) {
-      out.print("\r\r" + spinner[progress % spinner.length] + " ");
+      for (String channelId : nullChannelList) {
+        out.print("\r\r" + spinner[progress % spinner.length] + " ");
+        out.flush();
+        logFileWriter.write(channelId, "null-channel", timestamp);
+        archiver.archive(channelId);
+        progress++;
+      }
+      out.println("\n");
       out.flush();
-      logFileWriter.write(channelId, "wrong-type-channel", timestamp);
-      archiver.archive(channelId);
-      progress++;
-    }
-    out.println("\n");
-    out.flush();
 
-    sortedChannelIdList.removeAll(wrongTypeChannelList);
-    List<String> wrongPermissionsChannelList =
-        wrongPermissionsFilter.filter(globalShardManager, sortedChannelIdList);
-    out.print("Archiving wrong permissions channels...\n* ");
-    out.flush();
-    for (String channelId : wrongPermissionsChannelList) {
-      out.print("\r\r" + spinner[progress % spinner.length] + " ");
+      sortedChannelIdList.removeAll(nullChannelList);
+      List<String> wrongTypeChannelList =
+          wrongTypeFilter.filter(globalShardManager, sortedChannelIdList);
+      out.print("Archiving wrong type channels...\n* ");
       out.flush();
-      logFileWriter.write(channelId, "wrong-permissions-channel", timestamp);
-      archiver.archive(channelId);
-      progress++;
-    }
-    out.println("\n");
-    out.flush();
+      for (String channelId : wrongTypeChannelList) {
+        out.print("\r\r" + spinner[progress % spinner.length] + " ");
+        out.flush();
+        logFileWriter.write(channelId, "wrong-type-channel", timestamp);
+        archiver.archive(channelId);
+        progress++;
+      }
+      out.println("\n");
+      out.flush();
 
-    globalShardManager.shutdown();
+      sortedChannelIdList.removeAll(wrongTypeChannelList);
+      List<String> wrongPermissionsChannelList =
+          wrongPermissionsFilter.filter(globalShardManager, sortedChannelIdList);
+      out.print("Archiving wrong permissions channels...\n* ");
+      out.flush();
+      for (String channelId : wrongPermissionsChannelList) {
+        out.print("\r\r" + spinner[progress % spinner.length] + " ");
+        out.flush();
+        logFileWriter.write(channelId, "wrong-permissions-channel", timestamp);
+        archiver.archive(channelId);
+        progress++;
+      }
+      out.println("\n");
+      out.flush();
+
+      globalShardManager.shutdown();
+    }
   }
 
   /** Custom listener for Discord events. On Ready is needed here. */
   public class EventListener extends ListenerAdapter {
+    @NotNull
+    private static JDA extractJda(@NotNull ReadyEvent readyEvent) {
+      return readyEvent.getJDA();
+    }
+
+    private static JDA.ShardInfo extractShardInfo(JDA jda) {
+      return jda.getShardInfo();
+    }
+
     @Override
     public void onReady(@NotNull ReadyEvent readyEvent) {
-      JDA jda = readyEvent.getJDA();
-      int id = jda.getShardInfo().getShardId();
-      int total = jda.getShardInfo().getShardTotal() - 1;
+      JDA jda = extractJda(readyEvent);
+      JDA.ShardInfo shardInfo = extractShardInfo(jda);
+      int id = shardInfo.getShardId();
+      int total = shardInfo.getShardTotal() - 1;
       if (id != total) {
         return;
       }
