@@ -19,33 +19,34 @@ public class WrongPermissionsFilter {
    * @return The list of channels that have wrong permissions
    */
   public List<String> filter(ShardManager globalShardManager, List<String> input) {
-    PrintWriter out = new PrintWriter(System.out, true);
-    List<String> wrongPermissionsChannels = new ArrayList<>(input);
-    for (int i = 0; i < 10; i++) {
-      out.println(wrongPermissionsChannels.size() + " possible wrong permissions channels");
-      Iterator<String> wrongPermissionsIterator = wrongPermissionsChannels.iterator();
-      while (wrongPermissionsIterator.hasNext()) {
-        String channelId = wrongPermissionsIterator.next();
-        GuildChannel channel = globalShardManager.getGuildChannelById(channelId);
-        Member member = channel.getGuild().getSelfMember();
-        boolean viewChannelEnabled = member.hasPermission(channel, Permission.VIEW_CHANNEL);
-        boolean sendMessageEnabled =
-            channel.getType().isThread()
-                ? member.hasPermission(channel, Permission.MESSAGE_SEND_IN_THREADS)
-                : member.hasPermission(channel, Permission.MESSAGE_SEND);
-        boolean embedLinkEnabled = member.hasPermission(channel, Permission.MESSAGE_EMBED_LINKS);
-        // If the channel has proper permissions remove it from the list.
-        // The list should only contain wrong permissions channels.
-        if (viewChannelEnabled && sendMessageEnabled && embedLinkEnabled) {
-          wrongPermissionsIterator.remove();
+    try (PrintWriter out = new PrintWriter(System.out, true)) {
+      List<String> wrongPermissionsChannels = new ArrayList<>(input);
+      for (int i = 0; i < 10; i++) {
+        out.println(wrongPermissionsChannels.size() + " possible wrong permissions channels");
+        Iterator<String> wrongPermissionsIterator = wrongPermissionsChannels.iterator();
+        while (wrongPermissionsIterator.hasNext()) {
+          String channelId = wrongPermissionsIterator.next();
+          GuildChannel channel = globalShardManager.getGuildChannelById(channelId);
+          Member member = channel.getGuild().getSelfMember();
+          boolean viewChannelEnabled = member.hasPermission(channel, Permission.VIEW_CHANNEL);
+          boolean sendMessageEnabled =
+              channel.getType().isThread()
+                  ? member.hasPermission(channel, Permission.MESSAGE_SEND_IN_THREADS)
+                  : member.hasPermission(channel, Permission.MESSAGE_SEND);
+          boolean embedLinkEnabled = member.hasPermission(channel, Permission.MESSAGE_EMBED_LINKS);
+          // If the channel has proper permissions remove it from the list.
+          // The list should only contain wrong permissions channels.
+          if (viewChannelEnabled && sendMessageEnabled && embedLinkEnabled) {
+            wrongPermissionsIterator.remove();
+          }
+        }
+        try {
+          Thread.sleep(2000);
+        } catch (InterruptedException ignore) {
+          // Do nothing
         }
       }
-      try {
-        Thread.sleep(2000);
-      } catch (InterruptedException ignore) {
-        // Do nothing
-      }
+      return wrongPermissionsChannels;
     }
-    return wrongPermissionsChannels;
   }
 }

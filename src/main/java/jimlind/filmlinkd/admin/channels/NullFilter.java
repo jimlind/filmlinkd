@@ -17,26 +17,27 @@ public class NullFilter {
    * @return The list of channels that are null
    */
   public List<String> filter(ShardManager globalShardManager, List<String> input) {
-    PrintWriter out = new PrintWriter(System.out, true);
-    List<String> nullChannels = new ArrayList<>(input);
-    for (int i = 0; i < 10; i++) {
-      out.println(nullChannels.size() + " possible null channels");
-      Iterator<String> nullIterator = nullChannels.iterator();
-      while (nullIterator.hasNext()) {
-        String channelId = nullIterator.next();
-        GuildChannel channel = globalShardManager.getGuildChannelById(channelId);
-        // If the channel is not null remove it from the list.
-        // The list should only contain null channels.
-        if (channel != null) {
-          nullIterator.remove();
+    try (PrintWriter out = new PrintWriter(System.out, true)) {
+      List<String> nullChannels = new ArrayList<>(input);
+      for (int i = 0; i < 10; i++) {
+        out.println(nullChannels.size() + " possible null channels");
+        Iterator<String> nullIterator = nullChannels.iterator();
+        while (nullIterator.hasNext()) {
+          String channelId = nullIterator.next();
+          GuildChannel channel = globalShardManager.getGuildChannelById(channelId);
+          // If the channel is not null remove it from the list.
+          // The list should only contain null channels.
+          if (channel != null) {
+            nullIterator.remove();
+          }
+        }
+        try {
+          Thread.sleep(2000);
+        } catch (InterruptedException ignore) {
+          // Do nothing
         }
       }
-      try {
-        Thread.sleep(2000);
-      } catch (InterruptedException ignore) {
-        // Do nothing
-      }
+      return nullChannels;
     }
-    return nullChannels;
   }
 }
