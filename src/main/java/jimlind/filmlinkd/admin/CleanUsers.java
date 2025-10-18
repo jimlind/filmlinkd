@@ -11,9 +11,8 @@ import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.google.firestore.UserReader;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+/** Admin command to clean up user records. */
 public class CleanUsers {
   private static final int PAGE_SIZE = 100;
 
@@ -21,6 +20,13 @@ public class CleanUsers {
   private final UserReader userReader;
   private final UserWriter userWriter;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param userFactory Create user models
+   * @param userReader Handles reading user records
+   * @param userWriter Handles writing user records
+   */
   @Inject
   public CleanUsers(UserFactory userFactory, UserReader userReader, UserWriter userWriter) {
     this.userFactory = userFactory;
@@ -28,6 +34,11 @@ public class CleanUsers {
     this.userWriter = userWriter;
   }
 
+  /**
+   * If a user is no longer available archive all the channels they were following.
+   *
+   * @param pageValue Allow the command to start on a specific page.
+   */
   public void run(String pageValue) {
     PrintWriter out = new PrintWriter(System.out, true);
 
