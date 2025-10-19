@@ -51,7 +51,7 @@ public class GuiceModule extends AbstractModule {
     bind(MemoryInformationLogger.class).in(Scopes.SINGLETON);
 
     // System Dispatcher Modules
-    bind(ScrapedResultQueueDispatcher.class).in(Scopes.NO_SCOPE);
+    bind(ScrapedResultQueueDispatcher.class).in(Scopes.SINGLETON);
     bind(StatLogDispatcher.class).in(Scopes.SINGLETON);
 
     // Scraper Related Modules
