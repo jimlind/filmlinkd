@@ -1,7 +1,9 @@
 package jimlind.filmlinkd.runnable;
 
+import com.google.inject.Inject;
 import java.time.Instant;
 import java.util.List;
+import java.util.stream.Stream;
 import jimlind.filmlinkd.discord.ShardManagerStorage;
 import jimlind.filmlinkd.discord.embed.factory.DiaryEntryEmbedFactory;
 import jimlind.filmlinkd.model.Message;
@@ -31,8 +33,7 @@ public class ScrapedResultQueueChecker implements Runnable {
   private final ShardManagerStorage shardManagerStorage;
   private final UserWriter userWriter;
 
-  private final int shardId;
-  private final int totalShards;
+  private boolean allShardsConnected;
 
   /**
    * Constructor for this class.
@@ -40,23 +41,18 @@ public class ScrapedResultQueueChecker implements Runnable {
    * @param diaryEntryEmbedFactory A class that builds diaryEntryEmbed objects
    * @param scrapedResultQueue A class that stores results in local memory
    * @param shardManagerStorage A class that stores shard information
-   * @param shardId The shard id to help us know which shard we are running this from
-   * @param totalShards The total number of shards in use
    * @param userWriter Handles all write operations for user data in Firestore
    */
+  @Inject
   public ScrapedResultQueueChecker(
       DiaryEntryEmbedFactory diaryEntryEmbedFactory,
       ScrapedResultQueue scrapedResultQueue,
       ShardManagerStorage shardManagerStorage,
-      UserWriter userWriter,
-      int shardId,
-      int totalShards) {
+      UserWriter userWriter) {
     this.diaryEntryEmbedFactory = diaryEntryEmbedFactory;
     this.scrapedResultQueue = scrapedResultQueue;
     this.shardManagerStorage = shardManagerStorage;
     this.userWriter = userWriter;
-    this.shardId = shardId;
-    this.totalShards = totalShards;
   }
 
   private static Message.Entry getEntry(ScrapedResult scrapedResult) {
@@ -65,7 +61,21 @@ public class ScrapedResultQueueChecker implements Runnable {
 
   @Override
   public void run() {
-    ScrapedResult result = scrapedResultQueue.get(shardId, totalShards);
+    ShardManager shardManager = shardManagerStorage.get();
+    if (shardManager == null) {
+      return;
+    }
+
+    if (!allShardsConnected) {
+      Stream<JDA.Status> stream = shardManager.getStatuses().values().stream();
+      if (stream.allMatch(status -> status == JDA.Status.CONNECTED)) {
+        allShardsConnected = true;
+      } else {
+        return;
+      }
+    }
+
+    ScrapedResult result = scrapedResultQueue.get(0, 12);
     if (result == null) {
       return;
     }
@@ -73,27 +83,20 @@ public class ScrapedResultQueueChecker implements Runnable {
     // Extract information from the scraped result object
     Message message = result.message();
     User user = result.user();
-
     List<MessageEmbed> embedList = diaryEntryEmbedFactory.create(message, user);
-    ShardManager shardManager = shardManagerStorage.get();
-    JDA shard = (shardManager != null) ? shardManager.getShardById(shardId) : null;
-
-    if (shard == null) {
-      log.atError().setMessage("Unable to Load Shard").addKeyValue("shard", shardId).log();
-      return;
-    }
 
     for (String channelId : result.getChannelList()) {
-      GuildMessageChannel channel = shard.getChannelById(GuildMessageChannel.class, channelId);
+      GuildMessageChannel channel =
+          shardManager.getChannelById(GuildMessageChannel.class, channelId);
 
-      // Not finding a channel is extremely normal when running shards so we ignore the
-      // possible issue and don't log anything
+      // Not finding a channel is extremely normal because servers delete channels so exit early and
+      // don't log anything
       if (channel == null) {
         continue;
       }
 
       // Not having proper permissions is more normal than it should be so we ignore the
-      // possible issue and log a message to use for purging dead channels later.
+      // possible issue and log a message to use for monitoring the situation.
       Member self = channel.getGuild().getSelfMember();
       if (!self.hasPermission(
           channel,
