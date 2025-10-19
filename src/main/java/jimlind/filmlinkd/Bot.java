@@ -7,6 +7,7 @@ import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.config.GuiceModule;
 import jimlind.filmlinkd.system.DiscordSystem;
 import jimlind.filmlinkd.system.ShutdownThread;
+import jimlind.filmlinkd.system.dispatcher.ScrapedResultQueueDispatcher;
 import jimlind.filmlinkd.system.dispatcher.StatLogDispatcher;
 import jimlind.filmlinkd.system.google.pubsub.PubSubManager;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +40,9 @@ public final class Bot {
 
     // Schedule system statistic logger
     injector.getInstance(StatLogDispatcher.class).start();
+
+    // Schedule the scraped result queue checker
+    injector.getInstance(ScrapedResultQueueDispatcher.class).start();
 
     // Register shutdown events
     Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownThread.class));
