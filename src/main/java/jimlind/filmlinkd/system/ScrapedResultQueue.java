@@ -71,4 +71,18 @@ public class ScrapedResultQueue {
 
     return scrapedResult;
   }
+
+  /**
+   * This method is much simplified from the "get" method. It gets the first element and removes it
+   * from the list. Doesn't do anything else.
+   *
+   * @return Returns null if there is nothing to get or the message contents
+   */
+  public @Nullable ScrapedResult getFirst() {
+    try {
+      return scrapedResultList.removeFirst();
+    } catch (NoSuchElementException e) {
+      return null;
+    }
+  }
 }
