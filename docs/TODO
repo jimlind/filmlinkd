@@ -1,10 +1,4 @@
 NEED
-* Investigate some of the 10x posts - They feel inaccurate - Might be people who are followed in channels without
-  permissions so they never get posted? Might need to do some house cleaning.
-* Write the most recent lid to the user database when followed if something doesn't already exist - so 10x posts don't come from the scraper
-* Write a passive aggressive message when users attempt to follow again
-* Follow up on the "Insufficient permissions" messages. Find a way to store the data that can be more easily queried
-* Check on how much bandwidth changed from scraper changes
 * Backfill created field. That's actually going to be helpful when paginating every record
 
 DONE
@@ -42,7 +36,13 @@ DONE
 * Log when messages don't post so a process can be created to clean up dead channels if posts don't work for X days
 * Nerf the /follow command - People are using it to get posts faster not understanding the override.
 * Don't post the most recent diary entry on follow command
-
+* Investigate some of the 10x posts - They feel inaccurate - Might be people who are followed in channels without
+  permissions so they never get posted? Might need to do some house cleaning.
+* Write the most recent lid to the user database when followed if something doesn't already exist - so 10x posts
+  don't come from the scraper
+* Write a passive aggressive message when users attempt to follow again
+* Follow up on the "Insufficient permissions" messages. Find a way to store the data that can be more easily queried
+* Check on how much bandwidth changed from scraper changes
 
 DATA TRANSFER PROCESS
 * Shut down original Filmlinkd VMs
@@ -66,3 +66,8 @@ gcloud projects describe filmlinkd --format="value(projectNumber)"
 849234463174
 gcloud projects describe letterboxd-bot --format="value(projectNumber)"
 888325130733
+
+PRETEND VM CUSTOM SIZES?
+I can't find any information that this actually exists or works but when I generated terraform files from an
+existing virtual machine it made this so it seems reasonable that it would exist and work.
+"e2-custom-small-4096"
