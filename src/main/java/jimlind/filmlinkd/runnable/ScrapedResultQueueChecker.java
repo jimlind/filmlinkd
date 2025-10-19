@@ -59,6 +59,10 @@ public class ScrapedResultQueueChecker implements Runnable {
     return scrapedResult.getEntry();
   }
 
+  private static List<String> extractChannelList(ScrapedResult result) {
+    return result.getChannelList();
+  }
+
   @Override
   public void run() {
     ShardManager shardManager = shardManagerStorage.get();
@@ -85,7 +89,7 @@ public class ScrapedResultQueueChecker implements Runnable {
     User user = result.user();
     List<MessageEmbed> embedList = diaryEntryEmbedFactory.create(message, user);
 
-    for (String channelId : result.getChannelList()) {
+    for (String channelId : extractChannelList(result)) {
       GuildMessageChannel channel =
           shardManager.getChannelById(GuildMessageChannel.class, channelId);
 
