@@ -75,7 +75,7 @@ public class ScrapedResultQueueChecker implements Runnable {
       }
     }
 
-    ScrapedResult result = scrapedResultQueue.get(0, 12);
+    ScrapedResult result = scrapedResultQueue.getFirst();
     if (result == null) {
       return;
     }
