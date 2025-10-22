@@ -268,6 +268,14 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.4.6</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.4</version>
@@ -354,6 +362,19 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>com.google.cloud.tools</groupId>
+                        <artifactId>jib-maven-plugin</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                            <to>
+                                <image>bot</image>
+                            </to>
+                            <container>
+                                <mainClass>jimlind.filmlinkd.Bot</mainClass>
+                            </container>
+                        </configuration>
+                    </plugin>
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-shade-plugin</artifactId>
                         <executions>
@@ -371,6 +392,19 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>com.google.cloud.tools</groupId>
+                        <artifactId>jib-maven-plugin</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                            <to>
+                                <image>scraper</image>
+                            </to>
+                            <container>
+                                <mainClass>jimlind.filmlinkd.Scraper</mainClass>
+                            </container>
+                        </configuration>
+                    </plugin>
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-shade-plugin</artifactId>
                         <executions>
@@ -387,6 +421,19 @@
             <id>admin</id>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>com.google.cloud.tools</groupId>
+                        <artifactId>jib-maven-plugin</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                            <to>
+                                <image>admin</image>
+                            </to>
+                            <container>
+                                <mainClass>jimlind.filmlinkd.Admin</mainClass>
+                            </container>
+                        </configuration>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-shade-plugin</artifactId>
