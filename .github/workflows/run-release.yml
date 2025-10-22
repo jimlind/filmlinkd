@@ -22,11 +22,26 @@ jobs:
       - name: Build with Maven
         run: mvn clean package --no-transfer-progress
 
+      - name: Set up GraalVM JDK 21
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image: true
+
+      - name: Build GraalVM Native Images
+        run: |
+          native-image --no-fallback -jar target/bot.jar -H:Name=bot
+          native-image --no-fallback -jar target/scraper.jar -H:Name=scraper
+          native-image --no-fallback -jar target/admin.jar -H:Name=admin
+
       - name: Prepare Release Artifacts
         run: |
-          mkdir -p /tmp/release
+          mkdir -p /tmp/release/graalvm
           cp target/admin.jar target/bot.jar target/scraper.jar /tmp/release/
           cp docs/release/README.md /tmp/release/
+          cp bot.jar scraper.jar admin.jar /tmp/release/graalvm/
 
       - name: Create GitHub Release and Upload Files
         env:
