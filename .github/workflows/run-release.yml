@@ -32,9 +32,9 @@ jobs:
       - name: Generate Reflection Configs for GraalVM Inputs
         run: |
           mkdir -p reflect-config/bot reflect-config/scraper
-          java -Dlogback.configurationFile=src/main/resources/logback.xml \
+          java -Dlogback.configurationFile=src/main/resources/logback-disabled.xml \
             -agentlib:native-image-agent=config-output-dir=reflect-config/bot -jar target/bot.jar
-          java -Dlogback.configurationFile=src/main/resources/logback.xml \
+          java -Dlogback.configurationFile=src/main/resources/logback-disabled.xml \
             -agentlib:native-image-agent=config-output-dir=reflect-config/scraper -jar target/scraper.jar
 
       - name: Build GraalVM Native Images
