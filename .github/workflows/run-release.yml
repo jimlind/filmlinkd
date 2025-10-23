@@ -29,24 +29,30 @@ jobs:
           distribution: 'graalvm'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Generate Reflection Configs for GraalVM Inputs
+        run: |
+          mkdir -p reflect-config/bot reflect-config/scraper
+          java -agentlib:native-image-agent=config-output-dir=reflect-config/bot -jar target/bot.jar
+          java -agentlib:native-image-agent=config-output-dir=reflect-config/scraper -jar target/scraper.jar
+
       - name: Build GraalVM Native Images
         run: |
-          native-image --no-fallback --gc=serial -jar target/bot.jar -o bot
-          native-image --no-fallback --gc=serial -jar target/scraper.jar -o scraper
-          native-image --no-fallback --gc=serial -jar target/admin.jar -o admin
+          native-image --no-fallback --gc=serial -H:ConfigurationFileDirectories=reflect-config/bot \
+            -jar target/bot.jar -o bot
+          native-image --no-fallback --gc=serial -H:ConfigurationFileDirectories=reflect-config/scraper \
+            -jar target/scraper.jar -o scraper
 
       - name: Compress Binaries
         run: |
           tar -czf bot.tar.gz bot
           tar -czf scraper.tar.gz scraper
-          tar -czf admin.tar.gz admin
 
       - name: Prepare Release Artifacts
         run: |
           mkdir -p /tmp/release
-          cp target/admin.jar target/bot.jar target/scraper.jar /tmp/release/
+          cp target/bot.jar target/scraper.jar /tmp/release/
           cp docs/release/README.md /tmp/release/
-          cp bot.tar.gz scraper.tar.gz admin.tar.gz /tmp/release/
+          cp bot.tar.gz scraper.tar.gz /tmp/release/
 
       - name: Create GitHub Release and Upload Files
         env:
