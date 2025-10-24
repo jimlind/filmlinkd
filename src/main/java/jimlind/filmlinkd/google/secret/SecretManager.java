@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.google;
+package jimlind.filmlinkd.google.secret;
 
 import com.google.cloud.secretmanager.v1.AccessSecretVersionRequest;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
@@ -16,7 +16,7 @@ public class SecretManager {
 
   /** The constructor for this class. */
   @Inject
-  SecretManager() {
+  protected SecretManager() {
     try {
       this.client = SecretManagerServiceClient.create();
     } catch (IOException e) {

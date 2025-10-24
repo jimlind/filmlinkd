@@ -5,7 +5,7 @@ import com.google.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import jimlind.filmlinkd.system.google.SecretManager;
+import jimlind.filmlinkd.google.secret.SecretManager;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
