@@ -7,9 +7,7 @@ import com.google.inject.Singleton;
 public class DummySecretManager extends SecretManager {
 
   @Inject
-  public DummySecretManager() {
-    super();
-  }
+  public DummySecretManager() {}
 
   @Override
   public String getSecret(String projectId, String secretName) {
