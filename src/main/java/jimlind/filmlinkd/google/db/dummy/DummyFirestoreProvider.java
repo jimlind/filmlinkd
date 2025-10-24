@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.google.db;
+package jimlind.filmlinkd.google.db.dummy;
 
 import com.google.cloud.firestore.Firestore;
 import com.google.inject.Provider;
