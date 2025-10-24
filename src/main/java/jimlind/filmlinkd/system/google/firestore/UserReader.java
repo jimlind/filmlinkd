@@ -6,8 +6,6 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -41,7 +39,7 @@ public class UserReader {
   public @Nullable QueryDocumentSnapshot getUserDocument(String userLid) {
     String collectionId = appConfig.getFirestoreUserCollectionId();
     ApiFuture<QuerySnapshot> query =
-        this.db.collection(collectionId).whereEqualTo("letterboxdId", userLid).limit(1).get();
+        db.collection(collectionId).whereEqualTo("letterboxdId", userLid).limit(1).get();
 
     try {
       return query.get().getDocuments().getFirst();
@@ -57,7 +55,7 @@ public class UserReader {
    */
   public long getUserCount() {
     String collectionId = appConfig.getFirestoreUserCollectionId();
-    ApiFuture<AggregateQuerySnapshot> query = this.db.collection(collectionId).count().get();
+    ApiFuture<AggregateQuerySnapshot> query = db.collection(collectionId).count().get();
     try {
       return query.get().getCount();
     } catch (InterruptedException | ExecutionException e) {
@@ -74,14 +72,11 @@ public class UserReader {
   public List<QueryDocumentSnapshot> getActiveUsers() {
     String collectionId = appConfig.getFirestoreUserCollectionId();
     ApiFuture<QuerySnapshot> query =
-        this.db
-            .collection(collectionId)
-            .whereNotEqualTo("channelList", Collections.emptyList())
-            .get();
+        db.collection(collectionId).whereNotEqualTo("channelList", List.of()).get();
     try {
       return query.get().getDocuments();
     } catch (InterruptedException | ExecutionException e) {
-      return Collections.emptyList();
+      return List.of();
     }
   }
 
@@ -95,9 +90,8 @@ public class UserReader {
   public List<QueryDocumentSnapshot> getActiveUsersPage(int pageSize, int pageIndex) {
     String collectionId = appConfig.getFirestoreUserCollectionId();
     ApiFuture<QuerySnapshot> query =
-        this.db
-            .collection(collectionId)
-            .whereNotEqualTo("channelList", Collections.emptyList())
+        db.collection(collectionId)
+            .whereNotEqualTo("channelList", List.of())
             .orderBy("created")
             .offset(pageSize * pageIndex)
             .limit(pageSize)
@@ -106,7 +100,7 @@ public class UserReader {
     try {
       return query.get().getDocuments();
     } catch (InterruptedException | ExecutionException e) {
-      return Collections.emptyList();
+      return List.of();
     }
   }
 
@@ -136,11 +130,11 @@ public class UserReader {
             .map(channelId -> Map.of("channelId", channelId))
             .toList();
     ApiFuture<QuerySnapshot> query =
-        this.db.collection(collectionId).whereArrayContainsAny("channelList", channelMapList).get();
+        db.collection(collectionId).whereArrayContainsAny("channelList", channelMapList).get();
     try {
       return query.get().getDocuments();
     } catch (InterruptedException | ExecutionException e) {
-      return new ArrayList<>();
+      return List.of();
     }
   }
 }
