@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 /** Handles the connecting and disconnecting of the Discord service. */
 @Singleton
 public class ConnectionManager {
+  public static final String TRACING_MODE = "tracing";
   private final AppConfig appConfig;
   private final EventListener eventListener;
   private final ShardManagerStorage shardManagerStorage;
@@ -31,6 +32,10 @@ public class ConnectionManager {
 
   /** Connects to the Discord service. */
   public void connect() {
+    if (TRACING_MODE.equals(System.getProperty("app.mode"))) {
+      return;
+    }
+
     String token = appConfig.getDiscordBotToken();
     ShardManager shardManager =
         DefaultShardManagerBuilder.createLight(token).addEventListeners(eventListener).build();
