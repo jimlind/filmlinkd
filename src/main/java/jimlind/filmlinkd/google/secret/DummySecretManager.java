@@ -4,8 +4,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class DummySecretManager extends SecretManager {
+public class DummySecretManager implements SecretManagerInterface {
 
+  /** The constructor for this class. */
   @Inject
   public DummySecretManager() {}
 

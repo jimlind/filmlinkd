@@ -11,7 +11,7 @@ import java.io.IOException;
  * secrets myself using other methods.
  */
 @Singleton
-public class SecretManager {
+public class SecretManager implements SecretManagerInterface {
   private final SecretManagerServiceClient client;
 
   /** The constructor for this class. */

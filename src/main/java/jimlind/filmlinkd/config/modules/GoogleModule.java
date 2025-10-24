@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import jimlind.filmlinkd.google.secret.DummySecretManager;
 import jimlind.filmlinkd.google.secret.SecretManager;
+import jimlind.filmlinkd.google.secret.SecretManagerInterface;
 import jimlind.filmlinkd.system.google.firestore.FirestoreProvider;
 import jimlind.filmlinkd.system.google.firestore.UserReader;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
@@ -21,11 +22,9 @@ public class GoogleModule extends AbstractModule {
   protected void configure() {
     // Configure a Dummy Secret Manager when Tracing
     String mode = System.getProperty("app.mode");
-    if (TRACING_MODE.equals(mode)) {
-      bind(SecretManager.class).to(DummySecretManager.class).in(Scopes.SINGLETON);
-    } else {
-      bind(SecretManager.class).in(Scopes.SINGLETON);
-    }
+    bind(SecretManagerInterface.class)
+        .to(TRACING_MODE.equals(mode) ? DummySecretManager.class : SecretManager.class)
+        .in(Scopes.SINGLETON);
 
     // Google System Modules
     bind(FirestoreProvider.class).in(Scopes.SINGLETON);
