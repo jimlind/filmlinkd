@@ -1,11 +1,13 @@
 package jimlind.filmlinkd.config.modules;
 
+import com.google.cloud.firestore.Firestore;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
+import jimlind.filmlinkd.google.db.DummyFirestoreProvider;
+import jimlind.filmlinkd.google.db.FirestoreProvider;
 import jimlind.filmlinkd.google.secret.DummySecretManager;
 import jimlind.filmlinkd.google.secret.SecretManager;
 import jimlind.filmlinkd.google.secret.SecretManagerInterface;
-import jimlind.filmlinkd.system.google.firestore.FirestoreProvider;
 import jimlind.filmlinkd.system.google.firestore.UserReader;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import jimlind.filmlinkd.system.google.firestore.VipReader;
@@ -21,13 +23,14 @@ public class GoogleModule extends AbstractModule {
   @Override
   protected void configure() {
     // Configure a Dummy Secret Manager when Tracing
-    String mode = System.getProperty("app.mode");
+    boolean tracingMode = TRACING_MODE.equals(System.getProperty("app.mode"));
     bind(SecretManagerInterface.class)
-        .to(TRACING_MODE.equals(mode) ? DummySecretManager.class : SecretManager.class)
+        .to(tracingMode ? DummySecretManager.class : SecretManager.class)
         .in(Scopes.SINGLETON);
+    bind(Firestore.class)
+        .toProvider(tracingMode ? DummyFirestoreProvider.class : FirestoreProvider.class);
 
     // Google System Modules
-    bind(FirestoreProvider.class).in(Scopes.SINGLETON);
     bind(UserReader.class).in(Scopes.SINGLETON);
     bind(UserWriter.class).in(Scopes.SINGLETON);
     bind(VipReader.class).in(Scopes.SINGLETON);

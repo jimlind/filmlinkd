@@ -24,12 +24,12 @@ public class UserReader {
    * The constructor for this class.
    *
    * @param appConfig Contains application and environment variables
-   * @param firestoreProvider Wrapper for the Firestore database client
+   * @param firestore The Firestore database client
    */
   @Inject
-  public UserReader(AppConfig appConfig, FirestoreProvider firestoreProvider) {
+  public UserReader(AppConfig appConfig, Firestore firestore) {
     this.appConfig = appConfig;
-    this.db = firestoreProvider.get();
+    this.db = firestore;
   }
 
   /**

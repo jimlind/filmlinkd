@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.google.firestore;
+package jimlind.filmlinkd.google.db;
 
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.FirestoreOptions;
