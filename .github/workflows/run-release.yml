@@ -46,6 +46,12 @@ jobs:
           cp build/graalvm/reflect-config.json reflect-config/bot/manual-override.json
           cp build/graalvm/reflect-config.json reflect-config/scraper/manual-override.json
 
+      - name: Upload full reflect-config as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: reflect-config
+          path: reflect-config
+
       - name: Build GraalVM Native Images
         run: |
           native-image --no-fallback --gc=serial -H:ConfigurationFileDirectories=reflect-config/bot \
