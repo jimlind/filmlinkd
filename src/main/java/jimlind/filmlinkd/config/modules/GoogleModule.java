@@ -13,7 +13,6 @@ import jimlind.filmlinkd.google.db.UserWriter;
 import jimlind.filmlinkd.google.db.UserWriterInterface;
 import jimlind.filmlinkd.google.db.VipReader;
 import jimlind.filmlinkd.google.db.VipReaderInterface;
-import jimlind.filmlinkd.google.pubsub.DummyPubSubManager;
 import jimlind.filmlinkd.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.google.pubsub.PubSubManagerInterface;
 import jimlind.filmlinkd.google.pubsub.PublisherCreator;
@@ -31,7 +30,7 @@ public class GoogleModule extends AbstractModule {
   protected void configure() {
     // Configure Specific Modules for Online and Offline Use
     if (TRACING_MODE.equals(System.getProperty("app.mode"))) {
-      bind(PubSubManagerInterface.class).to(DummyPubSubManager.class).in(Scopes.SINGLETON);
+      bind(PubSubManagerInterface.class).to(PubSubManager.class).in(Scopes.SINGLETON);
       bind(SecretManagerInterface.class).to(DummySecretManager.class).in(Scopes.SINGLETON);
       bind(UserReaderInterface.class).to(DummyUserReader.class).in(Scopes.SINGLETON);
       bind(UserWriterInterface.class).to(DummyUserWriter.class).in(Scopes.SINGLETON);
