@@ -4,8 +4,8 @@ import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.inject.Inject;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.google.db.UserReaderInterface;
+import jimlind.filmlinkd.google.db.UserWriterInterface;
 import jimlind.filmlinkd.model.User;
-import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 public class UserCoordinator {
   private final UserFactory userFactory;
   private final UserReaderInterface userReader;
-  private final UserWriter userWriter;
+  private final UserWriterInterface userWriter;
 
   /**
    * Constructor for this class.
@@ -24,7 +24,7 @@ public class UserCoordinator {
    */
   @Inject
   public UserCoordinator(
-      UserFactory userFactory, UserReaderInterface userReader, UserWriter userWriter) {
+      UserFactory userFactory, UserReaderInterface userReader, UserWriterInterface userWriter) {
     this.userFactory = userFactory;
     this.userReader = userReader;
     this.userWriter = userWriter;

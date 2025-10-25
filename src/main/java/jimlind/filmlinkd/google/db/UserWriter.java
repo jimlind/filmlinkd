@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.google.firestore;
+package jimlind.filmlinkd.google.db;
 
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.factory.UserFactory;
-import jimlind.filmlinkd.google.db.UserReaderInterface;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
@@ -22,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 /** Handles all create, update, and delete operations for user data in Firestore. */
 @Slf4j
-public class UserWriter {
+public class UserWriter implements UserWriterInterface {
   private static final String USER_KEY = "user";
 
   private final AppConfig appConfig;

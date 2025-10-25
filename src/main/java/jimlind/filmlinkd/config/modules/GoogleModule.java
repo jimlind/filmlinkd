@@ -4,10 +4,13 @@ import com.google.cloud.firestore.Firestore;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import jimlind.filmlinkd.google.db.DummyUserReader;
+import jimlind.filmlinkd.google.db.DummyUserWriter;
 import jimlind.filmlinkd.google.db.DummyVipReader;
 import jimlind.filmlinkd.google.db.FirestoreProvider;
 import jimlind.filmlinkd.google.db.UserReader;
 import jimlind.filmlinkd.google.db.UserReaderInterface;
+import jimlind.filmlinkd.google.db.UserWriter;
+import jimlind.filmlinkd.google.db.UserWriterInterface;
 import jimlind.filmlinkd.google.db.VipReader;
 import jimlind.filmlinkd.google.db.VipReaderInterface;
 import jimlind.filmlinkd.google.pubsub.DummyPubSubManager;
@@ -19,7 +22,6 @@ import jimlind.filmlinkd.google.pubsub.SubscriptionCreator;
 import jimlind.filmlinkd.google.secret.DummySecretManager;
 import jimlind.filmlinkd.google.secret.SecretManager;
 import jimlind.filmlinkd.google.secret.SecretManagerInterface;
-import jimlind.filmlinkd.system.google.firestore.UserWriter;
 
 /** Google modules for dependency injection. */
 public class GoogleModule extends AbstractModule {
@@ -32,17 +34,18 @@ public class GoogleModule extends AbstractModule {
       bind(PubSubManagerInterface.class).to(DummyPubSubManager.class).in(Scopes.SINGLETON);
       bind(SecretManagerInterface.class).to(DummySecretManager.class).in(Scopes.SINGLETON);
       bind(UserReaderInterface.class).to(DummyUserReader.class).in(Scopes.SINGLETON);
+      bind(UserWriterInterface.class).to(UserWriter.class).in(Scopes.SINGLETON);
       bind(VipReaderInterface.class).to(DummyVipReader.class).in(Scopes.SINGLETON);
     } else {
       bind(PubSubManagerInterface.class).to(PubSubManager.class).in(Scopes.SINGLETON);
       bind(SecretManagerInterface.class).to(SecretManager.class).in(Scopes.SINGLETON);
       bind(UserReaderInterface.class).to(UserReader.class).in(Scopes.SINGLETON);
+      bind(UserWriterInterface.class).to(DummyUserWriter.class).in(Scopes.SINGLETON);
       bind(VipReaderInterface.class).to(VipReader.class).in(Scopes.SINGLETON);
     }
 
     // Google Database Modules
     bind(Firestore.class).toProvider(FirestoreProvider.class).in(Scopes.SINGLETON);
-    bind(UserWriter.class).in(Scopes.SINGLETON);
 
     // Google PubSub Modules
     bind(PublisherCreator.class).in(Scopes.SINGLETON);

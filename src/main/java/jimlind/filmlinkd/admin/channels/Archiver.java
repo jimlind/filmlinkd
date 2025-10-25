@@ -5,14 +5,14 @@ import com.google.inject.Inject;
 import java.util.List;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.google.db.UserReaderInterface;
+import jimlind.filmlinkd.google.db.UserWriterInterface;
 import jimlind.filmlinkd.model.User;
-import jimlind.filmlinkd.system.google.firestore.UserWriter;
 
 /** Archives a channel for all users following it. */
 public class Archiver {
   private final UserFactory userFactory;
   private final UserReaderInterface userReader;
-  private final UserWriter userWriter;
+  private final UserWriterInterface userWriter;
 
   /**
    * Constructor for this class.
@@ -22,7 +22,8 @@ public class Archiver {
    * @param userWriter Handles writing user records
    */
   @Inject
-  public Archiver(UserFactory userFactory, UserReaderInterface userReader, UserWriter userWriter) {
+  public Archiver(
+      UserFactory userFactory, UserReaderInterface userReader, UserWriterInterface userWriter) {
     this.userFactory = userFactory;
     this.userReader = userReader;
     this.userWriter = userWriter;
