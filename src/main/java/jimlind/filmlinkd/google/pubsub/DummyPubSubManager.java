@@ -1,6 +1,7 @@
 package jimlind.filmlinkd.google.pubsub;
 
 import com.google.cloud.pubsub.v1.Publisher;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import java.io.IOException;
 import jimlind.filmlinkd.config.AppConfig;
@@ -14,19 +15,20 @@ public class DummyPubSubManager implements PubSubManagerInterface {
 
   private final AppConfig appConfig;
   private final PublisherCreator publisherCreator;
-//  private final TopicAdminClient topicClient;
+  //  private final TopicAdminClient topicClient;
 
   @Nullable private Publisher commandPublisher;
 
+  @Inject
   DummyPubSubManager(AppConfig appConfig, PublisherCreator publisherCreator) throws IOException {
     this.appConfig = appConfig;
     this.publisherCreator = publisherCreator;
-//    topicClient =
-//        TopicAdminClient.create(
-//            TopicAdminSettings.newBuilder()
-//                .setCredentialsProvider(
-//                    FixedCredentialsProvider.create(NoCredentials.getInstance()))
-//                .build());
+    //    topicClient =
+    //        TopicAdminClient.create(
+    //            TopicAdminSettings.newBuilder()
+    //                .setCredentialsProvider(
+    //                    FixedCredentialsProvider.create(NoCredentials.getInstance()))
+    //                .build());
   }
 
   /** Builds all the needed publishers and subscribers. */
