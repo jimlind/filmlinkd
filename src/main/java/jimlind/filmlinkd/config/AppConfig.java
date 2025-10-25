@@ -5,7 +5,8 @@ import com.google.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import jimlind.filmlinkd.google.secret.SecretManagerInterface;
+
+import jimlind.filmlinkd.google.secret.SecretManager;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +38,7 @@ public class AppConfig {
   @Getter @Setter private String mainClass;
 
   @Inject
-  AppConfig(SecretManagerInterface secretManager) {
+  AppConfig(SecretManager secretManager) {
     // Process application properties resource
     Properties appProperties = loadPropertiesFromResource("application.properties");
 

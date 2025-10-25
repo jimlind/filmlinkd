@@ -56,9 +56,9 @@ jobs:
 
       - name: Build GraalVM Native Images
         run: |
-          native-image --no-fallback --gc=serial -H:ConfigurationFileDirectories=reflect-config/bot \
+          native-image -Ob --no-fallback -H:ConfigurationFileDirectories=reflect-config/bot \
             -jar target/bot.jar -o bot
-          native-image --no-fallback --gc=serial -H:ConfigurationFileDirectories=reflect-config/scraper \
+          native-image -Ob --no-fallback -H:ConfigurationFileDirectories=reflect-config/scraper \
             -jar target/scraper.jar -o scraper
 
       - name: Compress Binaries
