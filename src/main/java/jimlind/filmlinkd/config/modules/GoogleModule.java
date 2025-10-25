@@ -50,5 +50,10 @@ public class GoogleModule extends AbstractModule {
     bind(PublisherCreator.class).in(Scopes.SINGLETON);
     bind(SubscriberListener.class).in(Scopes.SINGLETON);
     bind(SubscriptionCreator.class).in(Scopes.SINGLETON);
+
+    // I Hate This
+    bind(UserReader.class).in(Scopes.SINGLETON);
+    bind(UserWriter.class).in(Scopes.SINGLETON);
+    bind(VipReader.class).in(Scopes.SINGLETON);
   }
 }
