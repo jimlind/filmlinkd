@@ -34,12 +34,17 @@ jobs:
           mkdir -p reflect-config/bot reflect-config/scraper
           java -Dapp.mode=tracing \
             -Dlogback.configurationFile=src/main/resources/logback-disabled.xml \
-            -agentlib:native-image-agent=config-output-dir=reflect-config/bot,merge-config-dir=build/graalvm \
+            -agentlib:native-image-agent=config-output-dir=reflect-config/bot \
             -jar target/bot.jar
           java -Dapp.mode=tracing \
             -Dlogback.configurationFile=src/main/resources/logback-disabled.xml \
-            -agentlib:native-image-agent=config-output-dir=reflect-config/scraper,merge-config-dir=build/graalvm \
+            -agentlib:native-image-agent=config-output-dir=reflect-config/scraper \
             -jar target/scraper.jar
+
+      - name: Consolidate Reflection Configs
+        run: |
+          cp build/graalvm/reflect-config.json reflect-config/bot/manual-override.json
+          cp build/graalvm/reflect-config.json reflect-config/scraper/manual-override.json
 
       - name: Build GraalVM Native Images
         run: |
