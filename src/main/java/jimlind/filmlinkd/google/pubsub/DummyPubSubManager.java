@@ -1,17 +1,46 @@
 package jimlind.filmlinkd.google.pubsub;
 
+import com.google.cloud.pubsub.v1.Publisher;
 import com.google.inject.Singleton;
+import java.io.IOException;
+import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.model.Command;
 import jimlind.filmlinkd.model.Message;
+import org.jetbrains.annotations.Nullable;
 
 /** Handles all things related to the PubSub service. Creating, activating, etc. */
 @Singleton
 public class DummyPubSubManager implements PubSubManagerInterface {
+
+  private final AppConfig appConfig;
+  private final PublisherCreator publisherCreator;
+//  private final TopicAdminClient topicClient;
+
+  @Nullable private Publisher commandPublisher;
+
+  DummyPubSubManager(AppConfig appConfig, PublisherCreator publisherCreator) throws IOException {
+    this.appConfig = appConfig;
+    this.publisherCreator = publisherCreator;
+//    topicClient =
+//        TopicAdminClient.create(
+//            TopicAdminSettings.newBuilder()
+//                .setCredentialsProvider(
+//                    FixedCredentialsProvider.create(NoCredentials.getInstance()))
+//                .build());
+  }
+
   /** Builds all the needed publishers and subscribers. */
-  public void buildAll() {}
+  public void buildAll() {
+    buildCommandPublisher();
+    buildLogEntryPublisher();
+    buildCommandSubscriber();
+    buildLogEntrySubscriber();
+  }
 
   /** Builds the command publisher. */
-  public void buildCommandPublisher() {}
+  public void buildCommandPublisher() {
+    commandPublisher = publisherCreator.create(appConfig.getPubSubCommandTopicName());
+  }
 
   /** Builds the log entry publisher. */
   public void buildLogEntryPublisher() {}
