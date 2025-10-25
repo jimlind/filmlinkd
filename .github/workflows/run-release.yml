@@ -34,10 +34,12 @@ jobs:
           mkdir -p reflect-config/bot reflect-config/scraper
           java -Dapp.mode=tracing \
             -Dlogback.configurationFile=src/main/resources/logback-disabled.xml \
-            -agentlib:native-image-agent=config-output-dir=reflect-config/bot -jar target/bot.jar
+            -agentlib:native-image-agent=config-output-dir=reflect-config/bot,merge-config-dir=build/graalvm \
+            -jar target/bot.jar
           java -Dapp.mode=tracing \
             -Dlogback.configurationFile=src/main/resources/logback-disabled.xml \
-            -agentlib:native-image-agent=config-output-dir=reflect-config/scraper -jar target/scraper.jar
+            -agentlib:native-image-agent=config-output-dir=reflect-config/scraper,merge-config-dir=build/graalvm \
+            -jar target/scraper.jar
 
       - name: Build GraalVM Native Images
         run: |

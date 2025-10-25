@@ -1,0 +1,7 @@
+[
+  {
+    "name": "io.grpc.netty.shaded.io.netty.channel.ProtocolNegotiators",
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true
+  }
+]
