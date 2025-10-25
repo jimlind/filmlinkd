@@ -5,10 +5,10 @@ import com.google.inject.Injector;
 import java.util.Optional;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.config.GuiceModule;
+import jimlind.filmlinkd.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.scraper.scheduler.ScraperSchedulerFactory;
 import jimlind.filmlinkd.system.ShutdownThread;
 import jimlind.filmlinkd.system.dispatcher.StatLogDispatcher;
-import jimlind.filmlinkd.system.google.pubsub.PubSubManager;
 import lombok.extern.slf4j.Slf4j;
 
 /** The main entry point for the scraper application. */

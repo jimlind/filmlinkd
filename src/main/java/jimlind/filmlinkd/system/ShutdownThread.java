@@ -1,7 +1,7 @@
 package jimlind.filmlinkd.system;
 
 import com.google.inject.Inject;
-import jimlind.filmlinkd.system.google.pubsub.PubSubManager;
+import jimlind.filmlinkd.google.pubsub.PubSubManager;
 import lombok.extern.slf4j.Slf4j;
 
 /** Handles shutting down, stopping, and deactivating things that need the extra work. */

@@ -10,14 +10,14 @@ import jimlind.filmlinkd.google.db.UserReader;
 import jimlind.filmlinkd.google.db.UserReaderInterface;
 import jimlind.filmlinkd.google.db.VipReader;
 import jimlind.filmlinkd.google.db.VipReaderInterface;
+import jimlind.filmlinkd.google.pubsub.PubSubManager;
+import jimlind.filmlinkd.google.pubsub.PublisherCreator;
+import jimlind.filmlinkd.google.pubsub.SubscriberListener;
+import jimlind.filmlinkd.google.pubsub.SubscriptionCreator;
 import jimlind.filmlinkd.google.secret.DummySecretManager;
 import jimlind.filmlinkd.google.secret.SecretManager;
 import jimlind.filmlinkd.google.secret.SecretManagerInterface;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
-import jimlind.filmlinkd.system.google.pubsub.PubSubManager;
-import jimlind.filmlinkd.system.google.pubsub.PublisherCreator;
-import jimlind.filmlinkd.system.google.pubsub.SubscriberListener;
-import jimlind.filmlinkd.system.google.pubsub.SubscriptionCreator;
 
 /** Google modules for dependency injection. */
 public class GoogleModule extends AbstractModule {

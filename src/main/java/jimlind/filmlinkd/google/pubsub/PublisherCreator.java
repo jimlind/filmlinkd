@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.google.pubsub;
+package jimlind.filmlinkd.google.pubsub;
 
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.inject.Inject;
