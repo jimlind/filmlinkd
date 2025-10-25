@@ -185,10 +185,13 @@ public class PubSubManager implements PubSubManagerInterface {
   }
 
   private void subscribeListener(Subscriber subscriber) {
-    subscriber.addListener(subscriberListener, MoreExecutors.directExecutor());
-    subscriber.startAsync().awaitRunning();
-    if (log.isInfoEnabled()) {
-      log.info("Starting Listening for Messages on {}", subscriber.getSubscriptionNameString());
+    String subscriptionName = subscriber.getSubscriptionNameString();
+    try {
+      subscriber.addListener(subscriberListener, MoreExecutors.directExecutor());
+      subscriber.startAsync().awaitRunning();
+      log.info("Started Listening for Messages on {}", subscriptionName);
+    } catch (IllegalStateException e) {
+      log.error("Failed Starting Listening for Messages on {}", subscriptionName);
     }
   }
 }
