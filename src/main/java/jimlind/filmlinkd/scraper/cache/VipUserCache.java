@@ -9,9 +9,9 @@ import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.factory.VipFactory;
 import jimlind.filmlinkd.google.db.UserReader;
+import jimlind.filmlinkd.google.db.VipReader;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.model.Vip;
-import jimlind.filmlinkd.system.google.firestore.VipReader;
 
 /** The VIP User Cache contains all users in VIP servers. */
 @Singleton

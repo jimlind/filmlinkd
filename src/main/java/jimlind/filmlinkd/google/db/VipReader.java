@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.system.google.firestore;
+package jimlind.filmlinkd.google.db;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.Firestore;
@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutionException;
 import jimlind.filmlinkd.config.AppConfig;
 
 /** Handles all read-only queries for vip data from Firestore. */
-public class VipReader {
+public class VipReader implements VipReaderInterface {
   private final AppConfig appConfig;
   private final Firestore db;
 
