@@ -3,12 +3,13 @@ package jimlind.filmlinkd.config.modules;
 import com.google.cloud.firestore.Firestore;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
+import jimlind.filmlinkd.google.db.DummyUserReader;
 import jimlind.filmlinkd.google.db.FirestoreProvider;
-import jimlind.filmlinkd.google.db.dummy.DummyFirestoreProvider;
+import jimlind.filmlinkd.google.db.UserReader;
+import jimlind.filmlinkd.google.db.UserReaderInterface;
 import jimlind.filmlinkd.google.secret.DummySecretManager;
 import jimlind.filmlinkd.google.secret.SecretManager;
 import jimlind.filmlinkd.google.secret.SecretManagerInterface;
-import jimlind.filmlinkd.system.google.firestore.UserReader;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import jimlind.filmlinkd.system.google.firestore.VipReader;
 import jimlind.filmlinkd.system.google.pubsub.PubSubManager;
@@ -22,16 +23,17 @@ public class GoogleModule extends AbstractModule {
 
   @Override
   protected void configure() {
-    // Configure a Dummy Secret Manager when Tracing
-    boolean tracingMode = TRACING_MODE.equals(System.getProperty("app.mode"));
-    bind(SecretManagerInterface.class)
-        .to(tracingMode ? DummySecretManager.class : SecretManager.class)
-        .in(Scopes.SINGLETON);
-    bind(Firestore.class)
-        .toProvider(tracingMode ? DummyFirestoreProvider.class : FirestoreProvider.class);
+    // Configure Specific Modules for Online and Offline Use
+    if (TRACING_MODE.equals(System.getProperty("app.mode"))) {
+      bind(SecretManagerInterface.class).to(DummySecretManager.class).in(Scopes.SINGLETON);
+      bind(UserReaderInterface.class).to(DummyUserReader.class).in(Scopes.SINGLETON);
+    } else {
+      bind(SecretManagerInterface.class).to(SecretManager.class).in(Scopes.SINGLETON);
+      bind(UserReaderInterface.class).to(UserReader.class).in(Scopes.SINGLETON);
+    }
 
     // Google System Modules
-    bind(UserReader.class).in(Scopes.SINGLETON);
+    bind(Firestore.class).toProvider(FirestoreProvider.class).in(Scopes.SINGLETON);
     bind(UserWriter.class).in(Scopes.SINGLETON);
     bind(VipReader.class).in(Scopes.SINGLETON);
 

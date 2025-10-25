@@ -4,10 +4,10 @@ import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
 import com.google.pubsub.v1.PubsubMessage;
+import jimlind.filmlinkd.google.db.UserReader;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.ScrapedResult;
 import jimlind.filmlinkd.model.User;
-import jimlind.filmlinkd.system.google.firestore.UserReader;
 import lombok.extern.slf4j.Slf4j;
 
 /** A factory for creating instances of the {@link ScrapedResult} model. */

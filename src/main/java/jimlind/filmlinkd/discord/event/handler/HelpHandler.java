@@ -5,7 +5,7 @@ import com.google.inject.Injector;
 import java.util.List;
 import jimlind.filmlinkd.discord.dispatcher.HelpEmbedDispatcher;
 import jimlind.filmlinkd.discord.embed.factory.HelpEmbedFactory;
-import jimlind.filmlinkd.system.google.firestore.UserReader;
+import jimlind.filmlinkd.google.db.UserReader;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;

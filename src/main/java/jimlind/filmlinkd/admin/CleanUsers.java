@@ -8,8 +8,8 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.List;
 import jimlind.filmlinkd.factory.UserFactory;
+import jimlind.filmlinkd.google.db.UserReader;
 import jimlind.filmlinkd.model.User;
-import jimlind.filmlinkd.system.google.firestore.UserReader;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
 
 /** Admin command to clean up user records. */

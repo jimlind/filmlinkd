@@ -6,8 +6,8 @@ import com.google.inject.Singleton;
 import java.util.List;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.factory.UserFactory;
+import jimlind.filmlinkd.google.db.UserReader;
 import jimlind.filmlinkd.model.User;
-import jimlind.filmlinkd.system.google.firestore.UserReader;
 
 /** The General User Cache contains all active users. */
 @Singleton
