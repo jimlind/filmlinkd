@@ -41,10 +41,12 @@ jobs:
             -agentlib:native-image-agent=config-output-dir=reflect-config/scraper \
             -jar target/scraper.jar
 
-      - name: Merge Overrides into Reflect Config
+      - name: Merge Overrides into Reflect Configs
         run: |
-          jq -s 'add' reflect-config/reflect-config.json build/graalvm/reflect-config.json > reflect-config/merged.json
-          mv reflect-config/merged.json reflect-config/reflect-config.json
+          jq -s 'add' reflect-config/bot/reflect-config.json build/graalvm/reflect-config.json > reflect-config/bot/merged.json
+          mv reflect-config/bot/merged.json reflect-config/bot/reflect-config.json
+          jq -s 'add' reflect-config/scraper/reflect-config.json build/graalvm/reflect-config.json > reflect-config/scraper/merged.json
+          mv reflect-config/scraper/merged.json reflect-config/scraper/reflect-config.json
 
       - name: Upload full reflect-config as artifact
         uses: actions/upload-artifact@v4
