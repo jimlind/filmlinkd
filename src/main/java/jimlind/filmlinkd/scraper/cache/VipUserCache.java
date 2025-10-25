@@ -8,17 +8,17 @@ import java.util.List;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.factory.VipFactory;
-import jimlind.filmlinkd.google.db.UserReader;
-import jimlind.filmlinkd.google.db.VipReader;
+import jimlind.filmlinkd.google.db.UserReaderInterface;
+import jimlind.filmlinkd.google.db.VipReaderInterface;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.model.Vip;
 
 /** The VIP User Cache contains all users in VIP servers. */
 @Singleton
 public class VipUserCache extends BaseUserCache {
-  private final UserReader userReader;
+  private final UserReaderInterface userReader;
   private final VipFactory vipFactory;
-  private final VipReader vipReader;
+  private final VipReaderInterface vipReader;
 
   /**
    * Constructor for this class.
@@ -33,9 +33,9 @@ public class VipUserCache extends BaseUserCache {
   public VipUserCache(
       AppConfig appConfig,
       UserFactory userFactory,
-      UserReader userReader,
+      UserReaderInterface userReader,
       VipFactory vipFactory,
-      VipReader vipReader) {
+      VipReaderInterface vipReader) {
     super(appConfig, userFactory);
     this.userReader = userReader;
     this.vipFactory = vipFactory;

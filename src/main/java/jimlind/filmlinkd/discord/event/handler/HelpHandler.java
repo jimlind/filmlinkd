@@ -5,7 +5,7 @@ import com.google.inject.Injector;
 import java.util.List;
 import jimlind.filmlinkd.discord.dispatcher.HelpEmbedDispatcher;
 import jimlind.filmlinkd.discord.embed.factory.HelpEmbedFactory;
-import jimlind.filmlinkd.google.db.UserReader;
+import jimlind.filmlinkd.google.db.UserReaderInterface;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 public class HelpHandler implements Handler {
   private final HelpEmbedFactory helpEmbedFactory;
   private final Injector injector;
-  private final UserReader userReader;
+  private final UserReaderInterface userReader;
 
   /**
    * Constructor for this class.
@@ -35,7 +35,7 @@ public class HelpHandler implements Handler {
    * @param userReader Handles all read-only queries for user data from Firestore
    */
   @Inject
-  HelpHandler(HelpEmbedFactory helpEmbedFactory, Injector injector, UserReader userReader) {
+  HelpHandler(HelpEmbedFactory helpEmbedFactory, Injector injector, UserReaderInterface userReader) {
     this.helpEmbedFactory = helpEmbedFactory;
     this.injector = injector;
     this.userReader = userReader;

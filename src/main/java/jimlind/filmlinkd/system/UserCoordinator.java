@@ -3,7 +3,7 @@ package jimlind.filmlinkd.system;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.inject.Inject;
 import jimlind.filmlinkd.factory.UserFactory;
-import jimlind.filmlinkd.google.db.UserReader;
+import jimlind.filmlinkd.google.db.UserReaderInterface;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 /** Coordinates user actions that would otherwise require multiple method calls. */
 public class UserCoordinator {
   private final UserFactory userFactory;
-  private final UserReader userReader;
+  private final UserReaderInterface userReader;
   private final UserWriter userWriter;
 
   /**
@@ -23,7 +23,8 @@ public class UserCoordinator {
    * @param userWriter Handles all write operations for user data in Firestore
    */
   @Inject
-  public UserCoordinator(UserFactory userFactory, UserReader userReader, UserWriter userWriter) {
+  public UserCoordinator(
+      UserFactory userFactory, UserReaderInterface userReader, UserWriter userWriter) {
     this.userFactory = userFactory;
     this.userReader = userReader;
     this.userWriter = userWriter;

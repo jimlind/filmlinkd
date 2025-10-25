@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.factory.UserFactory;
-import jimlind.filmlinkd.google.db.UserReader;
+import jimlind.filmlinkd.google.db.UserReaderInterface;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
@@ -29,7 +29,7 @@ public class UserWriter {
   private final Firestore db;
   private final ImageUtils imageUtils;
   private final UserFactory userFactory;
-  private final UserReader userReader;
+  private final UserReaderInterface userReader;
 
   /**
    * The constructor for this class.
@@ -46,7 +46,7 @@ public class UserWriter {
       Firestore firestore,
       ImageUtils imageUtils,
       UserFactory userFactory,
-      UserReader userReader) {
+      UserReaderInterface userReader) {
     this.appConfig = appConfig;
     this.db = firestore;
     this.imageUtils = imageUtils;

@@ -8,7 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.List;
 import jimlind.filmlinkd.factory.UserFactory;
-import jimlind.filmlinkd.google.db.UserReader;
+import jimlind.filmlinkd.google.db.UserReaderInterface;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.google.firestore.UserWriter;
 
@@ -17,7 +17,7 @@ public class CleanUsers {
   private static final int PAGE_SIZE = 100;
 
   private final UserFactory userFactory;
-  private final UserReader userReader;
+  private final UserReaderInterface userReader;
   private final UserWriter userWriter;
 
   /**
@@ -28,7 +28,8 @@ public class CleanUsers {
    * @param userWriter Handles writing user records
    */
   @Inject
-  public CleanUsers(UserFactory userFactory, UserReader userReader, UserWriter userWriter) {
+  public CleanUsers(
+      UserFactory userFactory, UserReaderInterface userReader, UserWriter userWriter) {
     this.userFactory = userFactory;
     this.userReader = userReader;
     this.userWriter = userWriter;
