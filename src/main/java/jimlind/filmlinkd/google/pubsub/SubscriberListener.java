@@ -12,10 +12,9 @@ public class SubscriberListener extends Subscriber.Listener {
   @Override
   public void failed(Subscriber.State from, Throwable failure) {
     if (log.isInfoEnabled()) {
-      log.info("The Pub/Sub subscriber has encountered a fatal error and is shutting down.");
-      log.info(failure.toString());
+      log.error("The Pub/Sub subscriber has encountered a fatal error and is shutting down.");
+      log.error(failure.toString());
     }
-    throw new IllegalStateException("PubSubListener Failed");
   }
 
   @Override
