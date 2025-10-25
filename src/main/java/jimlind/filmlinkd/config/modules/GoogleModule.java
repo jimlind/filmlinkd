@@ -52,6 +52,7 @@ public class GoogleModule extends AbstractModule {
     bind(SubscriptionCreator.class).in(Scopes.SINGLETON);
 
     // I Hate This
+    bind(SecretManager.class).in(Scopes.SINGLETON);
     bind(UserReader.class).in(Scopes.SINGLETON);
     bind(UserWriter.class).in(Scopes.SINGLETON);
     bind(VipReader.class).in(Scopes.SINGLETON);
