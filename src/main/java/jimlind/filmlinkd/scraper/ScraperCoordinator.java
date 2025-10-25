@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import jimlind.filmlinkd.factory.MessageFactory;
-import jimlind.filmlinkd.google.pubsub.PubSubManager;
+import jimlind.filmlinkd.google.pubsub.PubSubManagerInterface;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.scraper.cache.BaseUserCache;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
@@ -24,7 +24,7 @@ public class ScraperCoordinator implements Runnable {
   private final DateUtils dateUtils;
   private final LogEntriesApi logEntriesApi;
   private final MessageFactory messageFactory;
-  private final PubSubManager pubSubManager;
+  private final PubSubManagerInterface pubSubManager;
 
   private Semaphore semaphore;
   private BaseUserCache userCache;
@@ -45,7 +45,7 @@ public class ScraperCoordinator implements Runnable {
       DateUtils dateUtils,
       LogEntriesApi logEntriesApi,
       MessageFactory messageFactory,
-      PubSubManager pubSubManager) {
+      PubSubManagerInterface pubSubManager) {
     this.dateUtils = dateUtils;
     this.logEntriesApi = logEntriesApi;
     this.messageFactory = messageFactory;

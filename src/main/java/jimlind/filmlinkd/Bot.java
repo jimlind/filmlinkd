@@ -5,7 +5,7 @@ import com.google.inject.Injector;
 import java.util.Optional;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.config.GuiceModule;
-import jimlind.filmlinkd.google.pubsub.PubSubManager;
+import jimlind.filmlinkd.google.pubsub.PubSubManagerInterface;
 import jimlind.filmlinkd.system.DiscordSystem;
 import jimlind.filmlinkd.system.ShutdownThread;
 import jimlind.filmlinkd.system.dispatcher.ScrapedResultQueueDispatcher;
@@ -34,9 +34,9 @@ public final class Bot {
     injector.getInstance(DiscordSystem.class).start();
 
     // Configure the needed publishers and subscribers
-    injector.getInstance(PubSubManager.class).buildCommandPublisher();
-    injector.getInstance(PubSubManager.class).buildLogEntryPublisher();
-    injector.getInstance(PubSubManager.class).buildLogEntrySubscriber();
+    injector.getInstance(PubSubManagerInterface.class).buildCommandPublisher();
+    injector.getInstance(PubSubManagerInterface.class).buildLogEntryPublisher();
+    injector.getInstance(PubSubManagerInterface.class).buildLogEntrySubscriber();
 
     // Schedule system statistic logger
     injector.getInstance(StatLogDispatcher.class).start();

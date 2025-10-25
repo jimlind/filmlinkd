@@ -5,7 +5,7 @@ import com.google.inject.Injector;
 import java.util.Optional;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.config.GuiceModule;
-import jimlind.filmlinkd.google.pubsub.PubSubManager;
+import jimlind.filmlinkd.google.pubsub.PubSubManagerInterface;
 import jimlind.filmlinkd.scraper.scheduler.ScraperSchedulerFactory;
 import jimlind.filmlinkd.system.ShutdownThread;
 import jimlind.filmlinkd.system.dispatcher.StatLogDispatcher;
@@ -30,8 +30,8 @@ public final class Scraper {
     injector.getInstance(AppConfig.class).setMainClass(Scraper.class.getName());
 
     // Configure the needed publishers and subscribers
-    injector.getInstance(PubSubManager.class).buildLogEntryPublisher();
-    injector.getInstance(PubSubManager.class).buildCommandSubscriber();
+    injector.getInstance(PubSubManagerInterface.class).buildLogEntryPublisher();
+    injector.getInstance(PubSubManagerInterface.class).buildCommandSubscriber();
 
     // Start the Scrapers
     ScraperSchedulerFactory schedulerFactory = injector.getInstance(ScraperSchedulerFactory.class);

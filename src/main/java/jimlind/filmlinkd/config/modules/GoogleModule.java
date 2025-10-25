@@ -11,6 +11,7 @@ import jimlind.filmlinkd.google.db.UserReaderInterface;
 import jimlind.filmlinkd.google.db.VipReader;
 import jimlind.filmlinkd.google.db.VipReaderInterface;
 import jimlind.filmlinkd.google.pubsub.PubSubManager;
+import jimlind.filmlinkd.google.pubsub.PubSubManagerInterface;
 import jimlind.filmlinkd.google.pubsub.PublisherCreator;
 import jimlind.filmlinkd.google.pubsub.SubscriberListener;
 import jimlind.filmlinkd.google.pubsub.SubscriptionCreator;
@@ -42,7 +43,7 @@ public class GoogleModule extends AbstractModule {
 
     // Google PubSub Modules
     bind(PublisherCreator.class).in(Scopes.SINGLETON);
-    bind(PubSubManager.class).in(Scopes.SINGLETON);
+    bind(PubSubManagerInterface.class).to(PubSubManager.class).in(Scopes.SINGLETON);
     bind(SubscriberListener.class).in(Scopes.SINGLETON);
     bind(SubscriptionCreator.class).in(Scopes.SINGLETON);
   }

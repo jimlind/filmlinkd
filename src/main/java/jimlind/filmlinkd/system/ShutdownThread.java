@@ -1,14 +1,14 @@
 package jimlind.filmlinkd.system;
 
 import com.google.inject.Inject;
-import jimlind.filmlinkd.google.pubsub.PubSubManager;
+import jimlind.filmlinkd.google.pubsub.PubSubManagerInterface;
 import lombok.extern.slf4j.Slf4j;
 
 /** Handles shutting down, stopping, and deactivating things that need the extra work. */
 @Slf4j
 public class ShutdownThread extends Thread {
   private final DiscordSystem discordSystem;
-  private final PubSubManager pubSubManager;
+  private final PubSubManagerInterface pubSubManager;
 
   /**
    * Constructor for this class.
@@ -17,7 +17,7 @@ public class ShutdownThread extends Thread {
    * @param pubSubManager Serves as the primary interface for PubSub systems
    */
   @Inject
-  ShutdownThread(DiscordSystem discordSystem, PubSubManager pubSubManager) {
+  ShutdownThread(DiscordSystem discordSystem, PubSubManagerInterface pubSubManager) {
     this.discordSystem = discordSystem;
     this.pubSubManager = pubSubManager;
   }
