@@ -10,6 +10,7 @@ import jimlind.filmlinkd.google.db.UserReader;
 import jimlind.filmlinkd.google.db.UserReaderInterface;
 import jimlind.filmlinkd.google.db.VipReader;
 import jimlind.filmlinkd.google.db.VipReaderInterface;
+import jimlind.filmlinkd.google.pubsub.DummyPubSubManager;
 import jimlind.filmlinkd.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.google.pubsub.PubSubManagerInterface;
 import jimlind.filmlinkd.google.pubsub.PublisherCreator;
@@ -28,10 +29,12 @@ public class GoogleModule extends AbstractModule {
   protected void configure() {
     // Configure Specific Modules for Online and Offline Use
     if (TRACING_MODE.equals(System.getProperty("app.mode"))) {
+      bind(PubSubManagerInterface.class).to(DummyPubSubManager.class).in(Scopes.SINGLETON);
       bind(SecretManagerInterface.class).to(DummySecretManager.class).in(Scopes.SINGLETON);
       bind(UserReaderInterface.class).to(DummyUserReader.class).in(Scopes.SINGLETON);
       bind(VipReaderInterface.class).to(DummyVipReader.class).in(Scopes.SINGLETON);
     } else {
+      bind(PubSubManagerInterface.class).to(PubSubManager.class).in(Scopes.SINGLETON);
       bind(SecretManagerInterface.class).to(SecretManager.class).in(Scopes.SINGLETON);
       bind(UserReaderInterface.class).to(UserReader.class).in(Scopes.SINGLETON);
       bind(VipReaderInterface.class).to(VipReader.class).in(Scopes.SINGLETON);
@@ -43,7 +46,6 @@ public class GoogleModule extends AbstractModule {
 
     // Google PubSub Modules
     bind(PublisherCreator.class).in(Scopes.SINGLETON);
-    bind(PubSubManagerInterface.class).to(PubSubManager.class).in(Scopes.SINGLETON);
     bind(SubscriberListener.class).in(Scopes.SINGLETON);
     bind(SubscriptionCreator.class).in(Scopes.SINGLETON);
   }
