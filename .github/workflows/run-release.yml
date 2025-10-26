@@ -31,13 +31,26 @@ jobs:
 
       - name: Generate Reflection Configs for GraalVM Inputs
         run: |
+          cp target/bot.jar my-app.jar
           mkdir -p META-INF/native-image
-          mkdir -p reflect-config/bot reflect-config/scraper
-          java \
-            -Dapp.mode=tracing \
-            -Dlogback.configurationFile=src/main/resources/logback-disabled.xml \
-            -agentlib:native-image-agent=config-output-dir=META-INF/native-image \
-            -jar target/bot.jar
+          java -agentlib:native-image-agent=config-output-dir=META-INF/native-image -jar my-app.jar
+          mkdir -p temp-jar
+          cd temp-jar
+          jar xf ../my-app.jar
+          cp -r ../META-INF ./
+          jar --create --file=my-app-configured.jar -C . .
+          native-image -Ob --no-fallback --verbose -jar my-app-configured.jar my-app-binary
+      
+      
+      
+      
+      
+      #          mkdir -p reflect-config/bot reflect-config/scraper
+      #          java \
+      #            -Dapp.mode=tracing \
+      #            -Dlogback.configurationFile=src/main/resources/logback-disabled.xml \
+      #            -agentlib:native-image-agent=config-output-dir=META-INF/native-image \
+      #            -jar target/bot.jar
       #          java -Dapp.mode=tracing \
       #            -Dlogback.configurationFile=src/main/resources/logback-disabled.xml \
       #            -agentlib:native-image-agent=config-output-dir=reflect-config/scraper \
