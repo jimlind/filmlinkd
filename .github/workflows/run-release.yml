@@ -59,7 +59,7 @@ jobs:
       - name: Build GraalVM Native Images
         run: |
           native-image -Ob --no-fallback \
-            -H:ConfigurationFileDirectories=reflect-config/bot \
+            -H:ConfigurationFileDirectories=reflect-config/x-bot \
             --initialize-at-build-time=com.google.inject,com.google.common \
             --report-unsupported-elements-at-runtime \
             -jar target/bot.jar -o bot
