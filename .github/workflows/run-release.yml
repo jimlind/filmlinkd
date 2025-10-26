@@ -33,10 +33,10 @@ jobs:
         run: |
           mkdir -p META-INF/native-image
           mkdir -p reflect-config/bot reflect-config/scraper
-          java 
-            -agentlib:native-image-agent=config-output-dir=META-INF/native-image \
+          java \
             -Dapp.mode=tracing \
             -Dlogback.configurationFile=src/main/resources/logback-disabled.xml \
+            -agentlib:native-image-agent=config-output-dir=META-INF/native-image \
             -jar target/bot.jar
       #          java -Dapp.mode=tracing \
       #            -Dlogback.configurationFile=src/main/resources/logback-disabled.xml \
