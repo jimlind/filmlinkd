@@ -28,12 +28,10 @@ public class GoogleModule extends AbstractModule {
   protected void configure() {
     // Configure Specific Modules for Online and Offline Use
     if (TRACING_MODE.equals(System.getProperty("app.mode"))) {
-      bind(PubSubManagerInterface.class).to(PubSubManager.class).in(Scopes.SINGLETON);
       bind(UserReaderInterface.class).to(DummyUserReader.class).in(Scopes.SINGLETON);
       bind(UserWriterInterface.class).to(DummyUserWriter.class).in(Scopes.SINGLETON);
       bind(VipReaderInterface.class).to(DummyVipReader.class).in(Scopes.SINGLETON);
     } else {
-      bind(PubSubManagerInterface.class).to(PubSubManager.class).in(Scopes.SINGLETON);
       bind(UserReaderInterface.class).to(UserReader.class).in(Scopes.SINGLETON);
       bind(UserWriterInterface.class).to(UserWriter.class).in(Scopes.SINGLETON);
       bind(VipReaderInterface.class).to(VipReader.class).in(Scopes.SINGLETON);
@@ -43,12 +41,16 @@ public class GoogleModule extends AbstractModule {
     bind(Firestore.class).toProvider(FirestoreProvider.class).in(Scopes.SINGLETON);
 
     // Google PubSub Modules
+    bind(PubSubManagerInterface.class).to(PubSubManager.class).in(Scopes.SINGLETON);
     bind(PublisherCreator.class).in(Scopes.SINGLETON);
     bind(SubscriberListener.class).in(Scopes.SINGLETON);
     bind(SubscriptionCreator.class).in(Scopes.SINGLETON);
 
-    // I Hate This
+    // Google Secrets
     bind(SecretManager.class).in(Scopes.SINGLETON);
+
+    // Binding the Actual DB stuff because they are needed even when they aren't used.
+    // It's gross. I hate it.
     bind(UserReader.class).in(Scopes.SINGLETON);
     bind(UserWriter.class).in(Scopes.SINGLETON);
     bind(VipReader.class).in(Scopes.SINGLETON);
