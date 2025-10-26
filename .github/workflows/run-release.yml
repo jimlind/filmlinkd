@@ -41,10 +41,10 @@ jobs:
       #            -agentlib:native-image-agent=config-output-dir=reflect-config/scraper \
       #            -jar target/scraper.jar
 
-      - name: Merge Overrides into Reflect Configs
-        run: |
-          jq -s 'add' reflect-config/bot/reflect-config.json build/graalvm/reflect-config.json > reflect-config/bot/merged.json
-          mv reflect-config/bot/merged.json reflect-config/bot/reflect-config.json
+      #      - name: Merge Overrides into Reflect Configs
+      #        run: |
+      #          jq -s 'add' reflect-config/bot/reflect-config.json build/graalvm/reflect-config.json > reflect-config/bot/merged.json
+      #          mv reflect-config/bot/merged.json reflect-config/bot/reflect-config.json
       #          jq -s 'add' reflect-config/scraper/reflect-config.json build/graalvm/reflect-config.json > reflect-config/scraper/merged.json
       #          mv reflect-config/scraper/merged.json reflect-config/scraper/reflect-config.json
 
@@ -59,7 +59,7 @@ jobs:
       - name: Build GraalVM Native Images
         run: |
           native-image -Ob --no-fallback \
-            -H:ConfigurationFileDirectories=reflect-config/x-bot \
+            -H:ConfigurationFileDirectories=reflect-config/bot \
             --initialize-at-build-time=com.google.inject,com.google.common \
             --report-unsupported-elements-at-runtime \
             -jar target/bot.jar -o bot
