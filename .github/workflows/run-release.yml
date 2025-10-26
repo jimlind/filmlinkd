@@ -59,6 +59,8 @@ jobs:
       - name: Build GraalVM Native Images
         run: |
           native-image -Ob --no-fallback \
+            --verbose \
+            --trace-class-initialization=jimlind.filmlinkd.google.secret.SecretManager \
             -H:ConfigurationFileDirectories=reflect-config/bot \
             --initialize-at-build-time=com.google.inject,com.google.common \
             --report-unsupported-elements-at-runtime \
