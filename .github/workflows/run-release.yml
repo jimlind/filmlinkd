@@ -32,18 +32,14 @@ jobs:
       - name: Generate Reflection Configs for GraalVM Inputs
         run: |
           cp target/bot.jar my-app.jar
-          mkdir -p META-INF/native-image
+          mkdir -p ./native-config
           java \
             -Dapp.mode=tracing \
             -Dlogback.configurationFile=src/main/resources/logback-disabled.xml \
-            -agentlib:native-image-agent=config-output-dir=META-INF/native-image \
+            -agentlib:native-image-agent=config-output-dir=./native-config \
             -jar my-app.jar
-          mkdir -p temp-jar
-          cd temp-jar
-          jar xf ../my-app.jar
-          cp -r ../META-INF ./
-          jar --create --file=my-app-configured.jar -C . .
-          native-image -Ob --no-fallback --verbose -jar my-app-configured.jar my-app-binary
+          native-image -cp my-app.jar -H:ConfigurationFileDirectories=./native-config jimlind.filmlinkd.Bot my-app-binary
+          ./my-app-binary     
       
       
       
@@ -70,8 +66,8 @@ jobs:
       - name: Upload full reflect-config as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: META-INF
-          path: META-INF
+          name: config
+          path: ./native-config
 
           #--initialize-at-build-time=com.google.inject,com.google.common,com.google.protobuf,com.google.cloud
           #            -H:ConfigurationFileDirectories=reflect-config/bot \
