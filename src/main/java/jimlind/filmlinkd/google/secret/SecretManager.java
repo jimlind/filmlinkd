@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
  */
 @Singleton
 @Slf4j
-public class SecretManager implements SecretManagerInterface {
+public class SecretManager {
   private @Nullable SecretManagerServiceClient client;
 
   /** The constructor for this class. */
