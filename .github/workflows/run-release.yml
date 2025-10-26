@@ -34,6 +34,7 @@ jobs:
           cp target/bot.jar my-app.jar
           mkdir -p META-INF/native-image
           java \
+            -Dapp.mode=tracing \
             -Dlogback.configurationFile=src/main/resources/logback-disabled.xml \
             -agentlib:native-image-agent=config-output-dir=META-INF/native-image \
             -jar my-app.jar
