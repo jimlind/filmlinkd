@@ -54,11 +54,13 @@ jobs:
           name: reflect-config
           path: reflect-config
 
+      #--initialize-at-build-time=com.google.inject,com.google.common,com.google.protobuf,com.google.cloud
+
       - name: Build GraalVM Native Images
         run: |
           native-image -Ob --no-fallback \
             -H:ConfigurationFileDirectories=reflect-config/bot \
-            --initialize-at-build-time=com.google.inject \
+            --initialize-at-build-time=com.google.inject,com.google.common \
             --report-unsupported-elements-at-runtime \
             -jar target/bot.jar -o bot
       #          native-image -Ob --no-fallback -H:ConfigurationFileDirectories=reflect-config/scraper \
