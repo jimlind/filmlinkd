@@ -19,7 +19,7 @@ public class SecretManager {
 
   /** The constructor for this class. */
   @Inject
-  SecretManager() {
+  public SecretManager() {
     try {
       this.client = SecretManagerServiceClient.create();
     } catch (IOException e) {
