@@ -3,14 +3,16 @@ package jimlind.filmlinkd.discord;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
+import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.exceptions.InvalidTokenException;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
 
 /** Handles the connecting and disconnecting of the Discord service. */
 @Singleton
+@Slf4j
 public class ConnectionManager {
-  public static final String TRACING_MODE = "tracing";
   private final AppConfig appConfig;
   private final EventListener eventListener;
   private final ShardManagerStorage shardManagerStorage;
@@ -32,14 +34,14 @@ public class ConnectionManager {
 
   /** Connects to the Discord service. */
   public void connect() {
-    if (TRACING_MODE.equals(System.getProperty("app.mode"))) {
-      return;
+    try {
+      String token = appConfig.getDiscordBotToken();
+      ShardManager shardManager =
+          DefaultShardManagerBuilder.createLight(token).addEventListeners(eventListener).build();
+      shardManagerStorage.set(shardManager);
+    } catch (InvalidTokenException e) {
+      log.error("Unable to connect to Discord API from Invalid Token");
     }
-
-    String token = appConfig.getDiscordBotToken();
-    ShardManager shardManager =
-        DefaultShardManagerBuilder.createLight(token).addEventListeners(eventListener).build();
-    shardManagerStorage.set(shardManager);
   }
 
   /** Disconnects from the Discord service. */
