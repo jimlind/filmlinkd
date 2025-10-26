@@ -38,7 +38,7 @@ jobs:
             -Dlogback.configurationFile=src/main/resources/logback-disabled.xml \
             -agentlib:native-image-agent=config-output-dir=./native-config \
             -jar my-app.jar
-          native-image -cp my-app.jar -H:ConfigurationFileDirectories=./native-config jimlind.filmlinkd.Bot my-app-binary
+          native-image -Ob --verbose -cp my-app.jar -H:ConfigurationFileDirectories=./native-config jimlind.filmlinkd.Bot my-app-binary
           ./my-app-binary     
       
       
