@@ -10,18 +10,17 @@ resource "google_compute_instance" "this" {
 
   boot_disk {
     initialize_params {
-      image = "cos-cloud/cos-stable"
+      image = "debian-cloud/debian-12"
       type  = "pd-standard"
-      size  = 20
+      size  = 10
     }
   }
 
-  metadata = {
-    google-monitoring-enabled = "true"
-  }
-  metadata_startup_script = templatefile("${path.module}/${var.startup_script_template}", {
-    environment = var.environment
-    timestamp   = formatdate("YYYYMMDD-HHmm", timestamp())
+  metadata_startup_script = templatefile("${path.module}/startup-script.sh.tpl", {
+    app           = var.app
+    environment   = var.environment
+    max_heap_size = var.max_heap_size
+    timestamp     = formatdate("YYYYMMDD-HHmm", timestamp())
   })
 
   service_account {

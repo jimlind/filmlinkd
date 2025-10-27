@@ -19,9 +19,15 @@ variable "label" {
   type        = string
 }
 
-variable "startup_script_template" {
-  description = "Path to the startup script template file"
+variable "app" {
+  description = "The application name."
   type        = string
+}
+
+variable "max_heap_size" {
+  description = "How much memory the JVM can use for the heap."
+  type        = string
+  default     = "256"
 }
 
 variable "subnet_self_link" {

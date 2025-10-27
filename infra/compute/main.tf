@@ -9,44 +9,48 @@ module "network" {
 
 # Development Computer Modules
 module "bot-development" {
-  source                  = "../modules/compute"
-  environment             = "DEVELOPMENT"
-  name                    = "bot-development"
-  label                   = "filmlinkd-bot-development"
-  machine_type            = "e2-micro"
-  startup_script_template = "startup-bot.sh.tpl"
-  subnet_self_link        = module.network.subnet_self_link
+  source           = "../modules/compute"
+  environment      = "DEVELOPMENT"
+  name             = "bot-development"
+  app              = "bot"
+  label            = "filmlinkd-bot-development"
+  machine_type     = "e2-micro"
+  max_heap_size    = "256"
+  subnet_self_link = module.network.subnet_self_link
 }
 
 module "scraper-development" {
-  source                  = "../modules/compute"
-  environment             = "DEVELOPMENT"
-  name                    = "scraper-development"
-  label                   = "filmlinkd-scraper-development"
-  machine_type            = "e2-micro"
-  startup_script_template = "startup-bot.sh.tpl"
-  subnet_self_link        = module.network.subnet_self_link
+  source           = "../modules/compute"
+  environment      = "DEVELOPMENT"
+  name             = "scraper-development"
+  app              = "scraper"
+  label            = "filmlinkd-scraper-development"
+  machine_type     = "e2-micro"
+  max_heap_size    = "256"
+  subnet_self_link = module.network.subnet_self_link
 }
 
 # Production Computer Modules
 module "bot-production" {
-  source                  = "../modules/compute"
-  environment             = "PRODUCTION"
-  name                    = "bot-production"
-  label                   = "filmlinkd-bot"
-  machine_type            = "e2-medium"
-  startup_script_template = "startup-bot.sh.tpl"
-  subnet_self_link        = module.network.subnet_self_link
+  source           = "../modules/compute"
+  environment      = "PRODUCTION"
+  name             = "bot-production"
+  app              = "bot"
+  label            = "filmlinkd-bot"
+  machine_type     = "e2-medium"
+  max_heap_size    = "1024"
+  subnet_self_link = module.network.subnet_self_link
 }
 
 module "scraper-production" {
-  source                  = "../modules/compute"
-  environment             = "PRODUCTION"
-  name                    = "scraper-production"
-  label                   = "filmlinkd-scraper"
-  machine_type            = "e2-medium"
-  startup_script_template = "startup-scraper.sh.tpl"
-  subnet_self_link        = module.network.subnet_self_link
+  source           = "../modules/compute"
+  environment      = "PRODUCTION"
+  name             = "scraper-production"
+  app              = "scraper"
+  label            = "filmlinkd-scraper"
+  machine_type     = "e2-medium"
+  max_heap_size    = "1024"
+  subnet_self_link = module.network.subnet_self_link
 }
 
 module "cloudnat" {
