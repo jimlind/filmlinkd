@@ -3,8 +3,6 @@ package jimlind.filmlinkd;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import java.util.Optional;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.config.GuiceModule;
 import jimlind.filmlinkd.google.pubsub.PubSubManagerInterface;
@@ -48,17 +46,5 @@ public final class Scraper {
 
     // Register shutdown events
     Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownThread.class));
-
-    // Shutdown After 60 seconds if in tracing mode
-    if (TRACING_MODE.equals(System.getProperty("app.mode"))) {
-      Executors.newSingleThreadScheduledExecutor()
-          .schedule(
-              () -> {
-                System.out.println("Killing process after 120 seconds...");
-                System.exit(0);
-              },
-              60,
-              TimeUnit.SECONDS);
-    }
   }
 }
