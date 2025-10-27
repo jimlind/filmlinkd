@@ -4,7 +4,7 @@ import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
 import com.google.pubsub.v1.PubsubMessage;
-import jimlind.filmlinkd.google.db.UserReaderInterface;
+import jimlind.filmlinkd.google.db.UserReader;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.ScrapedResult;
 import jimlind.filmlinkd.model.User;
@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ScrapedResultFactory {
   private final UserFactory userFactory;
-  private final UserReaderInterface userReader;
+  private final UserReader userReader;
 
   /**
    * Constructor for the {@link ScrapedResultFactory}.
@@ -23,7 +23,7 @@ public class ScrapedResultFactory {
    * @param userReader Class that handles all read-only queries for user data from Firestore
    */
   @Inject
-  public ScrapedResultFactory(UserFactory userFactory, UserReaderInterface userReader) {
+  public ScrapedResultFactory(UserFactory userFactory, UserReader userReader) {
     this.userFactory = userFactory;
     this.userReader = userReader;
   }

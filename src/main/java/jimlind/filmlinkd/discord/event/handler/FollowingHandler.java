@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import jimlind.filmlinkd.discord.embed.factory.FollowingEmbedFactory;
 import jimlind.filmlinkd.factory.UserFactory;
-import jimlind.filmlinkd.google.db.UserReaderInterface;
+import jimlind.filmlinkd.google.db.UserReader;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
@@ -19,7 +19,7 @@ public class FollowingHandler implements Handler {
   private final ChannelHelper channelHelper;
   private final FollowingEmbedFactory followingEmbedFactory;
   private final UserFactory userFactory;
-  private final UserReaderInterface userReader;
+  private final UserReader userReader;
 
   /**
    * Constructor for this class.
@@ -34,7 +34,7 @@ public class FollowingHandler implements Handler {
       ChannelHelper channelHelper,
       FollowingEmbedFactory followingEmbedFactory,
       UserFactory userFactory,
-      UserReaderInterface userReader) {
+      UserReader userReader) {
     this.channelHelper = channelHelper;
     this.followingEmbedFactory = followingEmbedFactory;
     this.userFactory = userFactory;

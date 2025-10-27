@@ -4,15 +4,15 @@ import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.inject.Inject;
 import java.util.List;
 import jimlind.filmlinkd.factory.UserFactory;
-import jimlind.filmlinkd.google.db.UserReaderInterface;
-import jimlind.filmlinkd.google.db.UserWriterInterface;
+import jimlind.filmlinkd.google.db.UserReader;
+import jimlind.filmlinkd.google.db.UserWriter;
 import jimlind.filmlinkd.model.User;
 
 /** Archives a channel for all users following it. */
 public class Archiver {
   private final UserFactory userFactory;
-  private final UserReaderInterface userReader;
-  private final UserWriterInterface userWriter;
+  private final UserReader userReader;
+  private final UserWriter userWriter;
 
   /**
    * Constructor for this class.
@@ -23,7 +23,7 @@ public class Archiver {
    */
   @Inject
   public Archiver(
-      UserFactory userFactory, UserReaderInterface userReader, UserWriterInterface userWriter) {
+      UserFactory userFactory, UserReader userReader, UserWriter userWriter) {
     this.userFactory = userFactory;
     this.userReader = userReader;
     this.userWriter = userWriter;

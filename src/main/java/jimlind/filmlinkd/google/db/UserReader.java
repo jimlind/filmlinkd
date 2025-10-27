@@ -14,7 +14,7 @@ import jimlind.filmlinkd.config.AppConfig;
 import org.jetbrains.annotations.Nullable;
 
 /** Handles all read-only queries for user data from Firestore. */
-public class UserReader implements UserReaderInterface {
+public class UserReader {
   private final AppConfig appConfig;
   private final Firestore db;
 

@@ -21,14 +21,14 @@ import org.jetbrains.annotations.NotNull;
 
 /** Handles all create, update, and delete operations for user data in Firestore. */
 @Slf4j
-public class UserWriter implements UserWriterInterface {
+public class UserWriter {
   private static final String USER_KEY = "user";
 
   private final AppConfig appConfig;
   private final Firestore db;
   private final ImageUtils imageUtils;
   private final UserFactory userFactory;
-  private final UserReaderInterface userReader;
+  private final UserReader userReader;
 
   /**
    * The constructor for this class.
@@ -45,7 +45,7 @@ public class UserWriter implements UserWriterInterface {
       Firestore firestore,
       ImageUtils imageUtils,
       UserFactory userFactory,
-      UserReaderInterface userReader) {
+      UserReader userReader) {
     this.appConfig = appConfig;
     this.db = firestore;
     this.imageUtils = imageUtils;

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import jimlind.filmlinkd.discord.ShardManagerStorage;
 import jimlind.filmlinkd.discord.embed.factory.DiaryEntryEmbedFactory;
-import jimlind.filmlinkd.google.db.UserWriterInterface;
+import jimlind.filmlinkd.google.db.UserWriter;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.ScrapedResult;
 import jimlind.filmlinkd.model.User;
@@ -31,7 +31,7 @@ public class ScrapedResultQueueChecker implements Runnable {
   private final DiaryEntryEmbedFactory diaryEntryEmbedFactory;
   private final ScrapedResultQueue scrapedResultQueue;
   private final ShardManagerStorage shardManagerStorage;
-  private final UserWriterInterface userWriter;
+  private final UserWriter userWriter;
 
   private boolean allShardsConnected;
 
@@ -48,7 +48,7 @@ public class ScrapedResultQueueChecker implements Runnable {
       DiaryEntryEmbedFactory diaryEntryEmbedFactory,
       ScrapedResultQueue scrapedResultQueue,
       ShardManagerStorage shardManagerStorage,
-      UserWriterInterface userWriter) {
+      UserWriter userWriter) {
     this.diaryEntryEmbedFactory = diaryEntryEmbedFactory;
     this.scrapedResultQueue = scrapedResultQueue;
     this.shardManagerStorage = shardManagerStorage;

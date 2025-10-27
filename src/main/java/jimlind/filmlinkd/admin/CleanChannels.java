@@ -16,7 +16,7 @@ import jimlind.filmlinkd.admin.channels.WrongPermissionsFilter;
 import jimlind.filmlinkd.admin.channels.WrongTypeFilter;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.factory.UserFactory;
-import jimlind.filmlinkd.google.db.UserReaderInterface;
+import jimlind.filmlinkd.google.db.UserReader;
 import jimlind.filmlinkd.model.User;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
@@ -34,7 +34,7 @@ public class CleanChannels {
   private final LogFileWriter logFileWriter;
   private final NullFilter nullFilter;
   private final UserFactory userFactory;
-  private final UserReaderInterface userReader;
+  private final UserReader userReader;
   private final WrongPermissionsFilter wrongPermissionsFilter;
   private final WrongTypeFilter wrongTypeFilter;
 
@@ -60,7 +60,7 @@ public class CleanChannels {
       LogFileWriter logFileWriter,
       NullFilter nullFilter,
       UserFactory userFactory,
-      UserReaderInterface userReader,
+      UserReader userReader,
       WrongPermissionsFilter wrongPermissionsFilter,
       WrongTypeFilter wrongTypeFilter) {
     this.appConfig = appConfig;
