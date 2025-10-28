@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import java.util.List;
 import jimlind.filmlinkd.discord.embed.factory.FollowEmbedFactory;
 import jimlind.filmlinkd.factory.CommandFactory;
-import jimlind.filmlinkd.google.pubsub.PubSubManagerInterface;
+import jimlind.filmlinkd.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.model.Command;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.UserCoordinator;
@@ -20,7 +20,7 @@ public class FollowHandler implements Handler {
   private final ChannelHelper channelHelper;
   private final CommandFactory commandFactory;
   private final FollowEmbedFactory followEmbedFactory;
-  private final PubSubManagerInterface pubSubManager;
+  private final PubSubManager pubSubManager;
   private final UserCoordinator userCoordinator;
 
   /**
@@ -39,7 +39,7 @@ public class FollowHandler implements Handler {
       ChannelHelper channelHelper,
       CommandFactory commandFactory,
       FollowEmbedFactory followEmbedFactory,
-      PubSubManagerInterface pubSubManager,
+      PubSubManager pubSubManager,
       UserCoordinator userCoordinator) {
     this.accountHelper = accountHelper;
     this.channelHelper = channelHelper;

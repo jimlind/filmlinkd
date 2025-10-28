@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import jimlind.filmlinkd.core.scheduling.TimedTaskRunner;
 import jimlind.filmlinkd.discord.embed.factory.HelpEmbedFactory;
 import jimlind.filmlinkd.factory.MessageFactory;
-import jimlind.filmlinkd.google.pubsub.PubSubManagerInterface;
+import jimlind.filmlinkd.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
@@ -25,7 +25,7 @@ public class HelpEmbedDispatcher extends TimedTaskRunner {
   private final HelpEmbedFactory helpEmbedFactory;
   private final LogEntriesApi logEntriesApi;
   private final MessageFactory messageFactory;
-  private final PubSubManagerInterface pubSubManager;
+  private final PubSubManager pubSubManager;
 
   private MessageChannel messageChannel;
   private int count = 1;
@@ -43,7 +43,7 @@ public class HelpEmbedDispatcher extends TimedTaskRunner {
       HelpEmbedFactory helpEmbedFactory,
       LogEntriesApi logEntriesApi,
       MessageFactory messageFactory,
-      PubSubManagerInterface pubSubManager) {
+      PubSubManager pubSubManager) {
     super(INITIAL_DELAY_MILLISECONDS, INTERVAL_MILLISECONDS);
 
     this.helpEmbedFactory = helpEmbedFactory;

@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 /** Handles all things related to the PubSub service. Creating, activating, etc. */
 @Singleton
 @Slf4j
-public class PubSubManager implements PubSubManagerInterface {
+public class PubSubManager {
 
   private final AppConfig appConfig;
   private final CommandMessageReceiver commandMessageReceiver;
