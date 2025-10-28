@@ -60,28 +60,14 @@ public class PubSubManager {
     this.subscriptionCreator = subscriptionCreator;
   }
 
-  /** Builds all the needed publishers and subscribers. */
-  public void buildAll() {
-    buildCommandPublisher();
-    buildLogEntryPublisher();
-    buildCommandSubscriber();
-    buildLogEntrySubscriber();
-  }
-
   /** Builds the command publisher. */
   public void buildCommandPublisher() {
     commandPublisher = publisherCreator.create(appConfig.getPubSubCommandTopicName());
-
-    Command command = new Command(Command.Type.FOLLOW, "", "");
-    publishCommand(command);
   }
 
   /** Builds the log entry publisher. */
   public void buildLogEntryPublisher() {
     logEntryPublisher = publisherCreator.create(appConfig.getPubSubLogEntryTopicName());
-
-    Message logEntry = new Message();
-    publishLogEntry(logEntry);
   }
 
   /** Builds the command subscriber. */
