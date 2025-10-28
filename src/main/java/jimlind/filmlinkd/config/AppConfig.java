@@ -37,7 +37,7 @@ public class AppConfig {
   @Getter @Setter private String mainClass;
 
   @Inject
-  public AppConfig(SecretManager secretManager) {
+  AppConfig(SecretManager secretManager) {
     // Process application properties resource
     Properties appProperties = loadPropertiesFromResource("application.properties");
 
