@@ -14,9 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 /** The main entry point for the scraper application. */
 @Slf4j
 public final class Scraper {
-
-  public static final String TRACING_MODE = "tracing";
-
   private Scraper() {}
 
   /**

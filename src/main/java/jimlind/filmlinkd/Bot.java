@@ -15,9 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 /** The main entry point for the bot application. */
 @Slf4j
 public final class Bot {
-
-  public static final String TRACING_MODE = "tracing";
-
   private Bot() {}
 
   /**
