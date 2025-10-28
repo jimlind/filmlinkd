@@ -25,7 +25,7 @@ jobs:
       - name: Prepare Release Artifacts
         run: |
           mkdir -p /tmp/release
-          cp target/bot.jar target/scraper.jar /tmp/release/
+          cp target/admin.jar target/bot.jar target/scraper.jar /tmp/release/
           cp docs/release/README.md /tmp/release/
 
       - name: Create GitHub Release and Upload Files
