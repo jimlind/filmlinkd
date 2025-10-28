@@ -5,17 +5,14 @@ import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import java.io.IOException;
-import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Handles all things related to the Secret service. Currently only getting because I set the
  * secrets myself using other methods.
  */
 @Singleton
-@Slf4j
 public class SecretManager {
-  private @Nullable SecretManagerServiceClient client;
+  private final SecretManagerServiceClient client;
 
   /** The constructor for this class. */
   @Inject
@@ -23,7 +20,7 @@ public class SecretManager {
     try {
       this.client = SecretManagerServiceClient.create();
     } catch (IOException e) {
-      log.error("Failed to create SecretManagerServiceClient", e);
+      throw new IllegalStateException("Failed to create SecretManagerServiceClient", e);
     }
   }
 
@@ -35,11 +32,6 @@ public class SecretManager {
    * @return The string value of the secret
    */
   public String getSecret(String projectId, String secretName) {
-    if (client == null) {
-      log.error("Attempting to fetch a secret while SecretManagerServiceClient is null");
-      return String.format("dummy-secret-for-%s-in-%s", secretName, projectId);
-    }
-
     String secretPath =
         String.format("projects/%s/secrets/%s/versions/latest", projectId, secretName);
     AccessSecretVersionRequest request =
