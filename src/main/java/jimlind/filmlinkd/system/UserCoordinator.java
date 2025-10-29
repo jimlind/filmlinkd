@@ -23,8 +23,7 @@ public class UserCoordinator {
    * @param userWriter Handles all write operations for user data in Firestore
    */
   @Inject
-  public UserCoordinator(
-      UserFactory userFactory, UserReader userReader, UserWriter userWriter) {
+  public UserCoordinator(UserFactory userFactory, UserReader userReader, UserWriter userWriter) {
     this.userFactory = userFactory;
     this.userReader = userReader;
     this.userWriter = userWriter;

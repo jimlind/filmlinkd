@@ -28,8 +28,7 @@ public class CleanUsers {
    * @param userWriter Handles writing user records
    */
   @Inject
-  public CleanUsers(
-      UserFactory userFactory, UserReader userReader, UserWriter userWriter) {
+  public CleanUsers(UserFactory userFactory, UserReader userReader, UserWriter userWriter) {
     this.userFactory = userFactory;
     this.userReader = userReader;
     this.userWriter = userWriter;

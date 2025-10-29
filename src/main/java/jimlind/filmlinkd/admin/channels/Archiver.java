@@ -22,8 +22,7 @@ public class Archiver {
    * @param userWriter Handles writing user records
    */
   @Inject
-  public Archiver(
-      UserFactory userFactory, UserReader userReader, UserWriter userWriter) {
+  public Archiver(UserFactory userFactory, UserReader userReader, UserWriter userWriter) {
     this.userFactory = userFactory;
     this.userReader = userReader;
     this.userWriter = userWriter;
