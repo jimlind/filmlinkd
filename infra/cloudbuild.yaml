@@ -1,23 +1,30 @@
 options:
   logging: CLOUD_LOGGING_ONLY
 
-steps:
-  - name: "ghcr.io/opentofu/opentofu:latest"
-    entrypoint: "sh"
-    args:
-      - "-c"
-      - |
-        cd infra/compute
-        tofu init
-        tofu destroy -auto-approve
-        tofu apply -auto-approve
+substitutions:
+  _ENVIRONMENT: "DEV"
 
+steps:
+  # Apply shared infrastructure (network, data services, etc.)
   - name: "ghcr.io/opentofu/opentofu:latest"
+    id: "apply-shared"
     entrypoint: "sh"
     args:
       - "-c"
       - |
-        cd infra/data
+        cd infra/shared
         tofu init
         tofu apply -auto-approve
     allowFailure: true
+
+  # Apply environment specific infrastructure (DEV or PROD)
+  - name: "ghcr.io/opentofu/opentofu:latest"
+    entrypoint: "sh"
+    args:
+      - "-c"
+      - |
+        echo "Environment: ${_ENVIRONMENT}"
+        cd infra/environments/${_ENVIRONMENT,,}
+        tofu init
+        tofu destroy -auto-approve
+        tofu apply -auto-approve
