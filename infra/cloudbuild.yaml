@@ -3,6 +3,7 @@ options:
 
 substitutions:
   _ENVIRONMENT: "DEV"
+  _ENVIRONMENT_LOWERCASE: ${_ENVIRONMENT,,}
 
 steps:
   # Apply shared infrastructure (network, data services, etc.)
@@ -24,7 +25,7 @@ steps:
       - "-c"
       - |
         echo "Environment: ${_ENVIRONMENT}"
-        cd infra/environments/${_ENVIRONMENT,,}
+        cd infra/environments/${_ENVIRONMENT_LOWERCASE}
         tofu init
         tofu destroy -auto-approve
         tofu apply -auto-approve
