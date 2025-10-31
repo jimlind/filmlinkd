@@ -13,6 +13,7 @@ steps:
       - "-c"
       - |
         cd infra/shared
+        tofu init
         if [ $_APPLY == "APPLY" ]
         then 
           tofu apply -refresh-only -auto-approve
