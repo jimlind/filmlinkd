@@ -1,0 +1,21 @@
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _APPLY: ""
+
+steps:
+  # Generate refresh plan for shared resources and review or apply if proper substitution available
+  - name: "ghcr.io/opentofu/opentofu:latest"
+    id: "apply-shared"
+    entrypoint: "sh"
+    args:
+      - "-c"
+      - |
+        cd infra/shared
+        if [ $_APPLY == "APPLY" ]
+        then 
+          tofu apply -refresh-only -auto-approve
+        else
+          tofu apply -refresh-only
+        fi
