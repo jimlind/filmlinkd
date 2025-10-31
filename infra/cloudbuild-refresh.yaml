@@ -14,9 +14,9 @@ steps:
       - |
         cd infra/shared
         tofu init
-        if [ $_APPLY == "APPLY" ]
+        if [ "$_APPLY" = "APPLY" ]
         then 
           tofu apply -refresh-only -auto-approve
         else
-          tofu apply -refresh-only
+          tofu apply -refresh-only -input=false
         fi
