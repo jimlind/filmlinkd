@@ -4,9 +4,9 @@ provider "google" {
   zone    = "us-central1-a"
 }
 
-resource "google_secret_manager_secret" "test_discord_dev_bot_token" {
+resource "google_secret_manager_secret" "discord_dev_bot_token" {
   project   = "filmlinkd"
-  secret_id = "TEST_DISCORD_DEV_BOT_TOKEN"
+  secret_id = "DISCORD_DEV_BOT_TOKEN"
   replication {
     auto {}
   }
@@ -22,9 +22,9 @@ resource "google_secret_manager_secret" "test_discord_dev_bot_token" {
   }
 }
 
-resource "google_secret_manager_secret" "test_discord_prod_bot_token" {
+resource "google_secret_manager_secret" "discord_prod_bot_token" {
   project   = "filmlinkd"
-  secret_id = "TEST_DISCORD_PROD_BOT_TOKEN"
+  secret_id = "DISCORD_PROD_BOT_TOKEN"
   replication {
     auto {}
   }
@@ -40,9 +40,9 @@ resource "google_secret_manager_secret" "test_discord_prod_bot_token" {
   }
 }
 
-resource "google_secret_manager_secret" "test_letterboxd_api_key" {
+resource "google_secret_manager_secret" "letterboxd_api_key" {
   project   = "filmlinkd"
-  secret_id = "TEST_LETTERBOXD_API_KEY"
+  secret_id = "LETTERBOXD_API_KEY"
   replication {
     auto {}
   }
@@ -58,9 +58,9 @@ resource "google_secret_manager_secret" "test_letterboxd_api_key" {
   }
 }
 
-resource "google_secret_manager_secret" "test_letterboxd_api_shared_secret" {
+resource "google_secret_manager_secret" "letterboxd_api_shared_secret" {
   project   = "filmlinkd"
-  secret_id = "TEST_LETTERBOXD_API_SHARED_SECRET"
+  secret_id = "LETTERBOXD_API_SHARED_SECRET"
   replication {
     auto {}
   }
