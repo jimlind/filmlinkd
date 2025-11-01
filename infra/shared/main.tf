@@ -10,10 +10,10 @@ resource "google_compute_project_default_network_tier" "project-tier" {
 module "firestore" {
   source = "../modules/firestore"
 }
-#
-# module "pubsub" {
-#   source = "../modules/pubsub"
-# }
+
+module "pubsub" {
+  source = "../modules/pubsub"
+}
 
 module "secret-manager" {
   source = "../modules/secret-manager"
