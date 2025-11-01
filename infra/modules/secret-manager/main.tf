@@ -15,7 +15,7 @@ resource "google_secret_manager_secret" "test_discord_dev_bot_token" {
   deletion_protection = false
   labels              = {}
   version_aliases     = {}
-  version_destroy_ttl = null
+  version_destroy_ttl = ""
 
   lifecycle {
     prevent_destroy = true
@@ -33,7 +33,7 @@ resource "google_secret_manager_secret" "test_discord_prod_bot_token" {
   deletion_protection = false
   labels              = {}
   version_aliases     = {}
-  version_destroy_ttl = null
+  version_destroy_ttl = ""
 
   lifecycle {
     prevent_destroy = true
@@ -51,7 +51,7 @@ resource "google_secret_manager_secret" "test_letterboxd_api_key" {
   deletion_protection = false
   labels              = {}
   version_aliases     = {}
-  version_destroy_ttl = null
+  version_destroy_ttl = ""
 
   lifecycle {
     prevent_destroy = true
@@ -69,7 +69,7 @@ resource "google_secret_manager_secret" "test_letterboxd_api_shared_secret" {
   deletion_protection = false
   labels              = {}
   version_aliases     = {}
-  version_destroy_ttl = null
+  version_destroy_ttl = ""
 
   lifecycle {
     prevent_destroy = true
