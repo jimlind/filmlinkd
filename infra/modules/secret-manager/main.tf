@@ -10,8 +10,13 @@ resource "google_secret_manager_secret" "test_discord_dev_bot_token" {
   replication {
     auto {}
   }
+
+  annotations         = {}
   deletion_protection = false
+  labels              = {}
+  version_aliases     = {}
   version_destroy_ttl = null
+
   lifecycle {
     prevent_destroy = true
   }
@@ -23,8 +28,13 @@ resource "google_secret_manager_secret" "test_discord_prod_bot_token" {
   replication {
     auto {}
   }
+
+  annotations         = {}
   deletion_protection = false
+  labels              = {}
+  version_aliases     = {}
   version_destroy_ttl = null
+
   lifecycle {
     prevent_destroy = true
   }
@@ -36,8 +46,13 @@ resource "google_secret_manager_secret" "test_letterboxd_api_key" {
   replication {
     auto {}
   }
+
+  annotations         = {}
   deletion_protection = false
+  labels              = {}
+  version_aliases     = {}
   version_destroy_ttl = null
+
   lifecycle {
     prevent_destroy = true
   }
@@ -49,8 +64,13 @@ resource "google_secret_manager_secret" "test_letterboxd_api_shared_secret" {
   replication {
     auto {}
   }
+
+  annotations         = {}
   deletion_protection = false
+  labels              = {}
+  version_aliases     = {}
   version_destroy_ttl = null
+
   lifecycle {
     prevent_destroy = true
   }
