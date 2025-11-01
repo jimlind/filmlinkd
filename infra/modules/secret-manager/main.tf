@@ -10,6 +10,7 @@ resource "google_secret_manager_secret" "test_discord_dev_bot_token" {
   replication {
     auto {}
   }
+  deletion_protection = false
   lifecycle {
     prevent_destroy = true
   }
@@ -21,6 +22,7 @@ resource "google_secret_manager_secret" "test_discord_prod_bot_token" {
   replication {
     auto {}
   }
+  deletion_protection = false
   lifecycle {
     prevent_destroy = true
   }
@@ -32,6 +34,7 @@ resource "google_secret_manager_secret" "test_letterboxd_api_key" {
   replication {
     auto {}
   }
+  deletion_protection = false
   lifecycle {
     prevent_destroy = true
   }
@@ -43,6 +46,7 @@ resource "google_secret_manager_secret" "test_letterboxd_api_shared_secret" {
   replication {
     auto {}
   }
+  deletion_protection = false
   lifecycle {
     prevent_destroy = true
   }
