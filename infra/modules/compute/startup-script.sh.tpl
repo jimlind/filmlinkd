@@ -8,7 +8,7 @@ echo "Environment: ${environment}"
 echo "Timestamp: ${timestamp}"
 
 # Set the Environment Variable
-FILMLINKD_ENVIRONMENT=${environment}
+export FILMLINKD_ENVIRONMENT=${environment}
 
 # Install Google Cloud Ops
 curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
