@@ -4,8 +4,8 @@ provider "google" {
   zone    = "us-central1-a"
 }
 
-resource "google_pubsub_topic" "x_filmlinkd_dev_command_topic" {
-  name    = "x_filmlinkd-dev-command-topic"
+resource "google_pubsub_topic" "filmlinkd_dev_command_topic" {
+  name    = "filmlinkd-dev-command-topic"
   project = "filmlinkd"
 
   message_storage_policy {
@@ -16,8 +16,8 @@ resource "google_pubsub_topic" "x_filmlinkd_dev_command_topic" {
     prevent_destroy = true
   }
 }
-resource "google_pubsub_topic" "x_filmlinkd_dev_log_entry_result_topic" {
-  name    = "x_filmlinkd-dev-log-entry-result-topic"
+resource "google_pubsub_topic" "filmlinkd_dev_log_entry_result_topic" {
+  name    = "filmlinkd-dev-log-entry-result-topic"
   project = "filmlinkd"
 
   message_storage_policy {
@@ -28,8 +28,8 @@ resource "google_pubsub_topic" "x_filmlinkd_dev_log_entry_result_topic" {
     prevent_destroy = true
   }
 }
-resource "google_pubsub_topic" "x_filmlinkd_dev_log_entry_topic" {
-  name    = "x_filmlinkd-dev-log-entry-topic"
+resource "google_pubsub_topic" "filmlinkd_dev_log_entry_topic" {
+  name    = "filmlinkd-dev-log-entry-topic"
   project = "filmlinkd"
 
   message_storage_policy {
@@ -41,8 +41,8 @@ resource "google_pubsub_topic" "x_filmlinkd_dev_log_entry_topic" {
   }
 }
 
-resource "google_pubsub_topic" "x_filmlinkd_command_topic" {
-  name    = "x_filmlinkd-command-topic"
+resource "google_pubsub_topic" "filmlinkd_command_topic" {
+  name    = "filmlinkd-command-topic"
   project = "filmlinkd"
 
   message_storage_policy {
@@ -53,8 +53,8 @@ resource "google_pubsub_topic" "x_filmlinkd_command_topic" {
     prevent_destroy = true
   }
 }
-resource "google_pubsub_topic" "x_filmlinkd_log_entry_result_topic" {
-  name    = "x_filmlinkd-log-entry-result-topic"
+resource "google_pubsub_topic" "filmlinkd_log_entry_result_topic" {
+  name    = "filmlinkd-log-entry-result-topic"
   project = "filmlinkd"
 
   message_storage_policy {
@@ -65,8 +65,8 @@ resource "google_pubsub_topic" "x_filmlinkd_log_entry_result_topic" {
     prevent_destroy = true
   }
 }
-resource "google_pubsub_topic" "x_filmlinkd_log_entry_topic" {
-  name    = "x_filmlinkd-log-entry-topic"
+resource "google_pubsub_topic" "filmlinkd_log_entry_topic" {
+  name    = "filmlinkd-log-entry-topic"
   project = "filmlinkd"
 
   message_storage_policy {
