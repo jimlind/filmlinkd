@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
     bucket = "filmlinkd-state"
-    prefix = "compute-root/state"
+    prefix = "environments/prod/state"
   }
 }
