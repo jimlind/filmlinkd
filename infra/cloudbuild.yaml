@@ -16,7 +16,6 @@ steps:
         cd infra/shared
         tofu init
         tofu apply -auto-approve
-    allowFailure: true
 
   # Apply environment specific infrastructure (DEV or PROD)
   - name: "ghcr.io/opentofu/opentofu:latest"
