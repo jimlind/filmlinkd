@@ -7,6 +7,11 @@ module "network" {
   source = "../modules/network"
 }
 
+module "cloudnat" {
+  source            = "../modules/cloudnat"
+  network_self_link = module.network.network_self_link
+}
+
 module "firestore" {
   source = "../modules/firestore"
 }
