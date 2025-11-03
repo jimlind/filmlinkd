@@ -137,4 +137,23 @@ public class UserReader {
       return List.of();
     }
   }
+
+  /**
+   * Gets all user documents for users with a specific archived channel listed.
+   *
+   * @param channelId A Discord channel id
+   * @return A list of all user documents that have the specific archived channel
+   */
+  public List<QueryDocumentSnapshot> getUserDocumentListByArchivedChannelId(String channelId) {
+    String collectionId = appConfig.getFirestoreUserCollectionId();
+    Map<String, String> searchInput = Map.of("channelId", channelId);
+    ApiFuture<QuerySnapshot> query =
+        db.collection(collectionId).whereArrayContains("archivedChannelList", searchInput).get();
+
+    try {
+      return query.get().getDocuments();
+    } catch (InterruptedException | ExecutionException e) {
+      return List.of();
+    }
+  }
 }
