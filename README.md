@@ -23,8 +23,8 @@ and the rest of this document won't be of interest.
 The source code for this bot is made available for you to take a peak under the hood and see how it all runs. Everything
 here is released as AGPLv3 so if you want to use or modify this project then the source code for your entire project
 must similarly be released. Likely you don't want this source code anyway as it is heavily dependent on gaining access
-to the Letterboxd API (this is becoming increasingly difficult) and running the on the GCP infrastructure (not
-everybody's favorite choice).
+to the Letterboxd API (that is becoming increasingly difficult) and running on the GCP infrastructure (not everybody's
+favorite choice).
 
 If you find the bot valuable to the community you have created on your servers please consider subscribing to
 the [Filmlinkd Patreon](https://www.patreon.com/filmlinkd) or making a one time donation on
@@ -32,7 +32,8 @@ the [Filmlinkd Ko-fi](https://ko-fi.com/filmlinkd). It's the only thing that cov
 
 The technical details may be a bit overwhelming if you aren't interested in that sort of thing. User
 facing [documentation](https://jimlind.github.io/filmlinkd/) is available that will answer most of your questions. If
-you want to follow up with something specific do
+you want to follow up with something specific join [the Discord Server](https://discord.gg/deZ7EUguge) and post in the
+appropriate channel.
 
 ### Links
 
