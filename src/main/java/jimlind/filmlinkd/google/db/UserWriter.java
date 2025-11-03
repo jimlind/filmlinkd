@@ -230,6 +230,44 @@ public class UserWriter {
   }
 
   /**
+   * Reverts an archived subscription from a user's document.
+   *
+   * @param userLid User's Letterboxd id
+   * @param channelId Discord Channel id
+   * @return true if the action succeeded; false on failure
+   */
+  public boolean revertUserArchivedSubscription(String userLid, String channelId) {
+    // Create user but also save snapshot to update with
+    QueryDocumentSnapshot snapshot = userReader.getUserDocument(userLid);
+    User user = userFactory.createFromSnapshot(snapshot);
+    if (snapshot == null || user == null) {
+      return false;
+    }
+
+    // Remove the archived channel from the list of archived channels
+    user.setArchivedChannelList(
+        user.getArchivedChannelList().stream()
+            .filter(channel -> !channel.channelId.equals(channelId))
+            .toList());
+
+    // Add the archived channel back to the list of subscribed channels if it isn't there
+    if (!user.getChannelIdList().contains(channelId)) {
+      User.Channel newChannel = new User.Channel();
+      newChannel.setChannelId(channelId);
+      user.getChannelList().add(newChannel);
+    }
+
+    try {
+      getReference(snapshot).update(user.toMap());
+    } catch (IllegalArgumentException e) {
+      log.error("Unable to Remove from Archived Channel List");
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
    * Updates the username, display name, and image from recent Letterboxd data.
    *
    * @param member Letterboxd Member object from API.
