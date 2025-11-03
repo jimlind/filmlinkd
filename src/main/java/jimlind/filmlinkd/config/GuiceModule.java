@@ -3,6 +3,7 @@ package jimlind.filmlinkd.config;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import jimlind.filmlinkd.cache.EntryCache;
+import jimlind.filmlinkd.config.modules.AdminModule;
 import jimlind.filmlinkd.config.modules.DiscordModule;
 import jimlind.filmlinkd.config.modules.GoogleModule;
 import jimlind.filmlinkd.config.modules.LetterboxdModule;
@@ -59,7 +60,8 @@ public class GuiceModule extends AbstractModule {
     bind(ScrapedResultQueueDispatcher.class).in(Scopes.SINGLETON);
     bind(StatLogDispatcher.class).in(Scopes.SINGLETON);
 
-    // Discord, Google, and Letterboxd Dependency Modules
+    // Collections of Other Dependency Modules
+    install(new AdminModule());
     install(new DiscordModule());
     install(new GoogleModule());
     install(new LetterboxdModule());
