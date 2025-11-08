@@ -23,6 +23,8 @@ import jimlind.filmlinkd.system.ShutdownThread;
 import jimlind.filmlinkd.system.UserCoordinator;
 import jimlind.filmlinkd.system.dispatcher.ScrapedResultQueueDispatcher;
 import jimlind.filmlinkd.system.dispatcher.StatLogDispatcher;
+import jimlind.filmlinkd.themoviedb.Client;
+import jimlind.filmlinkd.themoviedb.MovieApi;
 
 /** Contains all the guts for dependency injection to work. */
 public class GuiceModule extends AbstractModule {
@@ -59,6 +61,10 @@ public class GuiceModule extends AbstractModule {
     // System Dispatcher Modules
     bind(ScrapedResultQueueDispatcher.class).in(Scopes.SINGLETON);
     bind(StatLogDispatcher.class).in(Scopes.SINGLETON);
+
+    // The Movie Database Modules
+    bind(Client.class).in(Scopes.SINGLETON);
+    bind(MovieApi.class).in(Scopes.SINGLETON);
 
     // Collections of Other Dependency Modules
     install(new AdminModule());
