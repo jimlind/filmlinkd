@@ -10,6 +10,7 @@ public class AppConstants {
       "letterboxd.apiKeySecretName";
   public static final String PROP_KEY_LETTERBOXD_API_SHARED_SECRET_NAME =
       "letterboxd.apiSharedSecretName";
+  public static final String PROP_KEY_THE_MOVIE_DATABASE_API_KEY = "theMovieDatabase.apiKey";
 
   public static final String PROP_KEY_DISCORD_APPLICATION_ID = "discordApplicationId";
   public static final String PROP_KEY_DISCORD_BOT_TOKEN_SECRET_NAME = "discordBotTokenSecretName";

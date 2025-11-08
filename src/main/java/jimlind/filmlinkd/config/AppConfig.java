@@ -23,6 +23,7 @@ public class AppConfig {
   @Getter private final String googleProjectId;
   @Getter private final String letterboxdApiKey;
   @Getter private final String letterboxdApiShared;
+  @Getter private final String theMovieDatabaseApiKey;
   @Getter private final String pubSubCommandSubscriptionName;
   @Getter private final String pubSubCommandTopicName;
   @Getter private final String pubSubLogEntrySubscriptionName;
@@ -52,8 +53,11 @@ public class AppConfig {
         appProperties.getProperty(AppConstants.PROP_KEY_LETTERBOXD_API_KEY_SECRET_NAME);
     String letterboxdSharedName =
         appProperties.getProperty(AppConstants.PROP_KEY_LETTERBOXD_API_SHARED_SECRET_NAME);
+    String theMovieDatabaseApiKeyName =
+        appProperties.getProperty(AppConstants.PROP_KEY_THE_MOVIE_DATABASE_API_KEY);
     letterboxdApiKey = secretManager.getSecret(googleProjectId, letterboxdKeyName);
     letterboxdApiShared = secretManager.getSecret(googleProjectId, letterboxdSharedName);
+    theMovieDatabaseApiKey = secretManager.getSecret(googleProjectId, theMovieDatabaseApiKeyName);
 
     // Process environment properties resource
     @Nullable String environment = System.getenv("FILMLINKD_ENVIRONMENT");
