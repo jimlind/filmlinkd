@@ -44,7 +44,7 @@ public class RouletteHandler implements Handler {
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
 
-    MovieLatest response = this.movieApi.getLatest();
+    MovieLatest response = movieApi.getLatest();
     if (response == null) {
       sendUndefined(event);
       return;
