@@ -1,79 +1,86 @@
 package jimlind.filmlinkd.discord.event.handler;
 
 import com.google.inject.Inject;
-import java.security.SecureRandom;
 import java.util.List;
+import java.util.Random;
 import jimlind.filmlinkd.discord.embed.factory.FilmEmbedFactory;
 import jimlind.filmlinkd.model.CombinedLbFilmModel;
 import jimlind.filmlinkd.system.letterboxd.api.FilmApi;
-import jimlind.filmlinkd.system.letterboxd.web.LetterboxdIdWeb;
+import jimlind.filmlinkd.system.letterboxd.api.FilmsApi;
+import jimlind.filmlinkd.system.letterboxd.model.LbFilm;
+import jimlind.filmlinkd.system.letterboxd.model.LbFilmStatistics;
+import jimlind.filmlinkd.system.letterboxd.model.LbFilmSummary;
+import jimlind.filmlinkd.system.letterboxd.model.LbFilmsResponse;
+import jimlind.filmlinkd.themoviedb.MovieApi;
+import jimlind.filmlinkd.themoviedb.model.MovieLatest;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 /** Handles the /roulette command to show a random film. */
 public class RouletteHandler implements Handler {
-  private static final int MIN_FILM_ID_LENGTH = 2;
-  private static final String CHARACTERS =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
   private final FilmApi filmApi;
+  private final FilmsApi filmsApi;
   private final FilmEmbedFactory filmEmbedFactory;
-  private final LetterboxdIdWeb letterboxdIdWeb;
+  private final MovieApi movieApi;
 
   /**
    * Constructor for this class.
    *
    * @param filmApi Fetches film data from Letterboxd API
+   * @param filmsApi Fetches a collection of film data from Letterboxd API
    * @param filmEmbedFactory Builds the embed for the /filmEmbed command
-   * @param letterboxdIdWeb Class that translates a Letterboxd id to another piece of data
+   * @param movieApi Fetches movie data from TheMovieDatabase API
    */
   @Inject
   RouletteHandler(
-      FilmApi filmApi, FilmEmbedFactory filmEmbedFactory, LetterboxdIdWeb letterboxdIdWeb) {
+      FilmApi filmApi, FilmsApi filmsApi, FilmEmbedFactory filmEmbedFactory, MovieApi movieApi) {
     this.filmApi = filmApi;
+    this.filmsApi = filmsApi;
     this.filmEmbedFactory = filmEmbedFactory;
-    this.letterboxdIdWeb = letterboxdIdWeb;
+    this.movieApi = movieApi;
   }
 
   @Override
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
-    String filmString = findOneFilm(getRandomLid(), 0);
 
-    CombinedLbFilmModel combinedLbFilmModel = filmApi.fetch(filmString);
-    if (combinedLbFilmModel == null) {
-      event.getHook().sendMessage(NO_RESULTS_FOUND).queue();
+    MovieLatest response = this.movieApi.getLatest();
+    if (response == null) {
+      sendUndefined(event);
       return;
     }
 
+    // Get 6 random numbers in the range of TMDB movie ids and fetch the films from Letterboxd
+    List<Integer> tmdbIdList = new Random().ints(6, 2, response.getId() + 1).boxed().toList();
+    LbFilmsResponse filmsResponse = filmsApi.fetch(tmdbIdList);
+    if (filmsResponse == null || filmsResponse.items.isEmpty()) {
+      sendUndefined(event);
+      return;
+    }
+
+    LbFilmSummary filmSummary = filmsResponse.items.getFirst();
+    LbFilm filmDetailsResponse = filmApi.getFilmDetailsByLid(filmSummary.getId());
+    LbFilmStatistics filmStatisticsResponse = filmApi.getLbFilmStatistics(filmSummary.getId());
+    if (filmDetailsResponse == null || filmStatisticsResponse == null) {
+      sendUndefined(event);
+      return;
+    }
+
+    CombinedLbFilmModel combinedLbFilmModel = new CombinedLbFilmModel();
+    combinedLbFilmModel.setFilm(filmDetailsResponse);
+    combinedLbFilmModel.setFilmStatistics(filmStatisticsResponse);
+    combinedLbFilmModel.setFilmSummary(filmSummary);
+
+    sendCombinedFilmMessage(event, combinedLbFilmModel);
+  }
+
+  private void sendUndefined(SlashCommandInteractionEvent event) {
+    sendCombinedFilmMessage(event, filmApi.fetch("undefined"));
+  }
+
+  private void sendCombinedFilmMessage(
+      SlashCommandInteractionEvent event, CombinedLbFilmModel combinedLbFilmModel) {
     List<MessageEmbed> messageEmbedList = filmEmbedFactory.create(combinedLbFilmModel);
     event.getHook().sendMessageEmbeds(messageEmbedList).queue();
-  }
-
-  private String findOneFilm(String filmId, int count) {
-    // Send the users to this wierd movie that Letterboxd tries to default to
-    if (filmId.length() < MIN_FILM_ID_LENGTH) {
-      return "undefined";
-    }
-
-    String location = letterboxdIdWeb.getLocationFromLid(filmId);
-    if (location.contains("/film/")) {
-      return location.substring(location.lastIndexOf("/film/") + 6, location.lastIndexOf('/'));
-    } else {
-      return findOneFilm(filmId.substring(0, filmId.length() - 1), count + 1);
-    }
-  }
-
-  private String getRandomLid() {
-    SecureRandom random = new SecureRandom();
-    StringBuilder stringBuilder = new StringBuilder();
-
-    for (int i = 0; i < 7; i++) {
-      int randomIndex = random.nextInt(CHARACTERS.length());
-      char randomChar = CHARACTERS.charAt(randomIndex);
-      stringBuilder.append(randomChar);
-    }
-
-    return stringBuilder.toString();
   }
 }
