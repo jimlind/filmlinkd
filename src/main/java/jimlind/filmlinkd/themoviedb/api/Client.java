@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.themoviedb;
+package jimlind.filmlinkd.themoviedb.api;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 

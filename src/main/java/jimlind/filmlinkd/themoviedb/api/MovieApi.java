@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.themoviedb;
+package jimlind.filmlinkd.themoviedb.api;
 
 import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;

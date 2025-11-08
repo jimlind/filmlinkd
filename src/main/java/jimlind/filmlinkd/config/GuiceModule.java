@@ -23,8 +23,8 @@ import jimlind.filmlinkd.system.ShutdownThread;
 import jimlind.filmlinkd.system.UserCoordinator;
 import jimlind.filmlinkd.system.dispatcher.ScrapedResultQueueDispatcher;
 import jimlind.filmlinkd.system.dispatcher.StatLogDispatcher;
-import jimlind.filmlinkd.themoviedb.Client;
-import jimlind.filmlinkd.themoviedb.MovieApi;
+import jimlind.filmlinkd.themoviedb.api.Client;
+import jimlind.filmlinkd.themoviedb.api.MovieApi;
 
 /** Contains all the guts for dependency injection to work. */
 public class GuiceModule extends AbstractModule {

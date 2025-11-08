@@ -11,7 +11,7 @@ import jimlind.filmlinkd.system.letterboxd.model.LbFilm;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilmStatistics;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilmSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilmsResponse;
-import jimlind.filmlinkd.themoviedb.MovieApi;
+import jimlind.filmlinkd.themoviedb.api.MovieApi;
 import jimlind.filmlinkd.themoviedb.model.MovieLatest;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
