@@ -5,6 +5,7 @@ import com.google.inject.Scopes;
 import jimlind.filmlinkd.system.letterboxd.api.Client;
 import jimlind.filmlinkd.system.letterboxd.api.ContributorApi;
 import jimlind.filmlinkd.system.letterboxd.api.FilmApi;
+import jimlind.filmlinkd.system.letterboxd.api.FilmsApi;
 import jimlind.filmlinkd.system.letterboxd.api.ListApi;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.api.MemberApi;
@@ -23,6 +24,7 @@ public class LetterboxdModule extends AbstractModule {
     bind(Client.class).in(Scopes.SINGLETON);
     bind(ContributorApi.class).in(Scopes.SINGLETON);
     bind(FilmApi.class).in(Scopes.SINGLETON);
+    bind(FilmsApi.class).in(Scopes.SINGLETON);
     bind(ListApi.class).in(Scopes.SINGLETON);
     bind(LogEntriesApi.class).in(Scopes.SINGLETON);
     bind(MemberApi.class).in(Scopes.SINGLETON);
