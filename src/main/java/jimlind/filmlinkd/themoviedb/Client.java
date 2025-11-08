@@ -15,7 +15,6 @@ import jimlind.filmlinkd.config.AppConfig;
 import org.apache.http.client.utils.URIBuilder;
 
 public class Client {
-  .OK = 200;
   private static final String BASE_URL = "https://api.themoviedb.org/3/";
 
   private final String apiKey;
