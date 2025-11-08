@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
-/** Represents the detailed film data returned from The Movie Database (TMDB) API. */
+/** Data model returned from The Movie Database API for their latest movie. */
 @Getter
 @Setter
 public class MovieLatest {
@@ -64,6 +64,7 @@ public class MovieLatest {
   @SerializedName("vote_count")
   private int voteCount;
 
+  /** Data model reflecting TMDBs concept of a collection. */
   @Getter
   @Setter
   public static class BelongsToCollection {
@@ -77,6 +78,7 @@ public class MovieLatest {
     private String backdropPath;
   }
 
+  /** Data model reflecting TMDBs concept of a genre. */
   @Getter
   @Setter
   public static class Genre {
@@ -84,6 +86,7 @@ public class MovieLatest {
     private String name;
   }
 
+  /** Data model for the film's production company. */
   @Getter
   @Setter
   public static class ProductionCompany {
@@ -98,6 +101,7 @@ public class MovieLatest {
     private String originCountry;
   }
 
+  /** Data model for the film's production country (String and ISO 3166-1 code). */
   @Getter
   @Setter
   public static class ProductionCountry {
@@ -107,6 +111,7 @@ public class MovieLatest {
     private String name;
   }
 
+  /** Data model for the film's spoken language (Strings and ISO 3166-1 code). */
   @Getter
   @Setter
   public static class SpokenLanguage {

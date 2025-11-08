@@ -5,6 +5,10 @@ import java.util.List;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilmsResponse;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Implements <a href="https://api-docs.letterboxd.com/#operation-GET-films">GET /films</a> for a
+ * list of films.
+ */
 public class FilmsApi {
   private final Client client;
 
@@ -18,6 +22,14 @@ public class FilmsApi {
     this.client = client;
   }
 
+  /**
+   * Very specific implementation that accepts a list of Integers assuming they are TMDB film ids
+   * and loading any matching Letterboxd films. Letterboxd films are a subset of TMDB film ids so
+   * valid TMDB films may not return matches.
+   *
+   * @param input A list of TMDB film ids
+   * @return The response from the films API as {@link LbFilmsResponse}
+   */
   @Nullable
   public LbFilmsResponse fetch(List<Integer> input) {
     String filmIdParams =

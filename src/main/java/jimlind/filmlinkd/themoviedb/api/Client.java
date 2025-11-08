@@ -14,16 +14,28 @@ import java.time.Duration;
 import jimlind.filmlinkd.config.AppConfig;
 import org.apache.http.client.utils.URIBuilder;
 
+/** The basis for The Movie Database API calls. */
 public class Client {
   private static final String BASE_URL = "https://api.themoviedb.org/3/";
 
   private final String apiKey;
 
+  /**
+   * Constructor for this class.
+   *
+   * @param appConfig Contains application and environment variables
+   */
   @Inject
   public Client(AppConfig appConfig) {
     this.apiKey = appConfig.getTheMovieDatabaseApiKey();
   }
 
+  /**
+   * Gets data from the TMDB API.
+   *
+   * @param path The local path to call excluding any parameters
+   * @return The full string response from the API or an empty string if there is a failure
+   */
   public String get(String path) {
     URI uri;
     try {

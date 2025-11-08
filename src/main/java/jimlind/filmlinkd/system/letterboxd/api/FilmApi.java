@@ -9,10 +9,7 @@ import jimlind.filmlinkd.system.letterboxd.model.LbSearchResponse;
 import jimlind.filmlinkd.system.letterboxd.utils.UrlUtils;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Implements <a href="https://api-docs.letterboxd.com/#operation-GET-search">GET /search</a> for
- * films.
- */
+/** Implements a number of API clients used specifically to return film data. */
 public class FilmApi {
   private final Client client;
 
@@ -28,7 +25,8 @@ public class FilmApi {
 
   /**
    * Searches for film with the Letterboxd API. Only returns a small amount of information about the
-   * film for showing a snipped not the full film information available.
+   * film for showing a snippet not the full film information available. Uses the <a
+   * href="https://api-docs.letterboxd.com/#operation-GET-search">GET /search</a> API endpoint.
    *
    * @param searchTerm Search terms to use to find the film
    * @return The response from the search API as {@link LbFilmSummary}
@@ -78,11 +76,26 @@ public class FilmApi {
     return combinedLbFilmModel;
   }
 
+  /**
+   * Implements <a href="https://api-docs.letterboxd.com/#operation-GET-film_id_statistics">GET
+   * /film/{id}/statistics</a> to get film details.
+   *
+   * @param lid The Letterboxd ID for a film
+   * @return The response from the film statistics API as {@link LbFilmStatistics} or null if
+   *     failure
+   */
   @Nullable
   public LbFilmStatistics getLbFilmStatistics(String lid) {
     return this.client.getAuthorized("film/" + lid + "/statistics", LbFilmStatistics.class);
   }
 
+  /**
+   * Implements <a href="https://api-docs.letterboxd.com/#operation-GET-film_id">GET film/{id}</a>
+   * to get film details.
+   *
+   * @param lid The Letterboxd ID for a film
+   * @return The response from the film details API as {@link LbFilm} or null if failure
+   */
   @Nullable
   public LbFilm getFilmDetailsByLid(String lid) {
     return this.client.getAuthorized("film/" + lid, LbFilm.class);
