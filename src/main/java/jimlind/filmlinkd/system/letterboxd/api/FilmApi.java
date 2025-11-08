@@ -7,6 +7,7 @@ import jimlind.filmlinkd.system.letterboxd.model.LbFilmStatistics;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilmSummary;
 import jimlind.filmlinkd.system.letterboxd.model.LbSearchResponse;
 import jimlind.filmlinkd.system.letterboxd.utils.UrlUtils;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Implements <a href="https://api-docs.letterboxd.com/#operation-GET-search">GET /search</a> for
@@ -60,17 +61,11 @@ public class FilmApi {
       return null;
     }
 
-    // Load film details
-    String filmDetailsPath = "film/" + filmSummary.getId();
-    LbFilm filmDetailsResponse = this.client.getAuthorized(filmDetailsPath, LbFilm.class);
+    LbFilm filmDetailsResponse = getFilmDetailsByLid(filmSummary.getId());
     if (filmDetailsResponse == null) {
       return null;
     }
-
-    // Load film statistics
-    String filmStatisticsPath = "film/" + filmSummary.getId() + "/statistics";
-    LbFilmStatistics filmStatisticsResponse =
-        this.client.getAuthorized(filmStatisticsPath, LbFilmStatistics.class);
+    LbFilmStatistics filmStatisticsResponse = getLbFilmStatistics(filmSummary.getId());
     if (filmStatisticsResponse == null) {
       return null;
     }
@@ -81,5 +76,15 @@ public class FilmApi {
     combinedLbFilmModel.setFilmSummary(filmSummary);
 
     return combinedLbFilmModel;
+  }
+
+  @Nullable
+  public LbFilmStatistics getLbFilmStatistics(String lid) {
+    return this.client.getAuthorized("film/" + lid + "/statistics", LbFilmStatistics.class);
+  }
+
+  @Nullable
+  public LbFilm getFilmDetailsByLid(String lid) {
+    return this.client.getAuthorized("film/" + lid, LbFilm.class);
   }
 }
