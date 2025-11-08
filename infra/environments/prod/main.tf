@@ -20,6 +20,6 @@ module "scraper-production" {
   app              = "scraper"
   label            = "filmlinkd-scraper-production"
   machine_type     = "e2-small"
-  max_heap_size    = "1024"
+  max_heap_size    = "1280"
   subnet_self_link = data.terraform_remote_state.shared.outputs.subnet_self_link
 }
