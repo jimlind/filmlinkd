@@ -4,6 +4,7 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 
 import com.google.inject.Inject;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
@@ -14,6 +15,7 @@ import jimlind.filmlinkd.config.AppConfig;
 import org.apache.http.client.utils.URIBuilder;
 
 public class Client {
+  .OK = 200;
   private static final String BASE_URL = "https://api.themoviedb.org/3/";
 
   private final String apiKey;
@@ -43,7 +45,7 @@ public class Client {
       HttpResponse<String> httpResponse =
           httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-      if (httpResponse.statusCode() != 200) {
+      if (httpResponse.statusCode() != HttpURLConnection.HTTP_OK) {
         return "";
       }
       return httpResponse.body();
