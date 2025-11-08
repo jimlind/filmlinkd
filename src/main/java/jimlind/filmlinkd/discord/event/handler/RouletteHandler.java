@@ -53,12 +53,12 @@ public class RouletteHandler implements Handler {
     // Get 6 random numbers in the range of TMDB movie ids and fetch the films from Letterboxd
     List<Integer> tmdbIdList = new Random().ints(6, 2, response.getId() + 1).boxed().toList();
     LbFilmsResponse filmsResponse = filmsApi.fetch(tmdbIdList);
-    if (filmsResponse == null || filmsResponse.items.isEmpty()) {
+    if (filmsResponse == null || filmsResponse.getItems().isEmpty()) {
       sendUndefined(event);
       return;
     }
 
-    LbFilmSummary filmSummary = filmsResponse.items.getFirst();
+    LbFilmSummary filmSummary = filmsResponse.getItems().getFirst();
     LbFilm filmDetailsResponse = filmApi.getFilmDetailsByLid(filmSummary.getId());
     LbFilmStatistics filmStatisticsResponse = filmApi.getLbFilmStatistics(filmSummary.getId());
     if (filmDetailsResponse == null || filmStatisticsResponse == null) {
