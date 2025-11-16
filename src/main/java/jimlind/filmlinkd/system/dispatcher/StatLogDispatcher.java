@@ -10,7 +10,7 @@ import jimlind.filmlinkd.system.MemoryInformationLogger;
  */
 public class StatLogDispatcher extends TimedTaskRunner {
   private static final long INITIAL_DELAY_MILLISECONDS = 0;
-  private static final long INTERVAL_MILLISECONDS = 30000; // 30 seconds
+  private static final long INTERVAL_MILLISECONDS = 600000; // 10 minutes
 
   private final MemoryInformationLogger memoryInformationLogger;
 
