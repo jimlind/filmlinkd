@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euxo pipefail
 
 echo "Booting up VM..."
 echo "Hostname: $(hostname)"
@@ -25,11 +25,29 @@ RELEASE_URL=$(echo "$RELEASE_JSON" | jq -r '.[] | select(.binary.architecture ==
 curl -fsSL "$RELEASE_URL" -o temurin-jre.tar.gz
 mkdir -p /opt/java
 tar -xzf temurin-jre.tar.gz -C /opt/java --strip-components=1
-export PATH="/opt/java/bin:$PATH"
 
 # Get Most Recent Filmlinkd Bot
 BOT_URL=https://github.com/jimlind/filmlinkd/releases/latest/download/${app}.jar
-curl -fsSL "$BOT_URL" -o app.jar
+mkdir -p /opt/filmlinkd
+curl -fsSL "$BOT_URL" -o "/opt/filmlinkd/app.jar"
 
-# Run the Bot
-exec java -XX:+UseSerialGC -Xmx${max_heap_size}m -jar app.jar
+# Create Systemd Unit File
+cat <<EOF | tee /etc/systemd/system/filmlinkd.service
+[Unit]
+Description=Filmlinkd
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/filmlinkd
+ExecStart=/opt/java/bin/java -XX:+UseSerialGC -Xmx${max_heap_size}m -jar /opt/filmlinkd/app.jar
+Restart=always
+RestartSec=60
+
+[Install]
+WantedBy=default.target
+EOF
+
+# Enable Service and Run the Bot
+systemctl daemon-reload
+systemctl enable filmlinkd
+systemctl start filmlinkd
