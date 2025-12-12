@@ -19,7 +19,7 @@ apt-get update -qq && apt-get install -y --no-install-recommends curl ca-certifi
 
 # Get Most Recent Temurin JRE
 RELEASE_JSON=$(curl -s https://api.adoptium.net/v3/assets/latest/21/hotspot)
-RELEASE_URL=$(echo "$RELEASE_JSON" | jq -r '.[] | select(.binary.architecture == "x64" and .binary.os == "linux" and .binary.image_type == "jre") | .binary.package.link')
+RELEASE_URL=$(jq -r '.[] | select(.binary.architecture == "x64" and .binary.os == "linux" and .binary.image_type == "jre") | .binary.package.link')
 
 # Install Downloaded Termurin
 curl -fsSL "$RELEASE_URL" -o temurin-jre.tar.gz
@@ -49,5 +49,5 @@ EOF
 
 # Enable Service and Run the Bot
 systemctl daemon-reload
-systemctl enable filmlinkd
+systemctl disable filmlinkd
 systemctl start filmlinkd
