@@ -7,9 +7,6 @@ echo "Date: $(date)"
 echo "Environment: ${environment}"
 echo "Timestamp: ${timestamp}"
 
-# Set the Environment Variable
-export FILMLINKD_ENVIRONMENT=${environment}
-
 # Install Google Cloud Ops
 curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
 bash add-google-cloud-ops-agent-repo.sh --also-install
@@ -42,6 +39,7 @@ WorkingDirectory=/opt/filmlinkd
 ExecStart=/opt/java/bin/java -XX:+UseSerialGC -Xmx${max_heap_size}m -jar /opt/filmlinkd/app.jar
 Restart=always
 RestartSec=60
+Environment=FILMLINKD_ENVIRONMENT=${environment}
 
 [Install]
 WantedBy=default.target
