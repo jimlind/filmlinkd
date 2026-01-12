@@ -40,7 +40,7 @@ public class ConnectionManager {
           DefaultShardManagerBuilder.createLight(token).addEventListeners(eventListener).build();
       shardManagerStorage.set(shardManager);
     } catch (InvalidTokenException e) {
-      log.error("Unable to connect to Discord API from Invalid Token");
+      log.error("Unable to connect to Discord API with configured Bot Token");
     }
   }
 
