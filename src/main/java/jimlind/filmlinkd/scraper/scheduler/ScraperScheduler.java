@@ -6,8 +6,10 @@ import java.util.concurrent.TimeUnit;
 import jimlind.filmlinkd.scraper.cache.BaseUserCache;
 import jimlind.filmlinkd.scraper.cache.clearer.BaseUserCacheClearer;
 import jimlind.filmlinkd.scraper.runner.BaseScraper;
+import lombok.extern.slf4j.Slf4j;
 
 /** Schedules the scheduler that runs over every user. */
+@Slf4j
 public class ScraperScheduler {
   protected BaseScraper scraper;
   protected BaseUserCache userCache;
@@ -45,8 +47,27 @@ public class ScraperScheduler {
     // These should run forever so not closing them
     @SuppressWarnings("PMD.CloseResource")
     ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    scheduler.scheduleWithFixedDelay(scraper, 0, scraperPeriod, TimeUnit.SECONDS);
     scheduler.scheduleWithFixedDelay(
-        userCacheClearer, userCachePeriod, userCachePeriod, TimeUnit.HOURS);
+        () -> {
+          try {
+            scraper.run();
+          } catch (Throwable t) {
+            log.error("Error running scraper", t);
+          }
+        },
+        0,
+        scraperPeriod,
+        TimeUnit.SECONDS);
+    scheduler.scheduleWithFixedDelay(
+        () -> {
+          try {
+            userCacheClearer.run();
+          } catch (Throwable t) {
+            log.error("Error running user cache clearer", t);
+          }
+        },
+        userCachePeriod,
+        userCachePeriod,
+        TimeUnit.HOURS);
   }
 }
