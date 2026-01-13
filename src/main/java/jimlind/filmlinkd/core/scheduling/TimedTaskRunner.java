@@ -45,15 +45,7 @@ public abstract class TimedTaskRunner {
 
     scheduledFuture =
         scheduler.scheduleAtFixedRate(
-            () -> {
-              runTask();
-              if (shouldStop()) {
-                stop();
-              }
-            },
-            initialDelayMilliseconds,
-            intervalMilliseconds,
-            TimeUnit.MILLISECONDS);
+            this::runSafely, initialDelayMilliseconds, intervalMilliseconds, TimeUnit.MILLISECONDS);
   }
 
   /** Stops the SingleThreadScheduledExecutor. */
@@ -69,6 +61,18 @@ public abstract class TimedTaskRunner {
     } catch (InterruptedException e) {
       scheduler.shutdownNow();
       Thread.currentThread().interrupt();
+    }
+  }
+
+  /** Runs the task in a try stop and attempts to trigger stopping appropriately. */
+  private void runSafely() {
+    try {
+      runTask();
+    } catch (Throwable t) {
+      log.error("Error running task", t);
+    }
+    if (shouldStop()) {
+      stop();
     }
   }
 }
