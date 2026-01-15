@@ -40,6 +40,7 @@ public class ScraperScheduler {
   }
 
   /** Method that activates the scraper and clearer. */
+  @SuppressWarnings("PMD.AvoidCatchingThrowable")
   public void start() {
     // Set up the user cache with an appropriate random starting point before the scrapers start
     userCache.initializeRandomPage();

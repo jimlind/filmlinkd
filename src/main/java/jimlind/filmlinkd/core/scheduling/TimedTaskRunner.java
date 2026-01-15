@@ -65,6 +65,7 @@ public abstract class TimedTaskRunner {
   }
 
   /** Runs the task in a try stop and attempts to trigger stopping appropriately. */
+  @SuppressWarnings("PMD.AvoidCatchingThrowable")
   private void runSafely() {
     try {
       runTask();
