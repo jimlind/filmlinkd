@@ -16,16 +16,11 @@ import java.net.http.HttpClient;
 import java.net.http.HttpConnectTimeoutException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import jimlind.filmlinkd.config.AppConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.utils.URIBuilder;
@@ -41,15 +36,18 @@ public class Client {
   private static final String URI_KEY = "uri";
   private static final String PATH_KEY = "path";
   private final AppConfig appConfig;
+  private final SignatureBuilder signatureBuilder;
 
   /**
    * Constructor for this class.
    *
    * @param appConfig Contains application and environment variables
+   * @param signatureBuilder Helper class to build the signature for Letterboxd API calls
    */
   @Inject
-  Client(AppConfig appConfig) {
+  Client(AppConfig appConfig, SignatureBuilder signatureBuilder) {
     this.appConfig = appConfig;
+    this.signatureBuilder = signatureBuilder;
   }
 
   /**
@@ -72,7 +70,7 @@ public class Client {
               .addParameter("timestamp", String.valueOf(Instant.now().getEpochSecond()))
               .build();
       url = uri.toURL();
-      authorization = "Signature " + this.buildSignature("GET", uri.toString());
+      authorization = "Signature " + signatureBuilder.buildSignature("GET", uri.toString());
     } catch (URISyntaxException | MalformedURLException e) {
       log.atError()
           .setMessage("Failed to build URL or Authorization Signature")
@@ -161,7 +159,7 @@ public class Client {
               .addParameter("nonce", nonce)
               .addParameter("timestamp", now)
               .build();
-      String authorization = "Signature " + this.buildSignature("GET", uri.toString());
+      String authorization = "Signature " + signatureBuilder.buildSignature("GET", uri.toString());
 
       return this.request(uri, authorization, inputClass);
     } catch (URISyntaxException e) {
@@ -211,29 +209,6 @@ public class Client {
     } catch (OutOfMemoryError e) {
       log.atError().setMessage("Error on Json Parsing").addKeyValue("body", responseBody).log();
       return null;
-    }
-  }
-
-  private String bytesToHex(byte[] in) {
-    final StringBuilder builder = new StringBuilder();
-    for (final byte b : in) {
-      builder.append(String.format("%02x", b));
-    }
-    return builder.toString();
-  }
-
-  private String buildSignature(String method, String url) {
-    String shared = appConfig.getLetterboxdApiShared();
-    SecretKeySpec secretKeySpec = new SecretKeySpec(shared.getBytes(), "HmacSHA256");
-
-    // TODO: This used to have an unchecked try/catch wrapper
-    try {
-      Mac sha256Hmac = Mac.getInstance("HmacSHA256");
-      sha256Hmac.init(secretKeySpec);
-      String data = method.toUpperCase(Locale.ROOT) + "\u0000" + url + "\u0000"; // "�"
-      return bytesToHex(sha256Hmac.doFinal(data.getBytes()));
-    } catch (InvalidKeyException | NoSuchAlgorithmException e) {
-      return "";
     }
   }
 }
