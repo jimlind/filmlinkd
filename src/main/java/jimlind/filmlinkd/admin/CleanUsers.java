@@ -3,9 +3,11 @@ package jimlind.filmlinkd.admin;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.inject.Inject;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.google.db.UserReader;
@@ -51,14 +53,15 @@ public class CleanUsers {
    * @param pageValue Allow the command to start on a specific page.
    */
   public void run(String pageValue) {
-    try (PrintWriter out = new PrintWriter(System.out, true)) {
+    try (PrintWriter out =
+        new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true)) {
       boolean usersExist = true;
       int usersPage = pageValue == null ? 0 : Integer.parseInt(pageValue);
 
       while (usersExist) {
         out.print("Reading page " + usersPage + " of users...\n* ");
-        List<QueryDocumentSnapshot> userList =
-            userReader.getActiveUsersPage(PAGE_SIZE, usersPage++);
+        usersPage++;
+        List<QueryDocumentSnapshot> userList = userReader.getActiveUsersPage(PAGE_SIZE, usersPage);
         if (userList.isEmpty()) {
           out.println("DONE!");
           usersExist = false;
@@ -70,7 +73,8 @@ public class CleanUsers {
           if (user != null) {
             try {
               HttpURLConnection connection = getHttpUrlConnection(user);
-              processOutput(connection, out, user, i++);
+              i++;
+              processOutput(connection, out, user, i);
             } catch (IOException e) {
               out.println("!");
               out.flush();

@@ -1,6 +1,8 @@
 package jimlind.filmlinkd.admin.channels;
 
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -17,7 +19,8 @@ public class NullFilter {
    * @return The list of channels that are null
    */
   public List<String> filter(ShardManager globalShardManager, List<String> input) {
-    try (PrintWriter out = new PrintWriter(System.out, true)) {
+    try (PrintWriter out =
+        new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true)) {
       List<String> nullChannels = new ArrayList<>(input);
       for (int i = 0; i < 10; i++) {
         out.println(nullChannels.size() + " possible null channels");

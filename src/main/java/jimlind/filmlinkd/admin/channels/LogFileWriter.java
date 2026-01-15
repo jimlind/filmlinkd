@@ -1,7 +1,10 @@
 package jimlind.filmlinkd.admin.channels;
 
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,10 +17,15 @@ public class LogFileWriter {
    * @param tag Specific tag to include in file name
    * @param timestamp Timestamp ot include in file name
    */
-  @SuppressWarnings("PMD.AvoidFileStream")
   public void write(String content, String tag, String timestamp) {
     String filename = tag + "-" + timestamp + ".txt";
-    try (FileWriter writer = new FileWriter(filename, true)) {
+
+    try (java.io.BufferedWriter writer =
+        Files.newBufferedWriter(
+            Paths.get(filename),
+            StandardCharsets.UTF_8,
+            StandardOpenOption.CREATE,
+            StandardOpenOption.APPEND)) {
       writer.write(content + System.lineSeparator());
     } catch (IOException ignored) {
       Logger logger = Logger.getLogger(LogFileWriter.class.getName());

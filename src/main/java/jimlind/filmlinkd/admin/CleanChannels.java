@@ -2,8 +2,10 @@ package jimlind.filmlinkd.admin;
 
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.inject.Inject;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -104,7 +106,8 @@ public class CleanChannels {
    * this temporary admin file.
    */
   public void processData() {
-    try (PrintWriter out = new PrintWriter(System.out, true)) {
+    try (PrintWriter out =
+        new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true)) {
       String[] spinner = {"|", "/", "-", "\\"};
       int progress = 0;
 

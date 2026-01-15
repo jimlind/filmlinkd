@@ -2,7 +2,9 @@ package jimlind.filmlinkd.admin;
 
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.inject.Inject;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.google.db.UserReader;
@@ -39,7 +41,8 @@ public class UndoChannelArchive {
     List<QueryDocumentSnapshot> userSnapshotList =
         userReader.getUserDocumentListByArchivedChannelId(channelId);
 
-    try (PrintWriter out = new PrintWriter(System.out, true)) {
+    try (PrintWriter out =
+        new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true)) {
       for (QueryDocumentSnapshot snapshot : userSnapshotList) {
         User user = userFactory.createFromSnapshot(snapshot);
         if (user != null) {
