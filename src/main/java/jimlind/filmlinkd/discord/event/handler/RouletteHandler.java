@@ -15,6 +15,7 @@ import jimlind.filmlinkd.themoviedb.api.MovieApi;
 import jimlind.filmlinkd.themoviedb.model.MovieLatest;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import org.jetbrains.annotations.Nullable;
 
 /** Handles the /roulette command to show a random film. */
 public class RouletteHandler implements Handler {
@@ -40,11 +41,16 @@ public class RouletteHandler implements Handler {
     this.movieApi = movieApi;
   }
 
+  @Nullable
+  private MovieLatest extractLatest(MovieApi movieApi) {
+    return movieApi.getLatest();
+  }
+
   @Override
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
 
-    MovieLatest response = movieApi.getLatest();
+    MovieLatest response = extractLatest(movieApi);
     if (response == null) {
       sendUndefined(event);
       return;
