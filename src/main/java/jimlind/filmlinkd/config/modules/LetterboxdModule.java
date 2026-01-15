@@ -10,6 +10,7 @@ import jimlind.filmlinkd.system.letterboxd.api.ListApi;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.api.MemberApi;
 import jimlind.filmlinkd.system.letterboxd.api.MemberStatisticsApi;
+import jimlind.filmlinkd.system.letterboxd.api.SignatureBuilder;
 import jimlind.filmlinkd.system.letterboxd.utils.DateUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.LinkUtils;
@@ -29,6 +30,7 @@ public class LetterboxdModule extends AbstractModule {
     bind(LogEntriesApi.class).in(Scopes.SINGLETON);
     bind(MemberApi.class).in(Scopes.SINGLETON);
     bind(MemberStatisticsApi.class).in(Scopes.SINGLETON);
+    bind(SignatureBuilder.class).in(Scopes.SINGLETON);
 
     // Letterboxd Web Scraper Modules
     bind(LetterboxdIdWeb.class).in(Scopes.SINGLETON);
