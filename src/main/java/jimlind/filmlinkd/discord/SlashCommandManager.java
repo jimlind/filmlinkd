@@ -1,25 +1,26 @@
 package jimlind.filmlinkd.discord;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
 import java.util.Locale;
+import java.util.Map;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Provider;
 import jimlind.filmlinkd.discord.event.handler.Handler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 /** Handles all slash commands. The process command here transfers logic to appropriate handler. */
 public class SlashCommandManager {
 
-  private final Injector injector;
+  private final Map<String, Provider<Handler>> handlerMap;
 
   /**
    * Constructor for this class.
    *
-   * @param injector The Guice injector with all dependencies
+   * @param handlerMap Maps Command Handlers to common strings
    */
   @Inject
-  SlashCommandManager(Injector injector) {
-    this.injector = injector;
+  SlashCommandManager(Map<String, Provider<Handler>> handlerMap) {
+    this.handlerMap = handlerMap;
   }
 
   /**
@@ -39,20 +40,13 @@ public class SlashCommandManager {
     return false;
   }
 
-  private @Nullable Handler getHandlerFromEventName(String name) {
-    String fragment =
-        name.substring(0, 1).toUpperCase(Locale.ROOT) + name.substring(1).toLowerCase(Locale.ROOT);
-    String className = String.format("jimlind.filmlinkd.discord.event.handler.%sHandler", fragment);
-
+  @Nullable
+  private Handler getHandlerFromEventName(String name) {
     try {
-      Class<?> clazz = Class.forName(className);
-      Object handler = injector.getInstance(clazz);
-      if (handler instanceof Handler) {
-        return (Handler) handler;
-      } else {
-        return null;
-      }
-    } catch (ClassNotFoundException e) {
+      Provider<Handler> provider = handlerMap.get(name.toLowerCase(Locale.ROOT));
+      System.out.println(provider);
+      return provider != null ? provider.get() : null;
+    } catch (ClassCastException | NullPointerException e) {
       return null;
     }
   }
