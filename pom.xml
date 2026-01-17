@@ -15,6 +15,7 @@
         <junit-bom.version>6.0.2</junit-bom.version>
         <lombok.version>1.18.42</lombok.version>
         <guice.version>7.0.0</guice.version>
+        <dagger.version>2.57.2</dagger.version>
         <guava.version>33.5.0-jre</guava.version>
         <commons-lang3.version>3.20.0</commons-lang3.version>
         <slf4j.version>2.0.17</slf4j.version>
@@ -89,6 +90,11 @@
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
             <version>${guice.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.dagger</groupId>
+            <artifactId>dagger</artifactId>
+            <version>${dagger.version}</version>
         </dependency>
         <!-- Set version of guava to override a vulnerable dependency of guice -->
         <dependency>
@@ -282,6 +288,18 @@
                 <configuration>
                     <source>21</source>
                     <target>21</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>com.google.dagger</groupId>
+                            <artifactId>dagger-compiler</artifactId>
+                            <version>${dagger.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>
