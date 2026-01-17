@@ -4,9 +4,16 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.Locale;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /** Scrapes the Letterboxd website for public member information. */
+@Singleton
 public class MemberWeb {
+  /** Constructor for this class */
+  @Inject
+  public MemberWeb() {}
+
   /**
    * The best way to get the Letterboxd ID associated with a username is by loading the profile page
    * on the web and parsing the data from the headers. The Letterboxd ID is needed for all API

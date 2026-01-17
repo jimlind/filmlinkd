@@ -1,10 +1,11 @@
 package jimlind.filmlinkd.system.letterboxd.api;
 
-import com.google.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntriesResponse;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
  * Implements <a href="https://api-docs.letterboxd.com/#operation-GET-log-entries">GET
  * /log-entries</a>.
  */
+@Singleton
 @Slf4j
 public class LogEntriesApi {
   private final Client client;

@@ -1,12 +1,14 @@
 package jimlind.filmlinkd.system.letterboxd.api;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 
 /**
  * Implements <a href="https://api-docs.letterboxd.com/#operation-GET-member_id">GET
  * /member/{id}</a>.
  */
+@Singleton
 public class MemberApi {
   private final Client client;
 

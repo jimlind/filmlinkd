@@ -1,6 +1,7 @@
 package jimlind.filmlinkd.system.discord.helper;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.system.letterboxd.api.MemberApi;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.web.MemberWeb;
@@ -9,6 +10,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.jetbrains.annotations.Nullable;
 
 /** Interfaces with the web to handle account requests. */
+@Singleton
 public class AccountHelper {
   private final MemberApi memberApi;
   private final MemberWeb memberWeb;
