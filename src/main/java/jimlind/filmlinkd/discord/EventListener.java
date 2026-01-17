@@ -1,6 +1,7 @@
 package jimlind.filmlinkd.discord;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -13,6 +14,7 @@ import net.dv8tion.jda.api.utils.cache.CacheView;
 import org.jetbrains.annotations.NotNull;
 
 /** Custom listener for Discord events. On Ready and Slash Commands are needed here. */
+@Singleton
 @Slf4j
 public class EventListener extends ListenerAdapter {
   private final SlashCommandManager slashCommandManager;

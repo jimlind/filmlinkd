@@ -1,7 +1,7 @@
 package jimlind.filmlinkd.discord;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.exceptions.InvalidTokenException;

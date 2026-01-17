@@ -1,10 +1,10 @@
 package jimlind.filmlinkd.config;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.google.secret.SecretManager;
 import lombok.Getter;
 import lombok.Setter;

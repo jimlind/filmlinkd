@@ -2,9 +2,9 @@ package jimlind.filmlinkd.google.secret;
 
 import com.google.cloud.secretmanager.v1.AccessSecretVersionRequest;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import java.io.IOException;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Handles all things related to the Secret service. Currently only getting because I set the

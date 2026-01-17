@@ -1,6 +1,7 @@
 package jimlind.filmlinkd.system;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.discord.ConnectionManager;
 
 /**
@@ -8,6 +9,7 @@ import jimlind.filmlinkd.discord.ConnectionManager;
  * not sure that it needs to continue to exist. Maybe it should expand to be something that
  * periodically checks the connection status and attempts to act on that.
  */
+@Singleton
 public class DiscordSystem {
   private final ConnectionManager connectionManager;
 
