@@ -1,15 +1,17 @@
 package jimlind.filmlinkd.system.letterboxd.api;
 
-import com.google.inject.Inject;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
 
 /** Helper class to build the signature for Letterboxd API calls. */
+@Singleton
 public class SignatureBuilder {
   private final AppConfig appConfig;
 
