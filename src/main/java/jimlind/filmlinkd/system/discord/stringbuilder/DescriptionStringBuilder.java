@@ -8,7 +8,7 @@ public class DescriptionStringBuilder {
 
   /** Constructor for this class */
   @Inject
-  DescriptionStringBuilder() {}
+  public DescriptionStringBuilder() {}
 
   /**
    * Setter for the description attribute.

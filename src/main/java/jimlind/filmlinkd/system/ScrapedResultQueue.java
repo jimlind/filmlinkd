@@ -1,9 +1,10 @@
 package jimlind.filmlinkd.system;
 
-import com.google.inject.Singleton;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.model.ScrapedResult;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
@@ -19,6 +20,10 @@ import org.jetbrains.annotations.Nullable;
 @Slf4j
 public class ScrapedResultQueue {
   private final List<ScrapedResult> scrapedResultList = new LinkedList<>();
+
+  /** Constructor for this class */
+  @Inject
+  ScrapedResultQueue() {}
 
   /**
    * Puts a message in the queue for processing offline from the PubSub system.

@@ -2,8 +2,9 @@ package jimlind.filmlinkd.factory;
 
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.gson.GsonBuilder;
-import com.google.inject.Inject;
 import com.google.pubsub.v1.PubsubMessage;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.google.db.UserReader;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.ScrapedResult;
@@ -11,6 +12,7 @@ import jimlind.filmlinkd.model.User;
 import lombok.extern.slf4j.Slf4j;
 
 /** A factory for creating instances of the {@link ScrapedResult} model. */
+@Singleton
 @Slf4j
 public class ScrapedResultFactory {
   private final UserFactory userFactory;

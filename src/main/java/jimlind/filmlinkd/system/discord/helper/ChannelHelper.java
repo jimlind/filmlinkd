@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 public class ChannelHelper {
   /** Constructor for this class */
   @Inject
-  ChannelHelper() {}
+  public ChannelHelper() {}
 
   /**
    * Get the channel id as a string from the SlashCommandInteractionEvent. Returns an empty string

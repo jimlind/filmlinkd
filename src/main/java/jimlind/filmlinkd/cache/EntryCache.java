@@ -2,7 +2,8 @@ package jimlind.filmlinkd.cache;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.google.inject.Singleton;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * A wrapper for a Caffeine cache limited to 10,000 entries. The key is the most important piece of
@@ -13,6 +14,7 @@ public class EntryCache {
   Cache<String, Boolean> cache;
 
   /** Constructor for this class. */
+  @Inject
   public EntryCache() {
     cache = Caffeine.newBuilder().maximumSize(10_000).build();
   }
