@@ -1,9 +1,15 @@
 package jimlind.filmlinkd.factory;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.model.Command;
 
 /** A factory for creating instances of the {@link Command} model. */
+@Singleton
 public class CommandFactory {
+  /** Constructor for this class */
+  @Inject
+  CommandFactory() {}
 
   /**
    * Creates and initializes a new Command object.

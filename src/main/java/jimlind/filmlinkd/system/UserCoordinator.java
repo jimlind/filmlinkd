@@ -1,7 +1,8 @@
 package jimlind.filmlinkd.system;
 
 import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.inject.Inject;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.google.db.UserReader;
 import jimlind.filmlinkd.google.db.UserWriter;
@@ -10,6 +11,7 @@ import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import org.jetbrains.annotations.Nullable;
 
 /** Coordinates user actions that would otherwise require multiple method calls. */
+@Singleton
 public class UserCoordinator {
   private final UserFactory userFactory;
   private final UserReader userReader;

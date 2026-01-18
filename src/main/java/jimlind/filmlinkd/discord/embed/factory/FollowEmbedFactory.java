@@ -1,8 +1,9 @@
 package jimlind.filmlinkd.discord.embed.factory;
 
-import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.core.string.DisplayNameFormatter;
 import jimlind.filmlinkd.core.string.UsernameFormatter;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
@@ -13,6 +14,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 /** Builds a Discord embed to display the result of a follow request. */
+@Singleton
 public class FollowEmbedFactory {
   private final DescriptionStringBuilder descriptionStringBuilder;
   private final EmbedBuilderFactory embedBuilderFactory;

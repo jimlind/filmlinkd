@@ -1,8 +1,6 @@
 package jimlind.filmlinkd.google.pubsub;
 
 import com.google.cloud.pubsub.v1.SubscriptionAdminClient;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.protobuf.Duration;
 import com.google.pubsub.v1.ExpirationPolicy;
 import com.google.pubsub.v1.ProjectName;
@@ -11,6 +9,8 @@ import com.google.pubsub.v1.SubscriptionName;
 import com.google.pubsub.v1.TopicName;
 import java.io.IOException;
 import java.util.Objects;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,8 +1,14 @@
 package jimlind.filmlinkd.system.discord.stringbuilder;
 
+import javax.inject.Inject;
+
 /** Build a string that is correctly truncated for a description embed. */
 public class DescriptionStringBuilder {
   private String descriptionText = "";
+
+  /** Constructor for this class */
+  @Inject
+  DescriptionStringBuilder() {}
 
   /**
    * Setter for the description attribute.

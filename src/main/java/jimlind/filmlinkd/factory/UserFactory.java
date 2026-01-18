@@ -1,8 +1,9 @@
 package jimlind.filmlinkd.factory;
 
 import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.inject.Inject;
 import java.util.ArrayList;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
@@ -10,6 +11,7 @@ import jimlind.filmlinkd.system.letterboxd.utils.extractor.MemberAttributes;
 import org.jetbrains.annotations.Nullable;
 
 /** A factory for creating instances of the {@link User} model. */
+@Singleton
 public class UserFactory {
   private final ImageUtils imageUtils;
 

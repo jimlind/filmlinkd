@@ -1,10 +1,10 @@
 package jimlind.filmlinkd.google.pubsub;
 
 import com.google.cloud.pubsub.v1.Publisher;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.pubsub.v1.TopicName;
 import java.io.IOException;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
 import lombok.extern.slf4j.Slf4j;
 

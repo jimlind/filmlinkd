@@ -1,7 +1,8 @@
 package jimlind.filmlinkd.discord.event.handler;
 
-import com.google.inject.Inject;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.discord.embed.factory.FollowEmbedFactory;
 import jimlind.filmlinkd.factory.CommandFactory;
 import jimlind.filmlinkd.google.pubsub.PubSubManager;
@@ -15,6 +16,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 /** Handles the /follow command to follow a user and show new diary entries in specified channel. */
+@Singleton
 public class FollowHandler implements Handler {
   private final AccountHelper accountHelper;
   private final ChannelHelper channelHelper;

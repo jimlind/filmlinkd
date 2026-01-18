@@ -1,11 +1,11 @@
 package jimlind.filmlinkd.reciever;
 
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.pubsub.v1.PubsubMessage;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.scraper.cache.GeneralUserCache;
 import lombok.extern.slf4j.Slf4j;
 

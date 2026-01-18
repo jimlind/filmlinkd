@@ -3,13 +3,20 @@ package jimlind.filmlinkd.system.discord.helper;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 /** A Collection of (actually one) methods that help translate channel data. */
+@Singleton
 public class ChannelHelper {
+  /** Constructor for this class */
+  @Inject
+  ChannelHelper() {}
+
   /**
    * Get the channel id as a string from the SlashCommandInteractionEvent. Returns an empty string
    * if nothing is available. There may be a channel value attached to the event option. That
