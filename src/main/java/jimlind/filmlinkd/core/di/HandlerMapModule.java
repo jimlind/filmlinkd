@@ -7,10 +7,11 @@ import dagger.multibindings.StringKey;
 import jimlind.filmlinkd.discord.event.handler.ContributorHandler;
 import jimlind.filmlinkd.discord.event.handler.DiaryHandler;
 import jimlind.filmlinkd.discord.event.handler.FilmHandler;
+import jimlind.filmlinkd.discord.event.handler.FollowHandler;
 import jimlind.filmlinkd.discord.event.handler.Handler;
 
 @Module
-public class HandlerModule {
+public class HandlerMapModule {
   @Provides
   @IntoMap
   @StringKey("contributor")
@@ -29,6 +30,13 @@ public class HandlerModule {
   @IntoMap
   @StringKey("film")
   Handler provideFilmHandler(FilmHandler handler) {
+    return handler;
+  }
+
+  @Provides
+  @IntoMap
+  @StringKey("follow")
+  Handler provideFollowHandler(FollowHandler handler) {
     return handler;
   }
 }
