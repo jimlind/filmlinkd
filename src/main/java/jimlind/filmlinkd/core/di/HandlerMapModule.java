@@ -8,6 +8,7 @@ import jimlind.filmlinkd.discord.event.handler.ContributorHandler;
 import jimlind.filmlinkd.discord.event.handler.DiaryHandler;
 import jimlind.filmlinkd.discord.event.handler.FilmHandler;
 import jimlind.filmlinkd.discord.event.handler.FollowHandler;
+import jimlind.filmlinkd.discord.event.handler.FollowingHandler;
 import jimlind.filmlinkd.discord.event.handler.Handler;
 
 @Module
@@ -37,6 +38,13 @@ public class HandlerMapModule {
   @IntoMap
   @StringKey("follow")
   Handler provideFollowHandler(FollowHandler handler) {
+    return handler;
+  }
+
+  @Provides
+  @IntoMap
+  @StringKey("following")
+  Handler provideFollowingHandler(FollowingHandler handler) {
     return handler;
   }
 }
