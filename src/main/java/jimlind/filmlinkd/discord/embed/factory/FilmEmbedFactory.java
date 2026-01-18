@@ -1,10 +1,11 @@
 package jimlind.filmlinkd.discord.embed.factory;
 
-import com.google.inject.Inject;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.model.CombinedLbFilmModel;
 import jimlind.filmlinkd.system.discord.stringbuilder.CountStringBuilder;
@@ -21,6 +22,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 /** Builds a Discord embed to display information about a film. */
+@Singleton
 public class FilmEmbedFactory {
   private final EmbedBuilderFactory embedBuilderFactory;
   private final ImageUtils imageUtils;
