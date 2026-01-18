@@ -10,7 +10,7 @@ import jimlind.filmlinkd.system.DiscordSystem;
 
 /** Dagger component for the application. */
 @Singleton
-@Component(modules = {HandlerMapModule.class})
+@Component(modules = {FirestoreModule.class, HandlerMapModule.class})
 public interface ApplicationComponent {
   Map<String, Provider<Handler>> handlerMap();
 
