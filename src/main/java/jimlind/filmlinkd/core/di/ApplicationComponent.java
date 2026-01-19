@@ -9,6 +9,7 @@ import jimlind.filmlinkd.discord.dispatcher.HelpEmbedDispatcher;
 import jimlind.filmlinkd.discord.event.handler.Handler;
 import jimlind.filmlinkd.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.system.DiscordSystem;
+import jimlind.filmlinkd.system.dispatcher.ScrapedResultQueueDispatcher;
 import jimlind.filmlinkd.system.dispatcher.StatLogDispatcher;
 
 /** Dagger component for the application. */
@@ -29,6 +30,9 @@ public interface ApplicationComponent {
   // Handles all things related to the PubSub service. Creating, activating, etc.
   PubSubManager pubSubManager();
 
-  // Executes the timed stat logging tasksa
+  // Executes the timed stat logging tasks
   StatLogDispatcher statLogDispatcher();
+
+  // Executes the timed scraped result queue checking tasks
+  ScrapedResultQueueDispatcher scrapedResultQueueDispatcher();
 }

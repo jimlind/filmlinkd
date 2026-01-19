@@ -1,9 +1,10 @@
 package jimlind.filmlinkd.runnable;
 
-import com.google.inject.Inject;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Stream;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.discord.ShardManagerStorage;
 import jimlind.filmlinkd.discord.embed.factory.DiaryEntryEmbedFactory;
 import jimlind.filmlinkd.google.db.UserWriter;
@@ -26,6 +27,7 @@ import net.dv8tion.jda.api.sharding.ShardManager;
  * PubSub responses using the actual documented process. I probably could and this would become a
  * listener instead.
  */
+@Singleton
 @Slf4j
 public class ScrapedResultQueueChecker implements Runnable {
   private final DiaryEntryEmbedFactory diaryEntryEmbedFactory;

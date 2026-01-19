@@ -1,6 +1,7 @@
 package jimlind.filmlinkd.system.dispatcher;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.core.scheduling.TimedTaskRunner;
 import jimlind.filmlinkd.runnable.ScrapedResultQueueChecker;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
  * Executes the timed scraped result queue checking tasks in a way that appropriately uses the
  * TimedTaskRunner base to ensure that things could be closed when not needed.
  */
+@Singleton
 @Slf4j
 public class ScrapedResultQueueDispatcher extends TimedTaskRunner {
   private static final int INITIAL_DELAY_MILLISECONDS = 0;

@@ -1,6 +1,5 @@
 package jimlind.filmlinkd.discord.embed.factory;
 
-import com.google.inject.Inject;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -8,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import javax.inject.Inject;
 import jimlind.filmlinkd.core.string.ReviewFormatter;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.model.Message;
@@ -22,19 +22,15 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 public class DiaryEntryEmbedFactory {
   private static final int REVIEW_TEXT_MAX_LENGTH = 400;
   private final EmbedBuilderFactory embedBuilderFactory;
-  private final StarsStringBuilder starsStringBuilder;
 
   /**
    * Constructor for this class.
    *
    * @param embedBuilderFactory A factory for creating instances of the {@link EmbedBuilder} model
-   * @param starsStringBuilder Builds the stars emoji string
    */
   @Inject
-  DiaryEntryEmbedFactory(
-      EmbedBuilderFactory embedBuilderFactory, StarsStringBuilder starsStringBuilder) {
+  DiaryEntryEmbedFactory(EmbedBuilderFactory embedBuilderFactory) {
     this.embedBuilderFactory = embedBuilderFactory;
-    this.starsStringBuilder = starsStringBuilder;
   }
 
   private static String extractImage(Message.Entry entry) {
@@ -127,7 +123,8 @@ public class DiaryEntryEmbedFactory {
     }
 
     if (entry.getStarCount() > 0) {
-      reviewTitleBuilder.append(starsStringBuilder.setStarCount(entry.getStarCount()).build());
+      reviewTitleBuilder.append(
+          new StarsStringBuilder().setStarCount(entry.getStarCount()).build());
     }
     if (entry.isRewatch()) {
       reviewTitleBuilder.append(" <:r:851135667546488903>");
