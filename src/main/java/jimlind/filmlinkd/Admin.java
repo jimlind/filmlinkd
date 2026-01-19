@@ -1,20 +1,9 @@
 package jimlind.filmlinkd;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import jimlind.filmlinkd.admin.CleanChannels;
-import jimlind.filmlinkd.admin.CleanUsers;
-import jimlind.filmlinkd.admin.UndoChannelArchive;
-import jimlind.filmlinkd.config.GuiceModule;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 
 /** The main entry point for the admin application. */
 @Slf4j
@@ -49,29 +38,29 @@ public final class Admin {
     options.addOption(pageOption);
     options.addOption(channelOption);
 
-    Injector injector = Guice.createInjector(new GuiceModule());
-
-    try {
-      CommandLineParser commandLineParser = new DefaultParser();
-      CommandLine commandLine = commandLineParser.parse(options, args);
-      String commandValue = commandLine.getOptionValue("command");
-      String pageValue = commandLine.getOptionValue("page");
-      String channelValue = commandLine.getOptionValue("channel");
-
-      if (CLEAN_USERS.equals(commandValue)) {
-        injector.getInstance(CleanUsers.class).run(pageValue);
-      }
-      if (CLEAN_CHANNELS.equals(commandValue)) {
-        injector.getInstance(CleanChannels.class).run();
-      }
-      if (UNDO_CHANNEL_ARCHIVE.equals(commandValue)) {
-        injector.getInstance(UndoChannelArchive.class).run(channelValue);
-      }
-
-    } catch (ParseException e) {
-      if (logger.isLoggable(Level.SEVERE)) {
-        logger.severe("Error parsing command line: " + e.getMessage());
-      }
-    }
+//    Injector injector = Guice.createInjector(new GuiceModule());
+//
+//    try {
+//      CommandLineParser commandLineParser = new DefaultParser();
+//      CommandLine commandLine = commandLineParser.parse(options, args);
+//      String commandValue = commandLine.getOptionValue("command");
+//      String pageValue = commandLine.getOptionValue("page");
+//      String channelValue = commandLine.getOptionValue("channel");
+//
+//      if (CLEAN_USERS.equals(commandValue)) {
+//        injector.getInstance(CleanUsers.class).run(pageValue);
+//      }
+//      if (CLEAN_CHANNELS.equals(commandValue)) {
+//        injector.getInstance(CleanChannels.class).run();
+//      }
+//      if (UNDO_CHANNEL_ARCHIVE.equals(commandValue)) {
+//        injector.getInstance(UndoChannelArchive.class).run(channelValue);
+//      }
+//
+//    } catch (ParseException e) {
+//      if (logger.isLoggable(Level.SEVERE)) {
+//        logger.severe("Error parsing command line: " + e.getMessage());
+//      }
+//    }
   }
 }
