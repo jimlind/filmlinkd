@@ -1,14 +1,9 @@
 package jimlind.filmlinkd;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import java.util.Optional;
-import jimlind.filmlinkd.config.AppConfig;
-import jimlind.filmlinkd.config.GuiceModule;
-import jimlind.filmlinkd.google.pubsub.PubSubManager;
+import jimlind.filmlinkd.core.di.ApplicationComponent;
+import jimlind.filmlinkd.core.di.DaggerApplicationComponent;
 import jimlind.filmlinkd.scraper.scheduler.ScraperSchedulerFactory;
-import jimlind.filmlinkd.system.ShutdownThread;
-import jimlind.filmlinkd.system.dispatcher.StatLogDispatcher;
 import lombok.extern.slf4j.Slf4j;
 
 /** The main entry point for the scraper application. */
@@ -25,23 +20,23 @@ public final class Scraper {
     String env = Optional.ofNullable(System.getenv("FILMLINKD_ENVIRONMENT")).orElse("UNSET");
     log.atInfo().setMessage("Starting the Scraper Class (Environment: {})").addArgument(env).log();
 
-    // Create the Injector
-    Injector injector = Guice.createInjector(new GuiceModule());
-    injector.getInstance(AppConfig.class).setMainClass(Scraper.class.getName());
+    // Create the DI Components
+    ApplicationComponent component = DaggerApplicationComponent.create();
+    component.appConfig().setMainClass(Bot.class.getName());
 
     // Configure the needed publishers and subscribers
-    injector.getInstance(PubSubManager.class).buildLogEntryPublisher();
-    injector.getInstance(PubSubManager.class).buildCommandSubscriber();
+    component.pubSubManager().buildLogEntryPublisher();
+    component.pubSubManager().buildCommandSubscriber();
 
     // Start the Scrapers
-    ScraperSchedulerFactory schedulerFactory = injector.getInstance(ScraperSchedulerFactory.class);
+    ScraperSchedulerFactory schedulerFactory = component.scraperSchedulerFactory();
     schedulerFactory.create(false).start();
     schedulerFactory.create(true).start();
 
     // Schedule system statistic logger
-    injector.getInstance(StatLogDispatcher.class).start();
+    component.statLogDispatcher().start();
 
     // Register shutdown events
-    Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownThread.class));
+    Runtime.getRuntime().addShutdownHook(component.shutdownThread());
   }
 }

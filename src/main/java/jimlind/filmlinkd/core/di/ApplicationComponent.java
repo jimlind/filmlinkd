@@ -8,6 +8,8 @@ import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.discord.dispatcher.HelpEmbedDispatcher;
 import jimlind.filmlinkd.discord.event.handler.Handler;
 import jimlind.filmlinkd.google.pubsub.PubSubManager;
+import jimlind.filmlinkd.scraper.ScraperCoordinator;
+import jimlind.filmlinkd.scraper.scheduler.ScraperSchedulerFactory;
 import jimlind.filmlinkd.system.DiscordSystem;
 import jimlind.filmlinkd.system.ShutdownThread;
 import jimlind.filmlinkd.system.dispatcher.ScrapedResultQueueDispatcher;
@@ -31,11 +33,17 @@ public interface ApplicationComponent {
   // Handles all things related to the PubSub service. Creating, activating, etc.
   PubSubManager pubSubManager();
 
-  // Executes the timed stat logging tasks
-  StatLogDispatcher statLogDispatcher();
-
   // Executes the timed scraped result queue checking tasks
   ScrapedResultQueueDispatcher scrapedResultQueueDispatcher();
+
+  // Coordinate all the API checking to Pub/Sub publishing actions
+  ScraperCoordinator scraperCoordinator();
+
+  // A factory for creating instances of the ScraperScheduler model
+  ScraperSchedulerFactory scraperSchedulerFactory();
+
+  // Executes the timed stat logging tasks
+  StatLogDispatcher statLogDispatcher();
 
   // Handles shutting down, stopping, and deactivating
   ShutdownThread shutdownThread();
