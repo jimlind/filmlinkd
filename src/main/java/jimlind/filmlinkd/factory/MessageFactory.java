@@ -1,6 +1,7 @@
 package jimlind.filmlinkd.factory;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.Message.Type;
 import jimlind.filmlinkd.system.letterboxd.model.LbDiaryDetails;
@@ -13,22 +14,17 @@ import jimlind.filmlinkd.system.letterboxd.utils.LinkUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.extractor.LogEntryAttributes;
 
 /** A factory for creating instances of the {@link Message} model. */
+@Singleton
 public class MessageFactory {
-  private final DateUtils dateUtils;
-  private final LinkUtils linkUtils;
   private final ImageUtils imageUtils;
 
   /**
    * Constructor for the {@link MessageFactory}.
    *
-   * @param dateUtils Helpers for processing Letterboxd dates
-   * @param linkUtils Helpers for processing Letterboxd URLs
    * @param imageUtils Helpers for processing Letterboxd images
    */
   @Inject
-  MessageFactory(DateUtils dateUtils, LinkUtils linkUtils, ImageUtils imageUtils) {
-    this.dateUtils = dateUtils;
-    this.linkUtils = linkUtils;
+  MessageFactory(ImageUtils imageUtils) {
     this.imageUtils = imageUtils;
   }
 
@@ -50,8 +46,8 @@ public class MessageFactory {
     String reviewText = LogEntryAttributes.extractReviewText(logEntry);
     entry.setType(reviewText.isEmpty() ? Type.watch : Type.review);
 
-    entry.setLink(linkUtils.getLetterboxd(logEntry.links));
-    entry.setPublishedDate(dateUtils.toMilliseconds(logEntry.whenCreated));
+    entry.setLink(LinkUtils.getLetterboxd(logEntry.links));
+    entry.setPublishedDate(DateUtils.toMilliseconds(logEntry.whenCreated));
 
     LbFilmSummary film = LogEntryAttributes.extractFilm(logEntry);
     entry.setFilmTitle(film.name);
@@ -59,7 +55,7 @@ public class MessageFactory {
 
     LbDiaryDetails diaryDetails = LogEntryAttributes.extractDiaryDetails(logEntry);
     String diaryDate = (diaryDetails != null) ? diaryDetails.diaryDate : "";
-    entry.setWatchedDate(dateUtils.toMilliseconds(diaryDate));
+    entry.setWatchedDate(DateUtils.toMilliseconds(diaryDate));
 
     entry.setImage(imageUtils.getTallest(film.poster));
     entry.setStarCount(logEntry.rating);
@@ -68,7 +64,7 @@ public class MessageFactory {
     entry.setContainsSpoilers(LogEntryAttributes.extractSpoilerStatus(logEntry));
     entry.setAdult(film.adult);
     entry.setReview(reviewText);
-    entry.setUpdatedDate(dateUtils.toMilliseconds(logEntry.whenUpdated));
+    entry.setUpdatedDate(DateUtils.toMilliseconds(logEntry.whenUpdated));
     entry.setPublishSource(publishSource);
 
     Message message = new Message();

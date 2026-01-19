@@ -12,14 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 /** Utilities to translate Letterboxd date strings to other formats. */
 @Slf4j
 public class DateUtils {
-
   /**
    * Translates a Letterboxd date string to a timestamp in milliseconds.
    *
    * @param dateString A Letterboxd date string
    * @return A timestamp in milliseconds
    */
-  public long toMilliseconds(String dateString) {
+  public static long toMilliseconds(String dateString) {
     if (dateString == null || dateString.isEmpty()) {
       return 0L;
     }
@@ -48,7 +47,7 @@ public class DateUtils {
    * @param dateString A Letterboxd date string
    * @return A human-readable date string
    */
-  public String toPattern(String dateString) {
+  public static String toPattern(String dateString) {
     long timestamp = toMilliseconds(dateString);
     Instant instant = Instant.ofEpochMilli(timestamp);
     ZonedDateTime zonedDateTime = instant.atZone(ZoneOffset.UTC);
