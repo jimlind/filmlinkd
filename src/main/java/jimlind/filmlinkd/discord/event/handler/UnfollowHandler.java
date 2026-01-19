@@ -1,7 +1,8 @@
 package jimlind.filmlinkd.discord.event.handler;
 
-import com.google.inject.Inject;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.discord.embed.factory.UnfollowEmbedFactory;
 import jimlind.filmlinkd.google.db.UserWriter;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
@@ -11,9 +12,9 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 /** Handles the /unfollow command to unfollow a user and stop showing new diary entries. */
+@Singleton
 public class UnfollowHandler implements Handler {
   private final AccountHelper accountHelper;
-  private final ChannelHelper channelHelper;
   private final UnfollowEmbedFactory unfollowEmbedFactory;
   private final UserWriter userWriter;
 
@@ -21,18 +22,15 @@ public class UnfollowHandler implements Handler {
    * Constructor for this class.
    *
    * @param accountHelper Handles translating account names to proper data models
-   * @param channelHelper Service that parses a channel id from a slash event with options
    * @param unfollowEmbedFactory Builds the embed for the /unfollow command
    * @param userWriter Handles all write operations for user data in Firestore
    */
   @Inject
   UnfollowHandler(
       AccountHelper accountHelper,
-      ChannelHelper channelHelper,
       UnfollowEmbedFactory unfollowEmbedFactory,
       UserWriter userWriter) {
     this.accountHelper = accountHelper;
-    this.channelHelper = channelHelper;
     this.unfollowEmbedFactory = unfollowEmbedFactory;
     this.userWriter = userWriter;
   }
@@ -47,7 +45,7 @@ public class UnfollowHandler implements Handler {
       return;
     }
 
-    String channelId = channelHelper.getChannelId(event);
+    String channelId = ChannelHelper.getChannelId(event);
     if (channelId.isBlank()) {
       event.getHook().sendMessage(NO_CHANNEL_FOUND).queue();
       return;

@@ -14,6 +14,7 @@ import jimlind.filmlinkd.discord.event.handler.HelpHandler;
 import jimlind.filmlinkd.discord.event.handler.ListHandler;
 import jimlind.filmlinkd.discord.event.handler.LoggedHandler;
 import jimlind.filmlinkd.discord.event.handler.RefreshHandler;
+import jimlind.filmlinkd.discord.event.handler.UnfollowHandler;
 
 @Module
 public class HandlerMapModule {
@@ -77,6 +78,13 @@ public class HandlerMapModule {
   @IntoMap
   @StringKey("refresh")
   Handler provideRefreshHandler(RefreshHandler handler) {
+    return handler;
+  }
+
+  @Provides
+  @IntoMap
+  @StringKey("unfollow")
+  Handler provideUnfollowHandler(UnfollowHandler handler) {
     return handler;
   }
 }
