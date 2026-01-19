@@ -2,7 +2,6 @@ package jimlind.filmlinkd.themoviedb.api;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 
-import com.google.inject.Inject;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -11,6 +10,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import javax.inject.Inject;
 import jimlind.filmlinkd.config.AppConfig;
 import org.apache.http.client.utils.URIBuilder;
 

@@ -1,8 +1,8 @@
 package jimlind.filmlinkd.discord.event.handler;
 
-import com.google.inject.Inject;
 import java.util.List;
 import java.util.Random;
+import javax.inject.Inject;
 import jimlind.filmlinkd.discord.embed.factory.FilmEmbedFactory;
 import jimlind.filmlinkd.model.CombinedLbFilmModel;
 import jimlind.filmlinkd.system.letterboxd.api.FilmApi;

@@ -1,7 +1,6 @@
 package jimlind.filmlinkd.admin;
 
 import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.inject.Inject;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.math.BigInteger;
@@ -11,6 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import javax.inject.Inject;
 import jimlind.filmlinkd.admin.channels.Archiver;
 import jimlind.filmlinkd.admin.channels.LogFileWriter;
 import jimlind.filmlinkd.admin.channels.NullFilter;

@@ -1,7 +1,7 @@
 package jimlind.filmlinkd.system.letterboxd.api;
 
-import com.google.inject.Inject;
 import java.util.List;
+import javax.inject.Inject;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilmsResponse;
 import org.jetbrains.annotations.Nullable;
 

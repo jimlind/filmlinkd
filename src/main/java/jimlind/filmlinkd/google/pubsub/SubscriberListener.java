@@ -1,8 +1,8 @@
 package jimlind.filmlinkd.google.pubsub;
 
 import com.google.cloud.pubsub.v1.Subscriber;
-import com.google.inject.Singleton;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 
 /** Wrapper for the Subscriber.Listener that logs what the subscribers are doing. */

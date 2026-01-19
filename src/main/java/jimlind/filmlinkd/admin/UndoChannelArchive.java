@@ -1,11 +1,11 @@
 package jimlind.filmlinkd.admin;
 
 import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.inject.Inject;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import javax.inject.Inject;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.google.db.UserReader;
 import jimlind.filmlinkd.google.db.UserWriter;

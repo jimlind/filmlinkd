@@ -1,7 +1,7 @@
 package jimlind.filmlinkd.scraper.scheduler;
 
-import com.google.inject.Singleton;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.scraper.cache.GeneralUserCache;
 import jimlind.filmlinkd.scraper.cache.VipUserCache;

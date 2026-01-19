@@ -14,7 +14,6 @@
         <google-cloud-bom.version>26.73.0</google-cloud-bom.version>
         <junit-bom.version>6.0.2</junit-bom.version>
         <lombok.version>1.18.42</lombok.version>
-        <guice.version>7.0.0</guice.version>
         <dagger.version>2.57.2</dagger.version>
         <guava.version>33.5.0-jre</guava.version>
         <commons-lang3.version>3.20.0</commons-lang3.version>
@@ -87,20 +86,9 @@
             <!-- com.google.cloud:libraries-bom manages version -->
         </dependency>
         <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-            <version>${guice.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.google.dagger</groupId>
             <artifactId>dagger</artifactId>
             <version>${dagger.version}</version>
-        </dependency>
-        <!-- Set version of guava to override a vulnerable dependency of guice -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
         </dependency>
         <!-- Set version of commons-lang3 to override a vulnerable dependency of checkstyle -->
         <dependency>

@@ -1,7 +1,7 @@
 package jimlind.filmlinkd.themoviedb.api;
 
 import com.google.gson.GsonBuilder;
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import jimlind.filmlinkd.themoviedb.model.MovieLatest;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,10 +1,10 @@
 package jimlind.filmlinkd.scraper.runner;
 
-import com.google.inject.Inject;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
+import javax.inject.Inject;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.scraper.ScraperCoordinatorFactory;
