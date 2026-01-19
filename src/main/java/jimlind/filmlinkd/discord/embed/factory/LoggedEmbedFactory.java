@@ -1,11 +1,11 @@
 package jimlind.filmlinkd.discord.embed.factory;
 
-import com.google.inject.Inject;
 import io.github.furstenheim.CopyDown;
 import io.github.furstenheim.Options;
 import io.github.furstenheim.OptionsBuilder;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
 import jimlind.filmlinkd.system.discord.stringbuilder.StarsStringBuilder;
@@ -25,21 +25,17 @@ import org.jsoup.nodes.Document;
 /** Builds a Discord embed to display information about what a user has logged. */
 public class LoggedEmbedFactory {
   private static final int MAX_REVIEW_LENGTH = 200;
-  private final DateUtils dateUtils;
   private final EmbedBuilderFactory embedBuilderFactory;
   private final ImageUtils imageUtils;
 
   /**
    * Constructor for this class.
    *
-   * @param dateUtils Helpers for processing Letterboxd dates
    * @param embedBuilderFactory A factory for creating instances of the {@link EmbedBuilder} model.
    * @param imageUtils Assists in finding optimal Letterboxd images
    */
   @Inject
-  public LoggedEmbedFactory(
-      DateUtils dateUtils, EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
-    this.dateUtils = dateUtils;
+  public LoggedEmbedFactory(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
     this.embedBuilderFactory = embedBuilderFactory;
     this.imageUtils = imageUtils;
   }
@@ -70,12 +66,12 @@ public class LoggedEmbedFactory {
     StringBuilder description = new StringBuilder();
     for (LbLogEntry logEntry : logEntryList) {
       String action = "Logged";
-      String date = dateUtils.toPattern(logEntry.whenCreated);
+      String date = DateUtils.toPattern(logEntry.whenCreated);
 
       LbDiaryDetails diaryDetails = getDiaryDetails(logEntry);
       if (diaryDetails != null) {
         action = "Watched";
-        date = dateUtils.toPattern(diaryDetails.diaryDate);
+        date = DateUtils.toPattern(diaryDetails.diaryDate);
       }
 
       if (logEntry.review != null) {

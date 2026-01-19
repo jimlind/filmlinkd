@@ -1,7 +1,8 @@
 package jimlind.filmlinkd.discord.event.handler;
 
-import com.google.inject.Inject;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.discord.embed.factory.LoggedEmbedFactory;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.letterboxd.api.FilmApi;
@@ -14,6 +15,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 /** Handles the /logged command to show the most recent times a user has logged a film. */
+@Singleton
 public class LoggedHandler implements Handler {
   private final AccountHelper accountHelper;
   private final FilmApi filmApi;
