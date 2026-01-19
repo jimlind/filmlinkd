@@ -42,11 +42,7 @@ public class SlashCommandManager {
 
   @Nullable
   private Handler getHandlerFromEventName(String name) {
-    try {
-      Provider<Handler> provider = handlerMap.get(name.toLowerCase(Locale.ROOT));
-      return provider != null ? provider.get() : null;
-    } catch (ClassCastException | NullPointerException e) {
-      return null;
-    }
+    Provider<Handler> provider = handlerMap.get(name.toLowerCase(Locale.ROOT));
+    return provider != null ? provider.get() : null;
   }
 }
