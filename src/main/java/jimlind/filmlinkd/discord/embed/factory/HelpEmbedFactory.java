@@ -1,8 +1,8 @@
 package jimlind.filmlinkd.discord.embed.factory;
 
-import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
@@ -16,23 +16,17 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
  */
 public class HelpEmbedFactory {
   private final AppConfig appConfig;
-  private final DescriptionStringBuilder descriptionStringBuilder;
   private final EmbedBuilderFactory embedBuilderFactory;
 
   /**
    * Constructor for this class.
    *
    * @param appConfig Contains application and environment variables
-   * @param descriptionStringBuilder Builds the description string truncating as necessary
    * @param embedBuilderFactory A factory for creating instances of the {@link EmbedBuilder} model
    */
   @Inject
-  HelpEmbedFactory(
-      AppConfig appConfig,
-      DescriptionStringBuilder descriptionStringBuilder,
-      EmbedBuilderFactory embedBuilderFactory) {
+  HelpEmbedFactory(AppConfig appConfig, EmbedBuilderFactory embedBuilderFactory) {
     this.appConfig = appConfig;
-    this.descriptionStringBuilder = descriptionStringBuilder;
     this.embedBuilderFactory = embedBuilderFactory;
   }
 
@@ -67,7 +61,7 @@ public class HelpEmbedFactory {
             userCount,
             guildCount);
     embedBuilder.setDescription(
-        descriptionStringBuilder.setDescriptionText(descriptionText).build());
+        new DescriptionStringBuilder().setDescriptionText(descriptionText).build());
 
     // Set fields for slash commands
     embedBuilder.addField("/help", "Shows this message", false);
@@ -138,7 +132,7 @@ public class HelpEmbedFactory {
               any of the following messages your permissions need to be updated as documented.
               Next you should see a basic embed message.""";
         embedBuilder.setDescription(
-            descriptionStringBuilder.setDescriptionText(introductionText).build());
+            new DescriptionStringBuilder().setDescriptionText(introductionText).build());
         break;
       case 1:
         String basicMessage =
@@ -146,7 +140,7 @@ public class HelpEmbedFactory {
           This is a basic embed message.
           Next you should see an embed with a simple emoji.""";
         embedBuilder.setDescription(
-            descriptionStringBuilder.setDescriptionText(basicMessage).build());
+            new DescriptionStringBuilder().setDescriptionText(basicMessage).build());
         break;
       case 2:
         String simpleEmojiMessage =
@@ -155,7 +149,7 @@ public class HelpEmbedFactory {
           :star::star::star:.
           Next you should see an embed with a custom emoji.""";
         embedBuilder.setDescription(
-            descriptionStringBuilder.setDescriptionText(simpleEmojiMessage).build());
+            new DescriptionStringBuilder().setDescriptionText(simpleEmojiMessage).build());
         break;
       case 3:
         String customEmojiMessage =
@@ -164,7 +158,7 @@ public class HelpEmbedFactory {
           <:s:851134022251970610><:s:851134022251970610><:s:851134022251970610>
           Next you should see an embed with formatted text.""";
         embedBuilder.setDescription(
-            descriptionStringBuilder.setDescriptionText(customEmojiMessage).build());
+            new DescriptionStringBuilder().setDescriptionText(customEmojiMessage).build());
         break;
       case 4:
         String formattedMessage =
@@ -172,7 +166,7 @@ public class HelpEmbedFactory {
           This is a embed message *with* **formatted** ***text***.
           Next you should see an embed with an image.""";
         embedBuilder.setDescription(
-            descriptionStringBuilder.setDescriptionText(formattedMessage).build());
+            new DescriptionStringBuilder().setDescriptionText(formattedMessage).build());
         break;
       case 5:
         String imageMessage =
@@ -180,7 +174,7 @@ public class HelpEmbedFactory {
           This is a embed message with an image.
           Next you should see an embed with a diary entry.""";
         embedBuilder.setDescription(
-            descriptionStringBuilder.setDescriptionText(imageMessage).build());
+            new DescriptionStringBuilder().setDescriptionText(imageMessage).build());
         embedBuilder.setThumbnail("https://jimlind.github.io/filmlinkd/images/filmlinkd-100.png");
         break;
       default:
