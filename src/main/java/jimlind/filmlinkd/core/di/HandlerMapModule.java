@@ -15,6 +15,7 @@ import jimlind.filmlinkd.discord.event.handler.ListHandler;
 import jimlind.filmlinkd.discord.event.handler.LoggedHandler;
 import jimlind.filmlinkd.discord.event.handler.RefreshHandler;
 import jimlind.filmlinkd.discord.event.handler.UnfollowHandler;
+import jimlind.filmlinkd.discord.event.handler.UserHandler;
 
 @Module
 public class HandlerMapModule {
@@ -85,6 +86,13 @@ public class HandlerMapModule {
   @IntoMap
   @StringKey("unfollow")
   Handler provideUnfollowHandler(UnfollowHandler handler) {
+    return handler;
+  }
+
+  @Provides
+  @IntoMap
+  @StringKey("user")
+  Handler provideUserHandler(UserHandler handler) {
     return handler;
   }
 }

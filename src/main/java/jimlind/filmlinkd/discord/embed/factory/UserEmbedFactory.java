@@ -1,9 +1,9 @@
 package jimlind.filmlinkd.discord.embed.factory;
 
-import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import javax.inject.Inject;
 import jimlind.filmlinkd.core.string.DisplayNameFormatter;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
