@@ -1,9 +1,11 @@
 package jimlind.filmlinkd.system.letterboxd.api;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.system.letterboxd.model.LbListsResponse;
 
 /** Implements <a href="https://api-docs.letterboxd.com/#operation-GET-lists">GET /lists</a>. */
+@Singleton
 public class ListApi {
   private final Client client;
 

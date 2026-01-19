@@ -1,8 +1,9 @@
 package jimlind.filmlinkd.discord.event.handler;
 
-import com.google.inject.Inject;
 import java.util.List;
 import java.util.Locale;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.discord.embed.factory.ListEmbedFactory;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.letterboxd.api.ListApi;
@@ -14,6 +15,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 /** Handles the /list command to a summary of a user's list matching the search input. */
+@Singleton
 public class ListHandler implements Handler {
 
   private final AccountHelper accountHelper;
