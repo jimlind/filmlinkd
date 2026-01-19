@@ -1,10 +1,12 @@
 package jimlind.filmlinkd.system;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.google.pubsub.PubSubManager;
 import lombok.extern.slf4j.Slf4j;
 
 /** Handles shutting down, stopping, and deactivating things that need the extra work. */
+@Singleton
 @Slf4j
 public class ShutdownThread extends Thread {
   private final DiscordSystem discordSystem;

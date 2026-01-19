@@ -9,6 +9,7 @@ import jimlind.filmlinkd.discord.dispatcher.HelpEmbedDispatcher;
 import jimlind.filmlinkd.discord.event.handler.Handler;
 import jimlind.filmlinkd.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.system.DiscordSystem;
+import jimlind.filmlinkd.system.ShutdownThread;
 import jimlind.filmlinkd.system.dispatcher.ScrapedResultQueueDispatcher;
 import jimlind.filmlinkd.system.dispatcher.StatLogDispatcher;
 
@@ -35,4 +36,7 @@ public interface ApplicationComponent {
 
   // Executes the timed scraped result queue checking tasks
   ScrapedResultQueueDispatcher scrapedResultQueueDispatcher();
+
+  // Handles shutting down, stopping, and deactivating
+  ShutdownThread shutdownThread();
 }
