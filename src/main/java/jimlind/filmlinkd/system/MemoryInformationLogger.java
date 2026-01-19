@@ -1,11 +1,12 @@
 package jimlind.filmlinkd.system;
 
-import com.google.inject.Inject;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
 import java.lang.management.ThreadMXBean;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
  * lots of ways that you could configure different systems to access this data but this feels the
  * most predictable for me.
  */
+@Singleton
 @Slf4j
 public class MemoryInformationLogger {
   private static final String TOTAL_LOADED_KEY = "total-loaded";

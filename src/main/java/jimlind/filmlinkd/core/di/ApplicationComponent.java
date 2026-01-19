@@ -7,7 +7,9 @@ import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.discord.dispatcher.HelpEmbedDispatcher;
 import jimlind.filmlinkd.discord.event.handler.Handler;
+import jimlind.filmlinkd.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.system.DiscordSystem;
+import jimlind.filmlinkd.system.dispatcher.StatLogDispatcher;
 
 /** Dagger component for the application. */
 @Singleton
@@ -23,4 +25,10 @@ public interface ApplicationComponent {
 
   // Need to build new Help Embed Dispatchers
   HelpEmbedDispatcher helpEmbedDispatcher();
+
+  // Handles all things related to the PubSub service. Creating, activating, etc.
+  PubSubManager pubSubManager();
+
+  // Executes the timed stat logging tasksa
+  StatLogDispatcher statLogDispatcher();
 }
