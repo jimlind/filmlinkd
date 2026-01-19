@@ -42,7 +42,7 @@ public class UserWriter {
    * @param userReader Handles all read-only queries for user data from Firestore
    */
   @Inject
-  public UserWriter(
+  UserWriter(
       AppConfig appConfig,
       Firestore firestore,
       ImageUtils imageUtils,

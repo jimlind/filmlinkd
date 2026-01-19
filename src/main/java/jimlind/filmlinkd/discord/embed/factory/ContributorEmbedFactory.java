@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LbContributionStatistics;
@@ -17,7 +16,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 /** Builds a Discord embed to display information about a contributor. */
-@Singleton
 public class ContributorEmbedFactory {
   private final EmbedBuilderFactory embedBuilderFactory;
 
@@ -27,7 +25,7 @@ public class ContributorEmbedFactory {
    * @param embedBuilderFactory A factory for creating instances of the {@link EmbedBuilder} model
    */
   @Inject
-  public ContributorEmbedFactory(EmbedBuilderFactory embedBuilderFactory) {
+  ContributorEmbedFactory(EmbedBuilderFactory embedBuilderFactory) {
     this.embedBuilderFactory = embedBuilderFactory;
   }
 

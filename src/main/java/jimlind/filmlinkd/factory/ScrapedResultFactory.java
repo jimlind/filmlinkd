@@ -25,7 +25,7 @@ public class ScrapedResultFactory {
    * @param userReader Class that handles all read-only queries for user data from Firestore
    */
   @Inject
-  public ScrapedResultFactory(UserFactory userFactory, UserReader userReader) {
+  ScrapedResultFactory(UserFactory userFactory, UserReader userReader) {
     this.userFactory = userFactory;
     this.userReader = userReader;
   }

@@ -12,7 +12,7 @@ import javax.inject.Singleton;
 public class MemberWeb {
   /** Constructor for this class */
   @Inject
-  public MemberWeb() {}
+  MemberWeb() {}
 
   /**
    * The best way to get the Letterboxd ID associated with a username is by loading the profile page

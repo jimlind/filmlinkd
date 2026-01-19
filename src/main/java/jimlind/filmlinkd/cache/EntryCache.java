@@ -15,7 +15,7 @@ public class EntryCache {
 
   /** Constructor for this class. */
   @Inject
-  public EntryCache() {
+  EntryCache() {
     cache = Caffeine.newBuilder().maximumSize(10_000).build();
   }
 

@@ -27,7 +27,7 @@ public class UserReader {
    * @param firestore The Firestore database client
    */
   @Inject
-  public UserReader(AppConfig appConfig, Firestore firestore) {
+  UserReader(AppConfig appConfig, Firestore firestore) {
     this.appConfig = appConfig;
     this.db = firestore;
   }

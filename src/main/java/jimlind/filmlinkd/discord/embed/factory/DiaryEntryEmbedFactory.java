@@ -31,7 +31,7 @@ public class DiaryEntryEmbedFactory {
    * @param starsStringBuilder Builds the stars emoji string
    */
   @Inject
-  public DiaryEntryEmbedFactory(
+  DiaryEntryEmbedFactory(
       EmbedBuilderFactory embedBuilderFactory, StarsStringBuilder starsStringBuilder) {
     this.embedBuilderFactory = embedBuilderFactory;
     this.starsStringBuilder = starsStringBuilder;

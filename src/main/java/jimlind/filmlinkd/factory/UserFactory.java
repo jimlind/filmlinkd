@@ -21,7 +21,7 @@ public class UserFactory {
    * @param imageUtils Utilities for processing avatar images
    */
   @Inject
-  public UserFactory(ImageUtils imageUtils) {
+  UserFactory(ImageUtils imageUtils) {
     this.imageUtils = imageUtils;
   }
 

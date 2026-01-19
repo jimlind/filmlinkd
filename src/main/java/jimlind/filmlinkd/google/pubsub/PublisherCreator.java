@@ -20,7 +20,7 @@ public class PublisherCreator {
    * @param appConfig Contains application and environment variables
    */
   @Inject
-  public PublisherCreator(AppConfig appConfig) {
+  PublisherCreator(AppConfig appConfig) {
     this.appConfig = appConfig;
   }
 

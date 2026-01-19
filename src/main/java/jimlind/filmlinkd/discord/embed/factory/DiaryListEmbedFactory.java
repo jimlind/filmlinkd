@@ -3,7 +3,6 @@ package jimlind.filmlinkd.discord.embed.factory;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import jimlind.filmlinkd.core.string.DisplayNameFormatter;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
 import jimlind.filmlinkd.system.discord.stringbuilder.StarsStringBuilder;
@@ -16,7 +15,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 /** Builds a Discord embed to display information about a list of diary entries. */
-@Singleton
 public class DiaryListEmbedFactory {
   private final EmbedBuilderFactory embedBuilderFactory;
   private final ImageUtils imageUtils;
@@ -28,7 +26,7 @@ public class DiaryListEmbedFactory {
    * @param imageUtils Assists in finding optimal Letterboxd images
    */
   @Inject
-  public DiaryListEmbedFactory(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
+  DiaryListEmbedFactory(EmbedBuilderFactory embedBuilderFactory, ImageUtils imageUtils) {
     this.embedBuilderFactory = embedBuilderFactory;
     this.imageUtils = imageUtils;
   }
