@@ -1,10 +1,10 @@
 package jimlind.filmlinkd.scraper.cache;
 
 import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.factory.VipFactory;

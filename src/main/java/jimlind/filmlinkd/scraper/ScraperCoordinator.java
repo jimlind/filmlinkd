@@ -1,10 +1,10 @@
 package jimlind.filmlinkd.scraper;
 
-import com.google.inject.Inject;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
+import javax.inject.Inject;
 import jimlind.filmlinkd.factory.MessageFactory;
 import jimlind.filmlinkd.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.model.Message;
@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 @Slf4j
 public class ScraperCoordinator implements Runnable {
-  private final DateUtils dateUtils;
   private final LogEntriesApi logEntriesApi;
   private final MessageFactory messageFactory;
   private final PubSubManager pubSubManager;
@@ -35,18 +34,13 @@ public class ScraperCoordinator implements Runnable {
   /**
    * Constructor for this class.
    *
-   * @param dateUtils Utilities to translate Letterboxd date strings to other formats
    * @param logEntriesApi Fetches log entry data from Letterboxd API
    * @param messageFactory Builds the message object that is pushed into the PubSub system
    * @param pubSubManager Handles the PubSub system to accept commands and messages
    */
   @Inject
   ScraperCoordinator(
-      DateUtils dateUtils,
-      LogEntriesApi logEntriesApi,
-      MessageFactory messageFactory,
-      PubSubManager pubSubManager) {
-    this.dateUtils = dateUtils;
+      LogEntriesApi logEntriesApi, MessageFactory messageFactory, PubSubManager pubSubManager) {
     this.logEntriesApi = logEntriesApi;
     this.messageFactory = messageFactory;
     this.pubSubManager = pubSubManager;
@@ -89,7 +83,7 @@ public class ScraperCoordinator implements Runnable {
     logEntryList.stream()
         .filter(
             // Filter out entries that are newer than 3 minutes
-            logEntry -> current - dateUtils.toMilliseconds(logEntry.getWhenCreated()) >= 180000)
+            logEntry -> current - DateUtils.toMilliseconds(logEntry.getWhenCreated()) >= 180000)
         .filter(
             // Filter out entries that are not newer than the most recent entry
             logEntry -> 0 < LidComparer.compare(logEntry.id, diaryEntryLetterboxdId))

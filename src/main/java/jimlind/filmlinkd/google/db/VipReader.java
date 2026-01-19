@@ -4,13 +4,15 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
-import com.google.inject.Inject;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
 
 /** Handles all read-only queries for vip data from Firestore. */
+@Singleton
 public class VipReader {
   private final AppConfig appConfig;
   private final Firestore db;

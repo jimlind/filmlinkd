@@ -1,9 +1,11 @@
 package jimlind.filmlinkd.scraper.cache.clearer;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.scraper.cache.VipUserCache;
 
 /** Runnable to clear the General User Cache. */
+@Singleton
 public class VipUserCacheClearer extends BaseUserCacheClearer {
 
   /**

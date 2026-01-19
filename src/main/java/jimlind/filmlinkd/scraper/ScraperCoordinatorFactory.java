@@ -1,18 +1,20 @@
 package jimlind.filmlinkd.scraper;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
 import java.util.concurrent.Semaphore;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import jimlind.filmlinkd.core.di.ApplicationComponent;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.scraper.cache.BaseUserCache;
 
 /** A factory for creating instances of the {@link ScraperCoordinator} model. */
+@Singleton
 public class ScraperCoordinatorFactory {
-  private final Injector injector;
+  private final ApplicationComponent applicationComponent;
 
   @Inject
-  ScraperCoordinatorFactory(Injector injector) {
-    this.injector = injector;
+  ScraperCoordinatorFactory(ApplicationComponent applicationComponent) {
+    this.applicationComponent = applicationComponent;
   }
 
   /**
@@ -31,7 +33,7 @@ public class ScraperCoordinatorFactory {
       String userLetterboxdId,
       String diaryEntryLetterboxdId,
       Message.PublishSource source) {
-    ScraperCoordinator scraperCoordinator = injector.getInstance(ScraperCoordinator.class);
+    ScraperCoordinator scraperCoordinator = applicationComponent.scraperCoordinator();
     scraperCoordinator.setSemaphore(semaphore);
     scraperCoordinator.setUserCache(userCache);
     scraperCoordinator.setUserLetterboxdId(userLetterboxdId);

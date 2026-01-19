@@ -1,6 +1,7 @@
 package jimlind.filmlinkd.scraper.runner;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.model.Message.PublishSource;
 import jimlind.filmlinkd.scraper.ScraperCoordinatorFactory;
@@ -10,6 +11,7 @@ import jimlind.filmlinkd.scraper.cache.GeneralUserCache;
  * Scrapes the next page from the GeneralUserCache publishes a message in PubSub with the source set
  * to "normal" to notify the other systems.
  */
+@Singleton
 public class GeneralScraper extends BaseScraper {
   /**
    * Constructor for this class.
