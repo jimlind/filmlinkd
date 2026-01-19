@@ -1,15 +1,8 @@
 package jimlind.filmlinkd;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import java.util.Optional;
-import jimlind.filmlinkd.config.AppConfig;
-import jimlind.filmlinkd.config.GuiceModule;
-import jimlind.filmlinkd.google.pubsub.PubSubManager;
-import jimlind.filmlinkd.system.DiscordSystem;
-import jimlind.filmlinkd.system.ShutdownThread;
-import jimlind.filmlinkd.system.dispatcher.ScrapedResultQueueDispatcher;
-import jimlind.filmlinkd.system.dispatcher.StatLogDispatcher;
+import jimlind.filmlinkd.core.di.ApplicationComponent;
+import jimlind.filmlinkd.core.di.DaggerApplicationComponent;
 import lombok.extern.slf4j.Slf4j;
 
 /** The main entry point for the bot application. */
@@ -26,25 +19,25 @@ public final class Bot {
     String env = Optional.ofNullable(System.getenv("FILMLINKD_ENVIRONMENT")).orElse("UNSET");
     log.atInfo().setMessage("Starting the Bot Class (Environment: {})").addArgument(env).log();
 
-    // Create the Injector
-    Injector injector = Guice.createInjector(new GuiceModule());
-    injector.getInstance(AppConfig.class).setMainClass(Bot.class.getName());
+    // Create the DI Components
+    ApplicationComponent component = DaggerApplicationComponent.create();
+    component.appConfig().setMainClass(Bot.class.getName());
 
     // Start the Discord server
-    injector.getInstance(DiscordSystem.class).start();
+    component.discordSystem().start();
 
     // Configure the needed publishers and subscribers
-    injector.getInstance(PubSubManager.class).buildCommandPublisher();
-    injector.getInstance(PubSubManager.class).buildLogEntryPublisher();
-    injector.getInstance(PubSubManager.class).buildLogEntrySubscriber();
+    component.pubSubManager().buildCommandPublisher();
+    component.pubSubManager().buildLogEntryPublisher();
+    component.pubSubManager().buildLogEntrySubscriber();
 
     // Schedule system statistic logger
-    injector.getInstance(StatLogDispatcher.class).start();
+    component.statLogDispatcher().start();
 
     // Schedule the scraped result queue checker
-    injector.getInstance(ScrapedResultQueueDispatcher.class).start();
+    component.scrapedResultQueueDispatcher().start();
 
     // Register shutdown events
-    Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownThread.class));
+    Runtime.getRuntime().addShutdownHook(component.shutdownThread());
   }
 }
