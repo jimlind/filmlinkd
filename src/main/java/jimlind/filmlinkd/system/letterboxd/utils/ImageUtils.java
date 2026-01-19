@@ -9,7 +9,7 @@ import jimlind.filmlinkd.system.letterboxd.model.LbImageSize;
 /** Utilities to translate Letterboxd Image objects to other formats. */
 @Singleton
 public class ImageUtils {
-  /** Constructor for this class */
+  /** Constructor for this class. */
   @Inject
   public ImageUtils() {}
 

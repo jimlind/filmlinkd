@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 public class ScrapedResultQueue {
   private final List<ScrapedResult> scrapedResultList = new LinkedList<>();
 
-  /** Constructor for this class */
+  /** Constructor for this class. */
   @Inject
   ScrapedResultQueue() {}
 

@@ -7,7 +7,7 @@ import jimlind.filmlinkd.model.Command;
 /** A factory for creating instances of the {@link Command} model. */
 @Singleton
 public class CommandFactory {
-  /** Constructor for this class */
+  /** Constructor for this class. */
   @Inject
   CommandFactory() {}
 

@@ -4,7 +4,7 @@ package jimlind.filmlinkd.system.discord.stringbuilder;
 public class DescriptionStringBuilder {
   private String descriptionText = "";
 
-  /** Constructor for this class */
+  /** Constructor for this class. */
   public DescriptionStringBuilder() {}
 
   /**

@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 /** A factory for creating instances of the {@link Vip} model. */
 @Singleton
 public class VipFactory {
-  /** Constructor for this class */
+  /** Constructor for this class. */
   @Inject
   VipFactory() {}
 

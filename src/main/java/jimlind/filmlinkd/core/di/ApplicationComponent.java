@@ -19,32 +19,33 @@ import jimlind.filmlinkd.system.dispatcher.StatLogDispatcher;
 @Singleton
 @Component(modules = {FirestoreModule.class, HandlerMapModule.class})
 public interface ApplicationComponent {
+  /** Provides a map of all Handlers by string. */
   Map<String, Provider<Handler>> handlerMap();
 
-  // Contains application and environment variables
+  /** Contains application and environment variables. */
   AppConfig appConfig();
 
-  // The primary interface for Discord systems
+  /** The primary interface for Discord systems. */
   DiscordSystem discordSystem();
 
-  // Need to build new Help Embed Dispatchers
+  /** Need to build new Help Embed Dispatchers. */
   HelpEmbedDispatcher helpEmbedDispatcher();
 
-  // Handles all things related to the PubSub service. Creating, activating, etc.
+  /** Handles all things related to the PubSub service. Creating, activating, etc. */
   PubSubManager pubSubManager();
 
-  // Executes the timed scraped result queue checking tasks
+  /** Executes the timed scraped result queue checking tasks. */
   ScrapedResultQueueDispatcher scrapedResultQueueDispatcher();
 
-  // Coordinate all the API checking to Pub/Sub publishing actions
+  /** Coordinate all the API checking to Pub/Sub publishing actions. */
   ScraperCoordinator scraperCoordinator();
 
-  // A factory for creating instances of the ScraperScheduler model
+  /** A factory for creating instances of the ScraperScheduler model. */
   ScraperSchedulerFactory scraperSchedulerFactory();
 
-  // Executes the timed stat logging tasks
+  /** Executes the timed stat logging tasks. */
   StatLogDispatcher statLogDispatcher();
 
-  // Handles shutting down, stopping, and deactivating
+  /** Handles shutting down, stopping, and deactivating. */
   ShutdownThread shutdownThread();
 }

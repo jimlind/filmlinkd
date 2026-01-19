@@ -10,7 +10,7 @@ import javax.inject.Singleton;
 /** Scrapes the Letterboxd website for public member information. */
 @Singleton
 public class MemberWeb {
-  /** Constructor for this class */
+  /** Constructor for this class. */
   @Inject
   MemberWeb() {}
 

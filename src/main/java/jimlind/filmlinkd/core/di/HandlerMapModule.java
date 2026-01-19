@@ -17,6 +17,7 @@ import jimlind.filmlinkd.discord.event.handler.RefreshHandler;
 import jimlind.filmlinkd.discord.event.handler.UnfollowHandler;
 import jimlind.filmlinkd.discord.event.handler.UserHandler;
 
+/** Dagger 2 module for providing a map of all Handlers by string. */
 @Module
 public class HandlerMapModule {
   @Provides
