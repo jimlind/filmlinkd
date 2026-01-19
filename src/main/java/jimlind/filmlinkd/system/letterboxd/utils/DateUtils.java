@@ -11,7 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 
 /** Utilities to translate Letterboxd date strings to other formats. */
 @Slf4j
-public class DateUtils {
+public final class DateUtils {
+  /** Constructor for this class. */
+  private DateUtils() {}
+
   /**
    * Translates a Letterboxd date string to a timestamp in milliseconds.
    *

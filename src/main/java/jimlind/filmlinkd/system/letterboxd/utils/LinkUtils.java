@@ -6,7 +6,10 @@ import jimlind.filmlinkd.system.letterboxd.model.LbLinkType;
 import jimlind.filmlinkd.system.letterboxd.utils.extractor.LinkAttributes;
 
 /** Utilities to translate Letterboxd Link objects to other formats. */
-public class LinkUtils {
+public final class LinkUtils {
+  /** Constructor for this class. */
+  private LinkUtils() {}
+
   /**
    * Extract the URL for a Letterboxd link from a list of links.
    *

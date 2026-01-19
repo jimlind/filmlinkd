@@ -19,6 +19,7 @@ import jimlind.filmlinkd.discord.event.handler.UserHandler;
 
 /** Dagger 2 module for providing a map of all Handlers by string. */
 @Module
+@SuppressWarnings("PMD.TooManyMethods")
 public class HandlerMapModule {
   @Provides
   @IntoMap

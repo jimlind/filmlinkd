@@ -11,7 +11,10 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 /** A Collection of (actually one) methods that help translate channel data. */
 @Singleton
-public class ChannelHelper {
+public final class ChannelHelper {
+  /** Constructor for this class. */
+  private ChannelHelper() {}
+
   /**
    * Get the channel id as a string from the SlashCommandInteractionEvent. Returns an empty string
    * if nothing is available. There may be a channel value attached to the event option. That
