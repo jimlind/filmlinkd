@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
+import jimlind.filmlinkd.discord.dispatcher.HelpEmbedDispatcher;
 import jimlind.filmlinkd.discord.event.handler.Handler;
 import jimlind.filmlinkd.system.DiscordSystem;
 
@@ -19,4 +20,7 @@ public interface ApplicationComponent {
 
   // The primary interface for Discord systems
   DiscordSystem discordSystem();
+
+  // Need to build new Help Embed Dispatchers
+  HelpEmbedDispatcher helpEmbedDispatcher();
 }

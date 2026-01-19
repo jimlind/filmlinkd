@@ -1,8 +1,9 @@
 package jimlind.filmlinkd.discord.event.handler;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import jimlind.filmlinkd.core.di.ApplicationComponent;
 import jimlind.filmlinkd.discord.dispatcher.HelpEmbedDispatcher;
 import jimlind.filmlinkd.discord.embed.factory.HelpEmbedFactory;
 import jimlind.filmlinkd.google.db.UserReader;
@@ -21,23 +22,28 @@ import net.dv8tion.jda.api.utils.cache.CacheView;
 import org.jetbrains.annotations.Nullable;
 
 /** Handles the /help command to show a help message and allow users to test the bot. */
+@Singleton
 @Slf4j
 public class HelpHandler implements Handler {
+  private final ApplicationComponent applicationComponent;
   private final HelpEmbedFactory helpEmbedFactory;
-  private final Injector injector;
   private final UserReader userReader;
 
   /**
    * Constructor for this class.
    *
+   * @param applicationComponent Dagger 2 component allowing direct fetching of dependencies
    * @param helpEmbedFactory Builds the embed for the /help command
-   * @param injector Guice injector allowing creation of new instances at will
    * @param userReader Handles all read-only queries for user data from Firestore
    */
   @Inject
-  HelpHandler(HelpEmbedFactory helpEmbedFactory, Injector injector, UserReader userReader) {
+  HelpHandler(
+          ApplicationComponent applicationComponent,
+          HelpEmbedFactory helpEmbedFactory,
+          UserReader userReader
+          ) {
     this.helpEmbedFactory = helpEmbedFactory;
-    this.injector = injector;
+    this.applicationComponent = applicationComponent;
     this.userReader = userReader;
   }
 
@@ -54,7 +60,7 @@ public class HelpHandler implements Handler {
     if (testStatus) {
       event.getHook().sendMessageEmbeds(helpEmbedFactory.createTestMessage()).queue();
 
-      HelpEmbedDispatcher helpEmbedDispatcher = injector.getInstance(HelpEmbedDispatcher.class);
+      HelpEmbedDispatcher helpEmbedDispatcher = applicationComponent.helpEmbedDispatcher();
       helpEmbedDispatcher.configure(event.getMessageChannel());
       helpEmbedDispatcher.start();
 

@@ -1,6 +1,6 @@
 package jimlind.filmlinkd.discord.dispatcher;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import jimlind.filmlinkd.core.scheduling.TimedTaskRunner;
 import jimlind.filmlinkd.discord.embed.factory.HelpEmbedFactory;
 import jimlind.filmlinkd.factory.MessageFactory;
@@ -39,7 +39,7 @@ public class HelpEmbedDispatcher extends TimedTaskRunner {
    * @param pubSubManager Handles the PubSub system to accept commands and messages
    */
   @Inject
-  public HelpEmbedDispatcher(
+  HelpEmbedDispatcher(
       HelpEmbedFactory helpEmbedFactory,
       LogEntriesApi logEntriesApi,
       MessageFactory messageFactory,
