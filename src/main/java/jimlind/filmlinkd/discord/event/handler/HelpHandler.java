@@ -38,10 +38,9 @@ public class HelpHandler implements Handler {
    */
   @Inject
   HelpHandler(
-          ApplicationComponent applicationComponent,
-          HelpEmbedFactory helpEmbedFactory,
-          UserReader userReader
-          ) {
+      ApplicationComponent applicationComponent,
+      HelpEmbedFactory helpEmbedFactory,
+      UserReader userReader) {
     this.helpEmbedFactory = helpEmbedFactory;
     this.applicationComponent = applicationComponent;
     this.userReader = userReader;
