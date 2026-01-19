@@ -18,7 +18,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 /** Handles the /following command to show the users followed in the specified channel. */
 @Singleton
 public class FollowingHandler implements Handler {
-  private final ChannelHelper channelHelper;
   private final FollowingEmbedFactory followingEmbedFactory;
   private final UserFactory userFactory;
   private final UserReader userReader;
@@ -26,18 +25,13 @@ public class FollowingHandler implements Handler {
   /**
    * Constructor for this class.
    *
-   * @param channelHelper Service that parses a channel id from a slash event with options
    * @param followingEmbedFactory Builds the embed for the /following command
    * @param userFactory Builds the user object from a Firestore snapshot
    * @param userReader Handles all read-only queries for user data from Firestore
    */
   @Inject
   FollowingHandler(
-      ChannelHelper channelHelper,
-      FollowingEmbedFactory followingEmbedFactory,
-      UserFactory userFactory,
-      UserReader userReader) {
-    this.channelHelper = channelHelper;
+      FollowingEmbedFactory followingEmbedFactory, UserFactory userFactory, UserReader userReader) {
     this.followingEmbedFactory = followingEmbedFactory;
     this.userFactory = userFactory;
     this.userReader = userReader;
@@ -47,7 +41,7 @@ public class FollowingHandler implements Handler {
   public void handleEvent(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
 
-    String channelId = channelHelper.getChannelId(event);
+    String channelId = ChannelHelper.getChannelId(event);
     if (channelId.isBlank()) {
       event.getHook().sendMessage(NO_CHANNEL_FOUND).queue();
       return;

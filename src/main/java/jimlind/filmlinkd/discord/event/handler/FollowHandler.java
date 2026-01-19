@@ -19,7 +19,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 @Singleton
 public class FollowHandler implements Handler {
   private final AccountHelper accountHelper;
-  private final ChannelHelper channelHelper;
   private final CommandFactory commandFactory;
   private final FollowEmbedFactory followEmbedFactory;
   private final PubSubManager pubSubManager;
@@ -29,7 +28,6 @@ public class FollowHandler implements Handler {
    * Constructor for this class.
    *
    * @param accountHelper Handles translating account names to proper data models
-   * @param channelHelper Service that parses a channel id from a slash event with options
    * @param commandFactory Builds the command object that is pushed into the PubSub system
    * @param followEmbedFactory Builds the embed for the /follow command
    * @param pubSubManager Handles the PubSub system to accept commands and messages
@@ -38,13 +36,11 @@ public class FollowHandler implements Handler {
   @Inject
   public FollowHandler(
       AccountHelper accountHelper,
-      ChannelHelper channelHelper,
       CommandFactory commandFactory,
       FollowEmbedFactory followEmbedFactory,
       PubSubManager pubSubManager,
       UserCoordinator userCoordinator) {
     this.accountHelper = accountHelper;
-    this.channelHelper = channelHelper;
     this.commandFactory = commandFactory;
     this.followEmbedFactory = followEmbedFactory;
     this.pubSubManager = pubSubManager;
@@ -63,7 +59,7 @@ public class FollowHandler implements Handler {
     }
 
     // Exit early if no channel was found.
-    String channelId = channelHelper.getChannelId(event);
+    String channelId = ChannelHelper.getChannelId(event);
     if (channelId.isBlank()) {
       event.getHook().sendMessage(NO_CHANNEL_FOUND).queue();
       return;
