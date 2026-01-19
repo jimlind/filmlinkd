@@ -44,7 +44,6 @@ public class SlashCommandManager {
   private Handler getHandlerFromEventName(String name) {
     try {
       Provider<Handler> provider = handlerMap.get(name.toLowerCase(Locale.ROOT));
-      System.out.println(provider);
       return provider != null ? provider.get() : null;
     } catch (ClassCastException | NullPointerException e) {
       return null;
