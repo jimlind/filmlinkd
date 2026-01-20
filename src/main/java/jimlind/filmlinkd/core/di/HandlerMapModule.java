@@ -14,6 +14,7 @@ import jimlind.filmlinkd.discord.event.handler.HelpHandler;
 import jimlind.filmlinkd.discord.event.handler.ListHandler;
 import jimlind.filmlinkd.discord.event.handler.LoggedHandler;
 import jimlind.filmlinkd.discord.event.handler.RefreshHandler;
+import jimlind.filmlinkd.discord.event.handler.RouletteHandler;
 import jimlind.filmlinkd.discord.event.handler.UnfollowHandler;
 import jimlind.filmlinkd.discord.event.handler.UserHandler;
 
@@ -81,6 +82,13 @@ public class HandlerMapModule {
   @IntoMap
   @StringKey("refresh")
   Handler provideRefreshHandler(RefreshHandler handler) {
+    return handler;
+  }
+
+  @Provides
+  @IntoMap
+  @StringKey("roulette")
+  Handler provideRouletteHandler(RouletteHandler handler) {
     return handler;
   }
 

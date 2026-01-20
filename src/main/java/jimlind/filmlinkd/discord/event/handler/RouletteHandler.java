@@ -3,6 +3,7 @@ package jimlind.filmlinkd.discord.event.handler;
 import java.util.List;
 import java.util.Random;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import jimlind.filmlinkd.discord.embed.factory.FilmEmbedFactory;
 import jimlind.filmlinkd.model.CombinedLbFilmModel;
 import jimlind.filmlinkd.system.letterboxd.api.FilmApi;
@@ -18,6 +19,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.jetbrains.annotations.Nullable;
 
 /** Handles the /roulette command to show a random film. */
+@Singleton
 public class RouletteHandler implements Handler {
   private final FilmApi filmApi;
   private final FilmsApi filmsApi;
