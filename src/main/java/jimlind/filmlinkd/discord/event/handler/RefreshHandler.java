@@ -2,7 +2,6 @@ package jimlind.filmlinkd.discord.event.handler;
 
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import jimlind.filmlinkd.discord.embed.factory.RefreshEmbedFactory;
 import jimlind.filmlinkd.google.db.UserWriter;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
@@ -11,7 +10,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 /** Handles the /refresh command that updates cached user data like name and image. */
-@Singleton
 public class RefreshHandler implements Handler {
   private final AccountHelper accountHelper;
   private final RefreshEmbedFactory refreshEmbedFactory;

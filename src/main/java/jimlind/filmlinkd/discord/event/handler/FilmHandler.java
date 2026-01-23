@@ -2,7 +2,6 @@ package jimlind.filmlinkd.discord.event.handler;
 
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import jimlind.filmlinkd.discord.embed.factory.FilmEmbedFactory;
 import jimlind.filmlinkd.model.CombinedLbFilmModel;
 import jimlind.filmlinkd.system.letterboxd.api.FilmApi;
@@ -11,7 +10,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 /** Handles the /film command to show a film matching the search input. */
-@Singleton
 public class FilmHandler implements Handler {
 
   private final FilmApi filmApi;

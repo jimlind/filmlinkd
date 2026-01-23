@@ -2,7 +2,6 @@ package jimlind.filmlinkd.discord.event.handler;
 
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import jimlind.filmlinkd.discord.embed.factory.ContributorEmbedFactory;
 import jimlind.filmlinkd.system.letterboxd.api.ContributorApi;
 import jimlind.filmlinkd.system.letterboxd.model.LbContributor;
@@ -12,7 +11,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 /** Handles the /contributor command to show the contributors matching the search input. */
-@Singleton
 public class ContributorHandler implements Handler {
 
   private final ContributorApi contributorApi;

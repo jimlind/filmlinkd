@@ -2,7 +2,6 @@ package jimlind.filmlinkd.discord.event.handler;
 
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import jimlind.filmlinkd.discord.embed.factory.UnfollowEmbedFactory;
 import jimlind.filmlinkd.google.db.UserWriter;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
@@ -12,7 +11,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 /** Handles the /unfollow command to unfollow a user and stop showing new diary entries. */
-@Singleton
 public class UnfollowHandler implements Handler {
   private final AccountHelper accountHelper;
   private final UnfollowEmbedFactory unfollowEmbedFactory;

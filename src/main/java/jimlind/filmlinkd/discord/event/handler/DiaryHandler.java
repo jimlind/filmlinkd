@@ -2,7 +2,6 @@ package jimlind.filmlinkd.discord.event.handler;
 
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import jimlind.filmlinkd.discord.embed.factory.DiaryListEmbedFactory;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
@@ -12,7 +11,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 /** Handles the /diary command to show the recent diary entries from the user. */
-@Singleton
 public class DiaryHandler implements Handler {
   private final AccountHelper accountHelper;
   private final DiaryListEmbedFactory diaryListEmbedFactory;

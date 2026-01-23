@@ -1,7 +1,6 @@
 package jimlind.filmlinkd.system.letterboxd.api;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import jimlind.filmlinkd.system.letterboxd.model.LbSearchResponse;
 import jimlind.filmlinkd.system.letterboxd.utils.UrlUtils;
 
@@ -9,7 +8,6 @@ import jimlind.filmlinkd.system.letterboxd.utils.UrlUtils;
  * Implements <a href="https://api-docs.letterboxd.com/#operation-GET-search">GET /search</a> for
  * contributors.
  */
-@Singleton
 public class ContributorApi {
   private final Client client;
 

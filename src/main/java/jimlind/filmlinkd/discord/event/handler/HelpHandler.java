@@ -2,7 +2,6 @@ package jimlind.filmlinkd.discord.event.handler;
 
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import jimlind.filmlinkd.core.di.ApplicationComponent;
 import jimlind.filmlinkd.discord.dispatcher.HelpEmbedDispatcher;
 import jimlind.filmlinkd.discord.embed.factory.HelpEmbedFactory;
@@ -22,7 +21,6 @@ import net.dv8tion.jda.api.utils.cache.CacheView;
 import org.jetbrains.annotations.Nullable;
 
 /** Handles the /help command to show a help message and allow users to test the bot. */
-@Singleton
 @Slf4j
 public class HelpHandler implements Handler {
   private final ApplicationComponent applicationComponent;

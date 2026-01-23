@@ -1,7 +1,6 @@
 package jimlind.filmlinkd.system.letterboxd.api;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import jimlind.filmlinkd.model.CombinedLbFilmModel;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilm;
 import jimlind.filmlinkd.system.letterboxd.model.LbFilmStatistics;
@@ -11,7 +10,6 @@ import jimlind.filmlinkd.system.letterboxd.utils.UrlUtils;
 import org.jetbrains.annotations.Nullable;
 
 /** Implements a number of API clients used specifically to return film data. */
-@Singleton
 public class FilmApi {
   private final Client client;
 

@@ -3,14 +3,12 @@ package jimlind.filmlinkd.system.discord.helper;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.inject.Singleton;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 /** A Collection of (actually one) methods that help translate channel data. */
-@Singleton
 public final class ChannelHelper {
   /** Constructor for this class. */
   private ChannelHelper() {}

@@ -2,12 +2,10 @@ package jimlind.filmlinkd.system.letterboxd.utils;
 
 import com.google.gson.Gson;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import jimlind.filmlinkd.system.letterboxd.model.LbImage;
 import jimlind.filmlinkd.system.letterboxd.model.LbImageSize;
 
 /** Utilities to translate Letterboxd Image objects to other formats. */
-@Singleton
 public class ImageUtils {
   /** Constructor for this class. */
   @Inject

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import jimlind.filmlinkd.discord.embed.factory.FollowingEmbedFactory;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.google.db.UserReader;
@@ -16,7 +15,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 /** Handles the /following command to show the users followed in the specified channel. */
-@Singleton
 public class FollowingHandler implements Handler {
   private final FollowingEmbedFactory followingEmbedFactory;
   private final UserFactory userFactory;

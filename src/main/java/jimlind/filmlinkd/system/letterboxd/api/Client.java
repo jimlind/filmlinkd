@@ -21,7 +21,6 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.utils.URIBuilder;
@@ -31,7 +30,6 @@ import org.jetbrains.annotations.Nullable;
  * The basis for the rest of the Letterboxd API calls. Contains all the logic to make calls that
  * need to be authorized and those that don't.
  */
-@Singleton
 @Slf4j
 public class Client {
   static final String BASE_URL = "https://api.letterboxd.com/api/v0/";
