@@ -1,9 +1,9 @@
 package jimlind.filmlinkd;
 
 import java.util.Optional;
-import jimlind.filmlinkd.core.di.ApplicationComponent;
 import jimlind.filmlinkd.core.di.DaggerApplicationComponent;
 import jimlind.filmlinkd.scraper.scheduler.ScraperSchedulerFactory;
+import jimlind.filmlinkd.system.di.ApplicationComponent;
 import lombok.extern.slf4j.Slf4j;
 
 /** The main entry point for the scraper application. */

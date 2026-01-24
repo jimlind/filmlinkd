@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.core.di;
+package jimlind.filmlinkd.system.di;
 
 import dagger.Component;
 import java.util.Map;

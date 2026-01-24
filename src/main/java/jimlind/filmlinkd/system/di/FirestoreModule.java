@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.core.di;
+package jimlind.filmlinkd.system.di;
 
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.FirestoreOptions;

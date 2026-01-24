@@ -2,10 +2,10 @@ package jimlind.filmlinkd.discord.event.handler;
 
 import java.util.List;
 import javax.inject.Inject;
-import jimlind.filmlinkd.core.di.ApplicationComponent;
 import jimlind.filmlinkd.discord.dispatcher.HelpEmbedDispatcher;
 import jimlind.filmlinkd.discord.embed.factory.HelpEmbedFactory;
 import jimlind.filmlinkd.google.db.UserReader;
+import jimlind.filmlinkd.system.di.ApplicationComponent;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;

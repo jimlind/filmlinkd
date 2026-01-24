@@ -3,9 +3,9 @@ package jimlind.filmlinkd.scraper;
 import java.util.concurrent.Semaphore;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import jimlind.filmlinkd.core.di.ApplicationComponent;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.scraper.cache.BaseUserCache;
+import jimlind.filmlinkd.system.di.ApplicationComponent;
 
 /** A factory for creating instances of the {@link ScraperCoordinator} model. */
 @Singleton

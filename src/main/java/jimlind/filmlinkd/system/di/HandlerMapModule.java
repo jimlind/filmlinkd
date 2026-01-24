@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.core.di;
+package jimlind.filmlinkd.system.di;
 
 import dagger.Module;
 import dagger.Provides;
