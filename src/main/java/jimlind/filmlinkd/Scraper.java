@@ -1,9 +1,8 @@
 package jimlind.filmlinkd;
 
 import java.util.Optional;
-import jimlind.filmlinkd.core.di.DaggerApplicationComponent;
-import jimlind.filmlinkd.scraper.scheduler.ScraperSchedulerFactory;
 import jimlind.filmlinkd.system.di.ApplicationComponent;
+import jimlind.filmlinkd.system.di.DaggerApplicationComponent;
 import lombok.extern.slf4j.Slf4j;
 
 /** The main entry point for the scraper application. */
@@ -29,9 +28,8 @@ public final class Scraper {
     component.pubSubManager().buildCommandSubscriber();
 
     // Start the Scrapers
-    ScraperSchedulerFactory schedulerFactory = component.scraperSchedulerFactory();
-    schedulerFactory.create(false).start();
-    schedulerFactory.create(true).start();
+    component.generalScraperDispatcher().start();
+    component.vipScraperDispatcher().start();
 
     // Schedule system statistic logger
     component.statLogDispatcher().start();

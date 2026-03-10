@@ -9,7 +9,8 @@ import jimlind.filmlinkd.discord.dispatcher.HelpEmbedDispatcher;
 import jimlind.filmlinkd.discord.event.handler.Handler;
 import jimlind.filmlinkd.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.scraper.ScraperCoordinator;
-import jimlind.filmlinkd.scraper.scheduler.ScraperSchedulerFactory;
+import jimlind.filmlinkd.scraperNew.GeneralScraperDispatcher;
+import jimlind.filmlinkd.scraperNew.VipScraperDispatcher;
 import jimlind.filmlinkd.system.DiscordSystem;
 import jimlind.filmlinkd.system.ShutdownThread;
 import jimlind.filmlinkd.system.dispatcher.ScrapedResultQueueDispatcher;
@@ -37,11 +38,14 @@ public interface ApplicationComponent {
   /** Executes the timed scraped result queue checking tasks. */
   ScrapedResultQueueDispatcher scrapedResultQueueDispatcher();
 
+  /** Executes the timed general user scraper. */
+  GeneralScraperDispatcher generalScraperDispatcher();
+
+  /** Executes the timed vip user scraper. */
+  VipScraperDispatcher vipScraperDispatcher();
+
   /** Coordinate all the API checking to Pub/Sub publishing actions. */
   ScraperCoordinator scraperCoordinator();
-
-  /** A factory for creating instances of the ScraperScheduler model. */
-  ScraperSchedulerFactory scraperSchedulerFactory();
 
   /** Executes the timed stat logging tasks. */
   StatLogDispatcher statLogDispatcher();
