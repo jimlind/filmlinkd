@@ -53,12 +53,17 @@ public abstract class Task {
       scheduledFuture.cancel(false);
     }
     scheduler.shutdown();
+    workerPool.shutdown();
     try {
       if (!scheduler.awaitTermination(1, TimeUnit.SECONDS)) {
         scheduler.shutdownNow();
       }
+      if (!workerPool.awaitTermination(1, TimeUnit.SECONDS)) {
+        workerPool.shutdownNow();
+      }
     } catch (InterruptedException e) {
       scheduler.shutdownNow();
+      workerPool.shutdownNow();
       Thread.currentThread().interrupt();
     }
   }
@@ -79,9 +84,9 @@ public abstract class Task {
     }
 
     // Wraps the `runTask` method forcing timeouts and catching appropriate events. Throwing
-    // exceptions on a task should not stop the scheduler so catch and log those. Throwing errors on
-    // a task should stop the scheduler so we need to log and rethrow those events so functionality
-    // stays the same but visibility increases.
+    // exceptions on a task should not stop the scheduler so catch and log those. Throwing errors
+    // and interruptions on a task should stop the scheduler so we need to log and rethrow those
+    // events so functionality stays the same but visibility increases.
     try {
       Future<?> future = workerPool.submit(this::runTask);
       future.get(timeoutMillis, TimeUnit.MILLISECONDS);
