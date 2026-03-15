@@ -1,10 +1,10 @@
-package jimlind.filmlinkd.scraperV1;
+package jimlind.filmlinkd.scraperv1;
 
 import java.util.concurrent.Semaphore;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import jimlind.filmlinkd.model.Message;
-import jimlind.filmlinkd.scraperV1.cache.BaseUserCache;
+import jimlind.filmlinkd.scraperv1.cache.BaseUserCache;
 import jimlind.filmlinkd.system.di.ApplicationComponent;
 
 /** A factory for creating instances of the {@link ScraperCoordinator} model. */

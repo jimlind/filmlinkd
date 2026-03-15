@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.scraperV1.runner;
+package jimlind.filmlinkd.scraperv1.runner;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -7,8 +7,8 @@ import java.util.concurrent.Semaphore;
 import javax.inject.Inject;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.model.Message;
-import jimlind.filmlinkd.scraperV1.ScraperCoordinatorFactory;
-import jimlind.filmlinkd.scraperV1.cache.BaseUserCache;
+import jimlind.filmlinkd.scraperv1.ScraperCoordinatorFactory;
+import jimlind.filmlinkd.scraperv1.cache.BaseUserCache;
 import lombok.extern.slf4j.Slf4j;
 
 /**

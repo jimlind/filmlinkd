@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import jimlind.filmlinkd.scraperV1.cache.GeneralUserCache;
+import jimlind.filmlinkd.scraperv1.cache.GeneralUserCache;
 import lombok.extern.slf4j.Slf4j;
 
 /** The CommandMessageReceiver gets PubSub messages and responds to them appropriately. */

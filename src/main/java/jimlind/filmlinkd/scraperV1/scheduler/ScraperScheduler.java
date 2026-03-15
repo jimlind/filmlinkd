@@ -1,11 +1,11 @@
-package jimlind.filmlinkd.scraperV1.scheduler;
+package jimlind.filmlinkd.scraperv1.scheduler;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import jimlind.filmlinkd.scraperV1.cache.BaseUserCache;
-import jimlind.filmlinkd.scraperV1.cache.clearer.BaseUserCacheClearer;
-import jimlind.filmlinkd.scraperV1.runner.BaseScraper;
+import jimlind.filmlinkd.scraperv1.cache.BaseUserCache;
+import jimlind.filmlinkd.scraperv1.cache.clearer.BaseUserCacheClearer;
+import jimlind.filmlinkd.scraperv1.runner.BaseScraper;
 import lombok.extern.slf4j.Slf4j;
 
 /** Schedules the scheduler that runs over every user. */

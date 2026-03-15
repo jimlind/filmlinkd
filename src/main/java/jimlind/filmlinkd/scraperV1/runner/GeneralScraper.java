@@ -1,11 +1,11 @@
-package jimlind.filmlinkd.scraperV1.runner;
+package jimlind.filmlinkd.scraperv1.runner;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.model.Message.PublishSource;
-import jimlind.filmlinkd.scraperV1.ScraperCoordinatorFactory;
-import jimlind.filmlinkd.scraperV1.cache.GeneralUserCache;
+import jimlind.filmlinkd.scraperv1.ScraperCoordinatorFactory;
+import jimlind.filmlinkd.scraperv1.cache.GeneralUserCache;
 
 /**
  * Scrapes the next page from the GeneralUserCache publishes a message in PubSub with the source set

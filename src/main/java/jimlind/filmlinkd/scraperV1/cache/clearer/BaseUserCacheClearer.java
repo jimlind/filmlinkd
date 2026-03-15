@@ -1,6 +1,6 @@
-package jimlind.filmlinkd.scraperV1.cache.clearer;
+package jimlind.filmlinkd.scraperv1.cache.clearer;
 
-import jimlind.filmlinkd.scraperV1.cache.BaseUserCache;
+import jimlind.filmlinkd.scraperv1.cache.BaseUserCache;
 
 /**
  * Runnable to clear the User Cache. It's good practice to clear this cache every so often to ensure

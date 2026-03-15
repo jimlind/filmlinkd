@@ -1,8 +1,8 @@
-package jimlind.filmlinkd.scraperV1.cache.clearer;
+package jimlind.filmlinkd.scraperv1.cache.clearer;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import jimlind.filmlinkd.scraperV1.cache.VipUserCache;
+import jimlind.filmlinkd.scraperv1.cache.VipUserCache;
 
 /** Runnable to clear the General User Cache. */
 @Singleton

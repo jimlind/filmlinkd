@@ -1,14 +1,14 @@
-package jimlind.filmlinkd.scraperV1.scheduler;
+package jimlind.filmlinkd.scraperv1.scheduler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
-import jimlind.filmlinkd.scraperV1.cache.GeneralUserCache;
-import jimlind.filmlinkd.scraperV1.cache.VipUserCache;
-import jimlind.filmlinkd.scraperV1.cache.clearer.GeneralUserCacheClearer;
-import jimlind.filmlinkd.scraperV1.cache.clearer.VipUserCacheClearer;
-import jimlind.filmlinkd.scraperV1.runner.GeneralScraper;
-import jimlind.filmlinkd.scraperV1.runner.VipScraper;
+import jimlind.filmlinkd.scraperv1.cache.GeneralUserCache;
+import jimlind.filmlinkd.scraperv1.cache.VipUserCache;
+import jimlind.filmlinkd.scraperv1.cache.clearer.GeneralUserCacheClearer;
+import jimlind.filmlinkd.scraperv1.cache.clearer.VipUserCacheClearer;
+import jimlind.filmlinkd.scraperv1.runner.GeneralScraper;
+import jimlind.filmlinkd.scraperv1.runner.VipScraper;
 
 /** A factory for creating instances of the {@link ScraperScheduler} model. */
 @Singleton
