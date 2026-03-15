@@ -9,10 +9,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import jimlind.amaranth.task.Task;
-import lombok.extern.slf4j.Slf4j;
 
 @Singleton
-@Slf4j
 public class Scheduler {
   private final AtomicBoolean scheduledTasksStarted = new AtomicBoolean(false);
   private final AtomicBoolean supervisorStarted = new AtomicBoolean(false);
@@ -26,10 +24,9 @@ public class Scheduler {
     taskList.add(task);
   }
 
-  public void startAll() {
+  public void startAll() throws RuntimeException {
     if (!scheduledTasksStarted.compareAndSet(false, true)) {
-      log.error("Failure: Scheduler can only be started once.");
-      return;
+      throw new RuntimeException("Scheduler can only be started once.");
     }
 
     taskList.forEach(Task::start);
@@ -49,7 +46,6 @@ public class Scheduler {
       if (!task.hasExited()) {
         continue;
       }
-      log.info("Restarting the exited task: {}", task.getClass().getSimpleName());
       task.start();
     }
   }
