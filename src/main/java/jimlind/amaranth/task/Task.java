@@ -8,7 +8,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import lombok.extern.slf4j.Slf4j;
+import java.util.function.Consumer;
+import jimlind.amaranth.exception.TaskException;
+import jimlind.amaranth.exception.TaskGeneralException;
+import jimlind.amaranth.exception.TaskInterruptionException;
+import jimlind.amaranth.exception.TaskSeriousException;
+import jimlind.amaranth.exception.TaskTimeoutException;
 
 /**
  * Wrapper for a ScheduledExecutorService task.
@@ -17,10 +22,10 @@ import lombok.extern.slf4j.Slf4j;
  * appropriate error and throwable events are handled correctly and 3) To ensure that the task could
  * theoretically be closed when they are not no longer needed, making static analysis tools happy
  */
-@Slf4j
 public abstract class Task {
   protected final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
   protected final ExecutorService workerPool = Executors.newCachedThreadPool();
+  protected Consumer<TaskException> exceptionConsumer = exception -> {};
   protected ScheduledFuture<?> scheduledFuture;
   protected long timeoutMillis = TimeUnit.HOURS.toMillis(1);
 
@@ -83,27 +88,43 @@ public abstract class Task {
       return;
     }
 
-    // Wraps the `runTask` method forcing timeouts and catching appropriate events. Throwing
-    // exceptions on a task should not stop the scheduler so catch and log those. Throwing errors
-    // and interruptions on a task should stop the scheduler so we need to log and rethrow those
-    // events so functionality stays the same but visibility increases.
+    // Wraps the `runTask` method forcing timeouts and catching appropriate events.
+    // All exceptions are translated and sent to the exceptionConfuser for logging.
+    // Serious exceptions are rethrown to appropriately bubble up.
+    //
+    // * Any TimeoutException are swallowed and sent to the exceptionConsumer as
+    //   TaskTimeoutException.
+    // * Any InterruptedException are swallowed, sent to the exceptionConsumer as
+    //   TaskInterruptionException, and the interrupt flag is restored.
+    // * Any ExecutionException caused by Errors are rethrown but sent to the exceptionConsumer as
+    //   TaskSeriousException first.
+    // * All other ExecutionException are swallowed and send to the exceptionConsumer as
+    //   TaskGeneralException.
+    Future<?> future = workerPool.submit(this::runTask);
     try {
-      Future<?> future = workerPool.submit(this::runTask);
       future.get(timeoutMillis, TimeUnit.MILLISECONDS);
-    } catch (TimeoutException timeoutException) {
-      log.error("Task timed out: {}", this.getClass().getSimpleName());
+
+    } catch (TimeoutException timeout) {
+      future.cancel(true);
+      exceptionConsumer.accept(new TaskTimeoutException(timeout.getMessage(), timeout));
+
+    } catch (InterruptedException interrupt) {
+      future.cancel(true);
+      exceptionConsumer.accept(new TaskInterruptionException(interrupt.getMessage(), interrupt));
+      Thread.currentThread().interrupt();
+
     } catch (ExecutionException executionException) {
       Throwable cause = executionException.getCause();
       if (cause instanceof Error) {
-        log.error("Fatal error thrown in scheduled task and task killed: {}", cause.toString());
+        exceptionConsumer.accept(new TaskSeriousException(executionException.getMessage(), cause));
         throw (Error) cause;
       } else {
-        log.error("Exception thrown and caught in scheduled task: {}", cause.getMessage());
+        exceptionConsumer.accept(new TaskGeneralException(executionException.getMessage(), cause));
       }
-    } catch (InterruptedException interruption) {
-      log.error("Interrupted Exception thrown in scheduled task: {}", interruption.getMessage());
-      Thread.currentThread().interrupt();
-      throw new RuntimeException(interruption);
+
+    } catch (Exception exception) {
+      future.cancel(true);
+      exceptionConsumer.accept(new TaskGeneralException(exception.getMessage(), exception));
     }
   }
 }

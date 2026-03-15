@@ -1,30 +1,22 @@
 package jimlind.amaranth.task;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
-import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.concurrent.atomic.AtomicReference;
+import jimlind.amaranth.exception.TaskException;
+import jimlind.amaranth.exception.TaskGeneralException;
+import jimlind.amaranth.exception.TaskSeriousException;
+import jimlind.amaranth.exception.TaskTimeoutException;
 import org.junit.jupiter.api.Test;
-import org.slf4j.LoggerFactory;
 
 class TaskTest {
 
-  private ListAppender<ILoggingEvent> listAppender;
-
-  @BeforeEach
-  void setUp() {
-    Logger taskLogger = (Logger) LoggerFactory.getLogger(Task.class);
-    listAppender = new ListAppender<>();
-    listAppender.start();
-    taskLogger.addAppender(listAppender);
-  }
-
   @Test
-  void runSafely_logsTimeout() {
+  void runSafely_capturesTimeout() {
+    AtomicReference<TaskException> captured = new AtomicReference<>();
     TestTask task =
         new TestTask(
             () -> {
@@ -35,15 +27,14 @@ class TaskTest {
               }
             },
             20);
-
+    task.exceptionConsumer = captured::set;
     task.runSafely();
-
-    List<ILoggingEvent> logsList = listAppender.list;
-    verifyLog(logsList, "Task timed out: TestTask");
+    assertInstanceOf(TaskTimeoutException.class, captured.get());
   }
 
   @Test
-  void runSafely_logsException() {
+  void runSafely_capturesException() {
+    AtomicReference<TaskException> captured = new AtomicReference<>();
     RuntimeException testException = new RuntimeException("Test Exception");
     TestTask task =
         new TestTask(
@@ -51,15 +42,14 @@ class TaskTest {
               throw testException;
             },
             1000);
-
+    task.exceptionConsumer = captured::set;
     assertDoesNotThrow(task::runSafely);
-
-    List<ILoggingEvent> logsList = listAppender.list;
-    verifyLog(logsList, "Exception thrown and caught in scheduled task: Test Exception");
+    assertInstanceOf(TaskGeneralException.class, captured.get());
   }
 
   @Test
-  void runSafely_rethrowsError() {
+  void runSafely_rethrowsAndCapturesError() {
+    AtomicReference<TaskException> captured = new AtomicReference<>();
     Error testError = new Error("Test Error");
     TestTask task =
         new TestTask(
@@ -67,26 +57,18 @@ class TaskTest {
               throw testError;
             },
             1000);
-
+    task.exceptionConsumer = captured::set;
     assertThrows(Error.class, task::runSafely);
-
-    List<ILoggingEvent> logsList = listAppender.list;
-    verifyLog(
-        logsList,
-        "Fatal error thrown in scheduled task and task killed: java.lang.Error: Test Error");
+    assertInstanceOf(TaskSeriousException.class, captured.get());
   }
 
   @Test
   void runSafely_successfulExecution() {
+    AtomicReference<TaskException> captured = new AtomicReference<>();
     TestTask task = new TestTask(() -> {}, 1000);
+    task.exceptionConsumer = captured::set;
     assertDoesNotThrow(task::runSafely);
-    List<ILoggingEvent> logsList = listAppender.list;
-    assert (logsList.isEmpty());
-  }
-
-  private void verifyLog(List<ILoggingEvent> logsList, String expectedMessage) {
-    assert (logsList.stream()
-        .anyMatch(event -> event.getFormattedMessage().contains(expectedMessage)));
+    assertNull(captured.get());
   }
 
   private static class TestTask extends Task {
@@ -97,7 +79,7 @@ class TaskTest {
       this.timeoutMillis = timeoutMillis;
     }
 
-    // Leave start empty and test runTask specifically for how throwables are processed
+    // Leave start empty and test runTask specifically for how exceptions are processed
     @Override
     public void start() {}
 

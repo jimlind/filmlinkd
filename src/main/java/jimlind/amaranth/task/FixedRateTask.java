@@ -1,10 +1,8 @@
 package jimlind.amaranth.task;
 
 import java.util.concurrent.TimeUnit;
-import lombok.extern.slf4j.Slf4j;
 
 /** Abstraction that wraps a ScheduledExecutorService using scheduleAtFixedRate */
-@Slf4j
 public abstract class FixedRateTask extends Task {
   private final long initialDelayMillis;
   private final long periodMillis;
