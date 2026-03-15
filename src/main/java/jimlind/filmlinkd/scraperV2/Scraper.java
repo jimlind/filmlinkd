@@ -1,12 +1,12 @@
-package jimlind.filmlinkd.scraperNew;
+package jimlind.filmlinkd.scraperV2;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import jimlind.filmlinkd.model.Message.PublishSource;
-import jimlind.filmlinkd.scraper.ScraperCoordinatorFactory;
-import jimlind.filmlinkd.scraper.cache.BaseUserCache;
+import jimlind.filmlinkd.scraperV1.ScraperCoordinatorFactory;
+import jimlind.filmlinkd.scraperV1.cache.BaseUserCache;
 
 public class Scraper {
   private final ScraperCoordinatorFactory factory;

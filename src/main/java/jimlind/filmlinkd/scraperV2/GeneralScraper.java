@@ -1,11 +1,11 @@
-package jimlind.filmlinkd.scraperNew;
+package jimlind.filmlinkd.scraperV2;
 
 import javax.inject.Inject;
 
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.model.Message.PublishSource;
-import jimlind.filmlinkd.scraper.ScraperCoordinatorFactory;
-import jimlind.filmlinkd.scraper.cache.GeneralUserCache;
+import jimlind.filmlinkd.scraperV1.ScraperCoordinatorFactory;
+import jimlind.filmlinkd.scraperV1.cache.GeneralUserCache;
 
 public class GeneralScraper extends Scraper {
 

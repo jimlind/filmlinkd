@@ -1,18 +1,18 @@
-package jimlind.filmlinkd.scraper.runner;
+package jimlind.filmlinkd.scraperV1.runner;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.model.Message.PublishSource;
-import jimlind.filmlinkd.scraper.ScraperCoordinatorFactory;
-import jimlind.filmlinkd.scraper.cache.GeneralUserCache;
+import jimlind.filmlinkd.scraperV1.ScraperCoordinatorFactory;
+import jimlind.filmlinkd.scraperV1.cache.VipUserCache;
 
 /**
- * Scrapes the next page from the GeneralUserCache publishes a message in PubSub with the source set
- * to "normal" to notify the other systems.
+ * Scrapes the next page from the VipUserCache publishes a message in PubSub with the source set to
+ * "vip" to notify the other systems.
  */
 @Singleton
-public class GeneralScraper extends BaseScraper {
+public class VipScraper extends BaseScraper {
   /**
    * Constructor for this class.
    *
@@ -21,12 +21,12 @@ public class GeneralScraper extends BaseScraper {
    * @param scraperCoordinatorFactory Handles the creation of ScraperCoordinator tasks
    */
   @Inject
-  public GeneralScraper(
+  public VipScraper(
       AppConfig appConfig,
-      GeneralUserCache userCache,
+      VipUserCache userCache,
       ScraperCoordinatorFactory scraperCoordinatorFactory) {
     super(appConfig, userCache, scraperCoordinatorFactory);
-    this.concurrentClientLimit = appConfig.getScraperGeneralConcurrentLimit();
-    this.source = PublishSource.Normal;
+    this.concurrentClientLimit = appConfig.getScraperVipConcurrentLimit();
+    this.source = PublishSource.VIP;
   }
 }

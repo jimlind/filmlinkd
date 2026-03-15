@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.scraperNew;
+package jimlind.filmlinkd.scraperV2;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -10,20 +10,18 @@ import jimlind.filmlinkd.core.scheduling.TimedTaskRunner;
  * ensure that things could be closed when not needed.
  */
 @Singleton
-public class GeneralScraperDispatcher extends TimedTaskRunner {
-  private static final long INITIAL_DELAY_MILLISECONDS = 0;
-  private static final long INTERVAL_MILLISECONDS = 600000; // 10 minutes
+public class VipScraperDispatcher extends TimedTaskRunner {
   private final Scraper scraper;
 
   /**
    * Constructor for this class.
    *
    * @param appConfig Stores application configuration
-   * @param scraper Scrapers
+   * @param scraper Scrapes
    */
   @Inject
-  public GeneralScraperDispatcher(AppConfig appConfig, GeneralScraper scraper) {
-    super(0, appConfig.getScraperGeneralPeriod());
+  public VipScraperDispatcher(AppConfig appConfig, VipScraper scraper) {
+    super(0, appConfig.getScraperVipPeriod());
     this.scraper = scraper;
   }
 
