@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.scraperV2;
+package jimlind.filmlinkd.scraperv2;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -25,6 +25,7 @@ public class VipScraperDispatcher extends TimedTaskRunner {
     this.scraper = scraper;
   }
 
+  /** Triggers the VIP scraper execution. */
   @Override
   protected void runTask() {
     scraper.run();
