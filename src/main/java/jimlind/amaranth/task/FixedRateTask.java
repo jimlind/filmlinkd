@@ -2,7 +2,7 @@ package jimlind.amaranth.task;
 
 import java.util.concurrent.TimeUnit;
 
-/** Abstraction that wraps a ScheduledExecutorService using scheduleAtFixedRate */
+/** Abstraction that wraps a ScheduledExecutorService using scheduleAtFixedRate. */
 public abstract class FixedRateTask extends Task {
   private final long initialDelayMillis;
   private final long periodMillis;
@@ -21,6 +21,7 @@ public abstract class FixedRateTask extends Task {
   }
 
   /** Task to actually run. Needs to be implemented. */
+  @Override
   protected abstract void runTask();
 
   /** Starts the SingleThreadScheduledExecutor using scheduleAtFixedRate. */

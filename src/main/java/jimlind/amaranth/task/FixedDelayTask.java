@@ -2,7 +2,7 @@ package jimlind.amaranth.task;
 
 import java.util.concurrent.TimeUnit;
 
-/** Abstraction that wraps a ScheduledExecutorService using scheduleWithFixedDelay */
+/** Abstraction that wraps a ScheduledExecutorService using scheduleWithFixedDelay. */
 public abstract class FixedDelayTask extends Task {
   private final long initialDelayMillis;
   private final long subsequentDelayMillis;
@@ -21,6 +21,7 @@ public abstract class FixedDelayTask extends Task {
   }
 
   /** Task to actually run. Needs to be implemented. */
+  @Override
   protected abstract void runTask();
 
   /** Starts the SingleThreadScheduledExecutor using scheduleWithFixedDelay. */

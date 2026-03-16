@@ -73,7 +73,7 @@ public abstract class Task {
     }
   }
 
-  /** Execution would stop if this method returned true, but it is a hardcoded infinite task */
+  /** Execution would stop if this method returned true, but it is a hardcoded infinite task. */
   protected boolean shouldStop() {
     return false;
   }
@@ -81,6 +81,8 @@ public abstract class Task {
   /** Task to actually run. Needs to be implemented. */
   protected abstract void runTask();
 
+  /** Executes the task logic safely, enforcing timeouts and handling exceptions. */
+  @SuppressWarnings({"PMD.AvoidCatchingGenericException", "PMD.PreserveStackTrace"})
   protected void runSafely() {
     // Halt running if the scheduled task stop requested
     if (shouldStop()) {
