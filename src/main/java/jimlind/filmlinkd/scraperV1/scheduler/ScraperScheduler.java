@@ -40,13 +40,13 @@ public class ScraperScheduler {
   }
 
   /** Method that activates the scraper and clearer. */
+  @SuppressWarnings({"PMD.CloseResource", "PMD.AvoidCatchingThrowable"})
   public void start() {
     // Set up the user cache with an appropriate random starting point before the scrapers start
     userCache.initializeRandomPage();
 
     // These should run forever so not closing them
 
-    @SuppressWarnings("PMD.CloseResource")
     ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     scheduler.scheduleWithFixedDelay(
         () -> {
@@ -59,6 +59,7 @@ public class ScraperScheduler {
         0,
         scraperPeriod,
         TimeUnit.SECONDS);
+
     scheduler.scheduleWithFixedDelay(
         () -> {
           try {

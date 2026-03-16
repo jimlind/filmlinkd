@@ -19,6 +19,7 @@ import jimlind.filmlinkd.system.dispatcher.StatLogDispatcher;
 /** Dagger component for the application. */
 @Singleton
 @Component(modules = {FirestoreModule.class, HandlerMapModule.class})
+@SuppressWarnings("PMD.TooManyMethods")
 public interface ApplicationComponent {
   /** Provides a map of all Handlers by string. */
   Map<String, Provider<Handler>> handlerMap();
