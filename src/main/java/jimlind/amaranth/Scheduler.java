@@ -16,6 +16,8 @@ import jimlind.amaranth.task.Task;
  * <p>This scheduler handles starting, stopping, and supervising tasks. It includes a supervisor
  * mechanism that periodically checks if tasks have exited and restarts them to ensure continuous
  * execution.
+ *
+ * <p>TODO: Don't include dagger injection and singleton ideas in this library.
  */
 @Singleton
 public class Scheduler {
