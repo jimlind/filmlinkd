@@ -12,9 +12,9 @@ import jimlind.filmlinkd.scraperv1.ScraperCoordinator;
 import jimlind.filmlinkd.scraperv2.GeneralScraperDispatcher;
 import jimlind.filmlinkd.scraperv2.VipScraperDispatcher;
 import jimlind.filmlinkd.system.DiscordSystem;
+import jimlind.filmlinkd.system.MemoryInformationLogger;
 import jimlind.filmlinkd.system.ShutdownThread;
 import jimlind.filmlinkd.system.dispatcher.ScrapedResultQueueDispatcher;
-import jimlind.filmlinkd.system.dispatcher.StatLogDispatcher;
 
 /** Dagger component for the application. */
 @Singleton
@@ -48,9 +48,9 @@ public interface ApplicationComponent {
   /** Coordinate all the API checking to Pub/Sub publishing actions. */
   ScraperCoordinator scraperCoordinator();
 
-  /** Executes the timed stat logging tasks. */
-  StatLogDispatcher statLogDispatcher();
-
   /** Handles shutting down, stopping, and deactivating. */
   ShutdownThread shutdownThread();
+
+  /** Task that logs memory usage */
+  MemoryInformationLogger memoryInformationLogger();
 }

@@ -1,6 +1,7 @@
 package jimlind.filmlinkd;
 
 import java.util.Optional;
+import jimlind.amaranth.Scheduler;
 import jimlind.filmlinkd.system.di.ApplicationComponent;
 import jimlind.filmlinkd.system.di.DaggerApplicationComponent;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,9 @@ public final class Scraper {
     component.vipScraperDispatcher().start();
 
     // Schedule system statistic logger
-    component.statLogDispatcher().start();
+    Scheduler scheduler = new Scheduler();
+    scheduler.addTask(component.memoryInformationLogger());
+    scheduler.startAll();
 
     // Register shutdown events
     Runtime.getRuntime().addShutdownHook(component.shutdownThread());

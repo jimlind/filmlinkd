@@ -7,6 +7,7 @@ import java.lang.management.MemoryUsage;
 import java.lang.management.ThreadMXBean;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import jimlind.amaranth.task.FixedRateTask;
 import jimlind.filmlinkd.config.AppConfig;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,7 +18,11 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Singleton
 @Slf4j
-public class MemoryInformationLogger {
+public class MemoryInformationLogger extends FixedRateTask {
+  private static final long INITIAL_DELAY_MILLIS = 5000; // 5 seconds
+  private static final long SUBSEQUENT_DELAY_MILLIS = 600000; // 10 minutes
+  private static final long TIMEOUT_MILLIS = 5000; // 5 seconds
+
   private static final String TOTAL_LOADED_KEY = "total-loaded";
   private static final String USED_KEY = "used";
   private static final String COMMITTED_KEY = "committed";
@@ -42,6 +47,8 @@ public class MemoryInformationLogger {
    */
   @Inject
   public MemoryInformationLogger(AppConfig appConfig) {
+    super(INITIAL_DELAY_MILLIS, SUBSEQUENT_DELAY_MILLIS, TIMEOUT_MILLIS);
+
     this.appConfig = appConfig;
     classLoadingBean = ManagementFactory.getClassLoadingMXBean();
     memoryBean = ManagementFactory.getMemoryMXBean();
@@ -57,7 +64,8 @@ public class MemoryInformationLogger {
   }
 
   /** Execution path for this logger. Gathers memory information at the moment and logs it. */
-  public void run() {
+  @Override
+  public void runTask() {
     if (!log.isInfoEnabled()) {
       return;
     }
