@@ -67,10 +67,12 @@ public class MemoryInformationLogger extends FixedRateTask {
 
   @Override
   protected void exceptionConsumer(TaskException exception) {
-    log.warn(exception.getMessage());
-    log.warn(String.valueOf(exception.getCause()));
-    log.warn(String.valueOf(exception.getClass()));
-    log.warn(Arrays.toString(exception.getStackTrace()));
+    if (log.isWarnEnabled()) {
+      log.warn(exception.getMessage());
+      log.warn(String.valueOf(exception.getCause()));
+      log.warn(String.valueOf(exception.getClass()));
+      log.warn(Arrays.toString(exception.getStackTrace()));
+    }
   }
 
   /** Execution path for this logger. Gathers memory information at the moment and logs it. */

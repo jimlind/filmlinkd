@@ -51,6 +51,6 @@ public interface ApplicationComponent {
   /** Handles shutting down, stopping, and deactivating. */
   ShutdownThread shutdownThread();
 
-  /** Task that logs memory usage */
+  /** Task that logs memory usage. */
   MemoryInformationLogger memoryInformationLogger();
 }
