@@ -26,8 +26,8 @@ class TaskTest {
                 Thread.currentThread().interrupt();
               }
             },
-            20);
-    task.exceptionConsumer = captured::set;
+            20,
+            captured);
     task.runSafely();
     assertInstanceOf(TaskTimeoutException.class, captured.get());
   }
@@ -41,8 +41,8 @@ class TaskTest {
             () -> {
               throw testException;
             },
-            1000);
-    task.exceptionConsumer = captured::set;
+            1000,
+            captured);
     assertDoesNotThrow(task::runSafely);
     assertInstanceOf(TaskGeneralException.class, captured.get());
   }
@@ -56,8 +56,8 @@ class TaskTest {
             () -> {
               throw testError;
             },
-            1000);
-    task.exceptionConsumer = captured::set;
+            1000,
+            captured);
     assertThrows(Error.class, task::runSafely);
     assertInstanceOf(TaskSeriousException.class, captured.get());
   }
@@ -65,18 +65,20 @@ class TaskTest {
   @Test
   void runSafely_successfulExecution() {
     AtomicReference<TaskException> captured = new AtomicReference<>();
-    TestTask task = new TestTask(() -> {}, 1000);
-    task.exceptionConsumer = captured::set;
+    TestTask task = new TestTask(() -> {}, 1000, captured);
     assertDoesNotThrow(task::runSafely);
     assertNull(captured.get());
   }
 
   private static class TestTask extends Task {
     private final Runnable taskLogic;
+    private final AtomicReference<TaskException> exceptionCaptor;
 
-    public TestTask(Runnable taskLogic, long timeoutMillis) {
+    public TestTask(
+        Runnable taskLogic, long timeoutMillis, AtomicReference<TaskException> exceptionCaptor) {
       this.taskLogic = taskLogic;
       this.timeoutMillis = timeoutMillis;
+      this.exceptionCaptor = exceptionCaptor;
     }
 
     // Leave start empty and test runTask specifically for how exceptions are processed
@@ -86,6 +88,11 @@ class TaskTest {
     @Override
     protected void runTask() {
       taskLogic.run();
+    }
+
+    @Override
+    protected void exceptionConsumer(TaskException exception) {
+      exceptionCaptor.set(exception);
     }
   }
 }

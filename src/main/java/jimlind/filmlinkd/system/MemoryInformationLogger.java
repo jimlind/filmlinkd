@@ -5,8 +5,10 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
 import java.lang.management.ThreadMXBean;
+import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import jimlind.amaranth.exception.TaskException;
 import jimlind.amaranth.task.FixedRateTask;
 import jimlind.filmlinkd.config.AppConfig;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +63,14 @@ public class MemoryInformationLogger extends FixedRateTask {
 
   private static MemoryUsage getHeapMemoryUsage(MemoryMXBean memoryBean) {
     return memoryBean.getHeapMemoryUsage();
+  }
+
+  @Override
+  protected void exceptionConsumer(TaskException exception) {
+    log.warn(exception.getMessage());
+    log.warn(String.valueOf(exception.getCause()));
+    log.warn(String.valueOf(exception.getClass()));
+    log.warn(Arrays.toString(exception.getStackTrace()));
   }
 
   /** Execution path for this logger. Gathers memory information at the moment and logs it. */

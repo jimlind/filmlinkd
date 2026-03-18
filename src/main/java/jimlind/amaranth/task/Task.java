@@ -8,7 +8,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.function.Consumer;
 import jimlind.amaranth.exception.TaskException;
 import jimlind.amaranth.exception.TaskGeneralException;
 import jimlind.amaranth.exception.TaskInterruptionException;
@@ -25,7 +24,6 @@ import jimlind.amaranth.exception.TaskTimeoutException;
 public abstract class Task {
   protected final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
   protected final ExecutorService workerPool = Executors.newCachedThreadPool();
-  protected Consumer<TaskException> exceptionConsumer = exception -> {};
   protected ScheduledFuture<?> scheduledFuture;
   protected long timeoutMillis = TimeUnit.HOURS.toMillis(1);
 
@@ -81,6 +79,9 @@ public abstract class Task {
   /** Task to actually run. Needs to be implemented. */
   protected abstract void runTask();
 
+  /** Consumes task exceptions. Actual implementation hopefully logs events * */
+  protected void exceptionConsumer(TaskException exception) {}
+
   /** Executes the task logic safely, enforcing timeouts and handling exceptions. */
   @SuppressWarnings({"PMD.AvoidCatchingGenericException", "PMD.PreserveStackTrace"})
   protected void runSafely() {
@@ -108,25 +109,25 @@ public abstract class Task {
 
     } catch (TimeoutException timeout) {
       future.cancel(true);
-      exceptionConsumer.accept(new TaskTimeoutException(timeout.getMessage(), timeout));
+      exceptionConsumer(new TaskTimeoutException(timeout.getMessage(), timeout));
 
     } catch (InterruptedException interrupt) {
       future.cancel(true);
-      exceptionConsumer.accept(new TaskInterruptionException(interrupt.getMessage(), interrupt));
+      exceptionConsumer(new TaskInterruptionException(interrupt.getMessage(), interrupt));
       Thread.currentThread().interrupt();
 
     } catch (ExecutionException executionException) {
       Throwable cause = executionException.getCause();
       if (cause instanceof Error) {
-        exceptionConsumer.accept(new TaskSeriousException(executionException.getMessage(), cause));
+        exceptionConsumer(new TaskSeriousException(executionException.getMessage(), cause));
         throw (Error) cause;
       } else {
-        exceptionConsumer.accept(new TaskGeneralException(executionException.getMessage(), cause));
+        exceptionConsumer(new TaskGeneralException(executionException.getMessage(), cause));
       }
 
     } catch (Exception exception) {
       future.cancel(true);
-      exceptionConsumer.accept(new TaskGeneralException(exception.getMessage(), exception));
+      exceptionConsumer(new TaskGeneralException(exception.getMessage(), exception));
     }
   }
 }
