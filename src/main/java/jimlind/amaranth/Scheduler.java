@@ -6,8 +6,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import jimlind.amaranth.task.Task;
 
 /**
@@ -16,10 +14,7 @@ import jimlind.amaranth.task.Task;
  * <p>This scheduler handles starting, stopping, and supervising tasks. It includes a supervisor
  * mechanism that periodically checks if tasks have exited and restarts them to ensure continuous
  * execution.
- *
- * <p>TODO: Don't include dagger injection and singleton ideas in this library.
  */
-@Singleton
 public class Scheduler {
   private final AtomicBoolean scheduledTasksStarted = new AtomicBoolean(false);
   private final AtomicBoolean supervisorStarted = new AtomicBoolean(false);
@@ -27,7 +22,6 @@ public class Scheduler {
   private final ScheduledExecutorService supervisor = Executors.newSingleThreadScheduledExecutor();
 
   /** Constructs a new Scheduler. */
-  @Inject
   public Scheduler() {}
 
   /**
