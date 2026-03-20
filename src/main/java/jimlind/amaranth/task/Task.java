@@ -109,7 +109,8 @@ public abstract class Task {
 
     } catch (TimeoutException timeout) {
       future.cancel(true);
-      exceptionConsumer(new TaskTimeoutException(timeout.getMessage(), timeout));
+      exceptionConsumer(
+          new TaskTimeoutException("Timeout in task: " + this.getClass().getName(), timeout));
 
     } catch (InterruptedException interrupt) {
       future.cancel(true);
