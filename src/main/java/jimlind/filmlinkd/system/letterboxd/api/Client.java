@@ -9,7 +9,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpConnectTimeoutException;
@@ -22,8 +21,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import javax.inject.Inject;
 import jimlind.filmlinkd.config.AppConfig;
+import jimlind.filmlinkd.core.string.UrlBuilder;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -62,20 +61,21 @@ public class Client {
   public String handleAuthorizedStream(String path, Function<InputStream, String> streamProcessor) {
     URL url;
     String authorization;
+
     try {
-      URI uri =
-          new URIBuilder(BASE_URL + path)
-              .addParameter("apikey", appConfig.getLetterboxdApiKey())
-              .addParameter("nonce", String.valueOf(UUID.randomUUID()))
-              .addParameter("timestamp", String.valueOf(Instant.now().getEpochSecond()))
+      String urlString =
+          new UrlBuilder(BASE_URL + path)
+              .add("apikey", appConfig.getLetterboxdApiKey())
+              .add("nonce", String.valueOf(UUID.randomUUID()))
+              .add("timestamp", String.valueOf(Instant.now().getEpochSecond()))
               .build();
-      url = uri.toURL();
-      authorization = "Signature " + signatureBuilder.buildSignature("GET", uri.toString());
-    } catch (URISyntaxException | MalformedURLException e) {
+      url = URI.create(urlString).toURL();
+      authorization = "Signature " + signatureBuilder.buildSignature("GET", urlString);
+    } catch (IllegalArgumentException | MalformedURLException exception) {
       log.atError()
-          .setMessage("Failed to build URL or Authorization Signature")
+          .setMessage("Failed to build authorized URI")
           .addKeyValue(PATH_KEY, path)
-          .setCause(e)
+          .setCause(exception)
           .log();
       return "";
     }
@@ -129,10 +129,14 @@ public class Client {
    */
   public @Nullable <T> T get(String path, Class<T> inputClass) {
     try {
-      URI uri = new URIBuilder(BASE_URL + path).build();
+      URI uri = URI.create(BASE_URL + path);
       return this.request(uri, "", inputClass);
-    } catch (URISyntaxException e) {
-      log.atError().setMessage("Failed to build public URI").addKeyValue(PATH_KEY, path).log();
+    } catch (IllegalArgumentException exception) {
+      log.atError()
+          .setMessage("Failed to build public URI")
+          .addKeyValue(PATH_KEY, path)
+          .setCause(exception)
+          .log();
       return null;
     }
   }
@@ -147,23 +151,22 @@ public class Client {
    * @return Returns the datatype as defined by the inputs.
    */
   public @Nullable <T> T getAuthorized(String path, Class<T> inputClass) {
-    String key = appConfig.getLetterboxdApiKey();
-    String nonce = String.valueOf(UUID.randomUUID());
-    String now = String.valueOf(Instant.now().getEpochSecond());
-
-    // TODO: Are there other exceptions we should be trying to catch here?
     try {
-      URI uri =
-          new URIBuilder(BASE_URL + path)
-              .addParameter("apikey", key)
-              .addParameter("nonce", nonce)
-              .addParameter("timestamp", now)
+      String url =
+          new UrlBuilder(BASE_URL + path)
+              .add("apikey", appConfig.getLetterboxdApiKey())
+              .add("nonce", String.valueOf(UUID.randomUUID()))
+              .add("timestamp", String.valueOf(Instant.now().getEpochSecond()))
               .build();
-      String authorization = "Signature " + signatureBuilder.buildSignature("GET", uri.toString());
-
+      URI uri = URI.create(url);
+      String authorization = "Signature " + signatureBuilder.buildSignature("GET", url);
       return this.request(uri, authorization, inputClass);
-    } catch (URISyntaxException e) {
-      log.atError().setMessage("Failed to build authorized URI").addKeyValue(PATH_KEY, path).log();
+    } catch (IllegalArgumentException exception) {
+      log.atError()
+          .setMessage("Failed to build authorized URI")
+          .addKeyValue(PATH_KEY, path)
+          .setCause(exception)
+          .log();
       return null;
     }
   }
