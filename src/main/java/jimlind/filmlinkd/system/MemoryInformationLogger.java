@@ -5,10 +5,13 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
 import java.lang.management.ThreadMXBean;
-import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import jimlind.amaranth.exception.TaskException;
+import jimlind.amaranth.exception.TaskGeneralException;
+import jimlind.amaranth.exception.TaskInterruptionException;
+import jimlind.amaranth.exception.TaskSeriousException;
+import jimlind.amaranth.exception.TaskTimeoutException;
 import jimlind.amaranth.task.FixedRateTask;
 import jimlind.filmlinkd.config.AppConfig;
 import lombok.extern.slf4j.Slf4j;
@@ -67,11 +70,61 @@ public class MemoryInformationLogger extends FixedRateTask {
 
   @Override
   protected void exceptionConsumer(TaskException exception) {
-    if (log.isWarnEnabled()) {
-      log.warn(exception.getMessage());
-      log.warn(String.valueOf(exception.getCause()));
-      log.warn(String.valueOf(exception.getClass()));
-      log.warn(Arrays.toString(exception.getStackTrace()));
+    switch (exception) {
+      case TaskGeneralException taskException:
+        // Any number of low urgency exceptions are captured here. Log them as warnings because we
+        // expect the program to continue on uninterrupted.
+        if (log.isWarnEnabled()) {
+          log.atWarn()
+              .setMessage("General Exception Thrown")
+              .addKeyValue("Message", exception.getMessage())
+              .addKeyValue("Trace", exception.getCause().getStackTrace())
+              .log();
+        }
+        break;
+      case TaskInterruptionException taskInterruptionException:
+        // An interruption exception happens when a thread is interrupted. This should happen very
+        // rarely so but threads should be restarted.
+        if (log.isWarnEnabled()) {
+          log.atWarn()
+              .setMessage("Interruption Exception Thrown")
+              .addKeyValue("Message", exception.getMessage())
+              .addKeyValue("Trace", exception.getCause().getStackTrace())
+              .log();
+        }
+        break;
+      case TaskSeriousException taskSeriousException:
+        // A serious exception is thrown when an error that should be shutting down the systems is
+        // thrown. Log that as an error for immediate action.
+        if (log.isErrorEnabled()) {
+          log.atError()
+              .setMessage("Serious Exception Thrown")
+              .addKeyValue("Message", exception.getMessage())
+              .addKeyValue("Trace", exception.getCause().getStackTrace())
+              .log();
+        }
+        break;
+      case TaskTimeoutException taskTimeoutException:
+        // A timeout getting thrown here is only a curiosity. Logging as an info in case there might
+        // be something interesting to look at.
+        if (log.isInfoEnabled()) {
+          log.atInfo()
+              .setMessage("Timeout Exception Thrown")
+              .addKeyValue("Message", exception.getMessage())
+              .log();
+        }
+        break;
+      default:
+        // Conceptually this should never happen because only the types already included are created
+        // but for completeness with sniffers a default is preferred. If this ever does happen it's
+        // a big deal.
+        if (log.isErrorEnabled()) {
+          log.atError()
+              .setMessage("Unidentified Exception Thrown")
+              .addKeyValue("Message", exception.getMessage())
+              .addKeyValue("Trace", exception.getCause().getStackTrace())
+              .log();
+        }
     }
   }
 
