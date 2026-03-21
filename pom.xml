@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.example</groupId>
     <artifactId>filmlinkd</artifactId>
-    <version>6.4.0-beta</version>
+    <version>6.4.0-beta.2</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -16,17 +16,15 @@
         <lombok.version>1.18.42</lombok.version>
         <dagger.version>2.57.2</dagger.version>
         <guava.version>33.5.0-jre</guava.version>
-        <commons-lang3.version>3.20.0</commons-lang3.version>
         <slf4j.version>2.0.17</slf4j.version>
-        <logback.version>1.5.24</logback.version>
-        <httpclient5.version>5.6</httpclient5.version>
-        <jda.version>6.2.1</jda.version>
+        <logback.version>1.5.32</logback.version>
+        <jda.version>6.3.2</jda.version>
         <copy_down.version>1.1</copy_down.version>
         <jsoup.version>1.22.1</jsoup.version>
         <caffeine.version>3.2.3</caffeine.version>
         <commons-cli.version>1.11.0</commons-cli.version>
         <mockito.version>5.21.0</mockito.version>
-        <checkstyle.version>13.0.0</checkstyle.version>
+        <checkstyle.version>13.3.0</checkstyle.version>
 
         <maven-shade-plugin.version>3.6.1</maven-shade-plugin.version>
         <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
@@ -90,12 +88,6 @@
             <artifactId>dagger</artifactId>
             <version>${dagger.version}</version>
         </dependency>
-        <!-- Set version of commons-lang3 to override a vulnerable dependency of checkstyle -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
-        </dependency>
 
         <!-- Logging -->
         <dependency>
@@ -115,11 +107,6 @@
         </dependency>
 
         <!-- General System Dependencies -->
-        <dependency>
-            <groupId>org.apache.httpcomponents.client5</groupId>
-            <artifactId>httpclient5</artifactId>
-            <version>${httpclient5.version}</version>
-        </dependency>
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
@@ -205,9 +192,22 @@
                                 <filter>
                                     <artifact>*:*</artifact>
                                     <excludes>
+                                        <exclude>**/module-info.class</exclude>
                                         <exclude>META-INF/*.SF</exclude>
                                         <exclude>META-INF/*.DSA</exclude>
                                         <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>META-INF/LICENSE*</exclude>
+                                        <exclude>META-INF/NOTICE*</exclude>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                        <exclude>META-INF/versions/**/OSGI-INF/MANIFEST.MF</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.apache.httpcomponents:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/DEPENDENCIES</exclude>
+                                        <exclude>META-INF/LICENSE</exclude>
+                                        <exclude>META-INF/NOTICE</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
@@ -232,9 +232,22 @@
                                 <filter>
                                     <artifact>*:*</artifact>
                                     <excludes>
+                                        <exclude>**/module-info.class</exclude>
                                         <exclude>META-INF/*.SF</exclude>
                                         <exclude>META-INF/*.DSA</exclude>
                                         <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>META-INF/LICENSE*</exclude>
+                                        <exclude>META-INF/NOTICE*</exclude>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                        <exclude>META-INF/versions/**/OSGI-INF/MANIFEST.MF</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.apache.httpcomponents:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/DEPENDENCIES</exclude>
+                                        <exclude>META-INF/LICENSE</exclude>
+                                        <exclude>META-INF/NOTICE</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
@@ -259,9 +272,22 @@
                                 <filter>
                                     <artifact>*:*</artifact>
                                     <excludes>
+                                        <exclude>**/module-info.class</exclude>
                                         <exclude>META-INF/*.SF</exclude>
                                         <exclude>META-INF/*.DSA</exclude>
                                         <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>META-INF/LICENSE*</exclude>
+                                        <exclude>META-INF/NOTICE*</exclude>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                        <exclude>META-INF/versions/**/OSGI-INF/MANIFEST.MF</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.apache.httpcomponents:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/DEPENDENCIES</exclude>
+                                        <exclude>META-INF/LICENSE</exclude>
+                                        <exclude>META-INF/NOTICE</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
