@@ -5,14 +5,13 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import javax.inject.Inject;
 import jimlind.filmlinkd.config.AppConfig;
-import org.apache.http.client.utils.URIBuilder;
+import jimlind.filmlinkd.core.string.UrlBuilder;
 
 /** The basis for The Movie Database API calls. */
 public class Client {
@@ -37,17 +36,11 @@ public class Client {
    * @return The full string response from the API or an empty string if there is a failure
    */
   public String get(String path) {
-    URI uri;
-    try {
-      uri = new URIBuilder(BASE_URL + path).addParameter("api_key", apiKey).build();
-    } catch (URISyntaxException ignore) {
-      return "";
-    }
-
+    String url = new UrlBuilder(BASE_URL + path).add("api_key", apiKey).build();
     HttpRequest request =
         HttpRequest.newBuilder()
             .header("User-Agent", "Filmlinkd - A Letterboxd Discord Bot")
-            .uri(uri)
+            .uri(URI.create(url))
             .timeout(Duration.of(60, SECONDS))
             .GET()
             .build();
