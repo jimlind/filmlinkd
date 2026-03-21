@@ -15,6 +15,9 @@ public final class UrlBuilder {
    */
   public UrlBuilder(String baseUrl) {
     this.base = new StringBuilder(baseUrl);
+    if (baseUrl.contains("?")) {
+      hasParams = true;
+    }
   }
 
   /**
