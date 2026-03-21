@@ -55,11 +55,10 @@ public class LogEntriesApi {
         }
         reader.skipValue();
       }
-    } catch (IOException | IllegalStateException exception) {
-      log.atInfo()
-          .setMessage("Failed to get most recent entry id from stream.")
-          .setCause(exception)
-          .log();
+    } catch (IOException | IllegalStateException ignore) {
+      // Do nothing if there is an exception.
+      // Can be triggered if the user has not logged any diary items.
+      return "";
     }
     // If the JSON object doesn't contain an "items" object or we have an exception we exit here
     return "";
