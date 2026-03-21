@@ -22,7 +22,7 @@ public final class Scraper {
 
     // Create the DI Components
     ApplicationComponent component = DaggerApplicationComponent.create();
-    component.appConfig().setMainClass(Bot.class.getName());
+    component.appConfig().setMainClass(Scraper.class.getName());
 
     // Configure the needed publishers and subscribers
     component.pubSubManager().buildLogEntryPublisher();
