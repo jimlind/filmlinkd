@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import javax.inject.Inject;
+import jimlind.filmlinkd.core.string.UrlBuilder;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntriesResponse;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import lombok.extern.slf4j.Slf4j;
@@ -72,8 +73,12 @@ public class LogEntriesApi {
    * @return The response from the log-entries API as a list of {@link LbLogEntry}
    */
   public List<LbLogEntry> getRecentForUser(String userId, int count) {
-    String uriTemplate = "log-entries/?member=%s&memberRelationship=%s&perPage=%s";
-    String logEntriesPath = String.format(uriTemplate, userId, "Owner", count);
+    String logEntriesPath =
+        new UrlBuilder("log-entries/")
+            .add("member", userId)
+            .add("memberRelationship", "Owner")
+            .add("perPage", String.valueOf(count))
+            .build();
 
     LbLogEntriesResponse logEntriesResponse =
         this.client.getAuthorized(logEntriesPath, LbLogEntriesResponse.class);
@@ -93,8 +98,12 @@ public class LogEntriesApi {
    * @return The Letterboxd ID or an empty string if nothing found
    */
   public String getMostRecentEntryLetterboxdId(String userId) {
-    String uriTemplate = "log-entries/?member=%s&memberRelationship=%s&perPage=1";
-    String logEntriesPath = String.format(uriTemplate, userId, "Owner");
+    String logEntriesPath =
+        new UrlBuilder("log-entries/")
+            .add("member", userId)
+            .add("memberRelationship", "Owner")
+            .add("perPage", "1")
+            .build();
     return this.client.handleAuthorizedStream(logEntriesPath, LogEntriesApi::getFirstId);
   }
 
@@ -106,8 +115,13 @@ public class LogEntriesApi {
    * @return The response from the log-entries API as list of {@link LbLogEntry}
    */
   public List<LbLogEntry> getByUserAndFilm(String userId, String filmId) {
-    String uriTemplate = "log-entries/?member=%s&film=%s&memberRelationship=%s&perPage=%s";
-    String logEntriesPath = String.format(uriTemplate, userId, filmId, "Owner", 5);
+    String logEntriesPath =
+        new UrlBuilder("log-entries/")
+            .add("member", userId)
+            .add("film", filmId)
+            .add("memberRelationship", "Owner")
+            .add("perPage", "5")
+            .build();
 
     LbLogEntriesResponse logEntriesResponse =
         this.client.getAuthorized(logEntriesPath, LbLogEntriesResponse.class);
