@@ -30,11 +30,11 @@ public final class Scraper {
 
     // Start the Scrapers
     component.generalScraperDispatcher().start();
-    component.vipScraperDispatcher().start();
 
     // Schedule system statistic logger
     Scheduler scheduler = new Scheduler();
     scheduler.addTask(component.memoryInformationLogger());
+    scheduler.addTask(component.vipScraper());
     scheduler.startAll();
 
     // Register shutdown events
