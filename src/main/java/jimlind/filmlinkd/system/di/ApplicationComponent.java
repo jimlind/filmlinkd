@@ -11,6 +11,8 @@ import jimlind.filmlinkd.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.system.DiscordSystem;
 import jimlind.filmlinkd.system.MemoryInformationLogger;
 import jimlind.filmlinkd.system.ShutdownThread;
+import jimlind.filmlinkd.system.cache.GeneralUserCache;
+import jimlind.filmlinkd.system.cache.VipUserCache;
 import jimlind.filmlinkd.system.dispatcher.ScrapedResultQueueDispatcher;
 import jimlind.filmlinkd.system.scraper.GeneralScraper;
 import jimlind.filmlinkd.system.scraper.ScraperCoordinator;
@@ -48,8 +50,14 @@ public interface ApplicationComponent {
   /** Task that scrapes general users. */
   GeneralScraper generalScraper();
 
+  /** Local cache for general users. */
+  GeneralUserCache generalUserCache();
+
   /** Task that scrapes vip users. */
   VipScraper vipScraper();
+
+  /** Local cache for vip users. */
+  VipUserCache vipUserCache();
 
   /** Task that logs memory usage. */
   MemoryInformationLogger memoryInformationLogger();

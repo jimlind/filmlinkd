@@ -28,6 +28,10 @@ public final class Scraper {
     component.pubSubManager().buildLogEntryPublisher();
     component.pubSubManager().buildCommandSubscriber();
 
+    // Initialize user caches before scraping starts
+    component.generalUserCache().initializeRandomPage();
+    component.vipUserCache().initializeRandomPage();
+
     // Schedule scrapers and system statistic logger
     Scheduler scheduler = new Scheduler();
     scheduler.addTask(component.memoryInformationLogger());
