@@ -6,10 +6,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import jimlind.filmlinkd.cache.EntryCache;
 import jimlind.filmlinkd.factory.ScrapedResultFactory;
 import jimlind.filmlinkd.model.ScrapedResult;
 import jimlind.filmlinkd.system.ScrapedResultQueue;
+import jimlind.filmlinkd.system.cache.EntryCache;
 
 /** The LogEntryMessageReceiver gets PubSub messages and responds to them appropriately. */
 @Singleton
