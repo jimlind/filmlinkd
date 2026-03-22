@@ -35,7 +35,7 @@ public class Scraper extends FixedDelayTask {
       BaseUserCache userCache,
       PublishSource source,
       long scraperPeriod) {
-    super(INITIAL_DELAY_MILLIS, scraperPeriod, scraperPeriod);
+    super(INITIAL_DELAY_MILLIS, scraperPeriod, 60000);
 
     this.factory = factory;
     this.userCache = userCache;
