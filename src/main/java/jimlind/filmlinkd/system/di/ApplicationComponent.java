@@ -9,11 +9,11 @@ import jimlind.filmlinkd.discord.dispatcher.HelpEmbedDispatcher;
 import jimlind.filmlinkd.discord.event.handler.Handler;
 import jimlind.filmlinkd.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.scraperv1.ScraperCoordinator;
-import jimlind.filmlinkd.scraperv2.GeneralScraperDispatcher;
 import jimlind.filmlinkd.system.DiscordSystem;
 import jimlind.filmlinkd.system.MemoryInformationLogger;
 import jimlind.filmlinkd.system.ShutdownThread;
 import jimlind.filmlinkd.system.dispatcher.ScrapedResultQueueDispatcher;
+import jimlind.filmlinkd.system.scraper.GeneralScraper;
 import jimlind.filmlinkd.system.scraper.VipScraper;
 
 /** Dagger component for the application. */
@@ -39,14 +39,14 @@ public interface ApplicationComponent {
   /** Executes the timed scraped result queue checking tasks. */
   ScrapedResultQueueDispatcher scrapedResultQueueDispatcher();
 
-  /** Executes the timed general user scraper. */
-  GeneralScraperDispatcher generalScraperDispatcher();
-
   /** Coordinate all the API checking to Pub/Sub publishing actions. */
   ScraperCoordinator scraperCoordinator();
 
   /** Handles shutting down, stopping, and deactivating. */
   ShutdownThread shutdownThread();
+
+  /** Task that scrapes general users. */
+  GeneralScraper generalScraper();
 
   /** Task that scrapes vip users. */
   VipScraper vipScraper();

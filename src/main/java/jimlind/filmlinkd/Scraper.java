@@ -28,12 +28,10 @@ public final class Scraper {
     component.pubSubManager().buildLogEntryPublisher();
     component.pubSubManager().buildCommandSubscriber();
 
-    // Start the Scrapers
-    component.generalScraperDispatcher().start();
-
-    // Schedule system statistic logger
+    // Schedule scrapers and system statistic logger
     Scheduler scheduler = new Scheduler();
     scheduler.addTask(component.memoryInformationLogger());
+    scheduler.addTask(component.generalScraper());
     scheduler.addTask(component.vipScraper());
     scheduler.startAll();
 
