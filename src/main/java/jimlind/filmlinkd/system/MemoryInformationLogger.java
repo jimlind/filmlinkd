@@ -28,6 +28,9 @@ public class MemoryInformationLogger extends FixedRateTask {
   private static final long SUBSEQUENT_DELAY_MILLIS = 600000; // 10 minutes
   private static final long TIMEOUT_MILLIS = 5000; // 5 seconds
 
+  private static final String MESSAGE = "message";
+  private static final String TRACE = "trace";
+
   private static final String TOTAL_LOADED_KEY = "total-loaded";
   private static final String USED_KEY = "used";
   private static final String COMMITTED_KEY = "committed";
@@ -77,8 +80,8 @@ public class MemoryInformationLogger extends FixedRateTask {
         if (log.isWarnEnabled()) {
           log.atWarn()
               .setMessage("General Exception Thrown")
-              .addKeyValue("Message", exception.getMessage())
-              .addKeyValue("Trace", exception.getCause().getStackTrace())
+              .addKeyValue(MESSAGE, exception.getMessage())
+              .addKeyValue(TRACE, exception.getCause().getStackTrace())
               .log();
         }
         break;
@@ -88,8 +91,8 @@ public class MemoryInformationLogger extends FixedRateTask {
         if (log.isWarnEnabled()) {
           log.atWarn()
               .setMessage("Interruption Exception Thrown")
-              .addKeyValue("Message", exception.getMessage())
-              .addKeyValue("Trace", exception.getCause().getStackTrace())
+              .addKeyValue(MESSAGE, exception.getMessage())
+              .addKeyValue(TRACE, exception.getCause().getStackTrace())
               .log();
         }
         break;
@@ -99,8 +102,8 @@ public class MemoryInformationLogger extends FixedRateTask {
         if (log.isErrorEnabled()) {
           log.atError()
               .setMessage("Serious Exception Thrown")
-              .addKeyValue("Message", exception.getMessage())
-              .addKeyValue("Trace", exception.getCause().getStackTrace())
+              .addKeyValue(MESSAGE, exception.getMessage())
+              .addKeyValue(TRACE, exception.getCause().getStackTrace())
               .log();
         }
         break;
@@ -110,7 +113,7 @@ public class MemoryInformationLogger extends FixedRateTask {
         if (log.isInfoEnabled()) {
           log.atInfo()
               .setMessage("Timeout Exception Thrown")
-              .addKeyValue("Message", exception.getMessage())
+              .addKeyValue(MESSAGE, exception.getMessage())
               .log();
         }
         break;
@@ -121,8 +124,8 @@ public class MemoryInformationLogger extends FixedRateTask {
         if (log.isErrorEnabled()) {
           log.atError()
               .setMessage("Unidentified Exception Thrown")
-              .addKeyValue("Message", exception.getMessage())
-              .addKeyValue("Trace", exception.getCause().getStackTrace())
+              .addKeyValue(MESSAGE, exception.getMessage())
+              .addKeyValue(TRACE, exception.getCause().getStackTrace())
               .log();
         }
     }
