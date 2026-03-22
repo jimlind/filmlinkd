@@ -18,6 +18,9 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class LogEntriesApi {
+  private static final String ITEMS_KEY = "items";
+  private static final String ID_KEY = "id";
+
   private final Client client;
 
   /**
@@ -37,7 +40,7 @@ public class LogEntriesApi {
       // Loop over top level elements in the JSON object
       while (reader.hasNext()) {
         // When we find the "items" element
-        if ("items".equals(reader.nextName())) {
+        if (ITEMS_KEY.equals(reader.nextName())) {
           // Items is an array of objects so enter the first object in an array
           reader.beginArray();
           reader.beginObject();
@@ -45,7 +48,7 @@ public class LogEntriesApi {
           // Loop over elements in that first object
           while (reader.hasNext()) {
             // When we find the "id" element return it
-            if ("id".equals(reader.nextName())) {
+            if (ID_KEY.equals(reader.nextName())) {
               return reader.nextString();
             }
             // Otherwise skip the value and find the next
