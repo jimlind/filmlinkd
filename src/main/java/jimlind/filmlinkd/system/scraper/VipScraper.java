@@ -4,7 +4,7 @@ import javax.inject.Inject;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.model.Message.PublishSource;
 import jimlind.filmlinkd.scraperv1.ScraperCoordinatorFactory;
-import jimlind.filmlinkd.scraperv1.cache.VipUserCache;
+import jimlind.filmlinkd.system.cache.VipUserCache;
 
 /** Scraper implementation specifically for VIP users. */
 public class VipScraper extends Scraper {

@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import jimlind.filmlinkd.factory.MessageFactory;
 import jimlind.filmlinkd.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.model.Message;
-import jimlind.filmlinkd.scraperv1.cache.BaseUserCache;
+import jimlind.filmlinkd.system.cache.BaseUserCache;
 import jimlind.filmlinkd.system.letterboxd.api.LogEntriesApi;
 import jimlind.filmlinkd.system.letterboxd.model.LbLogEntry;
 import jimlind.filmlinkd.system.letterboxd.model.LbMemberSummary;

@@ -7,7 +7,7 @@ import java.util.concurrent.Semaphore;
 import jimlind.amaranth.task.FixedDelayTask;
 import jimlind.filmlinkd.model.Message.PublishSource;
 import jimlind.filmlinkd.scraperv1.ScraperCoordinatorFactory;
-import jimlind.filmlinkd.scraperv1.cache.BaseUserCache;
+import jimlind.filmlinkd.system.cache.BaseUserCache;
 
 /**
  * Base class for executing scraping tasks.
