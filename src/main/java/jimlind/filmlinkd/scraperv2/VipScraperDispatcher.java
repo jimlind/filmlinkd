@@ -21,7 +21,7 @@ public class VipScraperDispatcher extends TimedTaskRunner {
    */
   @Inject
   public VipScraperDispatcher(AppConfig appConfig, VipScraper scraper) {
-    super(0, appConfig.getScraperVipPeriod());
+    super(0, appConfig.getScraperVipPeriodMillis());
     this.scraper = scraper;
   }
 

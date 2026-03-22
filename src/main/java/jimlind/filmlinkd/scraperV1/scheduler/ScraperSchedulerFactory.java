@@ -63,7 +63,7 @@ public class ScraperSchedulerFactory {
           vipScraper,
           vipUserCache,
           vipUserCacheClearer,
-          this.appConfig.getScraperVipPeriod(),
+          this.appConfig.getScraperVipPeriodMillis(),
           this.appConfig.getScraperVipUserCachePeriod());
     }
 

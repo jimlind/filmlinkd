@@ -33,7 +33,7 @@ public class AppConfig {
   @Getter private final int scraperGeneralPeriod;
   @Getter private final int scraperGeneralUserCachePeriod;
   @Getter private final int scraperVipConcurrentLimit;
-  @Getter private final int scraperVipPeriod;
+  @Getter private final long scraperVipPeriodMillis;
   @Getter private final int scraperVipUserCachePeriod;
   @Getter @Setter private String mainClass;
 
@@ -90,8 +90,8 @@ public class AppConfig {
     scraperVipConcurrentLimit =
         Integer.parseInt(
             envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_VIP_CONCURRENT_LIMIT));
-    scraperVipPeriod =
-        Integer.parseInt(envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_VIP_PERIOD));
+    scraperVipPeriodMillis =
+        Long.parseLong(envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_VIP_PERIOD_MILLIS));
     scraperVipUserCachePeriod =
         Integer.parseInt(
             envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_VIP_USER_CACHE_PERIOD));
