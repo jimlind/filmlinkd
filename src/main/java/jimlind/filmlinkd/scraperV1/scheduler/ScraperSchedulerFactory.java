@@ -71,7 +71,7 @@ public class ScraperSchedulerFactory {
         generalScraper,
         generalUserCache,
         generalUserCacheClearer,
-        this.appConfig.getScraperGeneralPeriod(),
+        this.appConfig.getScraperGeneralPeriodMillis(),
         this.appConfig.getScraperGeneralUserCachePeriod());
   }
 }

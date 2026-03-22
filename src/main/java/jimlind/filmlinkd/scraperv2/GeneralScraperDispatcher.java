@@ -23,7 +23,7 @@ public class GeneralScraperDispatcher extends TimedTaskRunner {
    */
   @Inject
   public GeneralScraperDispatcher(AppConfig appConfig, GeneralScraper scraper) {
-    super(0, appConfig.getScraperGeneralPeriod());
+    super(0, appConfig.getScraperGeneralPeriodMillis());
     this.scraper = scraper;
   }
 

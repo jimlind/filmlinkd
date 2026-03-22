@@ -30,7 +30,7 @@ public class AppConfig {
   @Getter private final String pubSubLogEntryTopicName;
   @Getter private final int scraperPaginationLimit;
   @Getter private final int scraperGeneralConcurrentLimit;
-  @Getter private final int scraperGeneralPeriod;
+  @Getter private final long scraperGeneralPeriodMillis;
   @Getter private final int scraperGeneralUserCachePeriod;
   @Getter private final int scraperVipConcurrentLimit;
   @Getter private final long scraperVipPeriodMillis;
@@ -82,8 +82,9 @@ public class AppConfig {
     scraperGeneralConcurrentLimit =
         Integer.parseInt(
             envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_GENERAL_CONCURRENT_LIMIT));
-    scraperGeneralPeriod =
-        Integer.parseInt(envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_GENERAL_PERIOD));
+    scraperGeneralPeriodMillis =
+        Long.parseLong(
+            envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_GENERAL_PERIOD_MILLIS));
     scraperGeneralUserCachePeriod =
         Integer.parseInt(
             envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_GENERAL_USER_CACHE_PERIOD));
