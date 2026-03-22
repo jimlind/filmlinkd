@@ -3,7 +3,6 @@ package jimlind.filmlinkd.system.scraper;
 import javax.inject.Inject;
 import jimlind.filmlinkd.config.AppConfig;
 import jimlind.filmlinkd.model.Message.PublishSource;
-import jimlind.filmlinkd.scraperv1.ScraperCoordinatorFactory;
 import jimlind.filmlinkd.system.cache.GeneralUserCache;
 
 /** Scraper implementation for general (non-VIP) users. */

@@ -6,7 +6,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import jimlind.amaranth.task.FixedDelayTask;
 import jimlind.filmlinkd.model.Message.PublishSource;
-import jimlind.filmlinkd.scraperv1.ScraperCoordinatorFactory;
 import jimlind.filmlinkd.system.cache.BaseUserCache;
 
 /**

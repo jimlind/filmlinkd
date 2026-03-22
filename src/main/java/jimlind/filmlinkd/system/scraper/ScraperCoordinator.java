@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.scraperv1;
+package jimlind.filmlinkd.system.scraper;
 
 import java.time.Instant;
 import java.util.ArrayList;
