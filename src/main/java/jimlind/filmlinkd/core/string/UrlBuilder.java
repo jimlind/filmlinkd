@@ -5,8 +5,8 @@ import java.nio.charset.StandardCharsets;
 
 /** A utility class for constructing URLs with query parameters. */
 public final class UrlBuilder {
-  private final StringBuilder base;
-  private boolean hasParams = false;
+  private String fullUrl;
+  private boolean hasParams;
 
   /**
    * Constructs a new UrlBuilder.
@@ -14,7 +14,7 @@ public final class UrlBuilder {
    * @param baseUrl The base URL to append parameters to.
    */
   public UrlBuilder(String baseUrl) {
-    this.base = new StringBuilder(baseUrl);
+    this.fullUrl = baseUrl;
     if (baseUrl.contains("?")) {
       hasParams = true;
     }
@@ -30,11 +30,13 @@ public final class UrlBuilder {
    * @return This builder instance for method chaining.
    */
   public UrlBuilder add(String key, String value) {
-    base.append(hasParams ? '&' : '?');
+    fullUrl += (hasParams ? '&' : '?');
     hasParams = true;
-    base.append(URLEncoder.encode(key, StandardCharsets.UTF_8));
-    base.append('=');
-    base.append(URLEncoder.encode(value, StandardCharsets.UTF_8));
+
+    fullUrl += URLEncoder.encode(key, StandardCharsets.UTF_8);
+    fullUrl += "=";
+    fullUrl += URLEncoder.encode(value, StandardCharsets.UTF_8);
+
     return this;
   }
 
@@ -44,6 +46,6 @@ public final class UrlBuilder {
    * @return The full URL string.
    */
   public String build() {
-    return base.toString();
+    return fullUrl;
   }
 }
