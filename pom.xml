@@ -59,6 +59,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.github.jimlind</groupId>
+            <artifactId>amaranth</artifactId>
+            <version>0.0.25</version>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>

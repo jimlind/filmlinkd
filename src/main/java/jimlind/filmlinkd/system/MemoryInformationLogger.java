@@ -1,5 +1,11 @@
 package jimlind.filmlinkd.system;
 
+import io.github.jimlind.amaranth.exception.TaskException;
+import io.github.jimlind.amaranth.exception.TaskGeneralException;
+import io.github.jimlind.amaranth.exception.TaskInterruptionException;
+import io.github.jimlind.amaranth.exception.TaskSeriousException;
+import io.github.jimlind.amaranth.exception.TaskTimeoutException;
+import io.github.jimlind.amaranth.task.FixedRateTask;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
@@ -7,12 +13,6 @@ import java.lang.management.MemoryUsage;
 import java.lang.management.ThreadMXBean;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import jimlind.amaranth.exception.TaskException;
-import jimlind.amaranth.exception.TaskGeneralException;
-import jimlind.amaranth.exception.TaskInterruptionException;
-import jimlind.amaranth.exception.TaskSeriousException;
-import jimlind.amaranth.exception.TaskTimeoutException;
-import jimlind.amaranth.task.FixedRateTask;
 import jimlind.filmlinkd.config.AppConfig;
 import lombok.extern.slf4j.Slf4j;
 

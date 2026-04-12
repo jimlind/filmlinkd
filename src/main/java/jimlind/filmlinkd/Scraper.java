@@ -1,7 +1,7 @@
 package jimlind.filmlinkd;
 
+import io.github.jimlind.amaranth.Scheduler;
 import java.util.Optional;
-import jimlind.amaranth.Scheduler;
 import jimlind.filmlinkd.system.di.ApplicationComponent;
 import jimlind.filmlinkd.system.di.DaggerApplicationComponent;
 import lombok.extern.slf4j.Slf4j;
