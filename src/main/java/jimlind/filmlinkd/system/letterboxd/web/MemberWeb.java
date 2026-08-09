@@ -23,12 +23,12 @@ public class MemberWeb {
    * @return The Letterboxd ID associated with the username.
    */
   public String getMemberLidFromUsername(String username) {
-    String url = String.format("https://letterboxd.com/%s/", username.toLowerCase(Locale.ROOT));
+    String url = String.format("https://letterboxd.com/%s/rss", username.toLowerCase(Locale.ROOT));
 
     try {
       URI uri = URI.create(url);
       HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
-      connection.setRequestMethod("GET");
+      connection.setRequestMethod("HEAD");
       connection.setConnectTimeout(6000);
       connection.setReadTimeout(6000);
       connection.connect();
