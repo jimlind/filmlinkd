@@ -2,3 +2,5 @@
 .idea/
 dependency-reduced-pom.xml
 /target
+# New exclusions for standalone setup and migration
+.env
