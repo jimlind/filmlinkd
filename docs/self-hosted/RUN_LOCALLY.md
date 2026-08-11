@@ -20,3 +20,10 @@ Then watch logs and stop it with:
 podman logs -f filmlinkd-app
 podman stop filmlinkd-app
 ```
+
+Or run the whole thing
+
+```
+cd deploy
+podman-compose up -d
+```
