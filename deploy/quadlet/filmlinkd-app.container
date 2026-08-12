@@ -1,0 +1,16 @@
+[Unit]
+Description=Filmlinkd App
+Requires=filmlinkd-db.service
+After=filmlinkd-db.service
+
+[Container]
+Image=ghcr.io/jimlind/filmlinkd:self-hosted
+Network=filmlinkd.network
+EnvironmentFile=/opt/filmlinkd/.env
+ContainerName=filmlinkd-app
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

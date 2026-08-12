@@ -1,0 +1,26 @@
+[Unit]
+Description=Filmlinkd Database
+
+[Container]
+# Refresh with:
+#   $ podman pull docker.io/library/postgres:18-trixie
+#   $ podman images --format '{{.Digest}}' docker.io/library/postgres:18-trixie
+Image=docker.io/library/postgres:18-trixie@sha256:a02db8cac496f15b094798a38254f14d6e00741f709360e5e00bb6668ea31636
+Network=filmlinkd.network
+Volume=filmlinkd-pgdata.volume:/var/lib/postgresql
+PublishPort=127.0.0.1:5432:5432
+Environment=POSTGRES_USER=${DB_USER}
+Environment=POSTGRES_PASSWORD=${DB_PASSWORD}
+Environment=POSTGRES_DB=${DB_NAME}
+Exec=postgres -c shared_buffers=${PG_SHARED_BUFFERS} -c effective_cache_size=${PG_EFFECTIVE_CACHE_SIZE} -c work_mem=${PG_WORK_MEM} -c maintenance_work_mem=${PG_MAINTENANCE_WORK_MEM}
+HealthCmd=pg_isready -U ${DB_USER} -d ${DB_NAME}
+HealthInterval=5s
+HealthTimeout=5s
+HealthRetries=10
+
+[Service]
+EnvironmentFile=/opt/filmlinkd/.env
+Restart=always
+
+[Install]
+WantedBy=default.target
