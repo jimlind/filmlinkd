@@ -1,9 +1,8 @@
-package jimlind.filmlinkd.discord.event.handler;
+package jimlind.filmlinkd.discord.commands.help;
 
 import java.util.List;
 import javax.inject.Inject;
-import jimlind.filmlinkd.discord.dispatcher.HelpEmbedDispatcher;
-import jimlind.filmlinkd.discord.embed.factory.HelpEmbedFactory;
+import jimlind.filmlinkd.discord.event.handler.Handler;
 import jimlind.filmlinkd.google.db.UserReader;
 import jimlind.filmlinkd.system.di.ApplicationComponent;
 import lombok.extern.slf4j.Slf4j;

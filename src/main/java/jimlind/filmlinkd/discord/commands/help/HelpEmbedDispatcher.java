@@ -1,8 +1,7 @@
-package jimlind.filmlinkd.discord.dispatcher;
+package jimlind.filmlinkd.discord.commands.help;
 
 import javax.inject.Inject;
 import jimlind.filmlinkd.core.scheduling.TimedTaskRunner;
-import jimlind.filmlinkd.discord.embed.factory.HelpEmbedFactory;
 import jimlind.filmlinkd.factory.MessageFactory;
 import jimlind.filmlinkd.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.model.Message;

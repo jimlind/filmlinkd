@@ -1,4 +1,4 @@
-package jimlind.filmlinkd.discord.embed.factory;
+package jimlind.filmlinkd.discord.commands.help;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -5,7 +5,7 @@ import java.util.Map;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
-import jimlind.filmlinkd.discord.dispatcher.HelpEmbedDispatcher;
+import jimlind.filmlinkd.discord.commands.help.HelpEmbedDispatcher;
 import jimlind.filmlinkd.discord.event.handler.Handler;
 import jimlind.filmlinkd.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.system.DiscordSystem;
