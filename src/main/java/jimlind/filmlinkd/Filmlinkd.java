@@ -1,45 +1,29 @@
 package jimlind.filmlinkd;
 
+import jimlind.filmlinkd.system.di.ApplicationComponent;
+import jimlind.filmlinkd.system.di.DaggerApplicationComponent;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.session.ReadyEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.requests.GatewayIntent;
-import org.jetbrains.annotations.NotNull;
 
+/** The main entry point for the application. */
 @Slf4j
-public class Filmlinkd extends ListenerAdapter {
+public final class Filmlinkd {
+  private Filmlinkd() {}
+
+  /**
+   * Initializes and starts the Filmlinkd bot.
+   *
+   * @param args Command line arguments (not used).
+   */
   public static void main(String[] args) {
-    String token = System.getenv("DISCORD_BOT_TOKEN");
-    if (token == null || token.isBlank()) {
-      log.error("No Token!");
-      System.exit(1);
-    }
+    log.atInfo().setMessage("Starting the Filmlinkd Class").log();
 
-    try {
-      JDABuilder builder =
-          JDABuilder.createLight(token, GatewayIntent.GUILD_MESSAGES)
-              .addEventListeners(new Filmlinkd());
-      builder.build();
-    } catch (Exception e) {
-      log.error("Can't Build JDA Instance", e);
-      System.exit(1);
-    }
-  }
+    ApplicationComponent component = DaggerApplicationComponent.create();
+    component.appConfig().setMainClass(Filmlinkd.class.getName());
 
-  @Override
-  public void onReady(@NotNull ReadyEvent event) {
-    JDA jda = event.getJDA();
-    jda.upsertCommand("ping", "I will pong you.").queue();
-    log.info("Discord Client Logged In on {} Servers", jda.getGuildCache().size());
-  }
+    // Start the Discord server
+    component.connectionManager().connect();
 
-  @Override
-  public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-    if ("ping".equals(event.getName())) {
-      event.reply("pong").queue();
-    }
+    // Stop the Discord server on shutdown hook
+    Runtime.getRuntime().addShutdownHook(component.shutdownThread());
   }
 }
