@@ -97,11 +97,8 @@ public class AppConfig {
         Integer.parseInt(
             envProperties.getProperty(AppConstants.PROP_KEY_SCRAPER_VIP_USER_CACHE_PERIOD));
 
-    // Load Secrets via names in environment properties
-    discordBotToken =
-        secretManager.getSecret(
-            googleProjectId,
-            envProperties.getProperty(AppConstants.PROP_KEY_DISCORD_BOT_TOKEN_SECRET_NAME));
+    // Load environment variables directly
+    discordBotToken = loadEnvironmentVariable(AppConstants.PROP_KEY_DISCORD_BOT_TOKEN);
   }
 
   private Properties loadPropertiesFromResource(String resourcePath) {
@@ -121,5 +118,13 @@ public class AppConfig {
 
   private ClassLoader getClassLoader() {
     return Thread.currentThread().getContextClassLoader();
+  }
+
+  private String loadEnvironmentVariable(String envName) {
+    String value = System.getenv(envName);
+    if (value == null || value.isBlank()) {
+      throw new IllegalArgumentException(String.format("Env variable %s not found", envName));
+    }
+    return value;
   }
 }
