@@ -1,11 +1,11 @@
-package jimlind.filmlinkd.discord.event.handler;
+package jimlind.filmlinkd.discord.commands.following;
 
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.inject.Inject;
-import jimlind.filmlinkd.discord.embed.factory.FollowingEmbedFactory;
+import jimlind.filmlinkd.discord.event.handler.Handler;
 import jimlind.filmlinkd.factory.UserFactory;
 import jimlind.filmlinkd.google.db.UserReader;
 import jimlind.filmlinkd.model.User;
