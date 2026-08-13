@@ -5,10 +5,10 @@ import java.util.Map;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
+import jimlind.filmlinkd.discord.ConnectionManager;
 import jimlind.filmlinkd.discord.commands.help.HelpEmbedDispatcher;
 import jimlind.filmlinkd.discord.event.handler.Handler;
 import jimlind.filmlinkd.google.pubsub.PubSubManager;
-import jimlind.filmlinkd.system.DiscordSystem;
 import jimlind.filmlinkd.system.MemoryInformationLogger;
 import jimlind.filmlinkd.system.ShutdownThread;
 import jimlind.filmlinkd.system.cache.GeneralUserCache;
@@ -29,8 +29,8 @@ public interface ApplicationComponent {
   /** Contains application and environment variables. */
   AppConfig appConfig();
 
-  /** The primary interface for Discord systems. */
-  DiscordSystem discordSystem();
+  /** Manages connections to the Discord service. */
+  ConnectionManager connectionManager();
 
   /** Need to build new Help Embed Dispatchers. */
   HelpEmbedDispatcher helpEmbedDispatcher();

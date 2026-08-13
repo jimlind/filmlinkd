@@ -25,7 +25,7 @@ public final class Bot {
     component.appConfig().setMainClass(Bot.class.getName());
 
     // Start the Discord server
-    component.discordSystem().start();
+    component.connectionManager().connect();
 
     // Configure the needed publishers and subscribers
     component.pubSubManager().buildCommandPublisher();

@@ -2,6 +2,7 @@ package jimlind.filmlinkd.system;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import jimlind.filmlinkd.discord.ConnectionManager;
 import jimlind.filmlinkd.google.pubsub.PubSubManager;
 import lombok.extern.slf4j.Slf4j;
 
@@ -9,18 +10,18 @@ import lombok.extern.slf4j.Slf4j;
 @Singleton
 @Slf4j
 public class ShutdownThread extends Thread {
-  private final DiscordSystem discordSystem;
+  private final ConnectionManager connectionManager;
   private final PubSubManager pubSubManager;
 
   /**
    * Constructor for this class.
    *
-   * @param discordSystem Serves as the primary interface for Discord systems
+   * @param connectionManager Manages connections to the Discord service
    * @param pubSubManager Serves as the primary interface for PubSub systems
    */
   @Inject
-  ShutdownThread(DiscordSystem discordSystem, PubSubManager pubSubManager) {
-    this.discordSystem = discordSystem;
+  ShutdownThread(ConnectionManager connectionManager, PubSubManager pubSubManager) {
+    this.connectionManager = connectionManager;
     this.pubSubManager = pubSubManager;
   }
 
@@ -28,7 +29,7 @@ public class ShutdownThread extends Thread {
   @Override
   public void run() {
     log.info("Shutting Things Down!");
-    discordSystem.stop();
+    connectionManager.disconnect();
     pubSubManager.deactivateAll();
   }
 }
