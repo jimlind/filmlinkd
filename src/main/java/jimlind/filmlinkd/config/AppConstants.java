@@ -14,6 +14,9 @@ public class AppConstants {
 
   public static final String PROP_KEY_DISCORD_APPLICATION_ID = "discordApplicationId";
   public static final String PROP_KEY_DISCORD_BOT_TOKEN = "DISCORD_BOT_TOKEN";
+  public static final String PROP_KEY_DATABASE_URL = "DATABASE_URL";
+  public static final String PROP_KEY_DATABASE_USER = "DATABASE_USER";
+  public static final String PROP_KEY_DATABASE_PASSWORD = "DATABASE_PASSWORD";
   public static final String PROP_KEY_LOG_ENTRY_TOPIC_NAME = "logEntryTopicName";
   public static final String PROP_KEY_LOG_ENTRY_SUBSCRIPTION_NAME = "logEntrySubscriptionName";
   public static final String PROP_KEY_COMMAND_TOPIC_NAME = "commandTopicName";

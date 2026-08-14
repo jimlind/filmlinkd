@@ -17,6 +17,9 @@ public class AppConfig {
   @Getter private final String applicationVersion;
   @Getter private final String discordApplicationId;
   @Getter private final String discordBotToken;
+  @Getter private final String databaseUrl;
+  @Getter private final String databaseUser;
+  @Getter private final String databasePassword;
   @Getter private final String firestoreDatabaseId;
   @Getter private final String firestoreUserCollectionId;
   @Getter private final String firestoreVipCollectionId;
@@ -99,6 +102,9 @@ public class AppConfig {
 
     // Load environment variables directly
     discordBotToken = loadEnvironmentVariable(AppConstants.PROP_KEY_DISCORD_BOT_TOKEN);
+    databaseUrl = loadEnvironmentVariable(AppConstants.PROP_KEY_DATABASE_URL);
+    databaseUser = loadEnvironmentVariable(AppConstants.PROP_KEY_DATABASE_USER);
+    databasePassword = loadEnvironmentVariable(AppConstants.PROP_KEY_DATABASE_PASSWORD);
   }
 
   private Properties loadPropertiesFromResource(String resourcePath) {
