@@ -3,16 +3,16 @@ package jimlind.filmlinkd.admin.channels;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import java.util.List;
 import javax.inject.Inject;
-import jimlind.filmlinkd.factory.UserFactory;
-import jimlind.filmlinkd.google.db.UserReader;
-import jimlind.filmlinkd.google.db.UserWriter;
-import jimlind.filmlinkd.model.User;
+import jimlind.filmlinkd.factory.FirestoreUserFactory;
+import jimlind.filmlinkd.google.db.FirestoreUserReader;
+import jimlind.filmlinkd.google.db.FirestoreUserWriter;
+import jimlind.filmlinkd.model.FirestoreUser;
 
 /** Archives a channel for all users following it. */
 public class Archiver {
-  private final UserFactory userFactory;
-  private final UserReader userReader;
-  private final UserWriter userWriter;
+  private final FirestoreUserFactory userFactory;
+  private final FirestoreUserReader userReader;
+  private final FirestoreUserWriter userWriter;
 
   /**
    * Constructor for this class.
@@ -22,7 +22,10 @@ public class Archiver {
    * @param userWriter Handles writing user records
    */
   @Inject
-  public Archiver(UserFactory userFactory, UserReader userReader, UserWriter userWriter) {
+  public Archiver(
+      FirestoreUserFactory userFactory,
+      FirestoreUserReader userReader,
+      FirestoreUserWriter userWriter) {
     this.userFactory = userFactory;
     this.userReader = userReader;
     this.userWriter = userWriter;
@@ -36,7 +39,7 @@ public class Archiver {
   public void archive(String channelId) {
     List<QueryDocumentSnapshot> snapshotList = userReader.getUserDocumentListByChannelId(channelId);
     for (QueryDocumentSnapshot snapshot : snapshotList) {
-      User userModel = userFactory.createFromSnapshot(snapshot);
+      FirestoreUser userModel = userFactory.createFromSnapshot(snapshot);
       if (userModel == null) {
         continue;
       }

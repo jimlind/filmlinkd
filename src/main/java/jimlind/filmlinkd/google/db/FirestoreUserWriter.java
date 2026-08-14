@@ -12,8 +12,8 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
-import jimlind.filmlinkd.factory.UserFactory;
-import jimlind.filmlinkd.model.User;
+import jimlind.filmlinkd.factory.FirestoreUserFactory;
+import jimlind.filmlinkd.model.FirestoreUser;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
@@ -23,14 +23,14 @@ import org.jetbrains.annotations.NotNull;
 /** Handles all create, update, and delete operations for user data in Firestore. */
 @Singleton
 @Slf4j
-public class UserWriter {
+public class FirestoreUserWriter {
   private static final String USER_KEY = "user";
 
   private final AppConfig appConfig;
   private final Firestore db;
   private final ImageUtils imageUtils;
-  private final UserFactory userFactory;
-  private final UserReader userReader;
+  private final FirestoreUserFactory userFactory;
+  private final FirestoreUserReader userReader;
 
   /**
    * The constructor for this class.
@@ -42,12 +42,12 @@ public class UserWriter {
    * @param userReader Handles all read-only queries for user data from Firestore
    */
   @Inject
-  UserWriter(
+  FirestoreUserWriter(
       AppConfig appConfig,
       Firestore firestore,
       ImageUtils imageUtils,
-      UserFactory userFactory,
-      UserReader userReader) {
+      FirestoreUserFactory userFactory,
+      FirestoreUserReader userReader) {
     this.appConfig = appConfig;
     this.db = firestore;
     this.imageUtils = imageUtils;
@@ -60,7 +60,7 @@ public class UserWriter {
     return snapshot.getReference();
   }
 
-  private static User.Previous getPrevious(User user) {
+  private static FirestoreUser.Previous getPrevious(FirestoreUser user) {
     return user.getPrevious();
   }
 
@@ -70,9 +70,9 @@ public class UserWriter {
    * @param member Letterboxd Member object from API
    * @return a fully populated user model
    */
-  public User createUserDocument(LbMember member) {
+  public FirestoreUser createUserDocument(LbMember member) {
     String collectionId = appConfig.getFirestoreUserCollectionId();
-    User user = userFactory.createFromMember(member);
+    FirestoreUser user = userFactory.createFromMember(member);
 
     try {
       this.db.collection(collectionId).document(user.id).set(user.toMap()).get();
@@ -86,13 +86,13 @@ public class UserWriter {
   /**
    * Adds a channel subscription to a user's document.
    *
-   * @param userLid User's Letterboxd id
+   * @param userLid FirestoreUser's Letterboxd id
    * @param channelId Discord Channel id
    * @return true if the action succeeded or the channel was already present; false on failure
    */
   public boolean addUserSubscription(String userLid, String channelId) {
     QueryDocumentSnapshot snapshot = userReader.getUserDocument(userLid);
-    User user = userFactory.createFromSnapshot(snapshot);
+    FirestoreUser user = userFactory.createFromSnapshot(snapshot);
     if (snapshot == null || user == null) {
       return false;
     }
@@ -104,7 +104,7 @@ public class UserWriter {
       }
     }
 
-    User.Channel newChannel = new User.Channel();
+    FirestoreUser.Channel newChannel = new FirestoreUser.Channel();
     newChannel.setChannelId(channelId);
     user.getChannelList().add(newChannel);
 
@@ -127,14 +127,14 @@ public class UserWriter {
   /**
    * Removes a channel subscription from a user's document.
    *
-   * @param userLid User's Letterboxd id
+   * @param userLid FirestoreUser's Letterboxd id
    * @param channelId Discord Channel id
    * @return true if the action succeeded; false on failure
    */
   public boolean removeUserSubscription(String userLid, String channelId) {
     // Create user but also save snapshot to update with
     QueryDocumentSnapshot snapshot = userReader.getUserDocument(userLid);
-    User user = userFactory.createFromSnapshot(snapshot);
+    FirestoreUser user = userFactory.createFromSnapshot(snapshot);
     if (snapshot == null || user == null) {
       return false;
     }
@@ -162,14 +162,14 @@ public class UserWriter {
   /**
    * Removes a channel subscription from a user's document.
    *
-   * @param userLid User's Letterboxd id
+   * @param userLid FirestoreUser's Letterboxd id
    * @param channelId Discord Channel id
    * @return true if the action succeeded; false on failure
    */
   public boolean archiveUserSubscription(String userLid, String channelId) {
     // Create user but also save snapshot to update with
     QueryDocumentSnapshot snapshot = userReader.getUserDocument(userLid);
-    User user = userFactory.createFromSnapshot(snapshot);
+    FirestoreUser user = userFactory.createFromSnapshot(snapshot);
     if (snapshot == null || user == null) {
       return false;
     }
@@ -179,10 +179,10 @@ public class UserWriter {
             .filter(channel -> !channel.channelId.equals(channelId))
             .collect(Collectors.toCollection(ArrayList::new)));
 
-    User.Channel channelModel = new User.Channel();
+    FirestoreUser.Channel channelModel = new FirestoreUser.Channel();
     channelModel.setChannelId(channelId);
-    Stream<User.Channel> channelModelStream = Stream.of(channelModel);
-    Stream<User.Channel> archivedChannelStream = user.getArchivedChannelList().stream();
+    Stream<FirestoreUser.Channel> channelModelStream = Stream.of(channelModel);
+    Stream<FirestoreUser.Channel> archivedChannelStream = user.getArchivedChannelList().stream();
     user.setArchivedChannelList(Stream.concat(archivedChannelStream, channelModelStream).toList());
 
     try {
@@ -201,19 +201,19 @@ public class UserWriter {
   /**
    * Removes all channel subscriptions from a user's document.
    *
-   * @param userLid User's Letterboxd id
+   * @param userLid FirestoreUser's Letterboxd id
    * @return true if the action succeeded; false on failure
    */
   public boolean archiveAllUserSubscriptions(String userLid) {
     // Create user but also save snapshot to update with
     QueryDocumentSnapshot snapshot = userReader.getUserDocument(userLid);
-    User user = userFactory.createFromSnapshot(snapshot);
+    FirestoreUser user = userFactory.createFromSnapshot(snapshot);
     if (snapshot == null || user == null) {
       return false;
     }
 
-    Stream<User.Channel> channelStream = user.getChannelList().stream();
-    Stream<User.Channel> archivedChannelStream = user.getArchivedChannelList().stream();
+    Stream<FirestoreUser.Channel> channelStream = user.getChannelList().stream();
+    Stream<FirestoreUser.Channel> archivedChannelStream = user.getArchivedChannelList().stream();
     user.setArchivedChannelList(Stream.concat(channelStream, archivedChannelStream).toList());
     user.setChannelList(List.of());
 
@@ -234,14 +234,14 @@ public class UserWriter {
   /**
    * Reverts an archived subscription from a user's document.
    *
-   * @param userLid User's Letterboxd id
+   * @param userLid FirestoreUser's Letterboxd id
    * @param channelId Discord Channel id
    * @return true if the action succeeded; false on failure
    */
   public boolean revertUserArchivedSubscription(String userLid, String channelId) {
     // Create user but also save snapshot to update with
     QueryDocumentSnapshot snapshot = userReader.getUserDocument(userLid);
-    User user = userFactory.createFromSnapshot(snapshot);
+    FirestoreUser user = userFactory.createFromSnapshot(snapshot);
     if (snapshot == null || user == null) {
       return false;
     }
@@ -254,7 +254,7 @@ public class UserWriter {
 
     // Add the archived channel back to the list of subscribed channels if it isn't there
     if (!user.getChannelIdList().contains(channelId)) {
-      User.Channel newChannel = new User.Channel();
+      FirestoreUser.Channel newChannel = new FirestoreUser.Channel();
       newChannel.setChannelId(channelId);
       user.getChannelList().add(newChannel);
     }
@@ -277,7 +277,7 @@ public class UserWriter {
    */
   public boolean updateUserDisplayData(LbMember member) {
     QueryDocumentSnapshot snapshot = userReader.getUserDocument(member.id);
-    User user = userFactory.createFromSnapshot(snapshot);
+    FirestoreUser user = userFactory.createFromSnapshot(snapshot);
     if (snapshot == null || user == null) {
       return false;
     }
@@ -303,7 +303,7 @@ public class UserWriter {
   /**
    * Updates the stored data for a user's most recent diary entries.
    *
-   * @param userLid User's Letterboxd id.
+   * @param userLid FirestoreUser's Letterboxd id.
    * @param diaryLid Diary's Letterboxd id.
    * @param diaryPublishedDate Diary's published date.
    * @param diaryUri Diary's URI.
@@ -313,14 +313,14 @@ public class UserWriter {
       String userLid, String diaryLid, long diaryPublishedDate, String diaryUri) {
     // Create user but also save snapshot to update with
     QueryDocumentSnapshot snapshot = userReader.getUserDocument(userLid);
-    User user = userFactory.createFromSnapshot(snapshot);
+    FirestoreUser user = userFactory.createFromSnapshot(snapshot);
     if (snapshot == null || user == null) {
       return false;
     }
 
     // Default to an empty list, but set it if not null
     List<String> previousList = new ArrayList<>();
-    User.Previous previous = getPrevious(user);
+    FirestoreUser.Previous previous = getPrevious(user);
     if (previous.getList() != null) {
       previousList = getPrevious(user).getList();
     }
@@ -330,7 +330,7 @@ public class UserWriter {
       return true;
     }
 
-    User.Previous updatedPrevious = getPrevious(user);
+    FirestoreUser.Previous updatedPrevious = getPrevious(user);
     updatedPrevious.setPublished(diaryPublishedDate); // Only used for debugging
     updatedPrevious.setUri(diaryUri); // Only used for debugging
 

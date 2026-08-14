@@ -17,9 +17,9 @@ import jimlind.filmlinkd.admin.channels.NullFilter;
 import jimlind.filmlinkd.admin.channels.WrongPermissionsFilter;
 import jimlind.filmlinkd.admin.channels.WrongTypeFilter;
 import jimlind.filmlinkd.config.AppConfig;
-import jimlind.filmlinkd.factory.UserFactory;
-import jimlind.filmlinkd.google.db.UserReader;
-import jimlind.filmlinkd.model.User;
+import jimlind.filmlinkd.factory.FirestoreUserFactory;
+import jimlind.filmlinkd.google.db.FirestoreUserReader;
+import jimlind.filmlinkd.model.FirestoreUser;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -35,8 +35,8 @@ public class CleanChannels {
   private final Archiver archiver;
   private final LogFileWriter logFileWriter;
   private final NullFilter nullFilter;
-  private final UserFactory userFactory;
-  private final UserReader userReader;
+  private final FirestoreUserFactory userFactory;
+  private final FirestoreUserReader userReader;
   private final WrongPermissionsFilter wrongPermissionsFilter;
   private final WrongTypeFilter wrongTypeFilter;
 
@@ -61,8 +61,8 @@ public class CleanChannels {
       Archiver archiver,
       LogFileWriter logFileWriter,
       NullFilter nullFilter,
-      UserFactory userFactory,
-      UserReader userReader,
+      FirestoreUserFactory userFactory,
+      FirestoreUserReader userReader,
       WrongPermissionsFilter wrongPermissionsFilter,
       WrongTypeFilter wrongTypeFilter) {
     this.appConfig = appConfig;
@@ -81,11 +81,11 @@ public class CleanChannels {
     List<String> channelIdList = new ArrayList<>();
 
     for (QueryDocumentSnapshot userSnapshot : activeUsers) {
-      User userModel = userFactory.createFromSnapshot(userSnapshot);
+      FirestoreUser userModel = userFactory.createFromSnapshot(userSnapshot);
       if (userModel == null) {
         continue;
       }
-      for (User.Channel channel : userModel.getChannelList()) {
+      for (FirestoreUser.Channel channel : userModel.getChannelList()) {
         channelIdList.add(channel.getChannelId());
       }
     }

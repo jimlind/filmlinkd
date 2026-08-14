@@ -5,27 +5,27 @@ import com.google.gson.GsonBuilder;
 import com.google.pubsub.v1.PubsubMessage;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import jimlind.filmlinkd.google.db.UserReader;
+import jimlind.filmlinkd.google.db.FirestoreUserReader;
+import jimlind.filmlinkd.model.FirestoreUser;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.ScrapedResult;
-import jimlind.filmlinkd.model.User;
 import lombok.extern.slf4j.Slf4j;
 
 /** A factory for creating instances of the {@link ScrapedResult} model. */
 @Singleton
 @Slf4j
 public class ScrapedResultFactory {
-  private final UserFactory userFactory;
-  private final UserReader userReader;
+  private final FirestoreUserFactory userFactory;
+  private final FirestoreUserReader userReader;
 
   /**
    * Constructor for the {@link ScrapedResultFactory}.
    *
-   * @param userFactory Factory for creating {@link User} model
+   * @param userFactory Factory for creating {@link FirestoreUser} model
    * @param userReader Class that handles all read-only queries for user data from Firestore
    */
   @Inject
-  ScrapedResultFactory(UserFactory userFactory, UserReader userReader) {
+  ScrapedResultFactory(FirestoreUserFactory userFactory, FirestoreUserReader userReader) {
     this.userFactory = userFactory;
     this.userReader = userReader;
   }
@@ -48,17 +48,17 @@ public class ScrapedResultFactory {
     QueryDocumentSnapshot snapshot = userReader.getUserDocument(message.getEntryUserLid());
     if (snapshot == null) {
       log.atWarn()
-          .setMessage("Invalid User Passed in PubSub Message")
+          .setMessage("Invalid FirestoreUser Passed in PubSub Message")
           .addKeyValue("message", message)
           .log();
       return null;
     }
 
     // Translate to user object
-    User user = userFactory.createFromSnapshot(snapshot);
+    FirestoreUser user = userFactory.createFromSnapshot(snapshot);
     if (user == null) {
       log.atWarn()
-          .setMessage("Unable to Create User from Snapshot")
+          .setMessage("Unable to Create FirestoreUser from Snapshot")
           .addKeyValue("message", message)
           .addKeyValue("snapshot", snapshot)
           .log();

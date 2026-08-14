@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import jimlind.filmlinkd.core.string.UsernameFormatter;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
-import jimlind.filmlinkd.model.User;
+import jimlind.filmlinkd.model.FirestoreUser;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -34,7 +34,7 @@ public class FollowingEmbedFactory {
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains as many embed objects as are needed to contain all users.
    */
-  public List<MessageEmbed> create(Map<String, User> userMap) {
+  public List<MessageEmbed> create(Map<String, FirestoreUser> userMap) {
     List<MessageEmbed> embedList = new ArrayList<>();
 
     String description =
@@ -44,8 +44,8 @@ public class FollowingEmbedFactory {
     embedList.add(embedBuilderFactory.create().setDescription(description).build());
 
     String resultString = "";
-    for (Map.Entry<String, User> entry : userMap.entrySet()) {
-      User user = entry.getValue();
+    for (Map.Entry<String, FirestoreUser> entry : userMap.entrySet()) {
+      FirestoreUser user = entry.getValue();
       String userDisplay =
           String.format(
               "• %s [%s](https://boxd.it/%s)\n",

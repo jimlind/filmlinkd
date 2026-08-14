@@ -3,19 +3,19 @@ package jimlind.filmlinkd.system;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import jimlind.filmlinkd.factory.UserFactory;
-import jimlind.filmlinkd.google.db.UserReader;
-import jimlind.filmlinkd.google.db.UserWriter;
-import jimlind.filmlinkd.model.User;
+import jimlind.filmlinkd.factory.FirestoreUserFactory;
+import jimlind.filmlinkd.google.db.FirestoreUserReader;
+import jimlind.filmlinkd.google.db.FirestoreUserWriter;
+import jimlind.filmlinkd.model.FirestoreUser;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import org.jetbrains.annotations.Nullable;
 
 /** Coordinates user actions that would otherwise require multiple method calls. */
 @Singleton
-public class UserCoordinator {
-  private final UserFactory userFactory;
-  private final UserReader userReader;
-  private final UserWriter userWriter;
+public class FirestoreUserCoordinator {
+  private final FirestoreUserFactory userFactory;
+  private final FirestoreUserReader userReader;
+  private final FirestoreUserWriter userWriter;
 
   /**
    * Constructor for this class.
@@ -25,7 +25,10 @@ public class UserCoordinator {
    * @param userWriter Handles all write operations for user data in Firestore
    */
   @Inject
-  public UserCoordinator(UserFactory userFactory, UserReader userReader, UserWriter userWriter) {
+  public FirestoreUserCoordinator(
+      FirestoreUserFactory userFactory,
+      FirestoreUserReader userReader,
+      FirestoreUserWriter userWriter) {
     this.userFactory = userFactory;
     this.userReader = userReader;
     this.userWriter = userWriter;
@@ -40,11 +43,11 @@ public class UserCoordinator {
    * @return user The created user or null if update failed
    */
   @Nullable
-  public User follow(LbMember member, String channelId) {
+  public FirestoreUser follow(LbMember member, String channelId) {
     QueryDocumentSnapshot snapshot = userReader.getUserDocument(member.id);
 
     // Create the user in the database if it doesn't exist
-    User user;
+    FirestoreUser user;
     if (snapshot == null) {
       user = userWriter.createUserDocument(member);
     } else {

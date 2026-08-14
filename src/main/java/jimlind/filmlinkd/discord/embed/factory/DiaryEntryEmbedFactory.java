@@ -10,8 +10,8 @@ import java.util.Locale;
 import javax.inject.Inject;
 import jimlind.filmlinkd.core.string.ReviewFormatter;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
+import jimlind.filmlinkd.model.FirestoreUser;
 import jimlind.filmlinkd.model.Message;
-import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.discord.stringbuilder.StarsStringBuilder;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -46,11 +46,11 @@ public class DiaryEntryEmbedFactory {
    *
    * @param message Message model here contains the data for a new diary entry usually retrieved
    *     from the PubSub listener
-   * @param user User model containing important data to display about the user
+   * @param user FirestoreUser model containing important data to display about the user
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains only one embed.
    */
-  public List<MessageEmbed> create(Message message, User user) {
+  public List<MessageEmbed> create(Message message, FirestoreUser user) {
     try {
       return createInternal(message, user);
     } catch (IllegalArgumentException e) {
@@ -64,7 +64,7 @@ public class DiaryEntryEmbedFactory {
     return new ArrayList<>();
   }
 
-  private List<MessageEmbed> createInternal(Message message, User user) {
+  private List<MessageEmbed> createInternal(Message message, FirestoreUser user) {
     EmbedBuilder embedBuilder = embedBuilderFactory.create();
 
     Message.Entry entry = message.getEntry();
@@ -98,7 +98,7 @@ public class DiaryEntryEmbedFactory {
     return collection;
   }
 
-  private String createAuthorTitle(Message.Entry entry, User user) {
+  private String createAuthorTitle(Message.Entry entry, FirestoreUser user) {
     String profileName = user.getDisplayName();
     return "%s %sed...".formatted(profileName, String.valueOf(entry.getType()));
   }

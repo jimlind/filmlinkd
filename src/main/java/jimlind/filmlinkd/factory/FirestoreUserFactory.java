@@ -4,50 +4,50 @@ import com.google.cloud.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import jimlind.filmlinkd.model.User;
+import jimlind.filmlinkd.model.FirestoreUser;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import jimlind.filmlinkd.system.letterboxd.utils.ImageUtils;
 import jimlind.filmlinkd.system.letterboxd.utils.extractor.MemberAttributes;
 import org.jetbrains.annotations.Nullable;
 
-/** A factory for creating instances of the {@link User} model. */
+/** A factory for creating instances of the {@link FirestoreUser} model. */
 @Singleton
-public class UserFactory {
+public class FirestoreUserFactory {
   private final ImageUtils imageUtils;
 
   /**
-   * Constructor for the {@link UserFactory}.
+   * Constructor for the {@link FirestoreUserFactory}.
    *
    * @param imageUtils Utilities for processing avatar images
    */
   @Inject
-  UserFactory(ImageUtils imageUtils) {
+  FirestoreUserFactory(ImageUtils imageUtils) {
     this.imageUtils = imageUtils;
   }
 
   /**
-   * Create {@link User} from a {@link QueryDocumentSnapshot}.
+   * Create {@link FirestoreUser} from a {@link QueryDocumentSnapshot}.
    *
    * @param snapshot A document snapshot from Firestore
    * @return Data model for user information
    */
-  public @Nullable User createFromSnapshot(@Nullable QueryDocumentSnapshot snapshot) {
+  public @Nullable FirestoreUser createFromSnapshot(@Nullable QueryDocumentSnapshot snapshot) {
     if (snapshot == null) {
       return null;
     }
 
-    User user = snapshot.toObject(User.class);
+    FirestoreUser user = snapshot.toObject(FirestoreUser.class);
     return fillDefaults(user);
   }
 
   /**
-   * Create a {@link User} from an {@link LbMember}.
+   * Create a {@link FirestoreUser} from an {@link LbMember}.
    *
    * @param member A model from the Letterboxd API response
    * @return Data model for user information
    */
-  public User createFromMember(LbMember member) {
-    User user = new User();
+  public FirestoreUser createFromMember(LbMember member) {
+    FirestoreUser user = new FirestoreUser();
 
     user.setId(member.id);
     user.setCreated(0L);
@@ -62,16 +62,16 @@ public class UserFactory {
   }
 
   /**
-   * Fill the User.Previous with enough default data so other systems work as expected. // Maybe
-   * there's a better way to do this, but for now this seems reasonable.
+   * Fill the FirestoreUser.Previous with enough default data so other systems work as expected. //
+   * Maybe there's a better way to do this, but for now this seems reasonable.
    *
    * @param user The user to fill with defaults
    * @return The user now with minimum necessary default data
    */
-  private User fillDefaults(User user) {
+  private FirestoreUser fillDefaults(FirestoreUser user) {
     // If previous data isn't set in user model set some defaults
     if (user.previous == null) {
-      User.Previous previous = new User.Previous();
+      FirestoreUser.Previous previous = new FirestoreUser.Previous();
       previous.setLid("0");
       previous.setList(new ArrayList<>());
       user.setPrevious(previous);

@@ -12,7 +12,7 @@ import lombok.Setter;
 /** Data model for user information directly mimicking the Firestore model form. */
 @Getter
 @Setter
-public class User {
+public class FirestoreUser {
   public String id;
 
   public long checked;

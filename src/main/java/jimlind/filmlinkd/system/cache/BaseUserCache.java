@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import jimlind.filmlinkd.config.AppConfig;
-import jimlind.filmlinkd.factory.UserFactory;
-import jimlind.filmlinkd.model.User;
+import jimlind.filmlinkd.factory.FirestoreUserFactory;
+import jimlind.filmlinkd.model.FirestoreUser;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 
 /**
@@ -18,7 +18,7 @@ import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
  */
 public abstract class BaseUserCache {
   protected final AppConfig appConfig;
-  protected final UserFactory userFactory;
+  protected final FirestoreUserFactory userFactory;
   // This is a string/string key value store for user data
   // The key is the user's letterboxd id
   // The value is the last known letterboxd entry id for the user
@@ -29,9 +29,9 @@ public abstract class BaseUserCache {
    * Constructor for this class.
    *
    * @param appConfig Holds all the configs that determine how the system run
-   * @param userFactory Factory for creating {@link User} model
+   * @param userFactory Factory for creating {@link FirestoreUser} model
    */
-  public BaseUserCache(AppConfig appConfig, UserFactory userFactory) {
+  public BaseUserCache(AppConfig appConfig, FirestoreUserFactory userFactory) {
     this.appConfig = appConfig;
     this.userFactory = userFactory;
   }
@@ -132,7 +132,7 @@ public abstract class BaseUserCache {
   protected void populateFromFirestore() {
     List<QueryDocumentSnapshot> activeUsersList = getUserList();
     for (QueryDocumentSnapshot snapshot : activeUsersList) {
-      User user = this.userFactory.createFromSnapshot(snapshot);
+      FirestoreUser user = this.userFactory.createFromSnapshot(snapshot);
       if (user != null) {
         userCache.put(user.letterboxdId, user.getMostRecentPrevious());
       }

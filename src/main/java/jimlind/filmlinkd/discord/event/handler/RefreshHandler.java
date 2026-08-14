@@ -3,7 +3,7 @@ package jimlind.filmlinkd.discord.event.handler;
 import java.util.List;
 import javax.inject.Inject;
 import jimlind.filmlinkd.discord.embed.factory.RefreshEmbedFactory;
-import jimlind.filmlinkd.google.db.UserWriter;
+import jimlind.filmlinkd.google.db.FirestoreUserWriter;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 public class RefreshHandler implements Handler {
   private final AccountHelper accountHelper;
   private final RefreshEmbedFactory refreshEmbedFactory;
-  private final UserWriter userWriter;
+  private final FirestoreUserWriter userWriter;
 
   /**
    * Constructor for this class.
@@ -24,7 +24,9 @@ public class RefreshHandler implements Handler {
    */
   @Inject
   RefreshHandler(
-      AccountHelper accountHelper, RefreshEmbedFactory refreshEmbedFactory, UserWriter userWriter) {
+      AccountHelper accountHelper,
+      RefreshEmbedFactory refreshEmbedFactory,
+      FirestoreUserWriter userWriter) {
     this.accountHelper = accountHelper;
     this.refreshEmbedFactory = refreshEmbedFactory;
     this.userWriter = userWriter;

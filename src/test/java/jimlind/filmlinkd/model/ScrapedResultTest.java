@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 class ScrapedResultTest {
-  @Mock private User user;
+  @Mock private FirestoreUser user;
   @Mock private Message message;
   @Mock private Message.Entry entry;
 

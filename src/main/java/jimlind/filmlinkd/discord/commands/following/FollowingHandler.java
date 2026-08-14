@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.TreeMap;
 import javax.inject.Inject;
 import jimlind.filmlinkd.discord.event.handler.Handler;
-import jimlind.filmlinkd.factory.UserFactory;
-import jimlind.filmlinkd.google.db.UserReader;
-import jimlind.filmlinkd.model.User;
+import jimlind.filmlinkd.factory.FirestoreUserFactory;
+import jimlind.filmlinkd.google.db.FirestoreUserReader;
+import jimlind.filmlinkd.model.FirestoreUser;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.letterboxd.utils.LidComparer;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -17,8 +17,8 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 /** Handles the /following command to show the users followed in the specified channel. */
 public class FollowingHandler implements Handler {
   private final FollowingEmbedFactory followingEmbedFactory;
-  private final UserFactory userFactory;
-  private final UserReader userReader;
+  private final FirestoreUserFactory userFactory;
+  private final FirestoreUserReader userReader;
 
   /**
    * Constructor for this class.
@@ -29,7 +29,9 @@ public class FollowingHandler implements Handler {
    */
   @Inject
   FollowingHandler(
-      FollowingEmbedFactory followingEmbedFactory, UserFactory userFactory, UserReader userReader) {
+      FollowingEmbedFactory followingEmbedFactory,
+      FirestoreUserFactory userFactory,
+      FirestoreUserReader userReader) {
     this.followingEmbedFactory = followingEmbedFactory;
     this.userFactory = userFactory;
     this.userReader = userReader;
@@ -47,9 +49,9 @@ public class FollowingHandler implements Handler {
 
     List<QueryDocumentSnapshot> documentList = userReader.getUserDocumentListByChannelId(channelId);
 
-    Map<String, User> userMap = new TreeMap<>(LidComparer::compare);
+    Map<String, FirestoreUser> userMap = new TreeMap<>(LidComparer::compare);
     for (QueryDocumentSnapshot snapshot : documentList) {
-      User user = userFactory.createFromSnapshot(snapshot);
+      FirestoreUser user = userFactory.createFromSnapshot(snapshot);
       if (user != null) {
         userMap.put(user.letterboxdId, user);
       }

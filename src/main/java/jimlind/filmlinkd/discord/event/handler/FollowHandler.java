@@ -6,8 +6,8 @@ import jimlind.filmlinkd.discord.embed.factory.FollowEmbedFactory;
 import jimlind.filmlinkd.factory.CommandFactory;
 import jimlind.filmlinkd.google.pubsub.PubSubManager;
 import jimlind.filmlinkd.model.Command;
-import jimlind.filmlinkd.model.User;
-import jimlind.filmlinkd.system.UserCoordinator;
+import jimlind.filmlinkd.model.FirestoreUser;
+import jimlind.filmlinkd.system.FirestoreUserCoordinator;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
@@ -20,7 +20,7 @@ public class FollowHandler implements Handler {
   private final CommandFactory commandFactory;
   private final FollowEmbedFactory followEmbedFactory;
   private final PubSubManager pubSubManager;
-  private final UserCoordinator userCoordinator;
+  private final FirestoreUserCoordinator userCoordinator;
 
   /**
    * Constructor for this class.
@@ -37,7 +37,7 @@ public class FollowHandler implements Handler {
       CommandFactory commandFactory,
       FollowEmbedFactory followEmbedFactory,
       PubSubManager pubSubManager,
-      UserCoordinator userCoordinator) {
+      FirestoreUserCoordinator userCoordinator) {
     this.accountHelper = accountHelper;
     this.commandFactory = commandFactory;
     this.followEmbedFactory = followEmbedFactory;
@@ -64,7 +64,7 @@ public class FollowHandler implements Handler {
     }
 
     // Exit early if database transaction failed.
-    User user = userCoordinator.follow(member, channelId);
+    FirestoreUser user = userCoordinator.follow(member, channelId);
     if (user == null) {
       event.getHook().sendMessage("Follow Failed").queue();
       return;

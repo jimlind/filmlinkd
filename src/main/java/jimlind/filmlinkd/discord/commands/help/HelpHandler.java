@@ -3,7 +3,7 @@ package jimlind.filmlinkd.discord.commands.help;
 import java.util.List;
 import javax.inject.Inject;
 import jimlind.filmlinkd.discord.event.handler.Handler;
-import jimlind.filmlinkd.google.db.UserReader;
+import jimlind.filmlinkd.google.db.FirestoreUserReader;
 import jimlind.filmlinkd.system.di.ApplicationComponent;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 public class HelpHandler implements Handler {
   private final ApplicationComponent applicationComponent;
   private final HelpEmbedFactory helpEmbedFactory;
-  private final UserReader userReader;
+  private final FirestoreUserReader userReader;
 
   /**
    * Constructor for this class.
@@ -37,7 +37,7 @@ public class HelpHandler implements Handler {
   HelpHandler(
       ApplicationComponent applicationComponent,
       HelpEmbedFactory helpEmbedFactory,
-      UserReader userReader) {
+      FirestoreUserReader userReader) {
     this.helpEmbedFactory = helpEmbedFactory;
     this.applicationComponent = applicationComponent;
     this.userReader = userReader;

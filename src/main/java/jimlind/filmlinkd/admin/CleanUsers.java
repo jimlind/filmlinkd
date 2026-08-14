@@ -9,18 +9,18 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import javax.inject.Inject;
-import jimlind.filmlinkd.factory.UserFactory;
-import jimlind.filmlinkd.google.db.UserReader;
-import jimlind.filmlinkd.google.db.UserWriter;
-import jimlind.filmlinkd.model.User;
+import jimlind.filmlinkd.factory.FirestoreUserFactory;
+import jimlind.filmlinkd.google.db.FirestoreUserReader;
+import jimlind.filmlinkd.google.db.FirestoreUserWriter;
+import jimlind.filmlinkd.model.FirestoreUser;
 
 /** Admin command to clean up user records. */
 public class CleanUsers {
   private static final int PAGE_SIZE = 100;
 
-  private final UserFactory userFactory;
-  private final UserReader userReader;
-  private final UserWriter userWriter;
+  private final FirestoreUserFactory userFactory;
+  private final FirestoreUserReader userReader;
+  private final FirestoreUserWriter userWriter;
 
   /**
    * Constructor for this class.
@@ -30,13 +30,16 @@ public class CleanUsers {
    * @param userWriter Handles writing user records
    */
   @Inject
-  public CleanUsers(UserFactory userFactory, UserReader userReader, UserWriter userWriter) {
+  public CleanUsers(
+      FirestoreUserFactory userFactory,
+      FirestoreUserReader userReader,
+      FirestoreUserWriter userWriter) {
     this.userFactory = userFactory;
     this.userReader = userReader;
     this.userWriter = userWriter;
   }
 
-  private static HttpURLConnection getHttpUrlConnection(User user) throws IOException {
+  private static HttpURLConnection getHttpUrlConnection(FirestoreUser user) throws IOException {
     String url = String.format("https://boxd.it/%s", user.getLetterboxdId());
     URI uri = URI.create(url);
     HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
@@ -69,7 +72,7 @@ public class CleanUsers {
 
         int i = 1;
         for (QueryDocumentSnapshot snapshot : userList) {
-          User user = userFactory.createFromSnapshot(snapshot);
+          FirestoreUser user = userFactory.createFromSnapshot(snapshot);
           if (user != null) {
             try {
               HttpURLConnection connection = getHttpUrlConnection(user);
@@ -87,8 +90,8 @@ public class CleanUsers {
     }
   }
 
-  private void processOutput(HttpURLConnection connection, PrintWriter out, User user, int i)
-      throws IOException {
+  private void processOutput(
+      HttpURLConnection connection, PrintWriter out, FirestoreUser user, int i) throws IOException {
     String[] spinner = {"|", "/", "-", "\\"};
 
     int responseCode = connection.getResponseCode();

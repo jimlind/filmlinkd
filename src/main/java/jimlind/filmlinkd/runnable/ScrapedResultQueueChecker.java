@@ -7,10 +7,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import jimlind.filmlinkd.discord.ShardManagerStorage;
 import jimlind.filmlinkd.discord.embed.factory.DiaryEntryEmbedFactory;
-import jimlind.filmlinkd.google.db.UserWriter;
+import jimlind.filmlinkd.google.db.FirestoreUserWriter;
+import jimlind.filmlinkd.model.FirestoreUser;
 import jimlind.filmlinkd.model.Message;
 import jimlind.filmlinkd.model.ScrapedResult;
-import jimlind.filmlinkd.model.User;
 import jimlind.filmlinkd.system.ScrapedResultQueue;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -33,7 +33,7 @@ public class ScrapedResultQueueChecker implements Runnable {
   private final DiaryEntryEmbedFactory diaryEntryEmbedFactory;
   private final ScrapedResultQueue scrapedResultQueue;
   private final ShardManagerStorage shardManagerStorage;
-  private final UserWriter userWriter;
+  private final FirestoreUserWriter userWriter;
 
   private boolean allShardsConnected;
 
@@ -50,7 +50,7 @@ public class ScrapedResultQueueChecker implements Runnable {
       DiaryEntryEmbedFactory diaryEntryEmbedFactory,
       ScrapedResultQueue scrapedResultQueue,
       ShardManagerStorage shardManagerStorage,
-      UserWriter userWriter) {
+      FirestoreUserWriter userWriter) {
     this.diaryEntryEmbedFactory = diaryEntryEmbedFactory;
     this.scrapedResultQueue = scrapedResultQueue;
     this.shardManagerStorage = shardManagerStorage;
@@ -88,7 +88,7 @@ public class ScrapedResultQueueChecker implements Runnable {
 
     // Extract information from the scraped result object
     Message message = result.message();
-    User user = result.user();
+    FirestoreUser user = result.user();
     List<MessageEmbed> embedList = diaryEntryEmbedFactory.create(message, user);
 
     for (String channelId : extractChannelList(result)) {

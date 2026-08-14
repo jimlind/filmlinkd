@@ -6,17 +6,17 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import javax.inject.Inject;
-import jimlind.filmlinkd.factory.UserFactory;
-import jimlind.filmlinkd.google.db.UserReader;
-import jimlind.filmlinkd.google.db.UserWriter;
-import jimlind.filmlinkd.model.User;
+import jimlind.filmlinkd.factory.FirestoreUserFactory;
+import jimlind.filmlinkd.google.db.FirestoreUserReader;
+import jimlind.filmlinkd.google.db.FirestoreUserWriter;
+import jimlind.filmlinkd.model.FirestoreUser;
 
 /** Admin command to clean up user records. */
 public class UndoChannelArchive {
 
-  private final UserFactory userFactory;
-  private final UserReader userReader;
-  private final UserWriter userWriter;
+  private final FirestoreUserFactory userFactory;
+  private final FirestoreUserReader userReader;
+  private final FirestoreUserWriter userWriter;
 
   /**
    * Constructor for this class.
@@ -26,7 +26,10 @@ public class UndoChannelArchive {
    * @param userWriter Handles writing user records
    */
   @Inject
-  public UndoChannelArchive(UserFactory userFactory, UserReader userReader, UserWriter userWriter) {
+  public UndoChannelArchive(
+      FirestoreUserFactory userFactory,
+      FirestoreUserReader userReader,
+      FirestoreUserWriter userWriter) {
     this.userFactory = userFactory;
     this.userReader = userReader;
     this.userWriter = userWriter;
@@ -44,7 +47,7 @@ public class UndoChannelArchive {
     try (PrintWriter out =
         new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true)) {
       for (QueryDocumentSnapshot snapshot : userSnapshotList) {
-        User user = userFactory.createFromSnapshot(snapshot);
+        FirestoreUser user = userFactory.createFromSnapshot(snapshot);
         if (user != null) {
           out.println(user.userName);
           boolean result =

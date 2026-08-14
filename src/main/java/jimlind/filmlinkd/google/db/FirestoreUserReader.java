@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 /** Handles all read-only queries for user data from Firestore. */
 @Singleton
-public class UserReader {
+public class FirestoreUserReader {
   private final AppConfig appConfig;
   private final Firestore db;
 
@@ -27,7 +27,7 @@ public class UserReader {
    * @param firestore The Firestore database client
    */
   @Inject
-  UserReader(AppConfig appConfig, Firestore firestore) {
+  FirestoreUserReader(AppConfig appConfig, Firestore firestore) {
     this.appConfig = appConfig;
     this.db = firestore;
   }

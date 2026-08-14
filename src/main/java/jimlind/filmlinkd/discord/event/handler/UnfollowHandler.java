@@ -3,7 +3,7 @@ package jimlind.filmlinkd.discord.event.handler;
 import java.util.List;
 import javax.inject.Inject;
 import jimlind.filmlinkd.discord.embed.factory.UnfollowEmbedFactory;
-import jimlind.filmlinkd.google.db.UserWriter;
+import jimlind.filmlinkd.google.db.FirestoreUserWriter;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 public class UnfollowHandler implements Handler {
   private final AccountHelper accountHelper;
   private final UnfollowEmbedFactory unfollowEmbedFactory;
-  private final UserWriter userWriter;
+  private final FirestoreUserWriter userWriter;
 
   /**
    * Constructor for this class.
@@ -27,7 +27,7 @@ public class UnfollowHandler implements Handler {
   UnfollowHandler(
       AccountHelper accountHelper,
       UnfollowEmbedFactory unfollowEmbedFactory,
-      UserWriter userWriter) {
+      FirestoreUserWriter userWriter) {
     this.accountHelper = accountHelper;
     this.unfollowEmbedFactory = unfollowEmbedFactory;
     this.userWriter = userWriter;

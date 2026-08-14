@@ -6,17 +6,17 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
-import jimlind.filmlinkd.factory.UserFactory;
+import jimlind.filmlinkd.factory.FirestoreUserFactory;
 import jimlind.filmlinkd.factory.VipFactory;
-import jimlind.filmlinkd.google.db.UserReader;
+import jimlind.filmlinkd.google.db.FirestoreUserReader;
 import jimlind.filmlinkd.google.db.VipReader;
-import jimlind.filmlinkd.model.User;
+import jimlind.filmlinkd.model.FirestoreUser;
 import jimlind.filmlinkd.model.Vip;
 
 /** The VIP User Cache contains all users in VIP servers. */
 @Singleton
 public class VipUserCache extends BaseUserCache {
-  private final UserReader userReader;
+  private final FirestoreUserReader userReader;
   private final VipFactory vipFactory;
   private final VipReader vipReader;
 
@@ -24,7 +24,7 @@ public class VipUserCache extends BaseUserCache {
    * Constructor for this class.
    *
    * @param appConfig Holds all the configs that determine how the system run
-   * @param userFactory Factory for creating {@link User} model
+   * @param userFactory Factory for creating {@link FirestoreUser} model
    * @param userReader Handles all read-only queries for user data from Firestore
    * @param vipFactory Factory for creating {@link Vip} model
    * @param vipReader Handles all read-only queries for VIP data from Firestore
@@ -32,8 +32,8 @@ public class VipUserCache extends BaseUserCache {
   @Inject
   public VipUserCache(
       AppConfig appConfig,
-      UserFactory userFactory,
-      UserReader userReader,
+      FirestoreUserFactory userFactory,
+      FirestoreUserReader userReader,
       VipFactory vipFactory,
       VipReader vipReader) {
     super(appConfig, userFactory);

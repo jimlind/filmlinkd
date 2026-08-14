@@ -3,7 +3,7 @@ package jimlind.filmlinkd.factory;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import jimlind.filmlinkd.model.User;
+import jimlind.filmlinkd.model.FirestoreUser;
 import jimlind.filmlinkd.model.Vip;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,7 +15,7 @@ public class VipFactory {
   VipFactory() {}
 
   /**
-   * Create {@link User} from a {@link QueryDocumentSnapshot}.
+   * Create {@link FirestoreUser} from a {@link QueryDocumentSnapshot}.
    *
    * @param snapshot A document snapshot from Firestore
    * @return Data model for user information

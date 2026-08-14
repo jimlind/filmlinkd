@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Model representing a ScrapeResult that happens when the scraper announces a new scraped entry.
  */
-public record ScrapedResult(Message message, User user) {
+public record ScrapedResult(Message message, FirestoreUser user) {
   /**
    * Gets diary entry object from scraped result.
    *
@@ -20,7 +20,7 @@ public record ScrapedResult(Message message, User user) {
    *
    * @return The object containing the data about a user's previous entry
    */
-  public User.Previous getPrevious() {
+  public FirestoreUser.Previous getPrevious() {
     return user.getPrevious();
   }
 
