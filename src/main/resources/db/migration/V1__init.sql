@@ -1,6 +1,3 @@
--- Load with a command similar to:
--- $ psql -U "$DB_USER" -d "$DB_NAME" -f schema.sql
-
 CREATE TABLE users (
   letterboxd_id         TEXT PRIMARY KEY,
   user_name             TEXT NOT NULL,

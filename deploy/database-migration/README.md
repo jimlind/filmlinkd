@@ -76,13 +76,13 @@ $ python3 02.dedupe.py --csv-dir firestore-users-dev-csv
 ```
 
 We now have a bunch of normalized deduped CSVs of our user data available for importing. So start the database server.
-If the database doesn't exist yet, it is automatically created using the data with the environment and commands. This
-should be run in the "deploy" directory.
+If the database doesn't exist yet, it is automatically created using the data with the environment and commands. The
+service has a Flyway integration so the tables will be created when the server is started. Then run a basic command to
+confirm table structures are correct.
 
 ```
 $ cd ../
 $ podman-compose up -d db
-$ podman-compose exec -T db psql -U filmlinkd -d filmlinkd -f /dev/stdin < database-migration/schema.sql
 $ podman-compose exec db psql -U filmlinkd -d filmlinkd -c '\d+'
 ```
 
