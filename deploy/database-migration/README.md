@@ -80,8 +80,15 @@ If the database doesn't exist yet, it is automatically created using the data wi
 service has a Flyway integration so the tables will be created when the server is started. Then run a basic command to
 confirm table structures are correct.
 
+If the podman default machine isn't running you will have to start it with:
+
+```
+$ podman machine start
+```
+
 ```
 $ cd ../
+$ set -a && source .env && set +a
 $ podman-compose up -d db
 $ podman-compose exec db psql -U filmlinkd -d filmlinkd -c '\d+'
 ```

@@ -7,9 +7,9 @@ services:
     #   $ podman images --format '{{.Digest}}' docker.io/library/postgres:18-trixie
     image: postgres:18-trixie@sha256:a02db8cac496f15b094798a38254f14d6e00741f709360e5e00bb6668ea31636
     environment:
-      POSTGRES_USER: "${DB_USER:?DB_USER must be set}"
-      POSTGRES_PASSWORD: "${DB_PASSWORD:?DB_PASSWORD must be set}"
-      POSTGRES_DB: "${DB_NAME:?DB_NAME must be set}"
+      POSTGRES_USER: "${DATABASE_USER:?DATABASE_USER must be set}"
+      POSTGRES_PASSWORD: "${DATABASE_PASSWORD:?DATABASE_PASSWORD must be set}"
+      POSTGRES_DB: "${DATABASE_NAME:?DATABASE_NAME must be set}"
     command:
       - postgres
       - -c
