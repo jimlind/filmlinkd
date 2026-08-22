@@ -2,8 +2,8 @@ package jimlind.filmlinkd.discord.commands.help;
 
 import java.util.List;
 import javax.inject.Inject;
+import jimlind.filmlinkd.database.UserDao;
 import jimlind.filmlinkd.discord.event.handler.Handler;
-import jimlind.filmlinkd.google.db.FirestoreUserReader;
 import jimlind.filmlinkd.system.di.ApplicationComponent;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -24,23 +24,23 @@ import org.jetbrains.annotations.Nullable;
 public class HelpHandler implements Handler {
   private final ApplicationComponent applicationComponent;
   private final HelpEmbedFactory helpEmbedFactory;
-  private final FirestoreUserReader userReader;
+  private final UserDao userDao;
 
   /**
    * Constructor for this class.
    *
    * @param applicationComponent Dagger 2 component allowing direct fetching of dependencies
    * @param helpEmbedFactory Builds the embed for the /help command
-   * @param userReader Handles all read-only queries for user data from Firestore
+   * @param userDao Handles all read-only queries for user data from the local database
    */
   @Inject
   HelpHandler(
       ApplicationComponent applicationComponent,
       HelpEmbedFactory helpEmbedFactory,
-      FirestoreUserReader userReader) {
+      UserDao userDao) {
     this.helpEmbedFactory = helpEmbedFactory;
     this.applicationComponent = applicationComponent;
-    this.userReader = userReader;
+    this.userDao = userDao;
   }
 
   private static ChannelType extractType(GuildMessageChannel channel) {
@@ -68,7 +68,7 @@ public class HelpHandler implements Handler {
     CacheView<Guild> instanceGuildCache = extractGuildCache(jda);
     CacheView<Guild> shardedGuildCache = extractGuildCache(shardManager);
 
-    long userCount = userReader.getUserCount();
+    long userCount = userDao.getUserCount();
     CacheView<Guild> guild = shardedGuildCache != null ? shardedGuildCache : instanceGuildCache;
 
     boolean viewChannelEnabled = false;

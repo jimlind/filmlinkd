@@ -20,7 +20,7 @@ import jimlind.filmlinkd.system.scraper.VipScraper;
 
 /** Dagger component for the application. */
 @Singleton
-@Component(modules = {FirestoreModule.class, HandlerMapModule.class})
+@Component(modules = {FirestoreModule.class, HandlerMapModule.class, DatabaseModule.class})
 @SuppressWarnings("PMD.TooManyMethods")
 public interface ApplicationComponent {
   /** Provides a map of all Handlers by string. */
