@@ -55,7 +55,7 @@ will need to be managed by podman commands but won't get in your way.
 
 We likely want to run the Java application locally so that you can quickly
 iterate on the code. It would be more hassle than it is worth to run it in
-a container. First setup the environment so the variables are registered and
+a container. First set up the environment so the variables are registered and
 the database override is in place and the correct Java binary is configured.
 > set -a && source deploy/.env.dev && set +a
 > export DATABASE_URL=jdbc:postgresql://localhost:5432/filmlinkd
