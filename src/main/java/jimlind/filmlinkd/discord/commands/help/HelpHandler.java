@@ -2,7 +2,7 @@ package jimlind.filmlinkd.discord.commands.help;
 
 import java.util.List;
 import javax.inject.Inject;
-import jimlind.filmlinkd.database.UserDao;
+import jimlind.filmlinkd.database.user.UserDao;
 import jimlind.filmlinkd.discord.event.handler.Handler;
 import jimlind.filmlinkd.system.di.ApplicationComponent;
 import lombok.extern.slf4j.Slf4j;
