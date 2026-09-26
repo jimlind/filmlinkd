@@ -2,12 +2,11 @@ package jimlind.filmlinkd.discord.commands.following;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import jimlind.filmlinkd.core.string.UsernameFormatter;
+import jimlind.filmlinkd.database.user.UserRow;
 import jimlind.filmlinkd.factory.EmbedBuilderFactory;
-import jimlind.filmlinkd.model.FirestoreUser;
 import jimlind.filmlinkd.system.discord.stringbuilder.DescriptionStringBuilder;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -34,7 +33,7 @@ public class FollowingEmbedFactory {
    * @return A fully constructed list of embeds that are ready to be sent to users. Here the list
    *     contains as many embed objects as are needed to contain all users.
    */
-  public List<MessageEmbed> create(Map<String, FirestoreUser> userMap) {
+  public List<MessageEmbed> create(List<UserRow> userRowList) {
     List<MessageEmbed> embedList = new ArrayList<>();
 
     String description =
@@ -44,12 +43,12 @@ public class FollowingEmbedFactory {
     embedList.add(embedBuilderFactory.create().setDescription(description).build());
 
     String resultString = "";
-    for (Map.Entry<String, FirestoreUser> entry : userMap.entrySet()) {
-      FirestoreUser user = entry.getValue();
+    for (UserRow userRow : userRowList) {
+//      FirestoreUser user = entry.getValue();
       String userDisplay =
           String.format(
               "• %s [%s](https://boxd.it/%s)\n",
-              UsernameFormatter.format(user.userName), user.letterboxdId, user.letterboxdId);
+              UsernameFormatter.format(userRow.userName()), userRow.letterboxdId(), userRow.letterboxdId());
 
       // Instead of checking the string length against what's known in the EmbedDescription it is
       // slightly more accurate to try setting EmbedDescription and reacting when the length

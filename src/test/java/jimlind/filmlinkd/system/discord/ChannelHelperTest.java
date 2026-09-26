@@ -35,44 +35,52 @@ public class ChannelHelperTest {
     when(event.getInteraction().getOption("channel")).thenReturn(null);
     when(event.getChannelId()).thenReturn("1234567890");
 
-    assertEquals("1234567890", ChannelHelper.getChannelId(event));
+    assertEquals(1234567890L, ChannelHelper.getChannelId(event));
   }
 
   @Test
-  void xtestGetChannelId_WithValidChannelMention() {
+  void testGetChannelId_WithNullChannelId() {
+    when(event.getInteraction().getOption("channel")).thenReturn(null);
+    when(event.getChannelId()).thenReturn(null);
+
+    assertNull(ChannelHelper.getChannelId(event));
+  }
+
+  @Test
+  void testGetChannelId_WithValidChannelMention() {
     when(event.getInteraction().getOption("channel")).thenReturn(optionMapping);
     when(optionMapping.getAsString()).thenReturn("<#9876543210>");
 
-    assertEquals("9876543210", ChannelHelper.getChannelId(event));
+    assertEquals(9876543210L, ChannelHelper.getChannelId(event));
   }
 
   @Test
-  void xtestGetChannelId_WithInvalidChannelMention() {
+  void testGetChannelId_WithInvalidChannelMention() {
     when(event.getInteraction().getOption("channel")).thenReturn(optionMapping);
     when(optionMapping.getAsString()).thenReturn("invalid-channel");
     when(event.getGuild()).thenReturn(guild);
     when(guild.getTextChannelsByName("invalid-channel", true)).thenReturn(List.of());
 
-    assertEquals("", ChannelHelper.getChannelId(event));
+    assertNull(ChannelHelper.getChannelId(event));
   }
 
   @Test
-  void xtestGetChannelId_WithGuildTextChannel() {
+  void testGetChannelId_WithGuildTextChannel() {
     when(event.getInteraction().getOption("channel")).thenReturn(optionMapping);
     when(optionMapping.getAsString()).thenReturn("general");
     when(event.getGuild()).thenReturn(guild);
     when(guild.getTextChannelsByName("general", true)).thenReturn(List.of(textChannel));
     when(textChannel.getId()).thenReturn("1357924680");
 
-    assertEquals("1357924680", ChannelHelper.getChannelId(event));
+    assertEquals(1357924680L, ChannelHelper.getChannelId(event));
   }
 
   @Test
-  void xtestGetChannelId_WithNullGuild() {
+  void testGetChannelId_WithNullGuild() {
     when(event.getInteraction().getOption("channel")).thenReturn(optionMapping);
     when(optionMapping.getAsString()).thenReturn("random");
     when(event.getGuild()).thenReturn(null);
 
-    assertEquals("", ChannelHelper.getChannelId(event));
+    assertNull(ChannelHelper.getChannelId(event));
   }
 }

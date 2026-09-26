@@ -62,8 +62,8 @@ public class FollowHandler implements Handler {
     }
 
     // Exit early if no channel was found.
-    String channelId = ChannelHelper.getChannelId(event);
-    if (channelId.isBlank()) {
+    Long channelId = ChannelHelper.getChannelId(event);
+    if (channelId == null) {
       event.getHook().sendMessage(NO_CHANNEL_FOUND).queue();
       return;
     }
@@ -71,7 +71,8 @@ public class FollowHandler implements Handler {
     UserRow userRow = userRowFactory.createFromMember(member);
     boolean userCreateResult = this.userDao.createUser(userRow);
 
-    UserChannelRow userChannelRow = userChannelRowFactory.createFromMember(member, channelId);
+    UserChannelRow userChannelRow =
+        userChannelRowFactory.createFromMember(member, String.valueOf(channelId));
     boolean userChannelCreateResult = this.userChannelDao.createUserChannel(userChannelRow);
 
     if (!userCreateResult || !userChannelCreateResult) {

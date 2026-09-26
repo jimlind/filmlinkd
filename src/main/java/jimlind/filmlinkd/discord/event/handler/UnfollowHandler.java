@@ -43,13 +43,13 @@ public class UnfollowHandler implements Handler {
       return;
     }
 
-    String channelId = ChannelHelper.getChannelId(event);
-    if (channelId.isBlank()) {
+    Long channelId = ChannelHelper.getChannelId(event);
+    if (channelId == null) {
       event.getHook().sendMessage(NO_CHANNEL_FOUND).queue();
       return;
     }
 
-    if (!userWriter.removeUserSubscription(member.id, channelId)) {
+    if (!userWriter.removeUserSubscription(member.id, String.valueOf(channelId))) {
       event.getHook().sendMessage("Unfollow Failed").queue();
       return;
     }

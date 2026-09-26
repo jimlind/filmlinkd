@@ -1,11 +1,22 @@
 package jimlind.filmlinkd.database.user;
 
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 
 /** Handles queries and inserts for user data in the local database. */
 @Slf4j
 public class UserDao {
+  private static final String GET_USER_LIST_BY_CHANNEL_ID_SQL =
+      """
+      SELECT u.letterboxd_id, u.user_name, u.display_name, u.image
+      FROM users u
+      JOIN user_channels uc ON uc.letterboxd_id = u.letterboxd_id
+      WHERE uc.channel_id = :channelId
+        AND uc.archived_at IS NULL
+      ORDER BY length(u.letterboxd_id), u.letterboxd_id_swapped
+      """;
   private static final String UPSERT_USER_SQL =
       """
       INSERT INTO users (letterboxd_id, user_name, display_name, image)
@@ -25,6 +36,7 @@ public class UserDao {
    */
   public UserDao(Jdbi jdbi) {
     this.jdbi = jdbi;
+    jdbi.registerRowMapper(ConstructorMapper.factory(UserRow.class));
   }
 
   /**
@@ -54,6 +66,22 @@ public class UserDao {
           .log();
       return false;
     }
+  }
+
+  /**
+   * Gets every user with an active subscription to a channel.
+   *
+   * @param channelId Discord Channel id
+   * @return The user rows subscribed to the channel
+   */
+  public List<UserRow> getUserListByChannelId(long channelId) {
+    return jdbi.withHandle(
+        handle ->
+            handle
+                .createQuery(GET_USER_LIST_BY_CHANNEL_ID_SQL)
+                .bind("channelId", channelId)
+                .mapTo(UserRow.class)
+                .list());
   }
 
   /**
