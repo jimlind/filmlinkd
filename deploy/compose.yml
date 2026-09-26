@@ -33,7 +33,7 @@ services:
 
   app:
     image: ghcr.io/jimlind/filmlinkd:self-hosted
-    env_file: .env
+    env_file: .env.dev
     depends_on:
       db:
         condition: service_healthy
