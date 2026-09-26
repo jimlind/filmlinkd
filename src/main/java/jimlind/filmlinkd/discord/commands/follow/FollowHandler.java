@@ -9,7 +9,6 @@ import jimlind.filmlinkd.database.user.UserDao;
 import jimlind.filmlinkd.database.user.UserRow;
 import jimlind.filmlinkd.database.user.UserRowFactory;
 import jimlind.filmlinkd.discord.event.handler.Handler;
-import jimlind.filmlinkd.system.FirestoreUserCoordinator;
 import jimlind.filmlinkd.system.discord.helper.AccountHelper;
 import jimlind.filmlinkd.system.discord.helper.ChannelHelper;
 import jimlind.filmlinkd.system.letterboxd.model.LbMember;
@@ -20,7 +19,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 public class FollowHandler implements Handler {
   private final AccountHelper accountHelper;
   private final FollowEmbedFactory followEmbedFactory;
-  private final FirestoreUserCoordinator userCoordinator;
   private final UserChannelDao userChannelDao;
   private final UserChannelRowFactory userChannelRowFactory;
   private final UserRowFactory userRowFactory;
@@ -31,20 +29,21 @@ public class FollowHandler implements Handler {
    *
    * @param accountHelper Handles translating account names to proper data models
    * @param followEmbedFactory Builds the embed for the /follow command
-   * @param userCoordinator Handles the interactions with the user model
+   * @param userChannelDao Handles queries and inserts for user channel data in the local database
+   * @param userChannelRowFactory Builds user channel rows for the local database
+   * @param userDao Handles queries and inserts for user data in the local database
+   * @param userRowFactory Builds user rows for the local database
    */
   @Inject
   public FollowHandler(
       AccountHelper accountHelper,
       FollowEmbedFactory followEmbedFactory,
-      FirestoreUserCoordinator userCoordinator,
       UserChannelDao userChannelDao,
       UserChannelRowFactory userChannelRowFactory,
-      UserRowFactory userRowFactory,
-      UserDao userDao) {
+      UserDao userDao,
+      UserRowFactory userRowFactory) {
     this.accountHelper = accountHelper;
     this.followEmbedFactory = followEmbedFactory;
-    this.userCoordinator = userCoordinator;
     this.userChannelDao = userChannelDao;
     this.userChannelRowFactory = userChannelRowFactory;
     this.userRowFactory = userRowFactory;
@@ -71,24 +70,14 @@ public class FollowHandler implements Handler {
 
     UserRow userRow = userRowFactory.createFromMember(member);
     boolean userCreateResult = this.userDao.createUser(userRow);
-    if (!userCreateResult) {
-      event.getHook().sendMessage("Follow Failed (Type 1)").queue();
-      return;
-    }
 
     UserChannelRow userChannelRow = userChannelRowFactory.createFromMember(member, channelId);
     boolean userChannelCreateResult = this.userChannelDao.createUserChannel(userChannelRow);
-    if (!userChannelCreateResult) {
-      event.getHook().sendMessage("Follow Failed (Type 2)").queue();
+
+    if (!userCreateResult || !userChannelCreateResult) {
+      event.getHook().sendMessage("Follow Failed").queue();
       return;
     }
-
-    // Exit early if database transaction failed.
-    //    FirestoreUser user = userCoordinator.follow(member, channelId);
-    //    if (!createResult) {
-    //      event.getHook().sendMessage("Follow Failed").queue();
-    //      return;
-    //    }
 
     // TODO: Replace this with a direct call to a method instead of creating an event
     //
