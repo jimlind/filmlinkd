@@ -6,7 +6,8 @@ import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
 import jimlind.filmlinkd.config.AppConfig;
-import jimlind.filmlinkd.database.UserDao;
+import jimlind.filmlinkd.database.channel.UserChannelDao;
+import jimlind.filmlinkd.database.user.UserDao;
 import org.flywaydb.core.Flyway;
 import org.jdbi.v3.core.Jdbi;
 
@@ -66,5 +67,17 @@ public class DatabaseModule {
   @Singleton
   public UserDao provideUserDao(Jdbi jdbi) {
     return new UserDao(jdbi);
+  }
+
+  /**
+   * Provides the user channel data access object.
+   *
+   * @param jdbi The JDBI database connection
+   * @return A DAO for user channel data queries
+   */
+  @Provides
+  @Singleton
+  public UserChannelDao provideUserChannelDao(Jdbi jdbi) {
+    return new UserChannelDao(jdbi);
   }
 }
